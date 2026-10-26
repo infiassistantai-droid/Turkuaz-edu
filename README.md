@@ -1,2 +1,2 @@
-# Turkuaz_edu
+# Turkuaz-edu
 
