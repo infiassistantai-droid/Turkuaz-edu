@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 130, 140, 0.4);
+  border-radius: 99px;
+}
+
+/* ---------- 3D flashcard flip ---------- */
+.flip-card {
+  perspective: 1400px;
+}
+.flip-inner {
+  position: relative;
+  min-height: 320px;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1rem;
+}
+.flip-back {
+  transform: rotateY(180deg);
+  display: flex;
+}
+
+/* ---------- Recording waveform ---------- */
+.wave i {
+  display: inline-block;
+  width: 4px;
+  height: 26px;
+  border-radius: 999px;
+  background: currentColor;
+  animation: wave 1s ease-in-out infinite;
+  margin: 0 3px;
+}
+.wave i:nth-child(2) { animation-delay: 0.12s; }
+.wave i:nth-child(3) { animation-delay: 0.24s; }
+.wave i:nth-child(4) { animation-delay: 0.36s; }
+.wave i:nth-child(5) { animation-delay: 0.48s; }
+.wave i:nth-child(6) { animation-delay: 0.6s; }
+.wave i:nth-child(7) { animation-delay: 0.72s; }
+.wave i:nth-child(8) { animation-delay: 0.84s; }
+.wave i:nth-child(9) { animation-delay: 0.96s; }
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+
+/* ---------- Utilities ---------- */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.pbar {
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- Module upgrades: slide-up / fade / drawer / tooltip / pulse ---------- */
+@keyframes slideup {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes drawerIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseRing {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-slideup {
+  animation: slideup 0.25s ease-out both;
+}
+.animate-view {
+  animation: viewIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-drawerin {
+  animation: drawerIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-fadein {
+  animation: fadeIn 0.2s ease-out both;
+}
+.animate-tooltip {
+  animation: tooltipIn 0.15s ease-out both;
+}
+.pulse-ring {
+  animation: pulseRing 1s ease-in-out infinite;
+}
