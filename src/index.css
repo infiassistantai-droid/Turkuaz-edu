@@ -131,24 +131,24 @@ html.premium-theme,
 html.premium-theme body,
 html.premium-theme #root {
   min-height: 100%;
-  background-color: #991b1b;
+  background-color: #8a0000;
 }
 
 html.premium-theme body {
   background-image:
     radial-gradient(ellipse at 12% 8%, rgba(250, 204, 21, 0.16), transparent 28%),
     radial-gradient(ellipse at 88% 84%, rgba(250, 204, 21, 0.1), transparent 30%),
-    linear-gradient(135deg, #991b1b 0%, #dc2626 48%, #450a0a 100%);
+    linear-gradient(135deg, #8a0000 0%, #E30A17 48%, #4a0000 100%);
   background-attachment: fixed;
 }
 
 .premium-theme #root > div.min-h-screen {
   color: #fff !important;
-  background-color: #dc2626 !important;
+  background-color: #E30A17 !important;
   background-image:
     radial-gradient(ellipse at 8% 6%, rgba(250, 204, 21, 0.14), transparent 26%),
     radial-gradient(ellipse at 92% 94%, rgba(250, 204, 21, 0.09), transparent 28%),
-    linear-gradient(135deg, #991b1b 0%, #dc2626 48%, #450a0a 100%) !important;
+    linear-gradient(135deg, #8a0000 0%, #E30A17 48%, #4a0000 100%) !important;
   background-attachment: fixed !important;
 }
 
@@ -195,10 +195,10 @@ html.premium-theme body {
 }
 
 .premium-theme #root .premium-hero {
-  background-color: #dc2626 !important;
+  background-color: #E30A17 !important;
   background-image:
     radial-gradient(circle at 82% 20%, rgba(250, 204, 21, 0.18), transparent 25%),
-    linear-gradient(135deg, #991b1b 0%, #dc2626 48%, #450a0a 100%) !important;
+    linear-gradient(135deg, #8a0000 0%, #E30A17 48%, #4a0000 100%) !important;
   border: 1px solid rgba(250, 204, 21, 0.46) !important;
   box-shadow: 0 12px 42px rgba(220, 38, 38, 0.5), inset 0 1px rgba(255, 255, 255, 0.24) !important;
 }
@@ -344,14 +344,15 @@ html.premium-theme body {
 }
 
 .premium-theme #root main .premium-hero::after {
-  content: '☾';
+  content: '';
   position: absolute;
-  right: -0.04em;
-  bottom: -0.42em;
+  right: -2.5rem;
+  bottom: -6rem;
   z-index: 0;
-  color: rgba(255, 255, 255, 0.08);
-  font-size: clamp(15rem, 34vw, 24rem);
-  line-height: 1;
+  width: clamp(18rem, 42vw, 31rem);
+  aspect-ratio: 1;
+  background: url('/icons/turkish-ay-yildiz.svg') center / contain no-repeat;
+  opacity: 0.085;
   pointer-events: none;
   user-select: none;
 }

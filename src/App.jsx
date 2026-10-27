@@ -21,9 +21,8 @@ import VocabularyFlashcards from './components/VocabularyFlashcards'
 import MockExam from './components/MockExam'
 import ProfileSetupModal from './components/ProfileSetupModal'
 
-// A small seeded demo baseline keeps the dashboard useful on first launch;
-// all subsequent changes are stored locally with the rest of the learner state.
-const DEFAULT_STATS = { xp: 0, streak: 0, wordsLearned: 0, levelsCompleted: 0, lastActivityDate: null }
+// Learner stats and skill results start empty and are persisted after real activity.
+const DEFAULT_STATS = { xp: 0, streak: 0, wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], examDone: false, lastActivityDate: null }
 const DEFAULT_PROGRESS = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
 
 function localDateKey(date = new Date()) {
@@ -118,8 +117,9 @@ function ToastItem({ toast }) {
 export default function App() {
   // Lazy initial state — hydrated straight from localStorage (SSR-safe via try/catch).
   const [active, setActive] = useState('home')
+  const [resetVersion, setResetVersion] = useState(0)
   const [dark, setDark] = useState(() => !!loadJSON(STORAGE_KEY, {})?.dark)
-  const [premium, setPremium] = useState(() => loadJSON(STORAGE_KEY, {})?.premium ?? true)
+  const [isPremium, setIsPremium] = useState(() => loadJSON(STORAGE_KEY, {})?.isPremium ?? false)
   const [toasts, setToasts] = useState([])
   const [profile, setProfile] = useState(() => loadProfile())
   const [editingProfile, setEditingProfile] = useState(false)
@@ -130,12 +130,12 @@ export default function App() {
   // Theme classes and full local persistence for learner progress/settings.
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
-    document.documentElement.classList.toggle('premium-theme', premium)
-  }, [dark, premium])
+    document.documentElement.classList.toggle('premium-theme', isPremium)
+  }, [dark, isPremium])
 
   useEffect(() => {
-    saveJSON(STORAGE_KEY, { stats, progress, examResult, dark, premium })
-  }, [stats, progress, examResult, dark, premium])
+    saveJSON(STORAGE_KEY, { stats, progress, examResult, dark, isPremium })
+  }, [stats, progress, examResult, dark, isPremium])
 
   // Profile persistence — stays logged in across refreshes
   useEffect(() => {
@@ -165,34 +165,49 @@ export default function App() {
     window.alert('Android yoki kompyuterda Chrome’ning uch nuqta (⋮) menyusini bosing, soʻng “Install app” yoki “Add to home screen”ni tanlang.')
   }, [])
 
+  const updateWordsLearned = useCallback((count) => {
+    setStats((s) => s.wordsLearned === count ? s : { ...s, wordsLearned: count })
+  }, [])
+
   const addXp = useCallback(
     (amount) => {
       const today = localDateKey()
+      const award = Math.max(0, Number(amount) || 0)
       setStats((s) => {
-        if (s.lastActivityDate === today) return { ...s, xp: s.xp + amount }
-        const streak = !s.lastActivityDate
+        const streak = s.lastActivityDate === today
           ? s.streak
-          : s.lastActivityDate === previousDateKey(today)
+          : !s.lastActivityDate || s.lastActivityDate === previousDateKey(today)
             ? s.streak + 1
             : 1
-        return { ...s, xp: s.xp + amount, streak, lastActivityDate: today }
+        return {
+          ...s,
+          xp: s.xp + award,
+          levelsCompleted: s.levelsCompleted + 1,
+          streak,
+          lastActivityDate: today,
+        }
       })
-      showToast(`+${amount} XP qoʻshildi! 🎉`, 'xp')
+      if (award > 0) showToast(`+${award} XP qoʻshildi! 🎉`, 'xp')
     },
     [showToast],
   )
 
   const completeLevel = useCallback(
-    (skill) => {
+    (skill, resultPercent, xpAward = 50) => {
       setProgress((p) => {
         const next = { ...p }
         if (skill && next[skill] !== undefined) {
-          next[skill] = Math.min(100, next[skill] + 1)
+          next[skill] = typeof resultPercent === 'number'
+            ? Math.max(0, Math.min(100, resultPercent))
+            : Math.min(100, next[skill] + 1)
         }
         return next
       })
-      setStats((s) => ({ ...s, levelsCompleted: s.levelsCompleted + 1 }))
-      addXp(50)
+      setStats((s) => {
+        if (!skill || (s.skillsCompleted || []).includes(skill)) return s
+        return { ...s, skillsCompleted: [...(s.skillsCompleted || []), skill] }
+      })
+      addXp(xpAward)
     },
     [addXp],
   )
@@ -233,7 +248,9 @@ export default function App() {
     setProgress(DEFAULT_PROGRESS)
     setExamResult(null)
     setDark(false)
-    setPremium(true)
+    setIsPremium(false)
+    setActive('home')
+    setResetVersion((version) => version + 1)
     showToast('Barcha maʼlumotlar tozalandi 🧹', 'save')
   }
 
@@ -252,23 +269,24 @@ export default function App() {
       case 'plan':
         return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} />
       case 'okuma':
-        return <OkumaModule completeLevel={() => completeLevel('okuma')} />
+        return <OkumaModule completeLevel={(percent) => completeLevel('okuma', percent)} />
       case 'dinleme':
-        return <DinlemeModule completeLevel={() => completeLevel('dinleme')} />
+        return <DinlemeModule completeLevel={(percent) => completeLevel('dinleme', percent)} />
       case 'yazma':
-        return <YazmaModule addXp={addXp} />
+        return <YazmaModule completeLevel={(percent, award) => completeLevel('yazma', percent, award)} />
       case 'konusma':
-        return <KonusmaModule />
+        return <KonusmaModule onComplete={() => completeLevel('konusma')} />
       case 'lugat':
-        return <VocabularyFlashcards onToast={showToast} />
+        return <VocabularyFlashcards onToast={showToast} onMasteryCountChange={updateWordsLearned} />
       case 'mock':
         return (
           <MockExam
             result={examResult}
             onResult={(r) => {
               setExamResult(r)
+              setStats((s) => ({ ...s, examDone: true }))
               showToast(`Imtihoni yakunlandi — ${r.score} ball, ${r.level} darajasi! 🎓`, 'success')
-              if (r.score >= 60) addXp(100)
+              addXp(r.score >= 60 ? 100 : 0)
             }}
             onRestart={() => setExamResult(null)}
             onFinish={() => navigate('home')}
@@ -286,8 +304,8 @@ export default function App() {
         onNavigate={navigate}
         dark={dark}
         onToggleDark={() => setDark((d) => !d)}
-        premium={premium}
-        onTogglePremium={() => setPremium((value) => !value)}
+        isPremium={isPremium}
+        onTogglePremium={() => setIsPremium((value) => !value)}
         streak={stats.streak}
         xp={stats.xp}
         targetPct={targetPct}
@@ -298,7 +316,7 @@ export default function App() {
         onInstallApp={handleInstallApp}
       >
         {/* View transition — fade + slide on every sidebar tab switch */}
-        <div key={active} className="animate-view">
+        <div key={`${active}-${resetVersion}`} className="animate-view">
           {renderView()}
         </div>
       </TurkchaDashboard>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   FileCheck2,
   Clock,
@@ -406,6 +406,7 @@ export default function MockExam({ result, onResult, onRestart, onFinish }) {
   const [answers, setAnswers] = useState(Array(mockExamQuestions.length).fill(undefined))
   const [current, setCurrent] = useState(0)
   const [timeLeft, setTimeLeft] = useState(TOTAL_TIME)
+  const finishedRef = useRef(Boolean(result))
 
   // countdown timer — pure tick; finishing is handled by a separate effect
   useEffect(() => {
@@ -424,6 +425,7 @@ export default function MockExam({ result, onResult, onRestart, onFinish }) {
   }, [phase, timeLeft])
 
   function startExam() {
+    finishedRef.current = false
     setAnswers(Array(mockExamQuestions.length).fill(undefined))
     setCurrent(0)
     setTimeLeft(TOTAL_TIME)
@@ -431,6 +433,8 @@ export default function MockExam({ result, onResult, onRestart, onFinish }) {
   }
 
   function finishExam() {
+    if (finishedRef.current) return
+    finishedRef.current = true
     let correct = 0
     const perQuestion = []
     mockExamQuestions.forEach((q, qi) => {

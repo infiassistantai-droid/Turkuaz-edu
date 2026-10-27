@@ -43,7 +43,7 @@ const TASKS = [
   { id: 'dinleme', time: '12:30', duration: '25 daqiqa', xp: 50, icon: 'Headphones', label: 'Tinglash treningi — «Kitap Kafe»HE', module: 'dinleme', tone: 'rose' },
   { id: 'yazma', time: '15:00', duration: '30 daqiqa', xp: 40, icon: 'PenLine', label: '1 rasmiy mektup yozing (60–80 soʻz)', module: 'yazma', tone: 'amber' },
   { id: 'konusma', time: '18:30', duration: '20 daqiqa', xp: 60, icon: 'Mic', label: '2 daqiqa gapirish — mavzu kartalari', module: 'konusma', tone: 'turk' },
-  { id: 'exam', time: '20:00', duration: '15 daqiqa', xp: 50, icon: 'Exam', label: 'Kunlik mock mashq — 10 savol', module: 'exam', tone: 'rose' },
+  { id: 'exam', time: '20:00', duration: '15 daqiqa', xp: 50, icon: 'Exam', label: 'Kunlik mock mashq — 10 savol', module: 'mock', tone: 'rose' },
 ]
 
 function fmtToday() {

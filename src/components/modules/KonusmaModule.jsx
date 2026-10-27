@@ -56,7 +56,7 @@ const SAMPLE_ANSWER = {
   ],
 }
 
-export default function KonusmaModule() {
+export default function KonusmaModule({ onComplete }) {
   const savedKonusma = loadKonusma()
   const [stage, setStage] = useState('q1') // q1 | q2 | q3
   const [reached, setReached] = useState(savedKonusma.reached || 1) // highest stage reached (1..3)
@@ -106,8 +106,9 @@ export default function KonusmaModule() {
       setPhase('done')
       setReached(3)
       setStage('q3')
+      onComplete?.()
     }
-  }, [speakLeft, phase])
+  }, [speakLeft, phase, onComplete])
 
   const isRecording = phase === 'speak'
 

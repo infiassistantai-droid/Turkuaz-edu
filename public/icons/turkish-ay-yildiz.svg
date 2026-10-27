@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Turkish crescent and star watermark</title>
+  <defs>
+    <mask id="crescent">
+      <rect width="512" height="512" fill="#fff"/>
+      <circle cx="284" cy="208" r="151" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="218" cy="256" r="174" fill="#fff" mask="url(#crescent)"/>
+  <path d="m374 132 30 62 69 10-50 48 12 68-61-32-61 32 12-68-50-48 69-10z" fill="#fff"/>
+</svg>

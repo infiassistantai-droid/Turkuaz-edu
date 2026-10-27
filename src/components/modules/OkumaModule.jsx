@@ -135,6 +135,7 @@ export default function OkumaModule({ completeLevel }) {
   }
 
   function reveal() {
+    if (revealedNow || answeredCount < passage.questions.length) return
     const next = { ...revealed }
     next[passage.id] = 'done'
     setRevealed(next)
@@ -142,7 +143,7 @@ export default function OkumaModule({ completeLevel }) {
     const modulePct = passage.questions.length ? Math.round((correct / passage.questions.length) * 100) : 0
     const saved = saveScore('okuma', { best: modulePct, attempts: 1 })
     setBest(saved.best)
-    completeLevel()
+    completeLevel(saved.best)
   }
 
   function reset() {
@@ -465,7 +466,7 @@ export default function OkumaModule({ completeLevel }) {
         <button
           type="button"
           onClick={reveal}
-          disabled={answeredCount < passage.questions.length}
+          disabled={revealedNow || answeredCount < passage.questions.length}
           className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/20 transition-all active:scale-95 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none dark:disabled:bg-slate-700"
         >
           <Sparkles className="h-4 w-4" />

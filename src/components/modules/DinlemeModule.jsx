@@ -101,12 +101,13 @@ export default function DinlemeModule({ completeLevel }) {
   }
 
   function reveal() {
+    if (revealed || answeredCount < track.questions.length) return
     setRevealed(true)
     const correctCount = track.questions.filter((q) => answers[q.id] === q.answer).length
     const pct = track.questions.length ? Math.round((correctCount / track.questions.length) * 100) : 0
     const saved = saveScore('dinleme', { best: pct, attempts: 1 })
     setBest(saved.best)
-    completeLevel()
+    completeLevel(saved.best)
   }
 
   const answeredCount = Object.values(answers).filter(
@@ -426,7 +427,7 @@ export default function DinlemeModule({ completeLevel }) {
         <button
           type="button"
           onClick={reveal}
-          disabled={answeredCount < track.questions.length}
+          disabled={revealed || answeredCount < track.questions.length}
           className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/20 transition-all active:scale-95 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none dark:disabled:bg-slate-700"
         >
           <Sparkles className="h-4 w-4" />

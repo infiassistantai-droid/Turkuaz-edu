@@ -36,7 +36,7 @@ const NAV = [
     section: 'ASOSIY',
     items: [
       { id: 'home', label: 'Bosh sahifa', icon: House },
-      { id: 'plan', label: 'Kunlik reja', icon: CalendarCheck, badge: '3' },
+      { id: 'plan', label: 'Kunlik reja', icon: CalendarCheck },
     ],
   },
   {
@@ -61,7 +61,7 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp }) {
+function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp, showInstall }) {
   return (
     <>
       <div
@@ -75,7 +75,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
       <aside
         aria-label="Asosiy navigatsiya"
         className={cn(
-          'glass fixed inset-y-0 left-0 z-50 flex flex-col rounded-[26px] border border-yellow-200/20 bg-black/30 backdrop-blur-2xl transition-all duration-300 ease-out',
+          'glass fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur-md transition-all duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/90',
           'lg:sticky lg:top-0 lg:h-screen lg:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-full',
           collapsed ? 'w-72 lg:w-[84px]' : 'w-72',
@@ -169,7 +169,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
         </nav>
 
         <div className="shrink-0 border-t border-slate-200/80 p-3 dark:border-slate-800/80">
-          <button
+          {showInstall && <button
             type="button"
             onClick={onInstallApp}
             title={collapsed ? "Ilovani O'rnatish" : undefined}
@@ -181,7 +181,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           >
             <Download className="size-4 shrink-0" aria-hidden="true" />
             <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>Ilovani O&apos;rnatish</span>
-          </button>
+          </button>}
           <div
             role="button"
             tabIndex={0}
@@ -247,7 +247,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function Header({ breadcrumb, dark, onToggleDark, premium, onTogglePremium, onOpenMobile, streak, xp, profile, profileOpen, setProfileOpen, onEditProfile, onClearData, onLogout }) {
+function Header({ breadcrumb, dark, onToggleDark, isPremium, onTogglePremium, onOpenMobile, streak, xp, profile, profileOpen, setProfileOpen, onEditProfile, onClearData, onLogout }) {
   const searchRef = useRef(null)
 
   useEffect(() => {
@@ -262,7 +262,7 @@ function Header({ breadcrumb, dark, onToggleDark, premium, onTogglePremium, onOp
   }, [])
 
   return (
-    <header className="glass sticky top-0 z-30 mx-2 mt-2 rounded-[20px] border border-yellow-200/20 bg-black/30 backdrop-blur-2xl sm:mx-4">
+    <header className="glass sticky top-0 z-30 border-b border-slate-200/80 bg-white/80 backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-950/80">
       <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
         <button
           type="button"
@@ -291,9 +291,14 @@ function Header({ breadcrumb, dark, onToggleDark, premium, onTogglePremium, onOp
               ref={searchRef}
               type="search"
               placeholder="So’z, qoida yoki test qidirish..."
-              className="premium-search h-10 w-full rounded-xl border border-yellow-200/70 bg-white pl-9 pr-14 text-sm font-medium text-gray-900 outline-none shadow-[0_3px_14px_rgba(0,0,0,.16)] transition-all placeholder:text-gray-600 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300/40"
+              className={cn(
+                'h-10 w-full rounded-xl border pl-9 pr-14 text-sm font-medium outline-none transition-all',
+                isPremium
+                  ? 'premium-search border-yellow-200/70 bg-white text-gray-900 shadow-[0_3px_14px_rgba(0,0,0,.16)] placeholder:text-gray-600 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300/40'
+                  : 'border-slate-200/80 bg-slate-50/80 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 dark:border-slate-800 dark:bg-slate-900/80 dark:text-white dark:placeholder:text-slate-500',
+              )}
             />
-            <kbd className="pointer-events-none absolute right-2.5 rounded-md border border-yellow-200/50 bg-white px-1.5 py-0.5 font-mono text-[10px] font-medium text-gray-600 shadow-sm">
+            <kbd className={cn("pointer-events-none absolute right-2.5 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-medium", isPremium ? "border border-yellow-200/50 bg-white text-gray-600 shadow-sm" : "border border-slate-200 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400")}>
               ⌘K
             </kbd>
           </label>
@@ -339,12 +344,12 @@ function Header({ breadcrumb, dark, onToggleDark, premium, onTogglePremium, onOp
           <button
             type="button"
             onClick={onTogglePremium}
-            title={premium ? 'Premium View yoqilgan' : 'Premium View yoqish'}
-            aria-label={premium ? 'Premium View o‘chirish' : 'Premium View yoqish'}
-            aria-pressed={premium}
+            title={isPremium ? 'Premium View yoqilgan' : 'Premium View yoqish'}
+            aria-label={isPremium ? 'Premium View o‘chirish' : 'Premium View yoqish'}
+            aria-pressed={isPremium}
             className={cn(
               'flex h-9 items-center justify-center gap-1.5 rounded-xl border px-2 transition-all active:scale-95',
-              premium
+              isPremium
                 ? 'border-amber-300/50 bg-amber-300/15 text-amber-300 shadow-[0_0_18px_rgba(251,191,36,0.18)] hover:shadow-[0_0_24px_rgba(239,68,68,0.35)]'
                 : 'border-slate-200/80 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800',
             )}
@@ -362,10 +367,30 @@ function Header({ breadcrumb, dark, onToggleDark, premium, onTogglePremium, onOp
 /*                                   App shell                                */
 /* -------------------------------------------------------------------------- */
 
-export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, premium, onTogglePremium, streak, xp, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
+export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, streak, xp, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [isInstalled, setIsInstalled] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return Boolean(window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true)
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    const standaloneQuery = window.matchMedia?.('(display-mode: standalone)')
+    const updateStandalone = () => {
+      if (standaloneQuery?.matches || window.navigator.standalone === true) setIsInstalled(true)
+    }
+    const handleInstalled = () => setIsInstalled(true)
+    updateStandalone()
+    standaloneQuery?.addEventListener?.('change', updateStandalone)
+    window.addEventListener('appinstalled', handleInstalled)
+    return () => {
+      standaloneQuery?.removeEventListener?.('change', updateStandalone)
+      window.removeEventListener('appinstalled', handleInstalled)
+    }
+  }, [])
 
   const breadcrumb = useMemo(() => {
     for (const group of NAV) {
@@ -381,9 +406,12 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
   }
 
   return (
-    <div className={cn('min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', premium && 'bg-gradient-to-br from-red-800 via-red-600 to-red-950')}>
+    <div className={cn('min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium && 'bg-gradient-to-br from-red-800 via-red-600 to-red-950')}>
       <div
-        className="pointer-events-none fixed inset-x-0 top-0 h-80 bg-gradient-to-b from-amber-300/15 via-red-600/5 to-transparent"
+        className={cn(
+          'pointer-events-none fixed inset-x-0 top-0 h-80',
+          isPremium ? 'bg-gradient-to-b from-amber-300/15 via-red-600/5 to-transparent' : 'bg-gradient-to-b from-teal-500/[0.07] to-transparent dark:from-teal-400/[0.05]',
+        )}
         aria-hidden="true"
       />
       <div className="relative flex">
@@ -398,6 +426,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           profile={profile}
           onOpenProfile={() => setProfileOpen(true)}
           onInstallApp={onInstallApp}
+          showInstall={!isInstalled}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -405,7 +434,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
             breadcrumb={breadcrumb}
             dark={dark}
             onToggleDark={onToggleDark}
-            premium={premium}
+            isPremium={isPremium}
             onTogglePremium={onTogglePremium}
             onOpenMobile={() => setMobileOpen(true)}
             streak={streak}
