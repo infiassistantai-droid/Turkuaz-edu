@@ -11,33 +11,7 @@ export const appInfo = {
 }
 
 // ----------------------------------------------------------------------
-// Dashboard state
-// ----------------------------------------------------------------------
-export const dashboardStats = {
-  xp: 12480,
-  xpToday: 120,
-  streak: 23,
-  wordsLearned: 148,
-  wordsTarget: 1200,
-  levelsCompleted: 9,
-  levelsTotal: 24,
-  lastExam: { score: 72, level: 'B2', date: '2026-10-18' },
-}
-
-export const skillProgress = {
-  okuma: 68,
-  dinleme: 54,
-  yazma: 47,
-  konusma: 39,
-}
-
-export const dailyTasks = [
-  { id: 'okuma', icon: 'BookOpen', title: '1 maqola oʻqib chiqing', sub: 'Çay Kültürü · B2', xp: 30, skill: 'okuma' },
-  { id: 'dinleme', icon: 'Headphones', title: 'Tinglash treningini tugatish', sub: '«Kitap Kafe»HE · 2:15', xp: 50, skill: 'dinleme' },
-  { id: 'yazma', icon: 'PenLine', title: '1 rasmiy mektup yozing', sub: 'Atıktoʻplash Tadbiri · 120–150 soʻz', xp: 40, skill: 'yazma' },
-  { id: 'konusma', icon: 'Mic', title: '2 daqiqa gapirish', sub: 'Mavzu kartalari · C1', xp: 60, skill: 'konusma' },
-]
-
+// Learning content
 // ----------------------------------------------------------------------
 // Reading passages (O'qib tushunish)
 // ----------------------------------------------------------------------

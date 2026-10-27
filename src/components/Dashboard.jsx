@@ -246,7 +246,7 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
           <button
             type="button"
             onClick={onStart}
-            className="gold-button premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-red-950/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
+            className="gold-button premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-teal-800 shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-50 hover:shadow-xl active:scale-95"
           >
             Bugungi mashgʻulotni boshlash
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
@@ -481,6 +481,7 @@ const CALC_FIELDS = [
 
 function CertificateCalculator({ initial }) {
   const [scores, setScores] = useState(initial)
+  useEffect(() => setScores(initial), [initial])
   const total = scores.dinleme + scores.okuma + scores.yazma + scores.konusma
   const pct = Math.round((total / 120) * 100)
   const cert = getCertificate(total)

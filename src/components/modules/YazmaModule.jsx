@@ -156,10 +156,11 @@ function levelStyle(level) {
   return { bg: 'bg-teal-50 text-teal-700 dark:bg-cyan-500/10 dark:text-teal-300', bar: 'bg-cyan-500' }
 }
 
-export default function YazmaModule({ addXp }) {
+export default function YazmaModule({ completeLevel }) {
   const [taskId, setTaskId] = useState(writingTasks[0].id)
   const task = useMemo(() => writingTasks.find((t) => t.id === taskId) || writingTasks[0], [taskId])
   const [text, setText] = useState('')
+  const gradedTextRef = useRef('')
   const [result, setResult] = useState(null)
   const [revealed, setRevealed] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -218,15 +219,14 @@ export default function YazmaModule({ addXp }) {
   }
 
   function grade() {
-    if (text.trim().length < 20) return
+    if (text.trim().length < 20 || text === gradedTextRef.current) return
+    gradedTextRef.current = text
     const res = gradeWriting(text, task.targetWords)
     setResult(res)
     setRevealed(true)
     const saved = saveScore('yazma', { best: res.score, attempts: 1 })
     setBestInfo(saved)
-    if (res && res.score >= 60) {
-      addXp(40)
-    }
+    completeLevel(saved.best, res.score >= 60 ? 40 : 0)
   }
 
   const lv = result ? levelStyle(result.level) : levelStyle('A2')

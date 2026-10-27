@@ -200,7 +200,7 @@ function ComparisonCard({ item }) {
   )
 }
 
-export default function VocabularyFlashcards({ cheatOnly = false, onToast }) {
+export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMasteryCountChange }) {
   const [view, setView] = useState('vocab') // vocab | grammar
   const [mastery, setMastery] = useState(() => loadJSON(MASTERY_KEY, {}))
   const [saved, setSaved] = useState(() => loadJSON(SAVED_KEY, []))
@@ -230,7 +230,8 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast }) {
     } catch {
       // storage might be unavailable; mastery still works in-memory
     }
-  }, [mastery])
+    onMasteryCountChange?.(Object.values(mastery).filter((value) => value === 'known').length)
+  }, [mastery, onMasteryCountChange])
 
   useEffect(() => {
     try {

@@ -137,7 +137,7 @@ export function targetThreshold(cert) {
 // ----------------------------------------------------------------------
 export function CertificateCalculator({ initialScores, targetCert, compact = false }) {
   const [scores, setScores] = useState(
-    initialScores || { okuma: 20, dinleme: 18, yazma: 15, konusma: 12 },
+    initialScores || { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 },
   )
 
   const total = SKILL_META.reduce((sum, s) => sum + scores[s.key], 0)
@@ -336,8 +336,8 @@ export default function SertifikatKalkulyatori({ stats, progress, targetCert }) 
             { title: 'Har kun trening qilasiz', ok: stats.streak >= 20 },
             { title: '100+ soʻzni bilasiz', ok: stats.wordsLearned >= 100 },
             { title: 'Mock imtihoni topshirdingiz', ok: !!stats.examDone },
-            { title: 'Barcha 4 koʻnikma ishladingiz', ok: stats.levelsCompleted >= 4 },
-            { title: 'Darajalar yigʻindi yaxshi', ok: stats.levelsCompleted >= 9 },
+            { title: 'Barcha 4 koʻnikma ishladingiz', ok: (stats.skillsCompleted || []).length >= 4 },
+            { title: '9+ ta mashq yakunlandi', ok: stats.levelsCompleted >= 9 },
             { title: 'Seriyani saqlab qoldingiz', ok: stats.streak >= 7 },
           ].map((item) => (
             <div
