@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   CalendarDays,
   Flame,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { appInfo } from '../data/mockExamData'
 import { cn } from '../lib/utils'
+import { loadJSON, saveJSON } from '../lib/storage'
 
 const COLOR_CLASSES = {
   turk: { text: 'text-teal-700 dark:text-teal-300', bg: 'bg-teal-50 dark:bg-teal-500/10', ring: 'ring-teal-600/15 dark:ring-teal-400/20', bar: 'bg-teal-500' },
@@ -61,8 +62,25 @@ function daysUntilExam() {
   return Math.max(0, Math.ceil((exam.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
 }
 
-export default function KunlikReja({ stats, progress, navigate }) {
-  const [done, setDone] = useState({})
+export default function KunlikReja({ stats, progress, navigate, addXp }) {
+  const today = new Date().toLocaleDateString('en-CA')
+  const storageKey = `turkish-marathon-daily-plan-${today}`
+  const savedPlan = loadJSON(storageKey, {})
+  const [done, setDone] = useState(() => savedPlan.done || {})
+  const [rewarded, setRewarded] = useState(() => savedPlan.rewarded || [])
+
+  useEffect(() => {
+    saveJSON(storageKey, { done, rewarded })
+  }, [storageKey, done, rewarded])
+
+  function toggleTask(task) {
+    const willComplete = !done[task.id]
+    setDone((previous) => ({ ...previous, [task.id]: willComplete }))
+    if (willComplete && !rewarded.includes(task.id)) {
+      addXp?.(task.xp)
+      setRewarded((previous) => [...previous, task.id])
+    }
+  }
   const completedCount = TASKS.filter((t) => done[t.id]).length
   const earnedXp = TASKS.filter((t) => done[t.id]).reduce((sum, t) => sum + t.xp, 0)
   const allDone = completedCount === TASKS.length
@@ -176,7 +194,7 @@ export default function KunlikReja({ stats, progress, navigate }) {
               {/* checkbox */}
               <button
                 type="button"
-                onClick={() => setDone((d) => ({ ...d, [task.id]: !d[task.id] }))}
+                onClick={() => toggleTask(task)}
                 className={cn(
                   'grid h-8 w-8 shrink-0 place-items-center rounded-xl border-2 transition-all active:scale-90',
                   isDone

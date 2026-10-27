@@ -15,6 +15,7 @@ import {
   Trophy,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { loadJSON, saveJSON } from '../lib/storage'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -64,8 +65,8 @@ const SKILLS = [
 ]
 
 const INITIAL_TASKS = [
-  { id: 't1', title: '20 ta yangi so’z (Ekler)', meta: 'Lug’at · 10 daq', xp: 40, done: true },
-  { id: 't2', title: 'Dinleme: 2 ta audio', meta: 'Tinglash · 15 daq', xp: 60, done: true },
+  { id: 't1', title: '20 ta yangi so’z (Ekler)', meta: 'Lug’at · 10 daq', xp: 40, done: false },
+  { id: 't2', title: 'Dinleme: 2 ta audio', meta: 'Tinglash · 15 daq', xp: 60, done: false },
   { id: 't3', title: 'Yazma: 150 so’zli insho', meta: 'Yozish · 25 daq', xp: 90, done: false },
   { id: 't4', title: 'Konuşma: 3 ta savol', meta: 'Gapirish · 12 daq', xp: 70, done: false },
 ]
@@ -219,7 +220,7 @@ function CardHeader({ icon: Icon, title, subtitle, right }) {
 /*                                  Hero card                                 */
 /* -------------------------------------------------------------------------- */
 
-function HeroCard({ onStart, name, weakest }) {
+function HeroCard({ onStart, name, weakest, targetLevel }) {
   const { d, h, m, s } = useCountdown(EXAM_DAYS)
   const units = [
     { v: d, l: 'kun' },
@@ -248,10 +249,10 @@ function HeroCard({ onStart, name, weakest }) {
         <div className="max-w-md">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/25 backdrop-blur-md">
             <Sparkles className="size-3.5" aria-hidden="true" />
-            Milliy Sertifikat · CEFR B1 / B2 / C1
+            Milliy Sertifikat · Maqsad {targetLevel || 'C1'}
           </span>
           <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            Merhaba, {name || 'Azizbek'}! Bugün C1 sari yana bir qadam.
+            Merhaba, {name || 'Azizbek'}! Bugün {targetLevel || 'C1'} sari yana bir qadam.
           </h1>
           <p className="mt-3 text-pretty text-sm leading-relaxed text-white/80">
             {weakest} bo’yicha natijangiz eng past — bugungi rejada unga 25 daqiqa ajratdik. Har kuni 60 daqiqa sizni maqsadga olib boradi.
@@ -610,8 +611,29 @@ function CertificateCalculator({ initial }) {
 /*                              Daily plan card                               */
 /* -------------------------------------------------------------------------- */
 
-function DailyPlanCard() {
-  const [tasks, setTasks] = useState(INITIAL_TASKS)
+function DailyPlanCard({ addXp }) {
+  const today = new Date().toLocaleDateString('en-CA')
+  const storageKey = `turkish-marathon-dashboard-plan-${today}`
+  const savedPlan = loadJSON(storageKey, {})
+  const [tasks, setTasks] = useState(() => INITIAL_TASKS.map((task) => ({ ...task, done: !!savedPlan.done?.[task.id] })))
+  const [rewarded, setRewarded] = useState(() => savedPlan.rewarded || [])
+
+  useEffect(() => {
+    saveJSON(storageKey, {
+      done: Object.fromEntries(tasks.map((task) => [task.id, task.done])),
+      rewarded,
+    })
+  }, [storageKey, tasks, rewarded])
+
+  function toggleTask(taskId) {
+    const task = tasks.find((item) => item.id === taskId)
+    if (!task) return
+    setTasks((previous) => previous.map((item) => item.id === taskId ? { ...item, done: !item.done } : item))
+    if (!task.done && !rewarded.includes(taskId)) {
+      addXp?.(task.xp)
+      setRewarded((previous) => [...previous, taskId])
+    }
+  }
   const doneCount = tasks.filter((t) => t.done).length
   const maxMin = Math.max(...WEEK.map((w) => w.min))
 
@@ -635,7 +657,7 @@ function DailyPlanCard() {
               type="button"
               role="checkbox"
               aria-checked={t.done}
-              onClick={() => setTasks((prev) => prev.map((p) => (p.id === t.id ? { ...p, done: !p.done } : p)))}
+              onClick={() => toggleTask(t.id)}
               className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition-colors hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-slate-800/50"
             >
               <span
@@ -702,7 +724,7 @@ function DailyPlanCard() {
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, navigate, name }) {
+export default function Dashboard({ scores, navigate, name, targetLevel, addXp }) {
   const total = SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0)
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
@@ -717,7 +739,7 @@ export default function Dashboard({ scores, navigate, name }) {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest.tr} />
+        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest.tr} targetLevel={targetLevel} />
         <ReadinessCard total={total} />
       </div>
 
@@ -733,7 +755,7 @@ export default function Dashboard({ scores, navigate, name }) {
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         <CertificateCalculator initial={initialScores} />
-        <DailyPlanCard />
+        <DailyPlanCard addXp={addXp} />
       </div>
 
       <footer className="pb-2 pt-2 text-center text-xs text-slate-400 dark:text-slate-500">
