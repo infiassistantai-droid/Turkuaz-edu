@@ -1,10 +1,6 @@
-arena/170655ba-turkuaz-edu
 # Türkçe Marathon — Milliy Sertifikat
-=======
-# Turkuaz-edu
-main
 
-Mobile-first, client-only Turkish language practice for the Uzbekistan Milliy Sertifikat exam (B1, B2 and C1). The app is built with React 18, Vite, Tailwind CSS and Lucide React; it requires no API or backend.
+A mobile-first, client-only Turkish language learning dashboard for the Uzbekistan Milliy Sertifikat exam (B1, B2 and C1), built with React, Vite, Tailwind CSS and Lucide React.
 
 ## Run locally
 
@@ -13,18 +9,18 @@ npm install
 npm run dev
 ```
 
-Create a production bundle with `npm run build`, then serve `dist/` from any static hosting provider. The Vite preview can be started with `npm run preview`.
+Build a static production bundle with `npm run build`; deploy the generated `dist/` folder to any static host. No backend is required.
 
-## Included modules
+## Dashboard and learning modules
 
-- First-run learner profile (name, surname and target level), editable from the profile menu.
-- Dashboard, daily study plan, XP and streak tracking.
-- Reading passages with font controls, vocabulary hints and answer feedback.
-- Listening script/audio simulation, writing prompts and rubrics, and timed speaking practice.
-- Turkish vocabulary flashcards with mastery and saved-word tracking.
-- Timed mock exam with saved results and score explanation.
-- Responsive slide-over mobile navigation, dark mode and local service-worker asset caching.
+- Profile onboarding and editable CEFR target.
+- Dashboard with real local XP, activity streak, target progress and skill results (no fabricated leaderboard).
+- Persistent daily plan and skill practice for reading, listening, writing, speaking and vocabulary.
+- Timed mock exam with saved results.
+- Responsive sidebar, dark mode and the optional **Premium View** theme.
+
+Premium View uses a glossy Turkish-red gradient, dark laminated-glass panels, gold highlights and ruby-red hover glows. Toggle it from the sparkle button in the top header; the preference is saved locally.
 
 ## Data and privacy
 
-All learner information stays in this browser. Profile, XP, streak, progress, module scores, vocabulary mastery, mock exam results, settings and daily checklist progress are saved in `localStorage`. Nothing is sent to a server. Use **Maʼlumotlarni tozalash** in the profile menu to remove the app's saved data from this browser.
+Profile, XP, streak, progress, module scores, vocabulary mastery, exam results, theme settings and daily checklist progress are stored in the browser's `localStorage`. Nothing is sent to a server. Use **Maʼlumotlarni tozalash** in the profile menu to clear local app data.

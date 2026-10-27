@@ -23,8 +23,8 @@ import ProfileSetupModal from './components/ProfileSetupModal'
 
 // A small seeded demo baseline keeps the dashboard useful on first launch;
 // all subsequent changes are stored locally with the rest of the learner state.
-const DEFAULT_STATS = { xp: 12480, streak: 23, wordsLearned: 148, levelsCompleted: 9, lastActivityDate: null }
-const DEFAULT_PROGRESS = { okuma: 68, dinleme: 54, yazma: 47, konusma: 39 }
+const DEFAULT_STATS = { xp: 0, streak: 0, wordsLearned: 0, levelsCompleted: 0, lastActivityDate: null }
+const DEFAULT_PROGRESS = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
 
 function localDateKey(date = new Date()) {
   const year = date.getFullYear()
@@ -37,6 +37,42 @@ function previousDateKey(key) {
   const date = new Date(`${key}T12:00:00`)
   date.setDate(date.getDate() - 1)
   return localDateKey(date)
+}
+
+function loadLearnerStats() {
+  const stored = loadJSON(STORAGE_KEY, {})?.stats
+  if (!stored) return DEFAULT_STATS
+
+  // Earlier builds shipped with invented starter totals. Remove that known
+  // demo baseline while preserving earned progress above it.
+  const hasOldDemoBaseline = stored.xp >= 12480 && stored.streak >= 23 &&
+    stored.wordsLearned >= 148 && stored.levelsCompleted >= 9
+  if (!hasOldDemoBaseline) return { ...DEFAULT_STATS, ...stored }
+
+  // Retain activity earned on top of the old sample baseline, not its invented totals.
+  return {
+    ...DEFAULT_STATS,
+    ...stored,
+    xp: Math.max(0, stored.xp - 12480),
+    streak: Math.max(0, stored.streak - 23),
+    wordsLearned: Math.max(0, stored.wordsLearned - 148),
+    levelsCompleted: Math.max(0, stored.levelsCompleted - 9),
+  }
+}
+
+function loadLearnerProgress() {
+  const stored = loadJSON(STORAGE_KEY, {})?.progress
+  if (!stored) return DEFAULT_PROGRESS
+  const hasOldDemoBaseline = stored.okuma >= 68 && stored.dinleme >= 54 &&
+    stored.yazma >= 47 && stored.konusma >= 39
+  if (!hasOldDemoBaseline) return { ...DEFAULT_PROGRESS, ...stored }
+  return {
+    ...DEFAULT_PROGRESS,
+    okuma: Math.max(0, stored.okuma - 68),
+    dinleme: Math.max(0, stored.dinleme - 54),
+    yazma: Math.max(0, stored.yazma - 47),
+    konusma: Math.max(0, stored.konusma - 39),
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -83,21 +119,23 @@ export default function App() {
   // Lazy initial state — hydrated straight from localStorage (SSR-safe via try/catch).
   const [active, setActive] = useState('home')
   const [dark, setDark] = useState(() => !!loadJSON(STORAGE_KEY, {})?.dark)
+  const [premium, setPremium] = useState(() => loadJSON(STORAGE_KEY, {})?.premium ?? true)
   const [toasts, setToasts] = useState([])
   const [profile, setProfile] = useState(() => loadProfile())
   const [editingProfile, setEditingProfile] = useState(false)
-  const [stats, setStats] = useState(() => loadJSON(STORAGE_KEY, {})?.stats || DEFAULT_STATS)
-  const [progress, setProgress] = useState(() => loadJSON(STORAGE_KEY, {})?.progress || DEFAULT_PROGRESS)
+  const [stats, setStats] = useState(loadLearnerStats)
+  const [progress, setProgress] = useState(loadLearnerProgress)
   const [examResult, setExamResult] = useState(() => loadJSON(STORAGE_KEY, {})?.examResult || null)
 
-  // Theme class + full state persistence (streak, XP, progress, exam results)
+  // Theme classes and full local persistence for learner progress/settings.
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
-  }, [dark])
+    document.documentElement.classList.toggle('premium-theme', premium)
+  }, [dark, premium])
 
   useEffect(() => {
-    saveJSON(STORAGE_KEY, { stats, progress, examResult, dark })
-  }, [stats, progress, examResult, dark])
+    saveJSON(STORAGE_KEY, { stats, progress, examResult, dark, premium })
+  }, [stats, progress, examResult, dark, premium])
 
   // Profile persistence — stays logged in across refreshes
   useEffect(() => {
@@ -195,6 +233,7 @@ export default function App() {
     setProgress(DEFAULT_PROGRESS)
     setExamResult(null)
     setDark(false)
+    setPremium(true)
     showToast('Barcha maʼlumotlar tozalandi 🧹', 'save')
   }
 
@@ -209,7 +248,7 @@ export default function App() {
   const renderView = () => {
     switch (active) {
       case 'home':
-        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} addXp={addXp} />
+        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} />
       case 'plan':
         return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} />
       case 'okuma':
@@ -236,7 +275,7 @@ export default function App() {
           />
         )
       default:
-        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} addXp={addXp} />
+        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} />
     }
   }
 
@@ -247,6 +286,8 @@ export default function App() {
         onNavigate={navigate}
         dark={dark}
         onToggleDark={() => setDark((d) => !d)}
+        premium={premium}
+        onTogglePremium={() => setPremium((value) => !value)}
         streak={stats.streak}
         xp={stats.xp}
         targetPct={targetPct}
