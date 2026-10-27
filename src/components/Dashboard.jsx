@@ -5,14 +5,15 @@ import {
   CalendarCheck,
   Check,
   Headphones,
+  Flame,
   Mic,
   PenLine,
   RotateCcw,
   Sparkles,
-  Timer,
   Target,
   TrendingUp,
   Trophy,
+  Zap,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { loadJSON, saveJSON } from '../lib/storage'
@@ -27,8 +28,7 @@ const SKILLS = [
     tr: 'Okuma',
     uz: 'O’qib tushunish',
     icon: BookOpenText,
-    score: 22,
-    delta: '+3',
+    score: 0,
     next: '5-matn: Kapadokya tarixi',
     action: 'Matnni davom ettirish',
   },
@@ -37,8 +37,7 @@ const SKILLS = [
     tr: 'Dinleme',
     uz: 'Tinglab tushunish',
     icon: Headphones,
-    score: 20,
-    delta: '+2',
+    score: 0,
     next: 'Audio 3: Radyo röportajı',
     action: 'Audioni tinglash',
   },
@@ -47,8 +46,7 @@ const SKILLS = [
     tr: 'Yazma',
     uz: 'Yozma ish',
     icon: PenLine,
-    score: 16,
-    delta: '+1',
+    score: 0,
     next: 'Insho: “Teknoloji ve eğitim”',
     action: 'Insho yozish',
   },
@@ -57,8 +55,7 @@ const SKILLS = [
     tr: 'Konuşma',
     uz: 'Gapirish',
     icon: Mic,
-    score: 18,
-    delta: '+4',
+    score: 0,
     next: '2-qism: Rasmni tasvirlash',
     action: 'Ovoz yozish',
   },
@@ -71,23 +68,35 @@ const INITIAL_TASKS = [
   { id: 't4', title: 'Konuşma: 3 ta savol', meta: 'Gapirish · 12 daq', xp: 70, done: false },
 ]
 
-const WEEK = [
-  { day: 'Du', min: 42 },
-  { day: 'Se', min: 65 },
-  { day: 'Ch', min: 38 },
-  { day: 'Pa', min: 80 },
-  { day: 'Ju', min: 55 },
-  { day: 'Sh', min: 90 },
-  { day: 'Ya', min: 24, today: true },
-]
+const WEEKDAY_LABELS = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh']
+const WEEK = (() => {
+  const today = new Date()
+  const mondayOffset = (today.getDay() + 6) % 7
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today)
+    date.setDate(today.getDate() - mondayOffset + index)
+    return {
+      day: WEEKDAY_LABELS[date.getDay()],
+      min: 0, // No fabricated study time: populate only when real duration tracking exists.
+      today: date.toDateString() === today.toDateString(),
+    }
+  })
+})()
 
-const EXAM_DAYS = 18
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
 
 function masteryTone(score) {
+  if (score <= 0)
+    return {
+      label: 'Boshlangʻich',
+      stroke: 'stroke-slate-300 dark:stroke-slate-600',
+      bar: 'from-slate-400 to-slate-300',
+      text: 'text-slate-500 dark:text-slate-400',
+      chip: 'bg-slate-100 text-slate-600 ring-1 ring-slate-300/40 dark:bg-white/5 dark:text-slate-300 dark:ring-white/10',
+    }
   if (score >= 24)
     return {
       label: 'A’lo',
@@ -160,26 +169,6 @@ function useMounted() {
   return mounted
 }
 
-function useCountdown(days) {
-  const [remaining, setRemaining] = useState(null)
-  useEffect(() => {
-    const startOfToday = new Date()
-    startOfToday.setHours(0, 0, 0, 0)
-    const target = startOfToday.getTime() + (days + 1) * 86400000
-    const tick = () => setRemaining(Math.max(0, target - Date.now()))
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [days])
-
-  if (remaining === null) return { d: days, h: 0, m: 0, s: 0 }
-  return {
-    d: Math.floor(remaining / 86400000),
-    h: Math.floor((remaining / 3600000) % 24),
-    m: Math.floor((remaining / 60000) % 60),
-    s: Math.floor((remaining / 1000) % 60),
-  }
-}
 
 /* -------------------------------------------------------------------------- */
 /*                               Shared primitives                            */
@@ -189,7 +178,7 @@ function Card({ className, children, ...props }) {
   return (
     <section
       className={cn(
-        'rounded-3xl border border-slate-200/80 bg-white/80 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
+        'glass premium-glass rounded-[22px] border border-slate-200/80 bg-white/80 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
         className,
       )}
       {...props}
@@ -220,22 +209,17 @@ function CardHeader({ icon: Icon, title, subtitle, right }) {
 /*                                  Hero card                                 */
 /* -------------------------------------------------------------------------- */
 
-function HeroCard({ onStart, name, weakest, targetLevel }) {
-  const { d, h, m, s } = useCountdown(EXAM_DAYS)
-  const units = [
-    { v: d, l: 'kun' },
-    { v: h, l: 'soat' },
-    { v: m, l: 'daq' },
-    { v: s, l: 'son' },
-  ]
+function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
+  const target = targetLevel || 'C1'
+  const threshold = target === 'B1' ? 50 : target === 'B2' ? 65 : 80
+  const pct = Math.min(100, Math.round((totalScore / threshold) * 100))
 
   return (
-    <section className="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl shadow-teal-900/15 sm:p-8 lg:col-span-2">
-      <div className="pointer-events-none absolute -right-16 -top-24 -z-10 size-72 rounded-full bg-cyan-300/40 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-28 left-1/3 -z-10 size-72 rounded-full bg-rose-500/30 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 size-48 rounded-full bg-emerald-400/25 blur-3xl" aria-hidden="true" />
+    <section className="premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl shadow-teal-900/15 sm:p-8 lg:col-span-2">
+      <div className="pointer-events-none absolute -right-16 -top-24 -z-10 size-72 rounded-full bg-cyan-300/20 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -bottom-28 left-1/3 -z-10 size-72 rounded-full bg-rose-500/20 blur-3xl" aria-hidden="true" />
       <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18]"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12]"
         style={{
           backgroundImage: 'radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)',
           backgroundSize: '18px 18px',
@@ -245,46 +229,40 @@ function HeroCard({ onStart, name, weakest, targetLevel }) {
         aria-hidden="true"
       />
 
-      <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+      <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div className="max-w-md">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/25 backdrop-blur-md">
             <Sparkles className="size-3.5" aria-hidden="true" />
-            Milliy Sertifikat · Maqsad {targetLevel || 'C1'}
+            Milliy Sertifikat · Maqsad {target}
           </span>
           <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            Merhaba, {name || 'Azizbek'}! Bugün {targetLevel || 'C1'} sari yana bir qadam.
+            Merhaba, {name || 'Oʻrganuvchi'}! Bugün {target} sari yana bir qadam.
           </h1>
           <p className="mt-3 text-pretty text-sm leading-relaxed text-white/80">
-            {weakest} bo’yicha natijangiz eng past — bugungi rejada unga 25 daqiqa ajratdik. Har kuni 60 daqiqa sizni maqsadga olib boradi.
+            {weakest
+              ? `${weakest} boʻyicha natijangizni mustahkamlang — tavsiya etilgan mashqni davom ettiring.`
+              : 'Hozircha baholangan natija yoʻq. Birinchi mashqni bajaring — rivojlanishingiz shu yerda koʻrinadi.'}
           </p>
           <button
             type="button"
             onClick={onStart}
-            className="group mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-teal-800 shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
+            className="gold-button premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-red-950/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
           >
-            {'Bugungi mashg’ulotni boshlash'}
+            Bugungi mashgʻulotni boshlash
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/20 backdrop-blur-md">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-white/80">
-            <Timer className="size-3.5" aria-hidden="true" />
-            Imtihongacha: <span className="font-semibold text-white">{d} kun</span>
-            <span className="relative ml-1 flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-rose-400 opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
-            </span>
-          </p>
-          <div className="mt-3 flex gap-2" role="timer" aria-label={`Imtihongacha ${d} kun ${h} soat ${m} daqiqa`}>
-            {units.map((u) => (
-              <div key={u.l} className="w-14 rounded-xl bg-slate-950/20 py-2 text-center ring-1 ring-white/10">
-                <div className="text-xl font-semibold tabular-nums tracking-tight">{String(u.v).padStart(2, '0')}</div>
-                <div className="text-[10px] uppercase tracking-wider text-white/60">{u.l}</div>
-              </div>
-            ))}
+        <div className="w-full max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-xl">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/65">Maqsad sari</p>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <span className="text-3xl font-semibold tracking-tight text-yellow-300">{target}</span>
+            <span className="text-right text-sm font-medium tabular-nums text-white/85">{totalScore} <span className="text-white/55">/ {threshold}</span></span>
           </div>
-          <p className="mt-3 text-[11px] text-white/60">13-noyabr · Toshkent test markazi</p>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
+            <div className="h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 transition-[width] duration-700" style={{ width: `${pct}%` }} />
+          </div>
+          <p className="mt-2 text-[11px] text-white/65">Joriy baholangan natija</p>
         </div>
       </div>
     </section>
@@ -295,11 +273,13 @@ function HeroCard({ onStart, name, weakest, targetLevel }) {
 /*                               Target / summary                             */
 /* -------------------------------------------------------------------------- */
 
-function ReadinessCard({ total }) {
+function ReadinessCard({ total, targetLevel }) {
   const mounted = useMounted()
   const pct = Math.round((total / 120) * 100)
   const cert = getCertificate(total)
-  const toC1 = Math.max(0, 80 - total)
+  const target = targetLevel || 'C1'
+  const threshold = target === 'B1' ? 50 : target === 'B2' ? 65 : 80
+  const remaining = Math.max(0, threshold - total)
 
   return (
     <Card className="flex flex-col p-6">
@@ -309,7 +289,7 @@ function ReadinessCard({ total }) {
         subtitle="4 bo’lim bo’yicha natija"
         right={
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20">
-            <TrendingUp className="size-3" aria-hidden="true" /> +10
+            <TrendingUp className="size-3" aria-hidden="true" /> Maqsad: {target}
           </span>
         }
       />
@@ -355,12 +335,12 @@ function ReadinessCard({ total }) {
             <Target className="size-4" aria-hidden="true" />
           </span>
           <p className="text-xs leading-relaxed text-rose-900 dark:text-rose-200">
-            {toC1 > 0 ? (
+            {remaining > 0 ? (
               <>
-                C1 uchun yana <span className="font-semibold">{toC1} ball</span> kerak. Yazma va Konuşmaga e’tibor bering.
+                {target} uchun yana <span className="font-semibold">{remaining} ball</span> kerak. Muntazam mashq qilishda davom eting.
               </>
             ) : (
-              <>C1 darajasiga yetdingiz — natijani mustahkamlang!</>
+              <>{target} maqsadiga yetdingiz — natijani mustahkamlang!</>
             )}
           </p>
         </div>
@@ -424,7 +404,7 @@ function SkillCard({ skill, onOpen }) {
           </div>
           <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
             <TrendingUp className="size-3" aria-hidden="true" />
-            {skill.delta} bu hafta
+            {skill.score > 0 ? 'Baholangan natija' : 'Hali baholanmagan'}
           </p>
         </div>
         <div className="relative">
@@ -635,7 +615,7 @@ function DailyPlanCard({ addXp }) {
     }
   }
   const doneCount = tasks.filter((t) => t.done).length
-  const maxMin = Math.max(...WEEK.map((w) => w.min))
+  const maxMin = Math.max(1, ...WEEK.map((w) => w.min))
 
   return (
     <Card className="flex flex-col p-6">
@@ -691,7 +671,7 @@ function DailyPlanCard({ addXp }) {
         <div className="mb-3 flex items-center justify-between text-xs">
           <span className="font-medium text-slate-700 dark:text-slate-200">Haftalik faollik</span>
           <span className="tabular-nums text-slate-500 dark:text-slate-400">
-            {WEEK.reduce((a, w) => a + w.min, 0)} daqiqa
+{WEEK.reduce((a, w) => a + w.min, 0)} daqiqa
           </span>
         </div>
         <div className="flex items-end gap-2">
@@ -705,8 +685,8 @@ function DailyPlanCard({ addXp }) {
                       ? 'bg-gradient-to-t from-rose-500 to-rose-400'
                       : 'bg-gradient-to-t from-teal-600/80 to-cyan-400/80',
                   )}
-                  style={{ height: `${(w.min / maxMin) * 100}%` }}
-                  title={`${w.min} daqiqa`}
+                  style={{ height: `${w.min === 0 ? 3 : (w.min / maxMin) * 100}%`, opacity: w.min === 0 ? 0.35 : 1 }}
+                  title={w.min === 0 ? 'Faollik qayd etilmagan' : `${w.min} daqiqa`}
                 />
               </div>
               <span className={cn('text-[10px] font-medium', w.today ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500')}>
@@ -724,23 +704,43 @@ function DailyPlanCard({ addXp }) {
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, navigate, name, targetLevel, addXp }) {
+export default function Dashboard({ scores, navigate, name, targetLevel, stats, addXp }) {
   const total = SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0)
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
     [scores],
   )
   // Weakest skill right now — the hero highlights it
-  const weakest = useMemo(
+  const weakestSkill = useMemo(
     () => SKILLS.reduce((a, s) => (scores?.[s.id] ?? s.score) < (scores?.[a.id] ?? a.score) ? s : a),
     [scores],
   )
+  const weakest = total > 0 ? weakestSkill.tr : null
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        {[
+          { label: 'Jami XP', value: (stats?.xp ?? 0).toLocaleString('en-US'), icon: Zap, hint: 'Oʻqish davomida' },
+          { label: 'Kunlik streak', value: `${stats?.streak ?? 0} kun`, icon: Flame, hint: 'Ketma-ket faollik' },
+          { label: 'Maqsad darajasi', value: targetLevel || 'C1', icon: Target, hint: 'Siz tanlagan CEFR' },
+          { label: 'Bosqichlar', value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: 'Yakunlangan mashqlar' },
+        ].map(({ label, value, icon: Icon, hint }) => (
+          <Card key={label} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-amber-300/20 bg-amber-300/10 text-amber-300 shadow-inner shadow-white/10">
+              <Icon className="size-5" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
+              <p className="truncate text-xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-2xl">{value}</p>
+              <p className="hidden truncate text-[11px] text-slate-400 sm:block">{hint}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest.tr} targetLevel={targetLevel} />
-        <ReadinessCard total={total} />
+        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest} targetLevel={targetLevel} totalScore={total} />
+        <ReadinessCard total={total} targetLevel={targetLevel} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
