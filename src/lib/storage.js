@@ -107,4 +107,13 @@ export function clearAllStorage() {
       // ignore
     }
   })
+  // Daily checklists are date-scoped so yesterday's history remains available
+  // during normal use, but a full reset should remove every checklist record.
+  try {
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith('turkish-marathon-daily-plan-') || key.startsWith('turkish-marathon-dashboard-plan-'))
+      .forEach((key) => localStorage.removeItem(key))
+  } catch {
+    // ignore unavailable storage
+  }
 }

@@ -21,8 +21,23 @@ import VocabularyFlashcards from './components/VocabularyFlashcards'
 import MockExam from './components/MockExam'
 import ProfileSetupModal from './components/ProfileSetupModal'
 
-const DEFAULT_STATS = { xp: 12480, streak: 23, wordsLearned: 148, levelsCompleted: 9 }
+// A small seeded demo baseline keeps the dashboard useful on first launch;
+// all subsequent changes are stored locally with the rest of the learner state.
+const DEFAULT_STATS = { xp: 12480, streak: 23, wordsLearned: 148, levelsCompleted: 9, lastActivityDate: null }
 const DEFAULT_PROGRESS = { okuma: 68, dinleme: 54, yazma: 47, konusma: 39 }
+
+function localDateKey(date = new Date()) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function previousDateKey(key) {
+  const date = new Date(`${key}T12:00:00`)
+  date.setDate(date.getDate() - 1)
+  return localDateKey(date)
+}
 
 // ----------------------------------------------------------------------
 // Typed toast system — top-right corner
@@ -97,9 +112,33 @@ export default function App() {
     }, 3000)
   }, [])
 
+  // Show platform-specific install steps because native install prompts are
+  // not exposed consistently across browsers and embedded previews.
+  const handleInstallApp = useCallback(() => {
+    const userAgent = window.navigator.userAgent || ''
+    const isIOS = /iPhone|iPad|iPod/i.test(userAgent) ||
+      (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1)
+
+    if (isIOS) {
+      window.alert('iPhone yoki iPad’da ilovani oʻrnatish uchun Safari Share (Ulashish) tugmasini bosing, soʻng “Add to Home Screen” (“Bosh ekranga qoʻshish”)ni tanlang.')
+      return
+    }
+
+    window.alert('Android yoki kompyuterda Chrome’ning uch nuqta (⋮) menyusini bosing, soʻng “Install app” yoki “Add to home screen”ni tanlang.')
+  }, [])
+
   const addXp = useCallback(
     (amount) => {
-      setStats((s) => ({ ...s, xp: s.xp + amount }))
+      const today = localDateKey()
+      setStats((s) => {
+        if (s.lastActivityDate === today) return { ...s, xp: s.xp + amount }
+        const streak = !s.lastActivityDate
+          ? s.streak
+          : s.lastActivityDate === previousDateKey(today)
+            ? s.streak + 1
+            : 1
+        return { ...s, xp: s.xp + amount, streak, lastActivityDate: today }
+      })
       showToast(`+${amount} XP qoʻshildi! 🎉`, 'xp')
     },
     [showToast],
@@ -137,7 +176,8 @@ export default function App() {
     [progress],
   )
   const totalScore = scores.okuma + scores.dinleme + scores.yazma + scores.konusma
-  const targetPct = Math.round((totalScore / 80) * 100) // progress toward C1
+  const targetScore = profile?.targetLevel === 'B1' ? 50 : profile?.targetLevel === 'B2' ? 65 : 80
+  const targetPct = Math.min(100, Math.round((totalScore / targetScore) * 100))
 
   // ------------------------------ auth flow ------------------------------
 
@@ -169,9 +209,9 @@ export default function App() {
   const renderView = () => {
     switch (active) {
       case 'home':
-        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} />
+        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} addXp={addXp} />
       case 'plan':
-        return <KunlikReja stats={stats} progress={progress} navigate={navigate} />
+        return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} />
       case 'okuma':
         return <OkumaModule completeLevel={() => completeLevel('okuma')} />
       case 'dinleme':
@@ -189,16 +229,14 @@ export default function App() {
             onResult={(r) => {
               setExamResult(r)
               showToast(`Imtihoni yakunlandi — ${r.score} ball, ${r.level} darajasi! 🎓`, 'success')
-              if (r.score >= 60) {
-                setStats((s) => ({ ...s, streak: s.streak + 1 }))
-              }
+              if (r.score >= 60) addXp(100)
             }}
             onRestart={() => setExamResult(null)}
             onFinish={() => navigate('home')}
           />
         )
       default:
-        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} />
+        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} addXp={addXp} />
     }
   }
 
@@ -216,6 +254,7 @@ export default function App() {
         onEditProfile={() => setEditingProfile(true)}
         onClearData={handleClearData}
         onLogout={handleLogout}
+        onInstallApp={handleInstallApp}
       >
         {/* View transition — fade + slide on every sidebar tab switch */}
         <div key={active} className="animate-view">

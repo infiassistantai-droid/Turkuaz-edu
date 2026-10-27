@@ -6,6 +6,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ClipboardCheck,
+  Download,
   Flame,
   GraduationCap,
   Headphones,
@@ -59,7 +60,7 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile }) {
+function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp }) {
   return (
     <>
       <div
@@ -167,6 +168,19 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
         </nav>
 
         <div className="shrink-0 border-t border-slate-200/80 p-3 dark:border-slate-800/80">
+          <button
+            type="button"
+            onClick={onInstallApp}
+            title={collapsed ? "Ilovani O'rnatish" : undefined}
+            aria-label="Ilovani O'rnatish"
+            className={cn(
+              'mb-3 flex w-full items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-3 py-2.5 text-sm font-semibold text-white shadow-md shadow-teal-700/15 transition hover:from-teal-700 hover:to-cyan-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2 active:scale-[0.98] dark:focus-visible:ring-offset-slate-950',
+              collapsed && 'lg:justify-center lg:px-0',
+            )}
+          >
+            <Download className="size-4 shrink-0" aria-hidden="true" />
+            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>Ilovani O&apos;rnatish</span>
+          </button>
           <div
             role="button"
             tabIndex={0}
@@ -331,7 +345,7 @@ function Header({ breadcrumb, dark, onToggleDark, onOpenMobile, streak, xp, prof
 /*                                   App shell                                */
 /* -------------------------------------------------------------------------- */
 
-export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, streak, xp, targetPct, profile, onEditProfile, onClearData, onLogout, children }) {
+export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, streak, xp, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -366,6 +380,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           targetPct={targetPct}
           profile={profile}
           onOpenProfile={() => setProfileOpen(true)}
+          onInstallApp={onInstallApp}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">
