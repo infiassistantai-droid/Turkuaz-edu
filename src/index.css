@@ -124,226 +124,233 @@ html {
   animation: pulseRing 1s ease-in-out infinite;
 }
 
+/* Default is the existing clean Turkuaz teal/slate theme; Premium is opt-in. */
+html.theme-default body { background-image: none; }
+
 /* -------------------------------------------------------------------------- */
 /* Premium View — glossy Turkish ruby red with dark laminated glass and gold  */
 /* -------------------------------------------------------------------------- */
 html.premium-theme,
+html.theme-premium,
 html.premium-theme body,
-html.premium-theme #root {
+html.theme-premium body,
+html:is(.premium-theme, .theme-premium) #root,
+html.theme-premium #root {
   min-height: 100%;
-  background-color: #8a0000;
+  background-color: #4a0000;
 }
 
-html.premium-theme body {
+html.premium-theme body,
+html.theme-premium body {
   background-image:
     radial-gradient(ellipse at 12% 8%, rgba(250, 204, 21, 0.16), transparent 28%),
     radial-gradient(ellipse at 88% 84%, rgba(250, 204, 21, 0.1), transparent 30%),
-    linear-gradient(135deg, #8a0000 0%, #E30A17 48%, #4a0000 100%);
+    linear-gradient(135deg, #4a0000 0%, #E30A17 50%, #8a0000 100%);
   background-attachment: fixed;
 }
 
-.premium-theme #root > div.min-h-screen {
+:is(.premium-theme, .theme-premium) #root > div.min-h-screen {
   color: #fff !important;
   background-color: #E30A17 !important;
   background-image:
     radial-gradient(ellipse at 8% 6%, rgba(250, 204, 21, 0.14), transparent 26%),
     radial-gradient(ellipse at 92% 94%, rgba(250, 204, 21, 0.09), transparent 28%),
-    linear-gradient(135deg, #8a0000 0%, #E30A17 48%, #4a0000 100%) !important;
+    linear-gradient(135deg, #4a0000 0%, #E30A17 50%, #8a0000 100%) !important;
   background-attachment: fixed !important;
 }
 
-.premium-theme #root > div > .pointer-events-none.fixed {
+:is(.premium-theme, .theme-premium) #root > div > .pointer-events-none.fixed {
   opacity: 0.72 !important;
 }
 
 /* The signature dark-tinted laminated glass treatment. */
-.premium-theme #root .glass,
-.premium-theme #root .premium-glass,
-.premium-theme #root aside,
-.premium-theme #root header,
-.premium-theme #root [class*="rounded-3xl"][class*="bg-white"],
-.premium-theme #root [class*="rounded-2xl"][class*="bg-white"],
-.premium-theme #root [class*="rounded-xl"][class*="bg-white"],
-.premium-theme #root [class*="rounded-3xl"][class*="bg-slate-50"],
-.premium-theme #root [class*="rounded-2xl"][class*="bg-slate-50"],
-.premium-theme #root [class*="rounded-xl"][class*="bg-slate-50"],
-.premium-theme #root [class*="rounded-2xl"][class*="bg-slate-800/"],
-.premium-theme #root [class*="rounded-xl"][class*="bg-slate-800/"] {
+:is(.premium-theme, .theme-premium) #root .glass,
+:is(.premium-theme, .theme-premium) #root .premium-glass,
+:is(.premium-theme, .theme-premium) #root aside,
+:is(.premium-theme, .theme-premium) #root header,
+:is(.premium-theme, .theme-premium) #root [class*="rounded-3xl"][class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-2xl"][class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-xl"][class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-3xl"][class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-2xl"][class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-xl"][class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-2xl"][class*="bg-slate-800/"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-xl"][class*="bg-slate-800/"] {
   color: #fff !important;
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(234, 179, 8, 0.4) !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(234, 179, 8, 0.35) !important;
   border-radius: 1rem !important;
   -webkit-backdrop-filter: blur(40px) saturate(155%);
   backdrop-filter: blur(40px) saturate(155%);
-  box-shadow: 0 8px 32px 0 rgba(220, 38, 38, 0.5), inset 0 1px rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.12) !important;
 }
 
-.premium-theme #root aside {
+:is(.premium-theme, .theme-premium) #root aside {
   border-radius: 26px !important;
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
   border-color: rgba(234, 179, 8, 0.4) !important;
 }
 
-.premium-theme #root header {
+:is(.premium-theme, .theme-premium) #root header {
   border-radius: 20px !important;
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
   border-color: rgba(234, 179, 8, 0.34) !important;
 }
 
-.premium-theme #root [class*="from-teal-"][class*="to-cyan-"] {
+:is(.premium-theme, .theme-premium) #root [class*="from-teal-"][class*="to-cyan-"] {
   background-image: linear-gradient(to right, #eab308 0%, #d97706 100%) !important;
 }
 
-.premium-theme #root .premium-hero {
+:is(.premium-theme, .theme-premium) #root .premium-hero {
   background-color: #E30A17 !important;
   background-image:
     radial-gradient(circle at 82% 20%, rgba(250, 204, 21, 0.18), transparent 25%),
-    linear-gradient(135deg, #8a0000 0%, #E30A17 48%, #4a0000 100%) !important;
+    linear-gradient(135deg, #4a0000 0%, #E30A17 50%, #8a0000 100%) !important;
   border: 1px solid rgba(250, 204, 21, 0.46) !important;
   box-shadow: 0 12px 42px rgba(220, 38, 38, 0.5), inset 0 1px rgba(255, 255, 255, 0.24) !important;
 }
 
-.premium-theme #root .premium-stat {
+:is(.premium-theme, .theme-premium) #root .premium-stat {
   background-color: rgba(0, 0, 0, 0.32) !important;
   border-color: rgba(234, 179, 8, 0.42) !important;
   box-shadow: 0 8px 32px rgba(220, 38, 38, 0.48), inset 0 1px rgba(255, 255, 255, 0.14) !important;
 }
 
 /* Keep legacy light utility backgrounds from bleaching the glass palette. */
-.premium-theme #root [class*="bg-white"],
-.premium-theme #root [class*="bg-slate-50"],
-.premium-theme #root [class*="bg-slate-100"],
-.premium-theme #root [class*="bg-slate-200"],
-.premium-theme #root [class*="bg-turk-"] {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+:is(.premium-theme, .theme-premium) #root [class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-slate-100"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-slate-200"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-turk-"] {
+  background-color: rgba(0, 0, 0, 0.35) !important;
 }
 
 /* Never leave low-contrast slate text on a light surface in Premium View. */
-.premium-theme #root [class*="text-slate-"],
-.premium-theme #root [class*="text-turk-"],
-.premium-theme #root [class*="text-teal-"],
-.premium-theme #root [class*="text-cyan-"],
-.premium-theme #root [class*="text-emerald-"],
-.premium-theme #root [class*="text-rose-"],
-.premium-theme #root [class*="text-red-"],
-.premium-theme #root [class*="text-orange-"],
-.premium-theme #root [class*="text-amber-"] {
+:is(.premium-theme, .theme-premium) #root [class*="text-slate-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-turk-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-emerald-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-rose-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-red-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-orange-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-amber-"] {
   color: #fff !important;
 }
 
-.premium-theme #root [class*="text-teal-"],
-.premium-theme #root [class*="text-turk-"],
-.premium-theme #root [class*="text-cyan-"],
-.premium-theme #root [class*="text-amber-"],
-.premium-theme #root [class*="text-orange-700"],
-.premium-theme #root [class*="text-yellow-"] {
+:is(.premium-theme, .theme-premium) #root [class*="text-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-turk-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-amber-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-orange-700"],
+:is(.premium-theme, .theme-premium) #root [class*="text-yellow-"] {
   color: #facc15 !important;
 }
 
-.premium-theme #root [class*="text-white/"] {
+:is(.premium-theme, .theme-premium) #root [class*="text-white/"] {
   color: rgba(255, 255, 255, 0.94) !important;
 }
 
-.premium-theme #root [class*="border-slate-"],
-.premium-theme #root [class*="border-teal-"],
-.premium-theme #root [class*="border-cyan-"],
-.premium-theme #root [class*="border-rose-"] {
+:is(.premium-theme, .theme-premium) #root [class*="border-slate-"],
+:is(.premium-theme, .theme-premium) #root [class*="border-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="border-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="border-rose-"] {
   border-color: rgba(234, 179, 8, 0.38) !important;
 }
 
 /* Gold is the Premium icon/accent color, including lucide outline icons. */
-.premium-theme #root svg {
+:is(.premium-theme, .theme-premium) #root svg {
   color: #facc15 !important;
 }
 
-.premium-theme #root [class*="fill-teal-"],
-.premium-theme #root [class*="fill-cyan-"],
-.premium-theme #root [class*="fill-orange-"],
-.premium-theme #root [class*="fill-amber-"] {
+:is(.premium-theme, .theme-premium) #root [class*="fill-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="fill-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="fill-orange-"],
+:is(.premium-theme, .theme-premium) #root [class*="fill-amber-"] {
   fill: #facc15 !important;
 }
 
-.premium-theme #root [class*="stroke-teal-"],
-.premium-theme #root [class*="stroke-cyan-"] {
+:is(.premium-theme, .theme-premium) #root [class*="stroke-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="stroke-cyan-"] {
   stroke: #facc15 !important;
 }
 
 /* Gold/red chips stay dark enough to preserve text contrast. */
-.premium-theme #root [class*="bg-orange-50"],
-.premium-theme #root [class*="bg-amber-50"],
-.premium-theme #root [class*="bg-yellow-50"],
-.premium-theme #root [class*="bg-teal-50"],
-.premium-theme #root [class*="bg-cyan-50"],
-.premium-theme #root [class*="bg-emerald-50"] {
+:is(.premium-theme, .theme-premium) #root [class*="bg-orange-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-amber-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-yellow-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-teal-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-cyan-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-emerald-50"] {
   color: #facc15 !important;
   border-color: rgba(234, 179, 8, 0.35) !important;
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
 }
 
-.premium-theme #root [class*="bg-rose-50"],
-.premium-theme #root [class*="bg-red-50"],
-.premium-theme #root [class*="bg-rose-100"],
-.premium-theme #root [class*="bg-red-100"] {
+:is(.premium-theme, .theme-premium) #root [class*="bg-rose-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-red-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-rose-100"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-red-100"] {
   color: #fff !important;
   background-color: rgba(70, 0, 0, 0.45) !important;
   border-color: rgba(234, 179, 8, 0.35) !important;
 }
 
 /* Gold action controls; secondary controls retain a dark glass face. */
-.premium-theme #root button[class*="from-teal-"],
-.premium-theme #root button[class*="from-rose-"],
-.premium-theme #root button[class*="bg-gradient-to-r"] {
+:is(.premium-theme, .theme-premium) #root button[class*="from-teal-"],
+:is(.premium-theme, .theme-premium) #root button[class*="from-rose-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-gradient-to-r"] {
   color: #451a03 !important;
   border: 1px solid rgba(253, 230, 138, 0.78) !important;
   background-image: linear-gradient(to right, #eab308 0%, #d97706 100%) !important;
   box-shadow: 0 8px 24px rgba(220, 38, 38, 0.48), inset 0 1px rgba(255, 255, 255, 0.48) !important;
 }
 
-.premium-theme #root button {
+:is(.premium-theme, .theme-premium) #root button {
   border-color: rgba(234, 179, 8, 0.42);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.14);
 }
 
-.premium-theme #root button:hover {
+:is(.premium-theme, .theme-premium) #root button:hover {
   filter: brightness(1.08);
   box-shadow: 0 10px 28px rgba(220, 38, 38, 0.55), inset 0 1px rgba(255, 255, 255, 0.26) !important;
 }
 
-.premium-theme #root button[aria-current="page"] {
+:is(.premium-theme, .theme-premium) #root button[aria-current="page"] {
   color: #451a03 !important;
   background-image: linear-gradient(to right, #eab308, #d97706) !important;
 }
 
-.premium-theme #root button[class*="bg-gradient-to-r"] svg,
-.premium-theme #root button[aria-current="page"] svg {
+:is(.premium-theme, .theme-premium) #root button[class*="bg-gradient-to-r"] svg,
+:is(.premium-theme, .theme-premium) #root button[aria-current="page"] svg {
   color: #7f1d1d !important;
   filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.45));
 }
 
-.premium-theme #root input,
-.premium-theme #root textarea,
-.premium-theme #root select,
-.premium-theme #root kbd {
+:is(.premium-theme, .theme-premium) #root input,
+:is(.premium-theme, .theme-premium) #root textarea,
+:is(.premium-theme, .theme-premium) #root select,
+:is(.premium-theme, .theme-premium) #root kbd {
   color: #fff !important;
   border-color: rgba(234, 179, 8, 0.42) !important;
   background-color: rgba(0, 0, 0, 0.38) !important;
 }
 
-.premium-theme #root input::placeholder,
-.premium-theme #root textarea::placeholder {
+:is(.premium-theme, .theme-premium) #root input::placeholder,
+:is(.premium-theme, .theme-premium) #root textarea::placeholder {
   color: rgba(255, 255, 255, 0.72) !important;
 }
 
-.premium-theme #root ::selection {
+:is(.premium-theme, .theme-premium) #root ::selection {
   color: #451a03;
   background: #facc15;
 }
 
-.premium-theme #root ::-webkit-scrollbar-thumb {
+:is(.premium-theme, .theme-premium) #root ::-webkit-scrollbar-thumb {
   background: rgba(250, 204, 21, 0.42);
 }
 
-.premium-theme #root main .premium-hero::after {
+:is(.premium-theme, .theme-premium) #root main .premium-hero::after {
   content: '';
   position: absolute;
   right: -2.5rem;
@@ -358,53 +365,53 @@ html.premium-theme body {
 }
 
 /* Visual-only utility classes adapted from the attached ruby-and-gold mockup. */
-.premium-theme #root .glass {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(250, 204, 21, 0.24) !important;
+:is(.premium-theme, .theme-premium) #root .glass {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(234, 179, 8, 0.35) !important;
   -webkit-backdrop-filter: blur(40px) saturate(145%);
   backdrop-filter: blur(40px) saturate(145%);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24), inset 0 1px rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.08) !important;
 }
 
-.premium-theme #root .nav-glow {
+:is(.premium-theme, .theme-premium) #root .nav-glow {
   border: 1px solid transparent;
   transition: color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.premium-theme #root .nav-glow:not([aria-current="page"]) {
+:is(.premium-theme, .theme-premium) #root .nav-glow:not([aria-current="page"]) {
   color: rgba(255, 255, 255, 0.86) !important;
 }
 
-.premium-theme #root .nav-glow:hover:not([aria-current="page"]) {
+:is(.premium-theme, .theme-premium) #root .nav-glow:hover:not([aria-current="page"]) {
   color: #fff !important;
   border-color: rgba(250, 204, 21, 0.28) !important;
   background: rgba(250, 204, 21, 0.08) !important;
 }
 
-.premium-theme #root .gold-button {
+:is(.premium-theme, .theme-premium) #root .gold-button {
   color: #451a03 !important;
   border: 1px solid rgba(254, 240, 138, 0.78) !important;
   background: linear-gradient(115deg, #fde68a 0%, #eab308 48%, #d97706 100%) !important;
   box-shadow: 0 8px 24px rgba(220, 38, 38, 0.38), inset 0 1px rgba(255, 255, 255, 0.52) !important;
 }
 
-.premium-theme #root input.premium-search {
+:is(.premium-theme, .theme-premium) #root input.premium-search {
   color: #111827 !important;
   border-color: rgba(234, 179, 8, 0.62) !important;
   background-color: #fff !important;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22) !important;
 }
 
-.premium-theme #root input.premium-search::placeholder {
+:is(.premium-theme, .theme-premium) #root input.premium-search::placeholder {
   color: #64748b !important;
   opacity: 1;
 }
 
-.premium-theme #root svg.search-icon {
+:is(.premium-theme, .theme-premium) #root svg.search-icon {
   color: #64748b !important;
 }
 
-.premium-theme #root kbd {
+:is(.premium-theme, .theme-premium) #root kbd {
   color: #475569 !important;
   border-color: #e2e8f0 !important;
   background-color: #f8fafc !important;

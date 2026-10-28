@@ -61,7 +61,7 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp, showInstall }) {
+function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
   return (
     <>
       <div
@@ -81,14 +81,15 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           collapsed ? 'w-72 lg:w-[84px]' : 'w-72',
         )}
       >
-        <div className={cn('flex h-16 shrink-0 items-center gap-3 px-5', collapsed && 'lg:justify-center lg:px-0')}>
-          <div className="relative">
+        <div className={cn('relative flex h-16 shrink-0 items-center gap-3 overflow-hidden px-5', collapsed && 'lg:justify-center lg:px-0')}>
+          {isPremium && <img src="/icons/turkish-ay-yildiz.svg" alt="" aria-hidden="true" className="pointer-events-none absolute -right-2 -top-2 z-0 size-20 opacity-[0.09]" />}
+          <div className="relative z-10">
             <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-400 opacity-60 blur-md" aria-hidden="true" />
             <div className="relative grid size-9 place-items-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white ring-1 ring-white/20">
               <GraduationCap className="size-5" aria-hidden="true" />
             </div>
           </div>
-          <div className={cn('min-w-0 leading-none', collapsed && 'lg:hidden')}>
+          <div className={cn('relative z-10 min-w-0 leading-none', collapsed && 'lg:hidden')}>
             <p className="text-[15px] font-semibold tracking-tight text-slate-900 dark:text-white">Türkçe</p>
             <span className="mt-1 inline-flex items-center rounded-md bg-gradient-to-r from-teal-600/10 to-cyan-500/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.12em] text-teal-700 ring-1 ring-teal-600/20 dark:text-teal-300 dark:ring-teal-400/25">
               TURKCHA CEFR PRO
@@ -97,7 +98,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           <button
             type="button"
             onClick={onCloseMobile}
-            className="ml-auto grid size-8 place-items-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden dark:hover:bg-slate-800"
+            className="relative z-10 ml-auto grid size-8 place-items-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden dark:hover:bg-slate-800"
             aria-label="Menyuni yopish"
           >
             <X className="size-4" />
@@ -182,6 +183,26 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
             <Download className="size-4 shrink-0" aria-hidden="true" />
             <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>Ilovani O&apos;rnatish</span>
           </button>}
+          <button
+            type="button"
+            onClick={onTogglePremium}
+            aria-pressed={isPremium}
+            className={cn(
+              'mb-3 flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold transition active:scale-[0.98]',
+              isPremium
+                ? 'border-yellow-300/55 bg-yellow-300/15 text-yellow-100 shadow-[0_0_20px_rgba(250,204,21,0.14)]'
+                : 'border-slate-200/80 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800',
+              collapsed && 'lg:justify-center lg:px-0',
+            )}
+            data-testid="toggle-premium-view"
+            title={collapsed ? 'Premium View' : undefined}
+          >
+            <Sparkles className="size-4 shrink-0" aria-hidden="true" />
+            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>Premium View</span>
+            <span className={cn('h-4 w-7 rounded-full p-0.5 transition-colors', isPremium ? 'bg-yellow-400' : 'bg-slate-300 dark:bg-slate-700')} aria-hidden="true">
+              <span className={cn('block size-3 rounded-full bg-white shadow transition-transform', isPremium && 'translate-x-3')} />
+            </span>
+          </button>
           <div
             role="button"
             tabIndex={0}
@@ -247,7 +268,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function Header({ breadcrumb, dark, onToggleDark, isPremium, onTogglePremium, onOpenMobile, streak, xp, profile, profileOpen, setProfileOpen, onEditProfile, onClearData, onLogout }) {
+function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, streak, xp, profile, profileOpen, setProfileOpen, onEditProfile, onClearData, onLogout }) {
   const searchRef = useRef(null)
 
   useEffect(() => {
@@ -341,22 +362,6 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onTogglePremium, on
           >
             {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </button>
-          <button
-            type="button"
-            onClick={onTogglePremium}
-            title={isPremium ? 'Premium View yoqilgan' : 'Premium View yoqish'}
-            aria-label={isPremium ? 'Premium View o‘chirish' : 'Premium View yoqish'}
-            aria-pressed={isPremium}
-            className={cn(
-              'flex h-9 items-center justify-center gap-1.5 rounded-xl border px-2 transition-all active:scale-95',
-              isPremium
-                ? 'border-amber-300/50 bg-amber-300/15 text-amber-300 shadow-[0_0_18px_rgba(251,191,36,0.18)] hover:shadow-[0_0_24px_rgba(239,68,68,0.35)]'
-                : 'border-slate-200/80 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800',
-            )}
-          >
-            <Sparkles className="size-4" aria-hidden="true" />
-            <span className="hidden text-xs font-semibold sm:inline">Premium</span>
-          </button>
         </div>
       </div>
     </header>
@@ -406,7 +411,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
   }
 
   return (
-    <div className={cn('min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium && 'bg-gradient-to-br from-red-800 via-red-600 to-red-950')}>
+    <div className={cn('min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : 'theme-default') }>
       <div
         className={cn(
           'pointer-events-none fixed inset-x-0 top-0 h-80',
@@ -427,6 +432,8 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           onOpenProfile={() => setProfileOpen(true)}
           onInstallApp={onInstallApp}
           showInstall={!isInstalled}
+          isPremium={isPremium}
+          onTogglePremium={onTogglePremium}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -435,7 +442,6 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
             dark={dark}
             onToggleDark={onToggleDark}
             isPremium={isPremium}
-            onTogglePremium={onTogglePremium}
             onOpenMobile={() => setMobileOpen(true)}
             streak={streak}
             xp={xp}
