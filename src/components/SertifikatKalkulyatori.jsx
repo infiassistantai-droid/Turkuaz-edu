@@ -74,61 +74,40 @@ export const COLOR_CLASSES = {
 }
 
 // ----------------------------------------------------------------------
-// Score helpers — Milliy Sertifikat uses 4 sections × 30 pts = 120 total
+// Multilevel certificate thresholds — section scores and the four-section
+// average use the same 0–75 rubric as the mock exam.
 // ----------------------------------------------------------------------
-export function scoreOut30(pct) {
-  return Math.max(0, Math.min(30, Math.round((pct / 100) * 30)))
+export function scoreOut75(pct) {
+  return Math.max(0, Math.min(75, Math.round((Number(pct || 0) / 100) * 75)))
 }
+
+// Backwards-compatible export for any older callers; values are now 0–75.
+export const scoreOut30 = scoreOut75
 
 export function levelFromSectionScore(score) {
-  if (score >= 24) return { label: 'C1', tone: 'turk' }
-  if (score >= 18) return { label: 'B2', tone: 'cyan' }
-  if (score >= 12) return { label: 'B1', tone: 'amber' }
-  return { label: 'A2', tone: 'slate' }
+  if (score >= 65) return { label: 'C1', tone: 'turk' }
+  if (score >= 51) return { label: 'B2', tone: 'cyan' }
+  if (score >= 38) return { label: 'B1', tone: 'amber' }
+  return { label: 'Below B1', tone: 'slate' }
 }
 
-/**
- * Total-score band — the 120-point Milliy Sertifikat scale:
- * <50 Yiqildi · 50–64 B1 · 65–79 B2 · 80+ C1 (maximal imtiyoz)
- */
-export function scoreBand(total) {
-  if (total < 50) {
-    return {
-      label: 'Yiqildi',
-      short: 'Yiqildi',
-      tone: 'rose',
-      message:
-        'B1 darajasiga yetish uchun asosiy qoidalarni qayta oʻrganish va har kuni trening qilish kerak.',
-    }
+export function scoreBand(average) {
+  if (average < 38) {
+    return { label: 'Below B1', short: 'Below B1', tone: 'rose', message: 'B1 darajasiga yetish uchun o‘rtacha 38 ball kerak.' }
   }
-  if (total < 65) {
-    return {
-      label: 'B1',
-      short: 'B1',
-      tone: 'amber',
-      message: 'Milliy Sertifikat B1 darajasi — boshlangʻich darajaga tayyorsiz.',
-    }
+  if (average < 51) {
+    return { label: 'B1', short: 'B1', tone: 'amber', message: 'O‘rtacha 38 ball bilan B1 darajasi.' }
   }
-  if (total < 80) {
-    return {
-      label: 'B2',
-      short: 'B2',
-      tone: 'turk',
-      message: 'Milliy Sertifikat B2 darajasida — B2 topshirishiga tayyorsiz.',
-    }
+  if (average < 65) {
+    return { label: 'B2', short: 'B2', tone: 'turk', message: 'O‘rtacha 51 ball bilan B2 darajasi.' }
   }
-  return {
-    label: 'C1 — Maksimal imtiyoz',
-    short: 'C1',
-    tone: 'turk',
-    message: 'Ajoyib! C1 darajasiga tayyorsiz — maksimal imtiyoz uchun kuchli tayyorlik.',
-  }
+  return { label: 'C1', short: 'C1', tone: 'turk', message: 'O‘rtacha 65 ball bilan C1 darajasi.' }
 }
 
 export function targetThreshold(cert) {
-  if (cert === 'C1') return 80
-  if (cert === 'B2') return 65
-  return 50
+  if (cert === 'C1') return 65
+  if (cert === 'B2') return 51
+  return 38
 }
 
 // ----------------------------------------------------------------------
@@ -140,7 +119,7 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
     initialScores || { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 },
   )
 
-  const total = SKILL_META.reduce((sum, s) => sum + scores[s.key], 0)
+  const total = Math.round(SKILL_META.reduce((sum, s) => sum + scores[s.key], 0) / SKILL_META.length)
   const band = scoreBand(total)
   const tone = COLOR_CLASSES[band.tone]
   const threshold = targetThreshold(targetCert)
@@ -154,7 +133,7 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
         <div className="mb-4 flex items-center gap-2">
           <Calculator className="h-5 w-5 text-turk-600 dark:text-turk-400" />
           <h3 className="font-display text-base font-extrabold text-slate-800 dark:text-white">
-            Koʻnikma ballari — har bir boʻlim 0–30 ball
+            Koʻnikma ballari — har bir boʻlim 0–75 ball
           </h3>
         </div>
         <div className="space-y-4">
@@ -172,13 +151,13 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
                     {skill.label}
                   </span>
                   <span className="ml-auto font-display text-sm font-extrabold tabular-nums text-slate-800 dark:text-white">
-                    {value}/30
+                    {value}/75
                   </span>
                 </div>
                 <input
                   type="range"
                   min={0}
-                  max={30}
+                  max={75}
                   step={1}
                   value={value}
                   onChange={(e) => setScores((s) => ({ ...s, [skill.key]: Number(e.target.value) }))}
@@ -186,8 +165,8 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
                 />
                 <div className="mt-1 flex justify-between text-[10px] font-semibold text-slate-400 dark:text-slate-500">
                   <span>0</span>
-                  <span>15</span>
-                  <span>30</span>
+                  <span>38</span>
+                  <span>75</span>
                 </div>
               </div>
             )
@@ -196,7 +175,7 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
         {!compact && (
           <p className="mt-4 rounded-xl bg-slate-50 p-3 text-xs leading-relaxed text-slate-500 ring-1 ring-slate-200 dark:bg-slate-900/60 dark:text-slate-400 dark:ring-slate-700">
             Milliy Sertifikatdagi har bir koʻnikma (okuma, dinleme, yazma, konushma) mustaqil
-            ballarlanadi — har boʻlim uchun maksimal 30 ball, umumiy hisobda <b>120 ball</b>.
+            ballarlanadi. Daraja toʻrtta boʻlimning 0–75 ball oraligʻidagi oʻrtacha natijasiga qarab aniqlanadi.
           </p>
         )}
       </div>
@@ -205,7 +184,7 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
       <div className="flex flex-col gap-4">
         <div className={cn('overflow-hidden rounded-3xl bg-gradient-to-br p-6 text-white shadow-xl', tone.glow)}>
           <div className="text-xs font-bold uppercase tracking-widest text-white/70">
-            Umumiy ball / 120
+            Toʻrt boʻlim oʻrtachasi / 75
           </div>
           <div className="font-display text-5xl font-extrabold tabular-nums">{total}</div>
           <div className={cn('mt-3 w-full rounded-xl bg-white/20 p-3 text-center', 'backdrop-blur-sm')}>
@@ -223,9 +202,9 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
             </h4>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-            {targetCert === 'C1' && 'C1 sertifikati uchun 80+ ball kerak.'}
-            {targetCert === 'B2' && 'B2 sertifikati uchun 65+ ball kerak.'}
-            {targetCert === 'B1' && 'B1 sertifikati uchun 50+ ball kerak.'}
+            {targetCert === 'C1' && 'C1 uchun toʻrt boʻlim oʻrtachasi kamida 65 ball bo‘lishi kerak.'}
+            {targetCert === 'B2' && 'B2 uchun toʻrt boʻlim oʻrtachasi kamida 51 ball bo‘lishi kerak.'}
+            {targetCert === 'B1' && 'B1 uchun toʻrt boʻlim oʻrtachasi kamida 38 ball bo‘lishi kerak.'}
           </p>
           {targetMet ? (
             <div className="mt-3 flex items-center gap-2 rounded-xl bg-turk-50 p-3 text-sm font-bold text-turk-700 dark:bg-turk-950/50 dark:text-turk-200">
@@ -258,7 +237,7 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                     <div
                       className={cn('h-full rounded-full pbar', meta.bar)}
-                      style={{ width: `${(value / 30) * 100}%` }}
+                      style={{ width: `${(value / 75) * 100}%` }}
                     />
                   </div>
                   <span className="w-12 shrink-0 text-right font-display text-sm font-extrabold tabular-nums text-slate-700 dark:text-slate-200">
@@ -286,12 +265,8 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
 // Standalone certificate page (BAZA VA SINOV section)
 // ----------------------------------------------------------------------
 export default function SertifikatKalkulyatori({ stats, progress, targetCert }) {
-  const initialScores = {
-    okuma: scoreOut30(progress.okuma),
-    dinleme: scoreOut30(progress.dinleme),
-    yazma: scoreOut30(progress.yazma),
-    konusma: scoreOut30(progress.konusma),
-  }
+  // Practice progress is not an exam score; do not present it as a certificate result.
+  const initialScores = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -310,12 +285,12 @@ export default function SertifikatKalkulyatori({ stats, progress, targetCert }) 
             </h1>
           </div>
           <span className="ml-auto rounded-xl bg-white/15 px-3 py-1.5 text-xs font-bold ring-1 ring-white/20 backdrop-blur-sm">
-            Boʻlimlar: 4 × 30 = 120 ball
+            Har bir boʻlim: 0–75 ball
           </span>
         </div>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">
-          Har bir koʻnikma uchun 0–30 ball oraligʻida baholang. Kalkulyator umumiy ballni
-          hisoblab, Milliy Sertifikat darajasini (B1 / B2 / C1) va maqsadingizga qancha yaqin ekanligingizni
+          Har bir koʻnikmani 0–75 oraligʻida baholang. Kalkulyator toʻrtta boʻlimning oʻrtachasini
+          hisoblab, darajani (B1 / B2 / C1) va maqsadingizga qancha yaqin ekanligingizni
           koʻrsatadi.
         </p>
       </div>
@@ -368,10 +343,10 @@ export default function SertifikatKalkulyatori({ stats, progress, targetCert }) 
       {/* Band legend */}
       <div className="grid gap-3 sm:grid-cols-2">
         {[
-          { label: '< 50 · Yiqildi', tone: 'rose', desc: 'Boshlangʻich darajaga yetish uchun muntazam trening kerak.' },
-          { label: '50–64 · B1', tone: 'amber', desc: 'Milliy Sertifikat B1 darajasiga tayyor.' },
-          { label: '65–79 · B2', tone: 'turk', desc: 'Milliy Sertifikat B2 darajasi — juda yaxshi.' },
-          { label: '80+ · C1', tone: 'cyan', desc: 'Maksimal imtiyoz — C1 darajasiga tayyor.' },
+          { label: '< 38 · Below B1', tone: 'rose', desc: 'B1 darajasi uchun oʻrtacha natijani oshiring.' },
+          { label: '38–50 · B1', tone: 'amber', desc: 'B1 darajasi.' },
+          { label: '51–64 · B2', tone: 'turk', desc: 'B2 darajasi.' },
+          { label: '65–75 · C1', tone: 'cyan', desc: 'C1 darajasi.' },
         ].map((row) => {
           const meta = COLOR_CLASSES[row.tone]
           return (

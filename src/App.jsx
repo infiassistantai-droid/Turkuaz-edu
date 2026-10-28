@@ -20,6 +20,7 @@ import KonusmaModule from './components/modules/KonusmaModule'
 import VocabularyFlashcards from './components/VocabularyFlashcards'
 import MockExam from './components/MockExam'
 import ProfileSetupModal from './components/ProfileSetupModal'
+import { calculateCertificate } from './lib/multilevelScoring'
 
 // Learner stats and skill results start empty and are persisted after real activity.
 const DEFAULT_STATS = { xp: 0, streak: 0, wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], examDone: false, lastActivityDate: null }
@@ -119,23 +120,43 @@ export default function App() {
   const [active, setActive] = useState('home')
   const [resetVersion, setResetVersion] = useState(0)
   const [dark, setDark] = useState(() => !!loadJSON(STORAGE_KEY, {})?.dark)
-  const [isPremium, setIsPremium] = useState(() => loadJSON(STORAGE_KEY, {})?.isPremium ?? false)
+  const [isPremium, setIsPremium] = useState(() => {
+    try {
+      const savedTheme = window.localStorage.getItem('turkuaz-edu-premium-theme')
+      if (savedTheme === 'true') return true
+      // A missing preference always means the clean Turkuaz default.
+      return false
+    } catch {
+      return false
+    }
+  })
   const [toasts, setToasts] = useState([])
   const [profile, setProfile] = useState(() => loadProfile())
   const [editingProfile, setEditingProfile] = useState(false)
   const [stats, setStats] = useState(loadLearnerStats)
   const [progress, setProgress] = useState(loadLearnerProgress)
-  const [examResult, setExamResult] = useState(() => loadJSON(STORAGE_KEY, {})?.examResult || null)
+  const [sectionResults, setSectionResults] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelSectionResults || {})
+  const [multilevelExamResult, setMultilevelExamResult] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelExamResult || null)
 
   // Theme classes and full local persistence for learner progress/settings.
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
     document.documentElement.classList.toggle('premium-theme', isPremium)
+    document.documentElement.classList.toggle('theme-premium', isPremium)
+    document.documentElement.classList.toggle('theme-default', !isPremium)
   }, [dark, isPremium])
 
   useEffect(() => {
-    saveJSON(STORAGE_KEY, { stats, progress, examResult, dark, isPremium })
-  }, [stats, progress, examResult, dark, isPremium])
+    try {
+      window.localStorage.setItem('turkuaz-edu-premium-theme', String(isPremium))
+    } catch {
+      // The existing app-state persistence still keeps the preference when available.
+    }
+  }, [isPremium])
+
+  useEffect(() => {
+    saveJSON(STORAGE_KEY, { stats, progress, multilevelSectionResults: sectionResults, multilevelExamResult, dark, isPremium })
+  }, [stats, progress, sectionResults, multilevelExamResult, dark, isPremium])
 
   // Profile persistence — stays logged in across refreshes
   useEffect(() => {
@@ -217,19 +238,16 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  // Skill mastery scores (0-30 each) derived from real progress —
-  // feeds the Dashboard readiness card + certificate calculator.
-  const scores = useMemo(
-    () => ({
-      okuma: Math.round((progress.okuma / 100) * 30),
-      dinleme: Math.round((progress.dinleme / 100) * 30),
-      yazma: Math.round((progress.yazma / 100) * 30),
-      konusma: Math.round((progress.konusma / 100) * 30),
-    }),
-    [progress],
-  )
-  const totalScore = scores.okuma + scores.dinleme + scores.yazma + scores.konusma
-  const targetScore = profile?.targetLevel === 'B1' ? 50 : profile?.targetLevel === 'B2' ? 65 : 80
+  // Requested 0–75 scaled section results; unattempted sections remain at zero.
+  const scores = useMemo(() => ({
+    dinleme: sectionResults.dinleme?.scaledScore ?? 0,
+    okuma: sectionResults.okuma?.scaledScore ?? 0,
+    yazma: sectionResults.yazma?.scaledScore ?? 0,
+    konusma: sectionResults.konusma?.scaledScore ?? 0,
+  }), [sectionResults])
+  const certificate = useMemo(() => calculateCertificate(scores), [scores])
+  const totalScore = certificate.average
+  const targetScore = profile?.targetLevel === 'B1' ? 38 : profile?.targetLevel === 'B2' ? 51 : 65
   const targetPct = Math.min(100, Math.round((totalScore / targetScore) * 100))
 
   // ------------------------------ auth flow ------------------------------
@@ -246,7 +264,8 @@ export default function App() {
     setEditingProfile(false)
     setStats(DEFAULT_STATS)
     setProgress(DEFAULT_PROGRESS)
-    setExamResult(null)
+    setSectionResults({})
+    setMultilevelExamResult(null)
     setDark(false)
     setIsPremium(false)
     setActive('home')
@@ -265,7 +284,7 @@ export default function App() {
   const renderView = () => {
     switch (active) {
       case 'home':
-        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} />
+        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} />
       case 'plan':
         return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} />
       case 'okuma':
@@ -281,19 +300,24 @@ export default function App() {
       case 'mock':
         return (
           <MockExam
-            result={examResult}
-            onResult={(r) => {
-              setExamResult(r)
-              setStats((s) => ({ ...s, examDone: true }))
-              showToast(`Imtihoni yakunlandi — ${r.score} ball, ${r.level} darajasi! 🎓`, 'success')
-              addXp(r.score >= 60 ? 100 : 0)
+            sectionResults={sectionResults}
+            onSectionComplete={(result) => {
+              setSectionResults((previous) => {
+                const existing = previous[result.section]
+                const history = [...(existing?.history || []), result].slice(-10)
+                return { ...previous, [result.section]: { ...result, attempts: (existing?.attempts || 0) + 1, history } }
+              })
+              completeLevel(result.section, (result.scaledScore / 75) * 100, result.earnedXp)
+              showToast(`${result.section.toLocaleUpperCase('tr-TR')} bo‘limi yakunlandi · ${result.scaledScore}/75 · ${result.level}`, 'success')
             }}
-            onRestart={() => setExamResult(null)}
-            onFinish={() => navigate('home')}
+            onExamComplete={(result) => {
+              setMultilevelExamResult(result)
+              setStats((current) => ({ ...current, examDone: true }))
+            }}
           />
         )
       default:
-        return <Dashboard scores={scores} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} />
+        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} />
     }
   }
 

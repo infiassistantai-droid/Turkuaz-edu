@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { loadJSON, saveJSON } from '../lib/storage'
+import { getCefrLevel } from '../lib/multilevelScoring'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -97,24 +98,32 @@ function masteryTone(score) {
       text: 'text-slate-500 dark:text-slate-400',
       chip: 'bg-slate-100 text-slate-600 ring-1 ring-slate-300/40 dark:bg-white/5 dark:text-slate-300 dark:ring-white/10',
     }
-  if (score >= 24)
+  if (score >= 65)
     return {
-      label: 'A’lo',
+      label: 'C1',
       stroke: 'stroke-emerald-500',
       bar: 'from-emerald-500 to-emerald-400',
       text: 'text-emerald-600 dark:text-emerald-400',
       chip: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20',
     }
-  if (score >= 18)
+  if (score >= 51)
     return {
-      label: 'Yaxshi',
+      label: 'B2',
       stroke: 'stroke-teal-500',
       bar: 'from-teal-600 to-cyan-500',
       text: 'text-teal-600 dark:text-teal-400',
       chip: 'bg-teal-50 text-teal-700 ring-1 ring-teal-600/15 dark:bg-teal-500/10 dark:text-teal-300 dark:ring-teal-400/20',
     }
+  if (score >= 38)
+    return {
+      label: 'B1',
+      stroke: 'stroke-amber-500',
+      bar: 'from-amber-500 to-yellow-400',
+      text: 'text-amber-600 dark:text-amber-400',
+      chip: 'bg-amber-50 text-amber-700 ring-1 ring-amber-600/15 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-400/20',
+    }
   return {
-    label: 'Zaif',
+    label: 'Below B1',
     stroke: 'stroke-rose-500',
     bar: 'from-rose-500 to-red-500',
     text: 'text-rose-600 dark:text-rose-400',
@@ -123,38 +132,38 @@ function masteryTone(score) {
 }
 
 function getCertificate(total) {
-  if (total >= 80)
+  if (total >= 65)
     return {
       level: 'C1',
       title: 'C1 Daraja',
-      note: 'OTMga 100% maksimal ball!',
+      note: 'C1 darajasi — har bir bo‘lim o‘rtachasi 65+ ball.',
       nextAt: null,
       card: 'from-emerald-500 to-teal-600 text-white shadow-emerald-600/25',
       ring: 'ring-white/25',
     }
-  if (total >= 65)
+  if (total >= 51)
     return {
       level: 'B2',
       title: 'B2 Daraja',
       note: 'Yuqori natija — C1 ga oz qoldi',
-      nextAt: 80,
+      nextAt: 65,
       card: 'from-teal-600 to-cyan-500 text-white shadow-teal-600/25',
       ring: 'ring-white/25',
     }
-  if (total >= 50)
+  if (total >= 38)
     return {
       level: 'B1',
       title: 'B1 Daraja',
-      note: 'Sertifikat beriladi — B2 sari davom eting',
-      nextAt: 65,
+      note: 'B1 darajasi — keyingi maqsad B2.',
+      nextAt: 51,
       card: 'from-cyan-500 to-sky-500 text-white shadow-cyan-600/25',
       ring: 'ring-white/25',
     }
   return {
-    level: '—',
-    title: 'Sertifikat uchun yetarli emas',
-    note: 'Kamida 50 ball talab qilinadi',
-    nextAt: 50,
+    level: 'Below B1',
+    title: 'B1 dan past natija',
+    note: 'B1 darajasi uchun o‘rtacha 38 ball kerak.',
+    nextAt: 38,
     card: 'from-rose-500 to-red-600 text-white shadow-rose-600/25',
     ring: 'ring-white/25',
   }
@@ -211,7 +220,7 @@ function CardHeader({ icon: Icon, title, subtitle, right }) {
 
 function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
   const target = targetLevel || 'C1'
-  const threshold = target === 'B1' ? 50 : target === 'B2' ? 65 : 80
+  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : 65
   const pct = Math.min(100, Math.round((totalScore / threshold) * 100))
 
   return (
@@ -257,7 +266,7 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/65">Maqsad sari</p>
           <div className="mt-2 flex items-end justify-between gap-3">
             <span className="text-3xl font-semibold tracking-tight text-yellow-300">{target}</span>
-            <span className="text-right text-sm font-medium tabular-nums text-white/85">{totalScore} <span className="text-white/55">/ {threshold}</span></span>
+            <span className="text-right text-sm font-medium tabular-nums text-white/85">{Number(totalScore).toFixed(2)} <span className="text-white/55">/ 75 ball</span></span>
           </div>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
             <div className="h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 transition-[width] duration-700" style={{ width: `${pct}%` }} />
@@ -275,10 +284,10 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
 
 function ReadinessCard({ total, targetLevel }) {
   const mounted = useMounted()
-  const pct = Math.round((total / 120) * 100)
+  const pct = Math.round((total / 75) * 100)
   const cert = getCertificate(total)
   const target = targetLevel || 'C1'
-  const threshold = target === 'B1' ? 50 : target === 'B2' ? 65 : 80
+  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : 65
   const remaining = Math.max(0, threshold - total)
 
   return (
@@ -286,7 +295,7 @@ function ReadinessCard({ total, targetLevel }) {
       <CardHeader
         icon={Trophy}
         title="Tayyorgarlik holati"
-        subtitle="4 bo’lim bo’yicha natija"
+        subtitle="4 bo‘lim · 0–75 ballik o‘rtacha"
         right={
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20">
             <TrendingUp className="size-3" aria-hidden="true" /> Maqsad: {target}
@@ -294,8 +303,8 @@ function ReadinessCard({ total, targetLevel }) {
         }
       />
       <div className="mt-6 flex items-end gap-2">
-        <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{total}</span>
-        <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">/ 120 ball</span>
+        <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{Number(total).toFixed(2)}</span>
+        <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">/ 75 o‘rtacha</span>
         <span className="mb-1.5 ml-auto rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-900">
           {cert.level}
         </span>
@@ -308,21 +317,21 @@ function ReadinessCard({ total, targetLevel }) {
             style={{ width: mounted ? `${pct}%` : '0%' }}
           />
         </div>
-        {[50, 65, 80].map((mark) => (
+        {[38, 51, 65].map((mark) => (
           <span
             key={mark}
             className="absolute top-0 h-2.5 w-px bg-white/90 dark:bg-slate-950"
-            style={{ left: `${(mark / 120) * 100}%` }}
+            style={{ left: `${(mark / 75) * 100}%` }}
             aria-hidden="true"
           />
         ))}
         <div className="relative mt-2 h-4 text-[10px] font-medium text-slate-400 dark:text-slate-500">
           {[
-            [50, 'B1'],
-            [65, 'B2'],
-            [80, 'C1'],
+            [38, 'B1'],
+            [51, 'B2'],
+            [65, 'C1'],
           ].map(([mark, l]) => (
-            <span key={l} className="absolute -translate-x-1/2" style={{ left: `${(mark / 120) * 100}%` }}>
+            <span key={l} className="absolute -translate-x-1/2" style={{ left: `${(mark / 75) * 100}%` }}>
               {l}
             </span>
           ))}
@@ -379,7 +388,7 @@ function SkillCard({ skill, onOpen }) {
   const mounted = useMounted()
   const Icon = skill.icon
   const tone = masteryTone(skill.score)
-  const pct = Math.round((skill.score / 30) * 100)
+  const pct = Math.round((skill.score / 75) * 100)
 
   return (
     <Card className="group flex flex-col p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300/80 hover:shadow-lg dark:hover:border-slate-700">
@@ -399,16 +408,16 @@ function SkillCard({ skill, onOpen }) {
       <div className="mt-5 flex items-center justify-between">
         <div>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{skill.score}</span>
-            <span className="text-sm text-slate-500 dark:text-slate-400">/ 30 ball</span>
+            <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{skill.score.toFixed(2).replace(/\.00$/, '')}</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400">/ 75 ball</span>
           </div>
           <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
             <TrendingUp className="size-3" aria-hidden="true" />
-            {skill.score > 0 ? 'Baholangan natija' : 'Hali baholanmagan'}
+            {skill.score > 0 ? `${skill.level || getCefrLevel(skill.score)} · baholangan natija` : 'Hali baholanmagan'}
           </p>
         </div>
         <div className="relative">
-          <ProgressRing value={skill.score} max={30} toneStroke={tone.stroke} mounted={mounted} />
+          <ProgressRing value={skill.score} max={75} toneStroke={tone.stroke} mounted={mounted} />
           <span className={cn('absolute inset-0 grid place-items-center text-xs font-semibold tabular-nums', tone.text)}>{pct}%</span>
         </div>
       </div>
@@ -435,7 +444,7 @@ function SkillCard({ skill, onOpen }) {
 /* -------------------------------------------------------------------------- */
 
 function ScoreSlider({ id, label, sub, icon: Icon, value, onChange }) {
-  const pct = (value / 30) * 100
+  const pct = (value / 75) * 100
   return (
     <div>
       <div className="mb-2.5 flex items-center justify-between">
@@ -445,7 +454,7 @@ function ScoreSlider({ id, label, sub, icon: Icon, value, onChange }) {
           <span className="text-xs font-normal text-slate-400 dark:text-slate-500">{sub}</span>
         </label>
         <span className="min-w-[3.25rem] rounded-lg bg-slate-100 px-2 py-0.5 text-center text-xs font-semibold tabular-nums text-slate-900 dark:bg-slate-800 dark:text-white">
-          {value} / 30
+          {value} / 75
         </span>
       </div>
       <div className="relative flex h-5 items-center">
@@ -456,8 +465,8 @@ function ScoreSlider({ id, label, sub, icon: Icon, value, onChange }) {
           id={id}
           type="range"
           min={0}
-          max={30}
-          step={1}
+          max={75}
+          step={0.1}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
           className="peer absolute inset-0 z-10 w-full cursor-pointer opacity-0"
@@ -482,8 +491,8 @@ const CALC_FIELDS = [
 function CertificateCalculator({ initial }) {
   const [scores, setScores] = useState(initial)
   useEffect(() => setScores(initial), [initial])
-  const total = scores.dinleme + scores.okuma + scores.yazma + scores.konusma
-  const pct = Math.round((total / 120) * 100)
+  const total = (scores.dinleme + scores.okuma + scores.yazma + scores.konusma) / 4
+  const pct = Math.round((total / 75) * 100)
   const cert = getCertificate(total)
 
   return (
@@ -491,7 +500,7 @@ function CertificateCalculator({ initial }) {
       <CardHeader
         icon={Sparkles}
         title="Milliy Sertifikat Ball Kalkulyatori"
-        subtitle="4 bo’lim × 30 ball = 120 ball"
+        subtitle="4 bo‘lim · har biri 0–75 ball · sertifikat o‘rtachasi"
         right={
           <button
             type="button"
@@ -523,8 +532,8 @@ function CertificateCalculator({ initial }) {
           <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-slate-800 dark:bg-slate-800/40">
             <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Umumiy ball</p>
             <div className="mt-1 flex items-baseline gap-1.5" aria-live="polite">
-              <span className="text-4xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{total}</span>
-              <span className="text-sm text-slate-500 dark:text-slate-400">/ 120</span>
+              <span className="text-4xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{total.toFixed(2)}</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">/ 75 o‘rtacha</span>
               <span className="ml-auto text-lg font-semibold tabular-nums text-slate-700 dark:text-slate-200">{pct}%</span>
             </div>
             <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-700/60">
@@ -563,10 +572,10 @@ function CertificateCalculator({ initial }) {
 
           <div className="grid grid-cols-4 gap-1 text-center text-[10px] font-medium text-slate-500 dark:text-slate-400">
             {[
-              ['<50', '—'],
-              ['50+', 'B1'],
-              ['65+', 'B2'],
-              ['80+', 'C1'],
+              ['<38', 'Below B1'],
+              ['38+', 'B1'],
+              ['51+', 'B2'],
+              ['65+', 'C1'],
             ].map(([range, lvl]) => (
               <div
                 key={lvl}
@@ -705,8 +714,8 @@ function DailyPlanCard({ addXp }) {
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, navigate, name, targetLevel, stats, addXp }) {
-  const total = SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0)
+export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp }) {
+  const total = overallScore ?? SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0) / 4
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
     [scores],
@@ -748,7 +757,7 @@ export default function Dashboard({ scores, navigate, name, targetLevel, stats, 
         {SKILLS.map((skill) => (
           <SkillCard
             key={skill.id}
-            skill={{ ...skill, score: scores?.[skill.id] ?? skill.score }}
+            skill={{ ...skill, score: scores?.[skill.id] ?? skill.score, level: sectionResults[skill.id]?.level }}
             onOpen={navigate}
           />
         ))}
