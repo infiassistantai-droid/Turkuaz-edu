@@ -8,7 +8,9 @@ import {
   ClipboardCheck,
   Download,
   Flame,
+  Globe,
   GraduationCap,
+  Check,
   Headphones,
   House,
   Library,
@@ -25,6 +27,7 @@ import {
 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
+import { useI18n } from '../lib/i18n.jsx'
 import ProfileMenu from './ProfileMenu'
 
 /* -------------------------------------------------------------------------- */
@@ -33,26 +36,26 @@ import ProfileMenu from './ProfileMenu'
 
 const NAV = [
   {
-    section: 'ASOSIY',
+    sectionKey: 'nav.section.main',
     items: [
-      { id: 'home', label: 'Bosh sahifa', icon: House },
-      { id: 'plan', label: 'Kunlik reja', icon: CalendarCheck },
+      { id: 'home', labelKey: 'nav.home', icon: House },
+      { id: 'plan', labelKey: 'nav.plan', icon: CalendarCheck },
     ],
   },
   {
-    section: '4 KO’NIKMA (IMTIHON)',
+    sectionKey: 'nav.section.skills',
     items: [
-      { id: 'okuma', label: 'O’qib tushunish', hint: 'Okuma', icon: BookOpenText },
-      { id: 'dinleme', label: 'Tinglab tushunish', hint: 'Dinleme', icon: Headphones },
-      { id: 'yazma', label: 'Yozma ish', hint: 'Yazma', icon: PenLine },
-      { id: 'konusma', label: 'Gapirish', hint: 'Konuşma', icon: Mic },
+      { id: 'okuma', labelKey: 'nav.reading', icon: BookOpenText },
+      { id: 'dinleme', labelKey: 'nav.listening', icon: Headphones },
+      { id: 'yazma', labelKey: 'nav.writing', icon: PenLine },
+      { id: 'konusma', labelKey: 'nav.speaking', icon: Mic },
     ],
   },
   {
-    section: 'BAZA VA SINOV',
+    sectionKey: 'nav.section.practice',
     items: [
-      { id: 'lugat', label: 'Lug’at & Ekler', icon: Library },
-      { id: 'mock', label: 'Mock Imtihon', icon: ClipboardCheck, badge: 'Yangi', urgent: true },
+      { id: 'lugat', labelKey: 'nav.vocabulary', icon: Library },
+      { id: 'mock', labelKey: 'nav.mock', icon: ClipboardCheck, badgeKey: 'nav.new', urgent: true },
     ],
   },
 ]
@@ -62,6 +65,7 @@ const NAV = [
 /* -------------------------------------------------------------------------- */
 
 function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
+  const { t } = useI18n()
   return (
     <>
       <div
@@ -73,7 +77,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
         aria-hidden="true"
       />
       <aside
-        aria-label="Asosiy navigatsiya"
+        aria-label={t('nav.aria')}
         className={cn(
           'glass fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur-md transition-all duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/90',
           'lg:sticky lg:top-0 lg:h-screen lg:translate-x-0',
@@ -99,7 +103,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
             type="button"
             onClick={onCloseMobile}
             className="relative z-10 ml-auto grid size-8 place-items-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden dark:hover:bg-slate-800"
-            aria-label="Menyuni yopish"
+            aria-label={t('header.menu.close')}
           >
             <X className="size-4" />
           </button>
@@ -107,14 +111,14 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 
         <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
           {NAV.map((group) => (
-            <div key={group.section} className="mt-5 first:mt-2">
+            <div key={group.sectionKey} className="mt-5 first:mt-2">
               <p
                 className={cn(
                   'mb-2 px-3 text-[10.5px] font-semibold tracking-[0.14em] text-slate-400 dark:text-slate-500',
                   collapsed && 'lg:hidden',
                 )}
               >
-                {group.section}
+                {t(group.sectionKey)}
               </p>
               {collapsed && <div className="mx-auto mb-2 hidden h-px w-8 bg-slate-200 lg:block dark:bg-slate-800" />}
               <ul className="space-y-0.5">
@@ -126,7 +130,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                       <button
                         type="button"
                         onClick={() => onNavigate(item.id)}
-                        title={collapsed ? item.label : undefined}
+                        title={collapsed ? t(item.labelKey) : undefined}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
                           'nav-glow group relative flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition-all duration-200 active:scale-[0.98]',
@@ -138,14 +142,9 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                       >
                         <Icon className="size-[18px] shrink-0" aria-hidden="true" />
                         <span className={cn('min-w-0 flex-1 truncate', collapsed && 'lg:sr-only')}>
-                          {item.label}
-                          {item.hint && (
-                            <span className={cn('ml-1.5 text-xs font-normal', isActive ? 'text-white/70' : 'text-slate-400 dark:text-slate-500')}>
-                              {item.hint}
-                            </span>
-                          )}
+                          {t(item.labelKey)}
                         </span>
-                        {item.badge && (
+                        {(item.badgeKey || item.badge) && (
                           <span
                             className={cn(
                               'rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
@@ -157,7 +156,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                                   : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
                             )}
                           >
-                            {item.badge}
+                            {item.badgeKey ? t(item.badgeKey) : item.badge}
                           </span>
                         )}
                       </button>
@@ -173,15 +172,15 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           {showInstall && <button
             type="button"
             onClick={onInstallApp}
-            title={collapsed ? "Ilovani O'rnatish" : undefined}
-            aria-label="Ilovani O'rnatish"
+            title={collapsed ? t('nav.install') : undefined}
+            aria-label={t('nav.install')}
             className={cn(
               'mb-3 flex w-full items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-3 py-2.5 text-sm font-semibold text-white shadow-md shadow-teal-700/15 transition hover:from-teal-700 hover:to-cyan-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2 active:scale-[0.98] dark:focus-visible:ring-offset-slate-950',
               collapsed && 'lg:justify-center lg:px-0',
             )}
           >
             <Download className="size-4 shrink-0" aria-hidden="true" />
-            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>Ilovani O&apos;rnatish</span>
+            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>{t('nav.install')}</span>
           </button>}
           <button
             type="button"
@@ -195,10 +194,10 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               collapsed && 'lg:justify-center lg:px-0',
             )}
             data-testid="toggle-premium-view"
-            title={collapsed ? 'Premium View' : undefined}
+            title={collapsed ? t('auth.theme.title') : undefined}
           >
             <Sparkles className="size-4 shrink-0" aria-hidden="true" />
-            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>Premium View</span>
+            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>{t('auth.theme.title')}</span>
             <span className={cn('h-4 w-7 rounded-full p-0.5 transition-colors', isPremium ? 'bg-yellow-400' : 'bg-slate-300 dark:bg-slate-700')} aria-hidden="true">
               <span className={cn('block size-3 rounded-full bg-white shadow transition-transform', isPremium && 'translate-x-3')} />
             </span>
@@ -221,23 +220,23 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
             <div className={cn('flex items-center gap-3', collapsed && 'lg:justify-center')}>
               <div className="relative shrink-0">
                 <div className="grid size-9 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white">
-                  {profile ? getInitials(profile.name, profile.surname) : 'AK'}
+                  {profile ? getInitials(profile.name, profile.surname) : t('nav.profile').slice(0, 2).toLocaleUpperCase()}
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900" aria-hidden="true" />
               </div>
               <div className={cn('min-w-0 flex-1', collapsed && 'lg:hidden')}>
                 <p className="truncate text-sm font-semibold tracking-tight text-slate-900 dark:text-white">
-                  {profile ? `${profile.name} ${profile.surname}` : 'Azizbek Karimov'}
+                  {profile ? [profile.name, profile.surname].filter(Boolean).join(' ') : t('nav.profile')}
                 </p>
                 <p className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                   <Target className="size-3 text-rose-500" aria-hidden="true" />
-                  Maqsad: {profile?.targetLevel || 'C1'} Sertifikat
+                  {t('profile.target')}: {profile?.targetLevel || '—'} CEFR
                 </p>
               </div>
             </div>
             <div className={cn('mt-3', collapsed && 'lg:hidden')}>
               <div className="mb-1.5 flex items-center justify-between text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                <span>B2 → C1</span>
+                <span>{t('sidebar.progress')}</span>
                 <span className="tabular-nums text-slate-700 dark:text-slate-200">{targetPct}%</span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800">
@@ -253,10 +252,10 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               'mt-2 hidden w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 lg:flex dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white',
               collapsed && 'justify-center px-0',
             )}
-            aria-label={collapsed ? 'Yon panelni kengaytirish' : 'Yon panelni yig’ish'}
+            aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
           >
             {collapsed ? <ChevronsRight className="size-4" /> : <ChevronsLeft className="size-4" />}
-            {!collapsed && <span>Panelni yig’ish</span>}
+            {!collapsed && <span>{t('nav.collapse')}</span>}
           </button>
         </div>
       </aside>
@@ -268,7 +267,66 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
+function LanguageSwitcher({ isPremium }) {
+  const { language, setLanguage, t } = useI18n()
+  const [open, setOpen] = useState(false)
+  const wrapperRef = useRef(null)
+  const options = [
+    { id: 'uz', key: 'language.uz' },
+    { id: 'tr', key: 'language.tr' },
+    { id: 'en', key: 'language.en' },
+  ]
+
+  useEffect(() => {
+    if (!open) return undefined
+    const onPointerDown = (event) => { if (!wrapperRef.current?.contains(event.target)) setOpen(false) }
+    const onKeyDown = (event) => { if (event.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  return (
+    <div className="relative" ref={wrapperRef}>
+      <button
+        type="button"
+        aria-label={t('language.label')}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        className={cn(
+          'inline-flex h-9 items-center gap-1.5 rounded-xl border px-2.5 text-xs font-bold transition-all duration-300 hover:bg-white/10 active:scale-95',
+          isPremium ? 'border-white/20 bg-black/20 text-white' : 'border-slate-200/80 bg-white/70 text-slate-700 hover:border-teal-300 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200',
+        )}
+      >
+        <Globe size={16} aria-hidden="true" />
+        <span>{language.toUpperCase()}</span>
+      </button>
+      {open && <div role="listbox" aria-label={t('language.label')} className={cn(
+        'absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl border p-1.5 shadow-2xl transition-all duration-300',
+        isPremium ? 'border-white/20 bg-black/40 text-white backdrop-blur-2xl' : 'border-slate-200/80 bg-white/90 text-slate-800 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/90 dark:text-white',
+      )}>
+        {options.map((option) => {
+          const selected = option.id === language
+          return <button key={option.id} type="button" role="option" aria-selected={selected} onClick={() => { setLanguage(option.id); setOpen(false) }} className={cn(
+            'flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition-all duration-300 hover:bg-white/10',
+            selected
+              ? isPremium
+                ? 'bg-yellow-300/15 font-extrabold text-yellow-200'
+                : 'bg-amber-100/80 font-extrabold text-amber-800 dark:bg-yellow-300/15 dark:text-yellow-200'
+              : 'font-medium',
+          )}>{t(option.key)}{selected && <Check className="size-4 text-yellow-500" aria-hidden="true"/>}</button>
+        })}
+      </div>}
+    </div>
+  )
+}
+
 function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, streak, xp, profile, profileOpen, setProfileOpen, onEditProfile, onClearData, onLogout }) {
+  const { t } = useI18n()
   const searchRef = useRef(null)
 
   useEffect(() => {
@@ -289,7 +347,7 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
           type="button"
           onClick={onOpenMobile}
           className="grid size-9 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-colors hover:bg-slate-100 active:scale-95 lg:hidden dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
-          aria-label="Menyuni ochish"
+          aria-label={t('header.menu.open')}
         >
           <Menu className="size-4" />
         </button>
@@ -306,12 +364,12 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
 
         <div className="mx-auto hidden w-full max-w-md md:block">
           <label className="group relative flex items-center">
-            <span className="sr-only">Qidirish</span>
+            <span className="sr-only">{t('header.search')}</span>
             <Search className="search-icon pointer-events-none absolute left-3 size-4 text-gray-500" aria-hidden="true" />
             <input
               ref={searchRef}
               type="search"
-              placeholder="So’z, qoida yoki test qidirish..."
+              placeholder={t('header.search')}
               className={cn(
                 'h-10 w-full rounded-xl border pl-9 pr-14 text-sm font-medium outline-none transition-all',
                 isPremium
@@ -328,12 +386,13 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
         <div className="ml-auto flex items-center gap-2 md:ml-0">
           <span className="hidden items-center gap-1.5 rounded-full border border-orange-200/80 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 sm:inline-flex dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-300">
             <Flame className="size-3.5 fill-orange-500 text-orange-500" aria-hidden="true" />
-            {streak} kun
+            {t('header.streak', { count: streak })}
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-3 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
             <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
             {xp.toLocaleString('en-US')} XP
           </span>
+          <LanguageSwitcher isPremium={isPremium} />
           {profile && (
             <ProfileMenu
               profile={profile}
@@ -348,7 +407,7 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
           <button
             type="button"
             className="relative grid size-9 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
-            aria-label="Bildirishnomalar"
+            aria-label={t('header.notifications')}
           >
             <Bell className="size-4" />
             <span className="absolute right-2 top-2 size-1.5 rounded-full bg-rose-500" aria-hidden="true" />
@@ -357,7 +416,7 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
             type="button"
             onClick={onToggleDark}
             className="grid size-9 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
-            aria-label={dark ? 'Yorug’ rejimga o’tish' : 'Qorong’i rejimga o’tish'}
+            aria-label={dark ? t('header.theme.light') : t('header.theme.dark')}
             aria-pressed={dark}
           >
             {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -400,10 +459,10 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
   const breadcrumb = useMemo(() => {
     for (const group of NAV) {
       const item = group.items.find((i) => i.id === active)
-      if (item) return { section: group.section.charAt(0) + group.section.slice(1).toLowerCase(), label: item.label }
+      if (item) return { section: t(group.sectionKey), label: t(item.labelKey) }
     }
-    return { section: 'Asosiy', label: 'Bosh sahifa' }
-  }, [active])
+    return { section: t('breadcrumb.main'), label: t('nav.home') }
+  }, [active, t])
 
   const navigate = (id) => {
     onNavigate(id)
@@ -429,7 +488,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           onCloseMobile={() => setMobileOpen(false)}
           targetPct={targetPct}
           profile={profile}
-          onOpenProfile={() => setProfileOpen(true)}
+          onOpenProfile={onEditProfile}
           onInstallApp={onInstallApp}
           showInstall={!isInstalled}
           isPremium={isPremium}

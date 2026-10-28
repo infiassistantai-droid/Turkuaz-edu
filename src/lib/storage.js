@@ -5,7 +5,8 @@
 // =====================================================================
 
 export const STORAGE_KEY = 'turkish-marathon-v1'          // app state: stats / progress / examResult / dark
-export const PROFILE_KEY = 'turkish-marathon-profile-v1'  // auth profile: name / surname / targetLevel
+export const PROFILE_KEY = 'turkish-marathon-profile-v1'  // auth profile: name / surname / email / targetLevel
+export const AUTH_KEY = 'turkish-marathon-auth-v1'          // device-local signed-in state
 export const SCORES_KEY = 'turkish-marathon-scores-v1'    // best + attempts per skill module
 export const KONUSMA_KEY = 'turkish-marathon-konusma-v1'  // speaking exam progress
 export const MASTERY_KEY = 'turkish-marathon-mastery-v2'  // vocab mastery (used by VocabularyFlashcards)
@@ -36,7 +37,7 @@ export function saveJSON(key, value) {
 
 export function loadProfile() {
   const p = loadJSON(PROFILE_KEY, null)
-  return p && p.name && p.surname ? p : null
+  return p && typeof p.name === 'string' && p.name.trim() ? p : null
 }
 
 export function saveProfile(profile) {
@@ -100,7 +101,7 @@ export function saveKonusma(state) {
 
 /** Remove every key the app owns — used by "Maʼlumotlarni tozalash". */
 export function clearAllStorage() {
-  [STORAGE_KEY, PROFILE_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY].forEach((key) => {
+  [STORAGE_KEY, PROFILE_KEY, AUTH_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY].forEach((key) => {
     try {
       localStorage.removeItem(key)
     } catch {

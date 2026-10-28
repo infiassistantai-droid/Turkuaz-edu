@@ -7,7 +7,7 @@ import {
   saveJSON,
   loadProfile,
   saveProfile,
-  clearProfile,
+  AUTH_KEY,
   clearAllStorage,
 } from './lib/storage'
 import TurkchaDashboard from './components/TurkchaDashboard'
@@ -23,7 +23,7 @@ import ProfileSetupModal from './components/ProfileSetupModal'
 import { calculateCertificate } from './lib/multilevelScoring'
 
 // Learner stats and skill results start empty and are persisted after real activity.
-const DEFAULT_STATS = { xp: 0, streak: 0, wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], examDone: false, lastActivityDate: null }
+const DEFAULT_STATS = { xp: 0, streak: 0, wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedMocks: 0, examDone: false, lastActivityDate: null }
 const DEFAULT_PROGRESS = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
 
 function localDateKey(date = new Date()) {
@@ -132,6 +132,14 @@ export default function App() {
   })
   const [toasts, setToasts] = useState([])
   const [profile, setProfile] = useState(() => loadProfile())
+  const [authenticated, setAuthenticated] = useState(() => {
+    if (!loadProfile()) return false
+    try {
+      return window.localStorage.getItem(AUTH_KEY) !== 'false'
+    } catch {
+      return true
+    }
+  })
   const [editingProfile, setEditingProfile] = useState(false)
   const [stats, setStats] = useState(loadLearnerStats)
   const [progress, setProgress] = useState(loadLearnerProgress)
@@ -162,6 +170,14 @@ export default function App() {
   useEffect(() => {
     if (profile) saveProfile(profile)
   }, [profile])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(AUTH_KEY, String(authenticated))
+    } catch {
+      // In-memory sign-in still works for this app session.
+    }
+  }, [authenticated])
 
   const showToast = useCallback((message, type = 'default') => {
     const id = Math.random().toString(36).slice(2)
@@ -247,20 +263,27 @@ export default function App() {
   }), [sectionResults])
   const certificate = useMemo(() => calculateCertificate(scores), [scores])
   const totalScore = certificate.average
-  const targetScore = profile?.targetLevel === 'B1' ? 38 : profile?.targetLevel === 'B2' ? 51 : 65
-  const targetPct = Math.min(100, Math.round((totalScore / targetScore) * 100))
+  const targetScore = profile?.targetLevel === 'B1' ? 38 : profile?.targetLevel === 'B2' ? 51 : profile?.targetLevel === 'C1' ? 65 : 0
+  const targetPct = targetScore ? Math.min(100, Math.round((totalScore / targetScore) * 100)) : 0
 
   // ------------------------------ auth flow ------------------------------
 
   const handleSaveProfile = (p) => {
     setProfile(p)
+    setAuthenticated(true)
     setEditingProfile(false)
     showToast(editingProfile ? 'Profil yangilandi! ✅' : 'Roʻyxatdan oʻtdingiz! 🎉', 'success')
+  }
+
+  const handleLogin = () => {
+    setAuthenticated(true)
+    showToast('Tekrar hoş geldiniz! ✅', 'success')
   }
 
   const handleClearData = () => {
     clearAllStorage()
     setProfile(null)
+    setAuthenticated(false)
     setEditingProfile(false)
     setStats(DEFAULT_STATS)
     setProgress(DEFAULT_PROGRESS)
@@ -274,8 +297,7 @@ export default function App() {
   }
 
   const handleLogout = () => {
-    clearProfile()
-    setProfile(null)
+    setAuthenticated(false)
     showToast('Chiqib qoldingiz', 'default')
   }
 
@@ -307,12 +329,15 @@ export default function App() {
                 const history = [...(existing?.history || []), result].slice(-10)
                 return { ...previous, [result.section]: { ...result, attempts: (existing?.attempts || 0) + 1, history } }
               })
+              if (result.testType === 'reading-only') {
+                setStats((current) => ({ ...current, completedMocks: (current.completedMocks || 0) + 1 }))
+              }
               completeLevel(result.section, (result.scaledScore / 75) * 100, result.earnedXp)
               showToast(`${result.section.toLocaleUpperCase('tr-TR')} bo‘limi yakunlandi · ${result.scaledScore}/75 · ${result.level}`, 'success')
             }}
             onExamComplete={(result) => {
               setMultilevelExamResult(result)
-              setStats((current) => ({ ...current, examDone: true }))
+              setStats((current) => ({ ...current, examDone: true, completedMocks: (current.completedMocks || 0) + 1 }))
             }}
           />
         )
@@ -347,12 +372,15 @@ export default function App() {
 
       {/* Auth / profile modal — first-run sign up, or edit profile */}
       <ProfileSetupModal
-        open={!profile || editingProfile}
-        mode={editingProfile ? 'edit' : 'signup'}
+        open={!authenticated || editingProfile}
+        mode={editingProfile ? 'edit' : profile ? 'auth' : 'signup'}
         profile={profile}
         hasProfile={!!profile}
-        onClose={() => setEditingProfile(false)}
+        isPremium={isPremium}
+        onTogglePremium={() => setIsPremium((value) => !value)}
+        onClose={editingProfile ? () => setEditingProfile(false) : undefined}
         onSave={handleSaveProfile}
+        onLogin={handleLogin}
       />
 
       {/* Toasts — top-right corner */}

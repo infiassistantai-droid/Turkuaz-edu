@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, Pencil, Trash2, LogOut, Target, Zap, Flame, AlertTriangle } from 'lucide-react'
+import { ChevronDown, Settings, Trash2, LogOut, Target, Zap, Flame, AlertTriangle } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
+import { useI18n } from '../lib/i18n.jsx'
 
 function MenuItem({ icon: Icon, label, onClick, danger }) {
   return (
@@ -27,6 +28,7 @@ function MenuItem({ icon: Icon, label, onClick, danger }) {
  * Controlled: `open` / `onOpenChange` let the sidebar user card open it too.
  */
 export default function ProfileMenu({ profile, stats, open, onOpenChange, onEdit, onClear, onLogout }) {
+  const { t } = useI18n()
   const [confirming, setConfirming] = useState(false)
   const wrapRef = useRef(null)
 
@@ -50,7 +52,7 @@ export default function ProfileMenu({ profile, stats, open, onOpenChange, onEdit
   if (!profile) return null
 
   const initials = getInitials(profile.name, profile.surname)
-  const displayName = `${profile.name} ${profile.surname}`
+  const displayName = [profile.name, profile.surname].filter(Boolean).join(' ')
 
   return (
     <div className="relative" ref={wrapRef}>
@@ -89,8 +91,9 @@ export default function ProfileMenu({ profile, stats, open, onOpenChange, onEdit
               <p className="truncate text-sm font-extrabold">{displayName}</p>
               <p className="flex items-center gap-1 text-xs font-semibold text-white/80">
                 <Target className="size-3" />
-                Maqsad: {profile.targetLevel} Sertifikat
+                {t('profile.target')}: {profile.targetLevel || '—'} CEFR
               </p>
+              {profile.email && <p className="mt-0.5 truncate text-[11px] text-white/70">{profile.email}</p>}
             </div>
           </div>
 
@@ -100,7 +103,7 @@ export default function ProfileMenu({ profile, stats, open, onOpenChange, onEdit
               <Flame className="size-3.5 fill-amber-500 text-amber-500" />
               <div className="leading-tight">
                 <div className="font-display text-sm font-extrabold tabular-nums">{stats?.streak ?? 0}</div>
-                <div className="text-[10px] font-bold uppercase tracking-widest">kun seriya</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest">{t('profile.days')}</div>
               </div>
             </div>
             <div className="flex items-center gap-1.5 rounded-xl bg-teal-50 px-2.5 py-2 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">
@@ -120,7 +123,7 @@ export default function ProfileMenu({ profile, stats, open, onOpenChange, onEdit
               <div className="space-y-2 rounded-xl bg-rose-50 p-3 dark:bg-rose-500/10">
                 <p className="flex items-start gap-2 text-xs font-bold leading-relaxed text-rose-700 dark:text-rose-200">
                   <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-                  Ishonchingiz komilmi? Barcha maʼlumotlar (streak, XP, ballar, soʻzlar) doimiy oʻchiriladi.
+                  {t('profile.confirm.clear')}
                 </p>
                 <div className="flex gap-2">
                   <button
@@ -128,22 +131,22 @@ export default function ProfileMenu({ profile, stats, open, onOpenChange, onEdit
                     onClick={() => setConfirming(false)}
                     className="flex-1 rounded-lg border border-rose-200 bg-white px-3 py-1.5 text-xs font-bold text-rose-600 transition-all active:scale-95 hover:bg-rose-100 dark:border-rose-500/30 dark:bg-slate-800 dark:text-rose-300"
                   >
-                    Bekor qilish
+                    {t('profile.cancel')}
                   </button>
                   <button
                     type="button"
                     onClick={onClear}
                     className="flex-1 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all active:scale-95 hover:bg-rose-700"
                   >
-                    Oʻchirish
+                    {t('profile.delete')}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="space-y-0.5">
-                <MenuItem icon={Pencil} label="Profilni tahrirlash" onClick={() => { onOpenChange?.(false); onEdit?.() }} />
-                <MenuItem icon={Trash2} label="Maʼlumotlarni tozalash" danger onClick={() => setConfirming(true)} />
-                <MenuItem icon={LogOut} label="Chiqish" onClick={() => { onOpenChange?.(false); onLogout?.() }} />
+                <MenuItem icon={Settings} label={t('profile.settings')} onClick={() => { onOpenChange?.(false); onEdit?.() }} />
+                <MenuItem icon={Trash2} label={t('profile.clear')} danger onClick={() => setConfirming(true)} />
+                <MenuItem icon={LogOut} label={t('profile.logout')} onClick={() => { onOpenChange?.(false); onLogout?.() }} />
               </div>
             )}
           </div>
