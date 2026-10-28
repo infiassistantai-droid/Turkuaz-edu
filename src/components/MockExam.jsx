@@ -5,6 +5,8 @@ import {
 } from 'lucide-react'
 import { calculateCertificate, scoreSection, scoreSpeakingParts, scoreWritingTasks } from '../lib/multilevelScoring'
 import { generateMockExam, SECTION_LABELS } from '../data/mockExamBank'
+import ReadingMockExam from './MockExam.tsx'
+import MockExamEngine from './MockExamEngine.tsx'
 import { cn } from '../lib/utils'
 
 const SECTION_KEYS = ['dinleme', 'okuma', 'yazma', 'konusma']
@@ -88,9 +90,12 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
   const [activeSection, setActiveSection] = useState(null)
   const [completedThisMock, setCompletedThisMock] = useState({})
   const [lastResult, setLastResult] = useState(null)
+  const [readingOnlyMode, setReadingOnlyMode] = useState(false)
+  const [databaseEngineMode, setDatabaseEngineMode] = useState(false)
   const reportedExamRef = useRef(false)
 
   function generateNewMock() {
+    setReadingOnlyMode(false)
     setMock(generateMockExam())
     setCompletedThisMock({})
     setLastResult(null)
@@ -129,6 +134,14 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
     }
     onSectionComplete?.(result)
     setScreen('result')
+  }
+
+  if (readingOnlyMode) {
+    return <ReadingMockExam onComplete={handleSectionComplete} onExit={() => setReadingOnlyMode(false)} />
+  }
+
+  if (databaseEngineMode) {
+    return <MockExamEngine onSectionComplete={(result) => onSectionComplete?.(result)} onExamComplete={(result) => onExamComplete?.(result)} onExit={() => setDatabaseEngineMode(false)} />
   }
 
   if (screen === 'session' && mock && activeSection) {
@@ -171,7 +184,7 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
   }
 
   if (!mock || screen === 'landing') {
-    return <MockLanding onGenerate={generateNewMock} sectionResults={sectionResults} />
+    return <MockLanding onGenerate={generateNewMock} onStartReading={() => setReadingOnlyMode(true)} onStartDatabase={() => setDatabaseEngineMode(true)} sectionResults={sectionResults} />
   }
 
   const certificate = completedThisMock && SECTION_KEYS.every((key) => completedThisMock[key])
@@ -182,7 +195,7 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700 dark:text-teal-300">Multilevel · Yangi variant</p><h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">To‘liq sinov rejasi</h1><p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Har bir yangi to‘plamda savollar va topshiriqlar yangilanadi.</p></div>
-        <button type="button" onClick={generateNewMock} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-teal-900/15"><RotateCcw className="size-4"/>Yangi Mock Boshlash</button>
+        <div className="flex flex-wrap gap-2"><button type="button" onClick={() => setDatabaseEngineMode(true)} className="inline-flex items-center gap-2 rounded-xl border border-amber-300/50 bg-amber-50 px-4 py-2.5 text-sm font-bold text-amber-900 dark:bg-amber-400/10 dark:text-amber-100"><Sparkles className="size-4"/>Mock 01 · yangi sınav motoru</button><button type="button" onClick={() => setReadingOnlyMode(true)} className="inline-flex items-center gap-2 rounded-xl border border-amber-300/50 bg-amber-50 px-4 py-2.5 text-sm font-bold text-amber-900 dark:bg-amber-400/10 dark:text-amber-100"><BookOpenText className="size-4"/>Faqat Okuma · 35 soru</button><button type="button" onClick={generateNewMock} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-teal-900/15"><RotateCcw className="size-4"/>Yangi Mock Boshlash</button></div>
       </div>
       {certificate && <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5 dark:border-teal-800 dark:bg-teal-950/30"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-bold text-teal-900 dark:text-teal-100">To‘liq mock yakunlandi · {certificate.level}</p><p className="text-sm text-teal-700 dark:text-teal-300">4 bo‘lim o‘rtachasi: {certificate.average} / 75</p></div><span className="text-2xl font-extrabold text-teal-800 dark:text-teal-200">{certificate.average} / 75</span></div></div>}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -203,11 +216,11 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
   )
 }
 
-function MockLanding({ onGenerate, sectionResults }) {
+function MockLanding({ onGenerate, onStartReading, onStartDatabase, sectionResults }) {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <section className="premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9">
-        <div className="relative z-10 max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4"/> BİLİM VE DEĞERLENDİRME · MULTILEVEL</div><h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">Türkçe Multilevel Mock Exam</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">Dinleme, Okuma, Yazma va Konuşma bo‘limlarini imtihon blueprinti bo‘yicha bajaring. Har bir natija 75 ballik shkalaga o‘girilib, qurilmangizda saqlanadi.</p><button type="button" onClick={onGenerate} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-bold text-teal-800 shadow-lg hover:bg-teal-50"><RotateCcw className="size-4"/>Yangi Mock Boshlash</button></div>
+        <div className="relative z-10 max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4"/> BİLİM VE DEĞERLENDİRME · MULTILEVEL</div><h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">Türkçe Multilevel Mock Exam</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">Dinleme, Okuma, Yazma va Konuşma bo‘limlarini imtihon blueprinti bo‘yicha bajaring. Har bir natija 75 ballik shkalaga o‘girilib, qurilmangizda saqlanadi.</p><div className="mt-6 flex flex-wrap gap-3"><button type="button" onClick={onGenerate} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-bold text-teal-800 shadow-lg hover:bg-teal-50"><RotateCcw className="size-4"/>To‘liq mock rejasini boshlash</button><button type="button" onClick={onStartDatabase} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><Sparkles className="size-4 text-amber-200"/>Mock 01 · dinamik motor</button><button type="button" onClick={onStartReading} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><BookOpenText className="size-4 text-amber-200"/>Faqat Okuma · 35 soru</button></div></div>
       </section>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{SECTION_KEYS.map((key) => { const Icon = SECTION_ICONS[key]; const saved = sectionResults[key]; return <div key={key} className="glass premium-glass rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-slate-800 dark:bg-slate-900/80"><div className="flex items-center gap-2"><Icon className="size-4 text-teal-700 dark:text-teal-300"/><span className="font-semibold text-slate-900 dark:text-white">{SECTION_LABELS[key]}</span></div><p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{saved ? `${saved.scaledScore}/75 · ${saved.level}` : '0 / 75 · Hali topshirilmagan'}</p></div> })}</div>
     </div>

@@ -18,6 +18,7 @@ import {
 import { cn } from '../lib/utils'
 import { loadJSON, saveJSON } from '../lib/storage'
 import { getCefrLevel } from '../lib/multilevelScoring'
+import { useI18n } from '../lib/i18n.jsx'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -26,50 +27,50 @@ import { getCefrLevel } from '../lib/multilevelScoring'
 const SKILLS = [
   {
     id: 'okuma',
-    tr: 'Okuma',
-    uz: 'O’qib tushunish',
+    labelKey: 'skill.reading',
+    subKey: 'skill.reading.sub',
+    nextKey: 'skill.reading.next',
+    actionKey: 'skill.reading.action',
     icon: BookOpenText,
     score: 0,
-    next: '5-matn: Kapadokya tarixi',
-    action: 'Matnni davom ettirish',
   },
   {
     id: 'dinleme',
-    tr: 'Dinleme',
-    uz: 'Tinglab tushunish',
+    labelKey: 'skill.listening',
+    subKey: 'skill.listening.sub',
+    nextKey: 'skill.listening.next',
+    actionKey: 'skill.listening.action',
     icon: Headphones,
     score: 0,
-    next: 'Audio 3: Radyo röportajı',
-    action: 'Audioni tinglash',
   },
   {
     id: 'yazma',
-    tr: 'Yazma',
-    uz: 'Yozma ish',
+    labelKey: 'skill.writing',
+    subKey: 'skill.writing.sub',
+    nextKey: 'skill.writing.next',
+    actionKey: 'skill.writing.action',
     icon: PenLine,
     score: 0,
-    next: 'Insho: “Teknoloji ve eğitim”',
-    action: 'Insho yozish',
   },
   {
     id: 'konusma',
-    tr: 'Konuşma',
-    uz: 'Gapirish',
+    labelKey: 'skill.speaking',
+    subKey: 'skill.speaking.sub',
+    nextKey: 'skill.speaking.next',
+    actionKey: 'skill.speaking.action',
     icon: Mic,
     score: 0,
-    next: '2-qism: Rasmni tasvirlash',
-    action: 'Ovoz yozish',
   },
 ]
 
 const INITIAL_TASKS = [
-  { id: 't1', title: '20 ta yangi so’z (Ekler)', meta: 'Lug’at · 10 daq', xp: 40, done: false },
-  { id: 't2', title: 'Dinleme: 2 ta audio', meta: 'Tinglash · 15 daq', xp: 60, done: false },
-  { id: 't3', title: 'Yazma: 150 so’zli insho', meta: 'Yozish · 25 daq', xp: 90, done: false },
-  { id: 't4', title: 'Konuşma: 3 ta savol', meta: 'Gapirish · 12 daq', xp: 70, done: false },
+  { id: 't1', titleKey: 'daily.task1', metaKey: 'daily.task1.meta', xp: 40, done: false },
+  { id: 't2', titleKey: 'daily.task2', metaKey: 'daily.task2.meta', xp: 60, done: false },
+  { id: 't3', titleKey: 'daily.task3', metaKey: 'daily.task3.meta', xp: 90, done: false },
+  { id: 't4', titleKey: 'daily.task4', metaKey: 'daily.task4.meta', xp: 70, done: false },
 ]
 
-const WEEKDAY_LABELS = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh']
+const WEEKDAY_KEYS = ['weekday.sun', 'weekday.mon', 'weekday.tue', 'weekday.wed', 'weekday.thu', 'weekday.fri', 'weekday.sat']
 const WEEK = (() => {
   const today = new Date()
   const mondayOffset = (today.getDay() + 6) % 7
@@ -77,7 +78,7 @@ const WEEK = (() => {
     const date = new Date(today)
     date.setDate(today.getDate() - mondayOffset + index)
     return {
-      day: WEEKDAY_LABELS[date.getDay()],
+      dayKey: WEEKDAY_KEYS[date.getDay()],
       min: 0, // No fabricated study time: populate only when real duration tracking exists.
       today: date.toDateString() === today.toDateString(),
     }
@@ -89,10 +90,10 @@ const WEEK = (() => {
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
 
-function masteryTone(score) {
+function masteryTone(score, t) {
   if (score <= 0)
     return {
-      label: 'Boshlangʻich',
+      label: t('level.beginner'),
       stroke: 'stroke-slate-300 dark:stroke-slate-600',
       bar: 'from-slate-400 to-slate-300',
       text: 'text-slate-500 dark:text-slate-400',
@@ -100,7 +101,7 @@ function masteryTone(score) {
     }
   if (score >= 65)
     return {
-      label: 'C1',
+      label: t('level.C1'),
       stroke: 'stroke-emerald-500',
       bar: 'from-emerald-500 to-emerald-400',
       text: 'text-emerald-600 dark:text-emerald-400',
@@ -108,7 +109,7 @@ function masteryTone(score) {
     }
   if (score >= 51)
     return {
-      label: 'B2',
+      label: t('level.B2'),
       stroke: 'stroke-teal-500',
       bar: 'from-teal-600 to-cyan-500',
       text: 'text-teal-600 dark:text-teal-400',
@@ -116,14 +117,14 @@ function masteryTone(score) {
     }
   if (score >= 38)
     return {
-      label: 'B1',
+      label: t('level.B1'),
       stroke: 'stroke-amber-500',
       bar: 'from-amber-500 to-yellow-400',
       text: 'text-amber-600 dark:text-amber-400',
       chip: 'bg-amber-50 text-amber-700 ring-1 ring-amber-600/15 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-400/20',
     }
   return {
-    label: 'Below B1',
+    label: t('level.belowB1'),
     stroke: 'stroke-rose-500',
     bar: 'from-rose-500 to-red-500',
     text: 'text-rose-600 dark:text-rose-400',
@@ -131,12 +132,12 @@ function masteryTone(score) {
   }
 }
 
-function getCertificate(total) {
+function getCertificate(total, t) {
   if (total >= 65)
     return {
       level: 'C1',
-      title: 'C1 Daraja',
-      note: 'C1 darajasi — har bir bo‘lim o‘rtachasi 65+ ball.',
+      title: t('certificate.C1.title'),
+      note: t('certificate.C1.note'),
       nextAt: null,
       card: 'from-emerald-500 to-teal-600 text-white shadow-emerald-600/25',
       ring: 'ring-white/25',
@@ -144,8 +145,8 @@ function getCertificate(total) {
   if (total >= 51)
     return {
       level: 'B2',
-      title: 'B2 Daraja',
-      note: 'Yuqori natija — C1 ga oz qoldi',
+      title: t('certificate.B2.title'),
+      note: t('certificate.B2.note'),
       nextAt: 65,
       card: 'from-teal-600 to-cyan-500 text-white shadow-teal-600/25',
       ring: 'ring-white/25',
@@ -153,16 +154,16 @@ function getCertificate(total) {
   if (total >= 38)
     return {
       level: 'B1',
-      title: 'B1 Daraja',
-      note: 'B1 darajasi — keyingi maqsad B2.',
+      title: t('certificate.B1.title'),
+      note: t('certificate.B1.note'),
       nextAt: 51,
       card: 'from-cyan-500 to-sky-500 text-white shadow-cyan-600/25',
       ring: 'ring-white/25',
     }
   return {
     level: 'Below B1',
-    title: 'B1 dan past natija',
-    note: 'B1 darajasi uchun o‘rtacha 38 ball kerak.',
+    title: t('certificate.below.title'),
+    note: t('certificate.below.note'),
     nextAt: 38,
     card: 'from-rose-500 to-red-600 text-white shadow-rose-600/25',
     ring: 'ring-white/25',
@@ -219,9 +220,10 @@ function CardHeader({ icon: Icon, title, subtitle, right }) {
 /* -------------------------------------------------------------------------- */
 
 function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
-  const target = targetLevel || 'C1'
-  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : 65
-  const pct = Math.min(100, Math.round((totalScore / threshold) * 100))
+  const { t } = useI18n()
+  const target = targetLevel || '—'
+  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : target === 'C1' ? 65 : 0
+  const pct = threshold ? Math.min(100, Math.round((totalScore / threshold) * 100)) : 0
 
   return (
     <section className="premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl shadow-teal-900/15 sm:p-8 lg:col-span-2">
@@ -242,36 +244,35 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
         <div className="max-w-md">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/25 backdrop-blur-md">
             <Sparkles className="size-3.5" aria-hidden="true" />
-            Milliy Sertifikat · Maqsad {target}
+            {t('dashboard.hero.badge', { target })}
           </span>
           <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            Merhaba, {name || 'Oʻrganuvchi'}! Bugün {target} sari yana bir qadam.
+            {t('dashboard.greeting', { name: name || t('dashboard.learner'), target })}
           </h1>
-          <p className="mt-3 text-pretty text-sm leading-relaxed text-white/80">
-            {weakest
-              ? `${weakest} boʻyicha natijangizni mustahkamlang — tavsiya etilgan mashqni davom ettiring.`
-              : 'Hozircha baholangan natija yoʻq. Birinchi mashqni bajaring — rivojlanishingiz shu yerda koʻrinadi.'}
+          <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-white/65">{t('dashboard.journey')}</p>
+          <p className="mt-2 text-pretty text-sm leading-relaxed text-white/80">
+            {weakest ? t('dashboard.weakest', { skill: weakest }) : t('dashboard.noScores')}
           </p>
           <button
             type="button"
             onClick={onStart}
             className="gold-button premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-teal-800 shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-50 hover:shadow-xl active:scale-95"
           >
-            Bugungi mashgʻulotni boshlash
+            {t('dashboard.start')}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </button>
         </div>
 
         <div className="w-full max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-xl">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/65">Maqsad sari</p>
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/65">{t('dashboard.progress')}</p>
           <div className="mt-2 flex items-end justify-between gap-3">
             <span className="text-3xl font-semibold tracking-tight text-yellow-300">{target}</span>
-            <span className="text-right text-sm font-medium tabular-nums text-white/85">{Number(totalScore).toFixed(2)} <span className="text-white/55">/ 75 ball</span></span>
+            <span className="text-right text-sm font-medium tabular-nums text-white/85">{Number(totalScore).toFixed(2)} <span className="text-white/55">{t('skill.scoreUnit')}</span></span>
           </div>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
             <div className="h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 transition-[width] duration-700" style={{ width: `${pct}%` }} />
           </div>
-          <p className="mt-2 text-[11px] text-white/65">Joriy baholangan natija</p>
+          <p className="mt-2 text-[11px] text-white/65">{t('dashboard.currentScore')}</p>
         </div>
       </div>
     </section>
@@ -283,30 +284,31 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
 /* -------------------------------------------------------------------------- */
 
 function ReadinessCard({ total, targetLevel }) {
+  const { t } = useI18n()
   const mounted = useMounted()
   const pct = Math.round((total / 75) * 100)
-  const cert = getCertificate(total)
-  const target = targetLevel || 'C1'
-  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : 65
-  const remaining = Math.max(0, threshold - total)
+  const cert = getCertificate(total, t)
+  const target = targetLevel || '—'
+  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : target === 'C1' ? 65 : 0
+  const remaining = threshold ? Math.max(0, threshold - total) : null
 
   return (
     <Card className="flex flex-col p-6">
       <CardHeader
         icon={Trophy}
-        title="Tayyorgarlik holati"
-        subtitle="4 bo‘lim · 0–75 ballik o‘rtacha"
+        title={t('dashboard.readiness')}
+        subtitle={t('dashboard.fourSkillsAverage')}
         right={
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20">
-            <TrendingUp className="size-3" aria-hidden="true" /> Maqsad: {target}
+            <TrendingUp className="size-3" aria-hidden="true" /> {t('dashboard.target', { target })}
           </span>
         }
       />
       <div className="mt-6 flex items-end gap-2">
         <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{Number(total).toFixed(2)}</span>
-        <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">/ 75 o‘rtacha</span>
+        <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">{t('dashboard.scoreAverage')}</span>
         <span className="mb-1.5 ml-auto rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-900">
-          {cert.level}
+          {t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}
         </span>
       </div>
 
@@ -344,12 +346,12 @@ function ReadinessCard({ total, targetLevel }) {
             <Target className="size-4" aria-hidden="true" />
           </span>
           <p className="text-xs leading-relaxed text-rose-900 dark:text-rose-200">
-            {remaining > 0 ? (
-              <>
-                {target} uchun yana <span className="font-semibold">{remaining} ball</span> kerak. Muntazam mashq qilishda davom eting.
-              </>
+            {remaining === null ? (
+              <>{t('dashboard.chooseTarget')}</>
+            ) : remaining > 0 ? (
+              <>{t('dashboard.pointsNeeded', { target, count: remaining })}</>
             ) : (
-              <>{target} maqsadiga yetdingiz — natijani mustahkamlang!</>
+              <>{t('dashboard.targetReached', { target })}</>
             )}
           </p>
         </div>
@@ -385,9 +387,10 @@ function ProgressRing({ value, max, toneStroke, mounted }) {
 }
 
 function SkillCard({ skill, onOpen }) {
+  const { t } = useI18n()
   const mounted = useMounted()
   const Icon = skill.icon
-  const tone = masteryTone(skill.score)
+  const tone = masteryTone(skill.score, t)
   const pct = Math.round((skill.score / 75) * 100)
 
   return (
@@ -398,8 +401,8 @@ function SkillCard({ skill, onOpen }) {
             <Icon className="size-5" aria-hidden="true" />
           </span>
           <div>
-            <h3 className="text-sm font-semibold tracking-tight text-slate-900 dark:text-white">{skill.tr}</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{skill.uz}</p>
+            <h3 className="text-sm font-semibold tracking-tight text-slate-900 dark:text-white">{t(skill.labelKey)}</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{t(skill.subKey)}</p>
           </div>
         </div>
         <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-semibold ring-1', tone.chip)}>{tone.label}</span>
@@ -409,11 +412,11 @@ function SkillCard({ skill, onOpen }) {
         <div>
           <div className="flex items-baseline gap-1">
             <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{skill.score.toFixed(2).replace(/\.00$/, '')}</span>
-            <span className="text-sm text-slate-500 dark:text-slate-400">/ 75 ball</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400">{t('skill.scoreUnit')}</span>
           </div>
           <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
             <TrendingUp className="size-3" aria-hidden="true" />
-            {skill.score > 0 ? `${skill.level || getCefrLevel(skill.score)} · baholangan natija` : 'Hali baholanmagan'}
+            {skill.score > 0 ? t('dashboard.skillEvaluated', { level: skill.level || getCefrLevel(skill.score) }) : t('dashboard.notEvaluated')}
           </p>
         </div>
         <div className="relative">
@@ -423,8 +426,8 @@ function SkillCard({ skill, onOpen }) {
       </div>
 
       <div className="mt-4 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/50 dark:text-slate-300">
-        <span className="text-slate-400 dark:text-slate-500">Keyingi: </span>
-        {skill.next}
+        <span className="text-slate-400 dark:text-slate-500">{t('dashboard.next')} </span>
+        {t(skill.nextKey)}
       </div>
 
       <button
@@ -432,7 +435,7 @@ function SkillCard({ skill, onOpen }) {
         onClick={() => onOpen(skill.id)}
         className="mt-3 inline-flex items-center gap-1 self-start text-sm font-medium text-teal-700 transition-colors hover:text-teal-900 active:scale-95 dark:text-teal-300 dark:hover:text-teal-100"
       >
-        {skill.action}
+        {t(skill.actionKey)}
         <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
       </button>
     </Card>
@@ -482,25 +485,26 @@ function ScoreSlider({ id, label, sub, icon: Icon, value, onChange }) {
 }
 
 const CALC_FIELDS = [
-  { key: 'dinleme', label: 'Dinleme', sub: 'Tinglash', icon: Headphones },
-  { key: 'okuma', label: 'Okuma', sub: 'O’qish', icon: BookOpenText },
-  { key: 'yazma', label: 'Yazma', sub: 'Yozish', icon: PenLine },
-  { key: 'konusma', label: 'Konuşma', sub: 'Gapirish', icon: Mic },
+  { key: 'dinleme', labelKey: 'skill.listening', subKey: 'skill.listening.sub', icon: Headphones },
+  { key: 'okuma', labelKey: 'skill.reading', subKey: 'skill.reading.sub', icon: BookOpenText },
+  { key: 'yazma', labelKey: 'skill.writing', subKey: 'skill.writing.sub', icon: PenLine },
+  { key: 'konusma', labelKey: 'skill.speaking', subKey: 'skill.speaking.sub', icon: Mic },
 ]
 
 function CertificateCalculator({ initial }) {
+  const { t } = useI18n()
   const [scores, setScores] = useState(initial)
   useEffect(() => setScores(initial), [initial])
   const total = (scores.dinleme + scores.okuma + scores.yazma + scores.konusma) / 4
   const pct = Math.round((total / 75) * 100)
-  const cert = getCertificate(total)
+  const cert = getCertificate(total, t)
 
   return (
     <Card className="p-6 lg:col-span-2">
       <CardHeader
         icon={Sparkles}
-        title="Milliy Sertifikat Ball Kalkulyatori"
-        subtitle="4 bo‘lim · har biri 0–75 ball · sertifikat o‘rtachasi"
+        title={t('certificate.calculator')}
+        subtitle={t('certificate.subtitle')}
         right={
           <button
             type="button"
@@ -508,7 +512,7 @@ function CertificateCalculator({ initial }) {
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/80 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
           >
             <RotateCcw className="size-3.5" aria-hidden="true" />
-            Qayta
+            {t('certificate.reset')}
           </button>
         }
       />
@@ -519,8 +523,8 @@ function CertificateCalculator({ initial }) {
             <ScoreSlider
               key={f.key}
               id={`calc-${f.key}`}
-              label={f.label}
-              sub={f.sub}
+              label={t(f.labelKey)}
+              sub={t(f.subKey)}
               icon={f.icon}
               value={scores[f.key]}
               onChange={(v) => setScores((prev) => ({ ...prev, [f.key]: v }))}
@@ -530,10 +534,10 @@ function CertificateCalculator({ initial }) {
 
         <div className="flex flex-col gap-3">
           <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-slate-800 dark:bg-slate-800/40">
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Umumiy ball</p>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('certificate.total')}</p>
             <div className="mt-1 flex items-baseline gap-1.5" aria-live="polite">
               <span className="text-4xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{total.toFixed(2)}</span>
-              <span className="text-sm text-slate-500 dark:text-slate-400">/ 75 o‘rtacha</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">{t('certificate.average')}</span>
               <span className="ml-auto text-lg font-semibold tabular-nums text-slate-700 dark:text-slate-200">{pct}%</span>
             </div>
             <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-700/60">
@@ -555,38 +559,38 @@ function CertificateCalculator({ initial }) {
             <div className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-white/15 blur-2xl" aria-hidden="true" />
             <div className="flex items-center gap-2">
               <span className="grid size-10 place-items-center rounded-xl bg-white/20 text-base font-bold tracking-tight ring-1 ring-white/30">
-                {cert.level}
+                {t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">Sertifikat</p>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{t('certificate.label')}</p>
                 <p className="text-sm font-semibold leading-tight">{cert.title}</p>
               </div>
             </div>
             <p className="mt-3 text-xs leading-relaxed text-white/90">{cert.note}</p>
             {cert.nextAt && (
               <p className="mt-2 text-[11px] font-medium text-white/75">
-                Keyingi darajagacha: {cert.nextAt - total} ball
+                {t('certificate.next', { count: (cert.nextAt - total).toFixed(2).replace(/\.00$/, '') })}
               </p>
             )}
           </div>
 
           <div className="grid grid-cols-4 gap-1 text-center text-[10px] font-medium text-slate-500 dark:text-slate-400">
             {[
-              ['<38', 'Below B1'],
-              ['38+', 'B1'],
-              ['51+', 'B2'],
-              ['65+', 'C1'],
+              ['<38', 'level.belowB1'],
+              ['38+', 'level.B1'],
+              ['51+', 'level.B2'],
+              ['65+', 'level.C1'],
             ].map(([range, lvl]) => (
               <div
                 key={lvl}
                 className={cn(
                   'rounded-lg border px-1 py-1.5',
-                  cert.level === lvl
+                  cert.level === ({ 'level.belowB1': 'Below B1', 'level.B1': 'B1', 'level.B2': 'B2', 'level.C1': 'C1' }[lvl])
                     ? 'border-teal-500/40 bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300'
                     : 'border-slate-200/80 dark:border-slate-800',
                 )}
               >
-                <div className="font-semibold">{lvl}</div>
+                <div className="font-semibold">{t(lvl)}</div>
                 <div className="tabular-nums">{range}</div>
               </div>
             ))}
@@ -602,6 +606,7 @@ function CertificateCalculator({ initial }) {
 /* -------------------------------------------------------------------------- */
 
 function DailyPlanCard({ addXp }) {
+  const { t } = useI18n()
   const today = new Date().toLocaleDateString('en-CA')
   const storageKey = `turkish-marathon-dashboard-plan-${today}`
   const savedPlan = loadJSON(storageKey, {})
@@ -631,8 +636,8 @@ function DailyPlanCard({ addXp }) {
     <Card className="flex flex-col p-6">
       <CardHeader
         icon={CalendarCheck}
-        title="Kunlik reja"
-        subtitle={`${doneCount} / ${tasks.length} bajarildi`}
+        title={t('daily.title')}
+        subtitle={t('daily.done', { done: doneCount, total: tasks.length })}
         right={
           <span className="rounded-full bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700 ring-1 ring-amber-600/15 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-400/20">
             +{tasks.reduce((a, t) => a + t.xp, 0)} XP
@@ -641,37 +646,37 @@ function DailyPlanCard({ addXp }) {
       />
 
       <ul className="mt-5 space-y-1.5">
-        {tasks.map((t) => (
-          <li key={t.id}>
+        {tasks.map((task) => (
+          <li key={task.id}>
             <button
               type="button"
               role="checkbox"
-              aria-checked={t.done}
-              onClick={() => toggleTask(t.id)}
+              aria-checked={task.done}
+              onClick={() => toggleTask(task.id)}
               className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition-colors hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-slate-800/50"
             >
               <span
                 className={cn(
                   'grid size-5 shrink-0 place-items-center rounded-md border transition-all',
-                  t.done
+                  task.done
                     ? 'border-emerald-500 bg-emerald-500 text-white'
                     : 'border-slate-300 dark:border-slate-600',
                 )}
               >
-                {t.done && <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />}
+                {task.done && <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />}
               </span>
               <span className="min-w-0 flex-1">
                 <span
                   className={cn(
                     'block truncate text-sm font-medium',
-                    t.done ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-800 dark:text-slate-100',
+                    task.done ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-800 dark:text-slate-100',
                   )}
                 >
-                  {t.title}
+                  {t(task.titleKey)}
                 </span>
-                <span className="block text-xs text-slate-400 dark:text-slate-500">{t.meta}</span>
+                <span className="block text-xs text-slate-400 dark:text-slate-500">{t(task.metaKey)}</span>
               </span>
-              <span className="text-xs font-medium tabular-nums text-slate-400 dark:text-slate-500">+{t.xp}</span>
+              <span className="text-xs font-medium tabular-nums text-slate-400 dark:text-slate-500">+{task.xp}</span>
             </button>
           </li>
         ))}
@@ -679,14 +684,14 @@ function DailyPlanCard({ addXp }) {
 
       <div className="mt-auto border-t border-slate-200/80 pt-5 dark:border-slate-800/80">
         <div className="mb-3 flex items-center justify-between text-xs">
-          <span className="font-medium text-slate-700 dark:text-slate-200">Haftalik faollik</span>
+          <span className="font-medium text-slate-700 dark:text-slate-200">{t('daily.weekly')}</span>
           <span className="tabular-nums text-slate-500 dark:text-slate-400">
-{WEEK.reduce((a, w) => a + w.min, 0)} daqiqa
+{t('daily.minutes', { count: WEEK.reduce((a, w) => a + w.min, 0) })}
           </span>
         </div>
         <div className="flex items-end gap-2">
           {WEEK.map((w) => (
-            <div key={w.day} className="flex flex-1 flex-col items-center gap-1.5">
+            <div key={t(w.dayKey)} className="flex flex-1 flex-col items-center gap-1.5">
               <div className="flex h-16 w-full items-end">
                 <div
                   className={cn(
@@ -696,11 +701,11 @@ function DailyPlanCard({ addXp }) {
                       : 'bg-gradient-to-t from-teal-600/80 to-cyan-400/80',
                   )}
                   style={{ height: `${w.min === 0 ? 3 : (w.min / maxMin) * 100}%`, opacity: w.min === 0 ? 0.35 : 1 }}
-                  title={w.min === 0 ? 'Faollik qayd etilmagan' : `${w.min} daqiqa`}
+                  title={w.min === 0 ? t('daily.noActivity') : t('daily.minutes', { count: w.min })}
                 />
               </div>
               <span className={cn('text-[10px] font-medium', w.today ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500')}>
-                {w.day}
+                {t(w.dayKey)}
               </span>
             </div>
           ))}
@@ -715,6 +720,7 @@ function DailyPlanCard({ addXp }) {
 /* -------------------------------------------------------------------------- */
 
 export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp }) {
+  const { t } = useI18n()
   const total = overallScore ?? SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0) / 4
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
@@ -725,18 +731,18 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
     () => SKILLS.reduce((a, s) => (scores?.[s.id] ?? s.score) < (scores?.[a.id] ?? a.score) ? s : a),
     [scores],
   )
-  const weakest = total > 0 ? weakestSkill.tr : null
+  const weakest = total > 0 ? t(weakestSkill.labelKey) : null
 
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {[
-          { label: 'Jami XP', value: (stats?.xp ?? 0).toLocaleString('en-US'), icon: Zap, hint: 'Oʻqish davomida' },
-          { label: 'Kunlik streak', value: `${stats?.streak ?? 0} kun`, icon: Flame, hint: 'Ketma-ket faollik' },
-          { label: 'Maqsad darajasi', value: targetLevel || 'C1', icon: Target, hint: 'Siz tanlagan CEFR' },
-          { label: 'Bosqichlar', value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: 'Yakunlangan mashqlar' },
-        ].map(({ label, value, icon: Icon, hint }) => (
-          <Card key={label} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
+          { label: t('dashboard.stat.xp'), value: (stats?.xp ?? 0).toLocaleString('en-US'), icon: Zap, hint: t('dashboard.stat.xp.hint') },
+          { label: t('dashboard.stat.streak'), value: `${stats?.streak ?? 0} ${t('profile.days')}`, icon: Flame, hint: t('dashboard.stat.streak.hint') },
+          { label: t('dashboard.stat.target'), value: targetLevel || '—', icon: Target, hint: t('dashboard.stat.target.hint'), testId: 'card-target-level' },
+          { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
+        ].map(({ label, value, icon: Icon, hint, testId }) => (
+          <Card key={label} data-testid={testId} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-amber-300/20 bg-amber-300/10 text-amber-300 shadow-inner shadow-white/10">
               <Icon className="size-5" aria-hidden="true" />
             </span>
@@ -769,7 +775,7 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
       </div>
 
       <footer className="pb-2 pt-2 text-center text-xs text-slate-400 dark:text-slate-500">
-        Turkcha CEFR Pro · Milliy Sertifikat (B1 · B2 · C1) tayyorlov platformasi
+        {t('dashboard.footer')}
       </footer>
     </div>
   )

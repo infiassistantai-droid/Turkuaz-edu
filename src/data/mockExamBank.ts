@@ -36,20 +36,21 @@ export type GeneratedMock = {
 
 const ABC = ['A', 'B', 'C'].map((id) => ({ id, label: id }))
 const ABCD = ['A', 'B', 'C', 'D'].map((id) => ({ id, label: id }))
+type RandomSource = () => number
 const optionLetters = (letters: string[]) => letters.map((id) => ({ id, label: id }))
-const shuffle = <T,>(items: T[]) => {
+const shuffle = <T,>(items: T[], random: RandomSource = Math.random) => {
   const result = [...items]
   for (let index = result.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1))
+    const swapIndex = Math.floor(random() * (index + 1))
     ;[result[index], result[swapIndex]] = [result[swapIndex], result[index]]
   }
   return result
 }
-const sample = <T,>(items: T[], count: number) => shuffle(items).slice(0, count)
+const sample = <T,>(items: T[], count: number, random: RandomSource = Math.random) => shuffle(items, random).slice(0, count)
 const optionList = (labels: string[]) => labels.map((label, index) => ({ id: String.fromCharCode(65 + index), label: `${String.fromCharCode(65 + index)}. ${label}` }))
-function randomizedChoiceOptions(labels: string[], correctLetter: string) {
+function randomizedChoiceOptions(labels: string[], correctLetter: string, random: RandomSource = Math.random) {
   const correctLabel = labels[correctLetter.charCodeAt(0) - 65]
-  const shuffledLabels = shuffle(labels)
+  const shuffledLabels = shuffle(labels, random)
   return {
     options: optionList(shuffledLabels),
     correctAnswer: String.fromCharCode(65 + shuffledLabels.indexOf(correctLabel)),
@@ -179,7 +180,8 @@ const dialogueSets = [
   ],
 ]
 
-const longTalks = [
+type LongTalk = { title: string; audioText: string; questions: Array<[string, string[], string]> }
+const longTalks: LongTalk[] = [
   {
     title: 'Kentlerde yeşil alanların önemi',
     audioText: 'Son yıllarda şehirlerde yaşayan insan sayısı hızla arttı. Bu büyüme, konut ve ulaşım ihtiyacını artırırken açık alanların azalmasına da yol açabiliyor. Oysa parklar yalnızca dinlenme yeri değildir; yazın sıcaklığı düşürür, yağmur suyunun toprağa karışmasını sağlar ve farklı yaşlardan insanları bir araya getirir. Uzmanlar, mahalle ölçeğinde küçük yeşil alanlar oluşturmanın bile ruh sağlığına olumlu katkı verdiğini belirtiyor. Belediyeler, yeni yapı projelerinde ağaçları korumalı ve çocuklar ile yaşlıların güvenle kullanabileceği alanlar tasarlamalıdır. Ayrıca vatandaşların bakım çalışmalarına katılması, bu alanların daha uzun süre temiz ve canlı kalmasına yardımcı olur.',
@@ -279,7 +281,8 @@ const headingSets = [
   },
 ]
 
-const narrativeSets = [
+type NarrativeSet = { title: string; context: string; mcq: Array<[string, string[], string]>; tf: Array<[string, string]> }
+const narrativeSets: NarrativeSet[] = [
   {
     title: 'Kapadokya’da bir hafta sonu',
     context: 'Ece ve arkadaşları sonbaharda Kapadokya’ya gitmek için uzun zamandır plan yapıyordu. İlk gün Göreme’deki açık hava müzesini gezdiler; rehber, kaya kiliselerinin farklı dönemlerde nasıl kullanıldığını anlattı. Öğleden sonra hava aniden yağmurlu oldu ve balon turu ertesi sabaha ertelendi. Grup, otellerine dönmek yerine küçük bir seramik atölyesine uğradı. Usta, bölgedeki kırmızı toprağın çömlek yapımında neden tercih edildiğini gösterdi. Ertesi sabah gökyüzü açık olmasına rağmen rüzgâr kuvvetliydi; güvenlik ekibi uçuşu iptal etti. Ece biraz hayal kırıklığına uğradı, ancak vadi yollarında yürüyüş yaparken gün doğumunun renklerini izledi. Dönüşten önce arkadaşlar, yerel üreticilerin hazırladığı kahvaltıyı denedi ve ziyaret ettikleri yerlerin fotoğraflarını birbirleriyle paylaştı. Ece, geziyi yalnızca balon uçuşuyla hatırlamayacağını, plansız karşılaşmaların da yolculuğu güzelleştirdiğini düşündü.',
@@ -304,7 +307,8 @@ const narrativeSets = [
   },
 ]
 
-const biographySets = [
+type BiographySet = { title: string; context: string; mcq: Array<[string, string[], string]>; matches: Array<[string, string]> }
+const biographySets: BiographySet[] = [
   {
     title: 'Aziz Sancar: bilim ve azim',
     context: 'A. Aziz Sancar, 1946 yılında Mardin’in Savur ilçesinde dünyaya geldi. Eğitimine küçük bir yerleşimde başladı ve ailesinin desteğiyle bilim öğrenmeye yöneldi.\n\nB. İstanbul Üniversitesi Tıp Fakültesi’nden mezun olduktan sonra bir süre hekimlik yaptı. Daha sonra araştırma yapmak için Amerika Birleşik Devletleri’ne gitti.\n\nC. Sancar, hücrelerin hasarlı DNA’yı nasıl onardığını inceleyen çalışmalarıyla tanındı. Araştırmaları, hücrelerin genetik bilgiyi koruma yollarının anlaşılmasına katkı sağladı.\n\nD. Bilim insanı, laboratuvar çalışmalarının yanı sıra öğrencilerin araştırmaya katılmasını destekledi. Ona göre sabırlı ve düzenli çalışma bilimsel ilerlemenin temelidir.\n\nE. 2015 yılında DNA onarımı alanındaki çalışmaları nedeniyle Nobel Kimya Ödülü’nü aldı. Ödül, uzun süreli araştırmaların uluslararası bilim dünyasında görünür olmasına yardımcı oldu.\n\nF. Sancar, bilim eğitiminin yaygınlaşmasını önemser ve gençlerin merak ettikleri soruların peşinden gitmesini teşvik eder.',
@@ -356,73 +360,73 @@ const speakingPools = [
   ],
 ]
 
-function buildListening(): QuestionSection {
+function buildListening(random: RandomSource = Math.random): QuestionSection {
   const parts: TestPart[] = []
   let number = 1
-  const reactionPool = sample(reactionPools[Math.floor(Math.random() * reactionPools.length)], 8)
+  const reactionPool = sample(reactionPools[Math.floor(random() * reactionPools.length)], 8, random)
   parts.push(makePartQuestions('listening-p1', number, reactionPool.map(([audioText, choices, correct]) => {
-    const randomized = randomizedChoiceOptions(choices as string[], String(correct))
+    const randomized = randomizedChoiceOptions(choices as string[], String(correct), random)
     return { prompt: 'Bu cümleye en uygun tepkiyi seçin.', kind: 'choice' as const, ...randomized, audioText: audioText as string }
   }), 'Bölüm 1 · Kısa cümlelere tepki', 'Cümleyi Türkçe dinleyin ve en uygun cevabı seçin. Her soru için tek doğru seçenek vardır.', { transcriptLabel: 'Metni göster' }))
   number += 8
 
-  const announcement = announcementSets[Math.floor(Math.random() * announcementSets.length)]
+  const announcement = announcementSets[Math.floor(random() * announcementSets.length)]
   const tfOptions = [{ id: 'A', label: 'A — Doğru' }, { id: 'B', label: 'B — Yanlış' }]
   parts.push(makePartQuestions('listening-p2', number, announcement.statements.map(([text, answer]) => ({ prompt: text, kind: 'boolean' as const, options: tfOptions, correctAnswer: answer })), 'Bölüm 2 · Duyuru', 'Duyuruyu dinleyin. Her ifadeyi A (Doğru) veya B (Yanlış) olarak işaretleyin.', { contextTitle: announcement.title, audioText: announcement.audioText, transcriptLabel: 'Duyuru metnini göster' }))
   number += 6
 
-  const speakers = speakerSets[Math.floor(Math.random() * speakerSets.length)]
+  const speakers = speakerSets[Math.floor(random() * speakerSets.length)]
   parts.push(makePartQuestions('listening-p3', number, speakers.speakers.map(([text, answer], index) => ({ prompt: `Konuşmacı ${index + 1}: Bu kişinin tercihi hangisidir?`, kind: 'matching' as const, options: speakers.options.map((label, i) => ({ id: String.fromCharCode(65 + i), label })), correctAnswer: answer, audioText: text })), 'Bölüm 3 · Konuşmacıları eşleştirme', 'Dört konuşmacıyı dinleyin ve her birini A–F seçeneklerinden biriyle eşleştirin. İki seçenek kullanılmayacaktır.', { contextTitle: speakers.title, transcriptLabel: 'Konuşmacı metnini göster' }))
   number += 4
 
-  const plan = planSets[Math.floor(Math.random() * planSets.length)]
+  const plan = planSets[Math.floor(random() * planSets.length)]
   parts.push(makePartQuestions('listening-p4', number, plan.tasks.map(([text, answer]) => ({ prompt: 'Dinlediğiniz açıklama plandaki hangi konumu anlatıyor?', kind: 'matching' as const, options: optionLetters(plan.locations.map((_, i) => String.fromCharCode(65 + i))), correctAnswer: answer, audioText: text })), 'Bölüm 4 · Plan üzerinde yer bulma', 'Açıklamaları dinleyin ve plandaki A–H konumlarıyla eşleştirin.', { contextTitle: plan.title, planLocations: plan.locations }))
   number += 5
 
-  const dialogues = sample(dialogueSets[Math.floor(Math.random() * dialogueSets.length)], 3)
+  const dialogues = sample(dialogueSets[Math.floor(random() * dialogueSets.length)], 3, random)
   const dialogueQuestions = dialogues.flatMap((dialogue, dialogueIndex) => dialogue.questions.map(([prompt, choices, answer]) => ({
     prompt: `Diyalog ${dialogueIndex + 1}: ${prompt}`,
     kind: 'choice' as const,
-    ...randomizedChoiceOptions(choices as string[], String(answer)),
+    ...randomizedChoiceOptions(choices as string[], String(answer), random),
     audioText: dialogue.text,
   })))
   parts.push(makePartQuestions('listening-p5', number, dialogueQuestions, 'Bölüm 5 · Kısa diyaloglar', 'Üç kısa diyaloğu dinleyin. Her diyalog için iki soruyu cevaplayın.', { transcriptLabel: 'Diyalog metnini göster' }))
   number += 6
 
-  const talk = longTalks[Math.floor(Math.random() * longTalks.length)]
-  const talkQuestions = talk.questions.map(([prompt, choices, answer]) => ({ prompt, kind: 'choice' as const, ...randomizedChoiceOptions(choices as string[], String(answer)) }))
+  const talk = longTalks[Math.floor(random() * longTalks.length)]
+  const talkQuestions = talk.questions.map(([prompt, choices, answer]) => ({ prompt, kind: 'choice' as const, ...randomizedChoiceOptions(choices, String(answer), random) }))
   parts.push(makePartQuestions('listening-p6', number, talkQuestions, 'Bölüm 6 · Uzun konuşma', 'Konuşmayı dinleyin ve altı soruyu cevaplayın.', { contextTitle: talk.title, audioText: talk.audioText, transcriptLabel: 'Konuşma metnini göster' }))
 
   return { key: 'dinleme', label: 'Dinleme', durationMinutes: 45, totalQuestions: 35, parts }
 }
 
-function buildReading(): QuestionSection {
+function buildReading(random: RandomSource = Math.random): QuestionSection {
   const parts: TestPart[] = []
   let number = 1
-  const cloze = clozeSets[Math.floor(Math.random() * clozeSets.length)]
+  const cloze = clozeSets[Math.floor(random() * clozeSets.length)]
   parts.push(makePartQuestions('reading-p1', number, cloze.answers.map((answer, index) => ({ prompt: `${index + 1}. boşluk için doğru kelimeyi seçin.`, kind: 'matching' as const, options: optionLetters(cloze.words.map((word) => word.slice(0, 1))), correctAnswer: answer })), 'Bölüm 1 · Boşluk doldurma', 'Metni okuyun. A–G kelime seçeneklerinden uygun olanı her boşlukla eşleştirin; bir kelime kullanılmayacaktır.', { contextTitle: cloze.title, context: `${cloze.context}\n\nKelime havuzu: ${cloze.words.join(' · ')}` }))
   number += 6
 
-  const ads = adSets[Math.floor(Math.random() * adSets.length)]
+  const ads = adSets[Math.floor(random() * adSets.length)]
   parts.push(makePartQuestions('reading-p2', number, ads.ads.map(([text, answer], index) => ({ prompt: `İlan ${index + 1}: ${text}`, kind: 'matching' as const, options: ads.statements.map((label, i) => ({ id: String.fromCharCode(65 + i), label })), correctAnswer: answer })), 'Bölüm 2 · İlanları eşleştirme', 'Sekiz ilanı okuyun ve A–J ihtiyaç ifadelerinden en uygun olanla eşleştirin. İki ifade kullanılmayacaktır.', { contextTitle: ads.title }))
   number += 8
 
-  const headings = headingSets[Math.floor(Math.random() * headingSets.length)]
+  const headings = headingSets[Math.floor(random() * headingSets.length)]
   parts.push(makePartQuestions('reading-p3', number, headings.paragraphs.map(([text, answer], index) => ({ prompt: `Paragraf ${['I', 'II', 'III', 'IV', 'V', 'VI'][index]}: ${text}`, kind: 'matching' as const, options: headings.headings.map((label, i) => ({ id: String.fromCharCode(65 + i), label })), correctAnswer: answer })), 'Bölüm 3 · Paragraflara başlık bulma', 'Altı paragrafı okuyun ve A–H başlıklarından uygun olanı seçin. İki başlık kullanılmayacaktır.', { contextTitle: headings.title }))
   number += 6
 
-  const narrative = narrativeSets[Math.floor(Math.random() * narrativeSets.length)]
+  const narrative = narrativeSets[Math.floor(random() * narrativeSets.length)]
   const tfngOptions = [{ id: 'A', label: 'A — Doğru' }, { id: 'B', label: 'B — Yanlış' }, { id: 'C', label: 'C — Bilgi yok' }]
   const narrativeQuestions = [
-    ...narrative.mcq.map(([prompt, choices, answer]) => ({ prompt, kind: 'choice' as const, ...randomizedChoiceOptions(choices as string[], String(answer)) })),
+    ...narrative.mcq.map(([prompt, choices, answer]) => ({ prompt, kind: 'choice' as const, ...randomizedChoiceOptions(choices, String(answer), random) })),
     ...narrative.tf.map(([prompt, answer]) => ({ prompt, kind: 'boolean' as const, options: tfngOptions, correctAnswer: answer })),
   ]
   parts.push(makePartQuestions('reading-p4', number, narrativeQuestions, 'Bölüm 4 · Uzun anlatı', 'Metni okuyun. İlk dört soruda doğru seçeneği, sonraki beş soruda Doğru/Yanlış/Bilgi yok cevabını işaretleyin.', { contextTitle: narrative.title, context: narrative.context }))
   number += 9
 
-  const biography = biographySets[Math.floor(Math.random() * biographySets.length)]
+  const biography = biographySets[Math.floor(random() * biographySets.length)]
   const bioQuestions = [
-    ...biography.mcq.map(([prompt, choices, answer]) => ({ prompt, kind: 'choice' as const, ...randomizedChoiceOptions(choices as string[], String(answer)) })),
+    ...biography.mcq.map(([prompt, choices, answer]) => ({ prompt, kind: 'choice' as const, ...randomizedChoiceOptions(choices, String(answer), random) })),
     ...biography.matches.map(([prompt, answer]) => ({ prompt: `Hangi paragraf bu bilgiyi içeriyor? ${prompt}`, kind: 'matching' as const, options: optionLetters(['A', 'B', 'C', 'D', 'E']), correctAnswer: answer })),
   ]
   parts.push(makePartQuestions('reading-p5', number, bioQuestions, 'Bölüm 5 · Biyografik/bilimsel metin', 'Metni okuyun. Q30–32 için çıkarılamayan bilgiyi; Q33–35 için A–E paragraflarından doğru olanı seçin.', { contextTitle: biography.title, context: biography.context }))
@@ -430,15 +434,15 @@ function buildReading(): QuestionSection {
   return { key: 'okuma', label: 'Okuma', durationMinutes: 60, totalQuestions: 35, parts }
 }
 
-export function generateMockExam(): GeneratedMock {
-  const task1 = writingTask1[Math.floor(Math.random() * writingTask1.length)]
-  const task2 = writingTask2[Math.floor(Math.random() * writingTask2.length)]
-  const speaking = speakingPools.map((pool) => pool[Math.floor(Math.random() * pool.length)])
+export function generateMockExam(random: RandomSource = Math.random): GeneratedMock {
+  const task1 = writingTask1[Math.floor(random() * writingTask1.length)]
+  const task2 = writingTask2[Math.floor(random() * writingTask2.length)]
+  const speaking = speakingPools.map((pool) => pool[Math.floor(random() * pool.length)])
   return {
-    id: `mock-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    id: `mock-${Date.now()}-${random().toString(36).slice(2, 8)}`,
     generatedAt: new Date().toISOString(),
-    dinleme: buildListening(),
-    okuma: buildReading(),
+    dinleme: buildListening(random),
+    okuma: buildReading(random),
     yazma: { key: 'yazma', label: 'Yazma', durationMinutes: 60, tasks: [task1, task2] },
     konusma: { key: 'konusma', label: 'Konuşma', durationMinutes: 15, parts: speaking },
   }
