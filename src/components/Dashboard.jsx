@@ -19,6 +19,7 @@ import { cn } from '../lib/utils'
 import { loadJSON, saveJSON } from '../lib/storage'
 import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
+import DailyQuestsWidget from './DailyQuestsWidget'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -550,28 +551,26 @@ function CertificateCalculator({ initial }) {
 
           <div
             className={cn(
-              'relative flex-1 overflow-hidden rounded-2xl bg-gradient-to-br p-4 shadow-lg ring-1 transition-all duration-500',
+              'relative flex items-start gap-4 overflow-hidden rounded-2xl bg-gradient-to-br p-4 shadow-lg ring-1 transition-all duration-500',
               cert.card,
               cert.ring,
             )}
             aria-live="polite"
           >
             <div className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-white/15 blur-2xl" aria-hidden="true" />
-            <div className="flex items-center gap-2">
-              <span className="grid size-10 place-items-center rounded-xl bg-white/20 text-base font-bold tracking-tight ring-1 ring-white/30">
-                {t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}
-              </span>
-              <div className="min-w-0">
-                <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{t('certificate.label')}</p>
-                <p className="text-sm font-semibold leading-tight">{cert.title}</p>
-              </div>
+            <span className="relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-white/20 px-1 text-center text-xs font-bold leading-tight tracking-tight ring-1 ring-white/30">
+              <span className="whitespace-nowrap">{t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}</span>
+            </span>
+            <div className="relative min-w-0 flex-1">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{t('certificate.label')}</p>
+              <p className="break-words text-sm font-semibold leading-tight">{cert.title}</p>
+              <p className="mt-2 break-words text-xs leading-relaxed text-white/90">{cert.note}</p>
+              {cert.nextAt && (
+                <p className="mt-2 break-words text-[11px] font-medium leading-relaxed text-white/75">
+                  {t('certificate.next', { count: (cert.nextAt - total).toFixed(2).replace(/\.00$/, '') })}
+                </p>
+              )}
             </div>
-            <p className="mt-3 text-xs leading-relaxed text-white/90">{cert.note}</p>
-            {cert.nextAt && (
-              <p className="mt-2 text-[11px] font-medium text-white/75">
-                {t('certificate.next', { count: (cert.nextAt - total).toFixed(2).replace(/\.00$/, '') })}
-              </p>
-            )}
           </div>
 
           <div className="grid grid-cols-4 gap-1 text-center text-[10px] font-medium text-slate-500 dark:text-slate-400">
@@ -719,8 +718,10 @@ function DailyPlanCard({ addXp }) {
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp }) {
-  const { t } = useI18n()
+export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp, dailyQuests, onClaimDailyReward, isPremium = false }) {
+  const { language, t } = useI18n()
+  const locale = { uz: 'uz-UZ', tr: 'tr-TR', en: 'en-US' }[language] || 'tr-TR'
+  const todayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
   const total = overallScore ?? SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0) / 4
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
@@ -735,9 +736,21 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      <div className="mb-1 flex flex-wrap items-end justify-between gap-3 px-1">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[.22em] text-teal-700 dark:text-teal-300">{todayLabel}</p>
+          <h1 className="mt-1.5 font-serif text-[26px] font-extrabold tracking-[-.045em] text-slate-900 dark:text-white sm:text-[30px]" data-testid="text-page-heading">{t('dashboard.home.title')}<span className={isPremium ? 'text-yellow-300' : 'text-teal-600'}>.</span></h1>
+        </div>
+        <span className={`mb-1 rounded-xl border px-3 py-2 text-[10px] font-semibold ${isPremium ? 'border-yellow-300/25 bg-black/25 text-yellow-100' : 'border-slate-200 bg-white/80 text-slate-500'}`}>{t('dashboard.stat.target')}: {targetLevel || '—'}</span>
+      </div>
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest} targetLevel={targetLevel} totalScore={total} />
+        <ReadinessCard total={total} targetLevel={targetLevel} />
+      </div>
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {[
-          { label: t('dashboard.stat.xp'), value: (stats?.xp ?? 0).toLocaleString('en-US'), icon: Zap, hint: t('dashboard.stat.xp.hint') },
+          { label: t('dashboard.stat.xp'), value: (stats?.xp ?? 0).toLocaleString(language), icon: Zap, hint: t('dashboard.stat.xp.hint') },
           { label: t('dashboard.stat.streak'), value: `${stats?.streak ?? 0} ${t('profile.days')}`, icon: Flame, hint: t('dashboard.stat.streak.hint') },
           { label: t('dashboard.stat.target'), value: targetLevel || '—', icon: Target, hint: t('dashboard.stat.target.hint'), testId: 'card-target-level' },
           { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
@@ -754,10 +767,7 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
           </Card>
         ))}
       </div>
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest} targetLevel={targetLevel} totalScore={total} />
-        <ReadinessCard total={total} targetLevel={targetLevel} />
-      </div>
+      <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} />
 
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
         {SKILLS.map((skill) => (

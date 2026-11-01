@@ -396,23 +396,244 @@ html.theme-premium body {
 }
 
 :is(.premium-theme, .theme-premium) #root input.premium-search {
-  color: #111827 !important;
+  color: #fff !important;
   border-color: rgba(234, 179, 8, 0.62) !important;
-  background-color: #fff !important;
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22) !important;
+  background-color: rgba(0, 0, 0, 0.38) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12) !important;
 }
 
 :is(.premium-theme, .theme-premium) #root input.premium-search::placeholder {
-  color: #64748b !important;
+  color: rgba(255, 255, 255, 0.72) !important;
   opacity: 1;
 }
 
 :is(.premium-theme, .theme-premium) #root svg.search-icon {
-  color: #64748b !important;
+  color: #facc15 !important;
 }
 
 :is(.premium-theme, .theme-premium) #root kbd {
-  color: #475569 !important;
-  border-color: #e2e8f0 !important;
-  background-color: #f8fafc !important;
+  color: #fde68a !important;
+  border-color: rgba(234, 179, 8, 0.4) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Default Turkuaz is strictly teal/cyan/slate. Warm utility tokens in legacy
+   modules are remapped only while Premium is off, so semantic states never
+   leak ruby or gold into the default palette. */
+html.theme-default #root [class*="text-rose-"],
+html.theme-default #root [class*="text-red-"],
+html.theme-default #root [class*="text-amber-"],
+html.theme-default #root [class*="text-yellow-"],
+html.theme-default #root [class*="text-orange-"] {
+  color: #0f766e !important;
+}
+
+html.theme-default #root [class*="bg-rose-"],
+html.theme-default #root [class*="bg-red-"],
+html.theme-default #root [class*="bg-amber-"],
+html.theme-default #root [class*="bg-yellow-"],
+html.theme-default #root [class*="bg-orange-"] {
+  background-color: rgba(20, 184, 166, 0.1) !important;
+}
+
+html.theme-default #root [class*="border-rose-"],
+html.theme-default #root [class*="border-red-"],
+html.theme-default #root [class*="border-amber-"],
+html.theme-default #root [class*="border-yellow-"],
+html.theme-default #root [class*="border-orange-"] {
+  border-color: rgba(13, 148, 136, 0.32) !important;
+}
+
+html.theme-default #root [class*="ring-rose-"],
+html.theme-default #root [class*="ring-red-"],
+html.theme-default #root [class*="ring-amber-"],
+html.theme-default #root [class*="ring-yellow-"],
+html.theme-default #root [class*="ring-orange-"] {
+  --tw-ring-color: rgba(13, 148, 136, 0.22) !important;
+}
+
+html.theme-default #root [class*="from-rose-"],
+html.theme-default #root [class*="from-red-"],
+html.theme-default #root [class*="from-amber-"],
+html.theme-default #root [class*="from-yellow-"],
+html.theme-default #root [class*="from-orange-"],
+html.theme-default #root [class*="to-rose-"],
+html.theme-default #root [class*="to-red-"],
+html.theme-default #root [class*="to-amber-"],
+html.theme-default #root [class*="to-yellow-"],
+html.theme-default #root [class*="to-orange-"] {
+  --tw-gradient-from: #0f766e var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(6 182 212 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), #06b6d4 var(--tw-gradient-via-position), #06b6d4 var(--tw-gradient-to-position) !important;
+}
+
+html.theme-default #root [class*="fill-rose-"],
+html.theme-default #root [class*="fill-red-"],
+html.theme-default #root [class*="fill-amber-"],
+html.theme-default #root [class*="fill-yellow-"],
+html.theme-default #root [class*="fill-orange-"] {
+  fill: #0f766e !important;
+}
+
+html.theme-default #root [class*="stroke-rose-"],
+html.theme-default #root [class*="stroke-red-"],
+html.theme-default #root [class*="stroke-amber-"],
+html.theme-default #root [class*="stroke-yellow-"],
+html.theme-default #root [class*="stroke-orange-"] {
+  stroke: #0f766e !important;
+}
+
+html.theme-default #root .premium-hero {
+  background-image: linear-gradient(135deg, #0f766e 0%, #0891b2 55%, #06b6d4 100%) !important;
+}
+
+/* Bring remaining legacy surfaces and solid-color actions into the Ruby & Gold
+   palette without whitening cards in Premium. */
+:is(.premium-theme, .theme-premium) #root [class*="bg-rose-"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-red-"] {
+  color: #fff !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(234, 179, 8, 0.38) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-rose-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-red-"] {
+  color: #fff !important;
+  background-image: linear-gradient(115deg, #7f1d1d 0%, #be123c 100%) !important;
+  border-color: rgba(253, 230, 138, 0.78) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-teal-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-cyan-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-emerald-"] {
+  color: #451a03 !important;
+  background-image: linear-gradient(115deg, #fde68a 0%, #eab308 52%, #d97706 100%) !important;
+  border-color: rgba(253, 230, 138, 0.78) !important;
+}
+
+html.theme-default #root [class*="shadow-rose-"],
+html.theme-default #root [class*="shadow-red-"],
+html.theme-default #root [class*="shadow-amber-"],
+html.theme-default #root [class*="shadow-yellow-"],
+html.theme-default #root [class*="shadow-orange-"] {
+  --tw-shadow-color: rgba(13, 148, 136, 0.18) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root option {
+  color: #fff !important;
+  background-color: #111 !important;
+}
+
+html.theme-default {
+  --exam-timer-primary: #0f766e;
+  --exam-timer-active: #0891b2;
+  --exam-timer-alert: #155e75;
+}
+
+:is(html.theme-premium, html.premium-theme) {
+  --exam-timer-primary: #facc15;
+  --exam-timer-active: #eab308;
+  --exam-timer-alert: #be123c;
+}
+
+/* Legacy pastel chips become dark glass in Premium; solid action buttons are
+   restyled separately below so their labels retain contrast. */
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-amber-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-yellow-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-cyan-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-teal-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-emerald-"] {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(234, 179, 8, 0.35) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-amber-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-yellow-"] {
+  color: #451a03 !important;
+  background-image: linear-gradient(115deg, #fde68a 0%, #eab308 52%, #d97706 100%) !important;
+  border-color: rgba(253, 230, 138, 0.78) !important;
+}
+
+/* Preserve button contrast after warming legacy Tailwind tokens to Turkuaz. */
+html.theme-default #root button[class*="bg-rose-"],
+html.theme-default #root button[class*="bg-red-"],
+html.theme-default #root button[class*="bg-amber-"],
+html.theme-default #root button[class*="bg-yellow-"],
+html.theme-default #root button[class*="bg-orange-"] {
+  color: #fff !important;
+  background-color: #0f766e !important;
+  background-image: none !important;
+}
+
+html.theme-default #root button[class*="from-rose-"],
+html.theme-default #root button[class*="from-red-"],
+html.theme-default #root button[class*="from-amber-"],
+html.theme-default #root button[class*="from-yellow-"],
+html.theme-default #root button[class*="from-orange-"] {
+  color: #fff !important;
+  background-image: linear-gradient(115deg, #0f766e, #0891b2) !important;
+}
+
+/* Screenshot fixes: selected CEFR choices keep strong contrast, while sidebar
+   profile surfaces and account dialogs stay dark glass in Premium. */
+:is(.premium-theme, .theme-premium) #root .premium-level-selected {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.48) !important;
+  border-color: rgba(250, 204, 21, 0.78) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+  backdrop-filter: blur(24px) saturate(145%);
+}
+
+:is(.premium-theme, .theme-premium) #root .premium-profile-card {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.72) !important;
+  border-color: rgba(234, 179, 8, 0.48) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  backdrop-filter: blur(32px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [role="dialog"] {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.78) !important;
+  border-color: rgba(234, 179, 8, 0.48) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
+  backdrop-filter: blur(36px) saturate(150%);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [role="dialog"] > header {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [role="menu"] {
+  color: #fff !important;
+  background: rgba(17, 7, 9, 0.96) !important;
+  border-color: rgba(234, 179, 8, 0.42) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
+  backdrop-filter: blur(36px) saturate(150%);
+}
+
+html.theme-default #root .selected-cefr-default {
+  color: #fff !important;
+  background-image: linear-gradient(135deg, #0f766e, #0891b2) !important;
+  border-color: #0f766e !important;
+}
+
+/* The first-run Turkuaz experience is intentionally bright and crisp. Premium
+   Ruby/Gold retains its separate dark-glass surfaces above. */
+html.theme-default:not(.dark),
+html.theme-default:not(.dark) body {
+  background: #eef7f7;
+  color: #1e293b;
+}
+html.theme-default:not(.dark) #root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #edf7f7 0%, #f3f7fa 48%, #eef5f7 100%);
+}
+html.theme-default:not(.dark) #root .glass {
+  background-color: rgba(255, 255, 255, 0.96);
+  border-color: rgba(203, 213, 225, 0.78);
 }
