@@ -19,12 +19,14 @@ import {
 import { appInfo } from '../data/mockExamData'
 import { cn } from '../lib/utils'
 import { loadJSON, saveJSON } from '../lib/storage'
+import { useI18n } from '../lib/i18n.jsx'
+import DailyQuests from './DailyQuests'
 
 const COLOR_CLASSES = {
   turk: { text: 'text-teal-700 dark:text-teal-300', bg: 'bg-teal-50 dark:bg-teal-500/10', ring: 'ring-teal-600/15 dark:ring-teal-400/20', bar: 'bg-teal-500' },
   cyan: { text: 'text-teal-700 dark:text-teal-300', bg: 'bg-teal-50 dark:bg-cyan-500/10', ring: 'ring-cyan-600/15 dark:ring-cyan-400/20', bar: 'bg-cyan-500' },
-  rose: { text: 'text-rose-600 dark:text-rose-300', bg: 'bg-rose-50 dark:bg-rose-500/10', ring: 'ring-rose-600/15 dark:ring-rose-400/20', bar: 'bg-rose-500' },
-  amber: { text: 'text-amber-600 dark:text-amber-300', bg: 'bg-amber-50 dark:bg-amber-500/10', ring: 'ring-amber-600/15 dark:ring-amber-400/20', bar: 'bg-amber-500' },
+  rose: { text: 'text-teal-700 dark:text-teal-300', bg: 'bg-teal-50 dark:bg-teal-500/10', ring: 'ring-teal-600/15 dark:ring-teal-400/20', bar: 'bg-teal-500' },
+  amber: { text: 'text-cyan-700 dark:text-cyan-300', bg: 'bg-cyan-50 dark:bg-cyan-500/10', ring: 'ring-cyan-600/15 dark:ring-cyan-400/20', bar: 'bg-cyan-500' },
 }
 
 const ICONS = {
@@ -38,21 +40,23 @@ const ICONS = {
 
 // Today's schedule — each task ties to a module
 const TASKS = [
-  { id: 'lugat', time: '07:30', duration: '15 daqiqa', xp: 10, icon: 'Lugat', label: 'Lugʻat xotiralash — 12 ta yangi soʻz', module: 'lugat', tone: 'turk' },
-  { id: 'okuma', time: '08:00', duration: '20 daqiqa', xp: 30, icon: 'BookOpen', label: 'Bir maqola oʻqib chiqing (B2)', module: 'okuma', tone: 'cyan' },
-  { id: 'dinleme', time: '12:30', duration: '25 daqiqa', xp: 50, icon: 'Headphones', label: 'Tinglash treningi — «Kitap Kafe»HE', module: 'dinleme', tone: 'rose' },
-  { id: 'yazma', time: '15:00', duration: '30 daqiqa', xp: 40, icon: 'PenLine', label: '1 rasmiy mektup yozing (60–80 soʻz)', module: 'yazma', tone: 'amber' },
-  { id: 'konusma', time: '18:30', duration: '20 daqiqa', xp: 60, icon: 'Mic', label: '2 daqiqa gapirish — mavzu kartalari', module: 'konusma', tone: 'turk' },
-  { id: 'exam', time: '20:00', duration: '15 daqiqa', xp: 50, icon: 'Exam', label: 'Kunlik mock mashq — 10 savol', module: 'mock', tone: 'rose' },
+  { id: 'lugat', time: '07:30', minutes: 15, xp: 10, icon: 'Lugat', labelKey: 'plan.task.vocab', module: 'lugat', tone: 'turk' },
+  { id: 'okuma', time: '08:00', minutes: 20, xp: 30, icon: 'BookOpen', labelKey: 'plan.task.reading', module: 'okuma', tone: 'cyan' },
+  { id: 'dinleme', time: '12:30', minutes: 25, xp: 50, icon: 'Headphones', labelKey: 'plan.task.listening', module: 'dinleme', tone: 'rose' },
+  { id: 'yazma', time: '15:00', minutes: 30, xp: 40, icon: 'PenLine', labelKey: 'plan.task.writing', module: 'writing-practice', tone: 'amber' },
+  { id: 'konusma', time: '18:30', minutes: 20, xp: 60, icon: 'Mic', labelKey: 'plan.task.speaking', module: 'konusma', tone: 'turk' },
+  { id: 'exam', time: '20:00', minutes: 15, xp: 50, icon: 'Exam', labelKey: 'plan.task.mock', module: 'mock', tone: 'cyan' },
 ]
 
-function fmtToday() {
-  const d = new Date()
-  const months = [
-    'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
-    'Iyul', 'Avgust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr',
-  ]
-  return `${d.getDate()} ${months[d.getMonth()]}`
+function fmtToday(language) {
+  const date = new Date()
+  const monthNames = {
+    uz: ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'],
+    tr: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  }
+  const month = (monthNames[language] || monthNames.uz)[date.getMonth()]
+  return language === 'en' ? `${month} ${date.getDate()}` : `${date.getDate()} ${month}`
 }
 
 function daysUntilExam() {
@@ -62,7 +66,8 @@ function daysUntilExam() {
   return Math.max(0, Math.ceil((exam.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
 }
 
-export default function KunlikReja({ stats, progress, navigate, addXp }) {
+export default function KunlikReja({ stats, progress, navigate, addXp, isPremium = false }) {
+  const { t, language } = useI18n()
   const today = new Date().toLocaleDateString('en-CA')
   const storageKey = `turkish-marathon-daily-plan-${today}`
   const savedPlan = loadJSON(storageKey, {})
@@ -94,40 +99,41 @@ export default function KunlikReja({ stats, progress, navigate, addXp }) {
             <CalendarDays className="h-6 w-6" />
           </div>
           <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-white/70">
-              Bugun · {fmtToday()}
+            <div className="text-xs font-bold tracking-widest text-white/70">
+              {t('plan.today', { date: fmtToday(language) })}
             </div>
-            <h1 className="font-display text-2xl font-extrabold sm:text-3xl">Kunlik reja</h1>
+            <h1 className="font-display text-2xl font-extrabold sm:text-3xl">{t('plan.title')}</h1>
           </div>
           <div className="ml-auto flex items-center gap-2 rounded-xl bg-white/15 px-4 py-2 ring-1 ring-white/20 backdrop-blur-sm">
-            <Flame className="h-5 w-5 text-amber-300" />
+            <Flame className="h-5 w-5 text-cyan-200" />
             <div className="leading-tight">
               <div className="font-display text-lg font-extrabold">{stats.streak}</div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">seriya</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">{t('plan.streak')}</div>
             </div>
           </div>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-white/85">
-          Imtihongacha {daysUntilExam()} kun qoldi — bu kun uchun 6 ta mashq tayyorlandi.
-          Har birini tugatib {TASKS.reduce((s, t) => s + t.xp, 0)} XP toʻplashingiz mumkin.
+          {t('plan.countdown', { days: daysUntilExam(), count: TASKS.length, xp: TASKS.reduce((sum, task) => sum + task.xp, 0) })}
         </p>
       </div>
+
+      <DailyQuests isPremium={isPremium} />
 
       {/* Progress strip */}
       <div className="rounded-3xl border border-slate-200/80 bg-white/80 p-5 backdrop-blur-md shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2 text-sm font-bold text-slate-600 dark:text-slate-300">
             <CheckCircle2 className={cn('h-5 w-5', allDone ? 'text-teal-700 dark:text-teal-400' : 'text-slate-400')} />
-            Tugallandi: {completedCount}/{TASKS.length}
+            {t('plan.done', { done: completedCount, total: TASKS.length })}
           </div>
-          <div className="flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-400">
+          <div className="flex items-center gap-2 text-sm font-bold text-teal-700 dark:text-teal-300">
             <Trophy className="h-5 w-5" />
-            Yigʻilgan XP: {earnedXp} / {TASKS.reduce((s, t) => s + t.xp, 0)}
+            {t('plan.xpEarned', { earned: earnedXp, total: TASKS.reduce((sum, task) => sum + task.xp, 0) })}
           </div>
           {allDone && (
             <span className="flex items-center gap-2 rounded-xl bg-teal-50 px-3 py-1.5 text-sm font-extrabold text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">
               <Sparkles className="h-4 w-4" />
-              Kun mukammal oʻtdi! 🎉
+              {t('plan.perfect')}
             </span>
           )}
         </div>
@@ -182,11 +188,11 @@ export default function KunlikReja({ stats, progress, navigate, addXp }) {
                 <div className="flex items-center gap-2">
                   <Icon className={cn('h-4 w-4 shrink-0', tone.text)} />
                   <span className={cn('text-sm font-bold', isDone ? 'text-teal-700 dark:text-teal-300' : 'text-slate-800 dark:text-white')}>
-                    {task.label}
+                    {t(task.labelKey)}
                   </span>
                 </div>
                 <div className="mt-1 flex items-center gap-3 text-xs font-semibold text-slate-400 dark:text-slate-500">
-                  <span>{task.duration}</span>
+                  <span>{t('plan.minutes', { count: task.minutes })}</span>
                   <span className={cn('font-bold', tone.text)}>+{task.xp} XP</span>
                 </div>
               </button>
@@ -201,7 +207,7 @@ export default function KunlikReja({ stats, progress, navigate, addXp }) {
                     ? 'border-teal-500 bg-teal-500 text-white'
                     : 'border-slate-300 text-transparent hover:border-teal-400 dark:border-slate-600',
                 )}
-                aria-label={isDone ? 'Olib tashlash' : 'Tugallandi deb belgilash'}
+                aria-label={isDone ? t('plan.undo') : t('plan.markDone')}
               >
                 {isDone ? <Check className="h-5 w-5" /> : <Circle className="h-5 w-5" />}
               </button>
@@ -213,22 +219,20 @@ export default function KunlikReja({ stats, progress, navigate, addXp }) {
       {/* Tip card */}
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="flex items-start gap-3 rounded-3xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur-md shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]">
-          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
+          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-teal-600 dark:text-teal-300" />
           <div>
-            <div className="text-sm font-bold text-slate-800 dark:text-white">Sarguzashtli oʻqish</div>
+            <div className="text-sm font-bold text-slate-800 dark:text-white">{t('plan.tip.reading.title')}</div>
             <div className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              Har bir mashqdan keyin 10 daqiqa nafas olib, yangi soʻzlarni bir necha marta
-              yozing — xotira mustahkamlanadi.
+              {t('plan.tip.reading.body')}
             </div>
           </div>
         </div>
         <div className="flex items-start gap-3 rounded-3xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur-md shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]">
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-teal-700 dark:text-teal-400" />
           <div>
-            <div className="text-sm font-bold text-slate-800 dark:text-white">Davolanmang!</div>
+            <div className="text-sm font-bold text-slate-800 dark:text-white">{t('plan.tip.streak.title')}</div>
             <div className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              Har kun bir xil vaqtda trening qilish seriyangizni saqlab qolishning eng yaxshi
-              usuli. {stats.streak} kun — ajoyib natija!
+              {t('plan.tip.streak.body', { days: stats.streak })}
             </div>
           </div>
         </div>

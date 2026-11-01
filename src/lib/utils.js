@@ -152,78 +152,44 @@ export function buildSuffix(word, suffixId) {
   const v = lastVowelOf(word)
   const endsVowel = /[aeıioöuü]$/i.test(word)
   const last = word.slice(-1).toLowerCase()
-  let form = ''
-  let rule = ''
+  let form = word
 
   if (suffixId === 'plural') {
-    const suf = isBackVowel(v) ? 'lar' : 'ler'
-    form = word + suf
-    rule = `Soʻz oxiridagi unli <b>${v}</b> ${isBackVowel(v) ? 'katta/orqa' : 'kichik/old'} unli → <b>-${suf}</b> qoʻshiladi.`
+    form += isBackVowel(v) ? 'lar' : 'ler'
   } else if (suffixId === 'p1') {
     if (endsVowel) {
       form = v === 'e' ? word + 'im' : word + 'm'
-      rule = `Soʻz unli bilan tugagan — <b>-(i)m</b> qoʻshimchasi qoʻshiladi${v === 'e' ? ' (e ortidan i keladi: ev → evim)' : ''}.`
     } else {
-      const w2 = voiceBase(word)
-      const vow = harmonyVowel(v)
-      form = w2 + vow + 'm'
-      rule = `Soʻz undosh bilan tugagan: sesshörünleştirme (${last} → ${w2.slice(-1)}) va unli moslashuvi <b>-${vow}m</b>.`
+      const stem = voiceBase(word)
+      form = stem + harmonyVowel(v) + 'm'
     }
   } else if (suffixId === 'dat') {
     if (endsVowel) {
-      if (v === 'e') {
-        form = word + 'e'
-        rule = "Soʻz unli <b>'e'</b> bilan tugagan — <b>-e</b> (ysiz)."
-      } else {
-        form = word + 'y' + (isBackVowel(v) ? 'a' : 'e')
-        rule = `Soʻz unli <b>${v}</b> bilan tugagan — <b>-(y)a / -(y)e</b> qoʻshimchasi (y bilan).`
-      }
+      form = v === 'e' ? word + 'e' : word + 'y' + (isBackVowel(v) ? 'a' : 'e')
     } else {
-      const w2 = voiceBase(word)
-      form = w2 + (isBackVowel(v) ? 'a' : 'e')
-      rule = `Soʻz undosh bilan tugagan: sesshörünleştirme + <b>-${isBackVowel(v) ? 'a' : 'e'}</b>.`
+      form = voiceBase(word) + (isBackVowel(v) ? 'a' : 'e')
     }
   } else if (suffixId === 'loc') {
     if (endsVowel) {
       const penult = word.slice(-2, -1).toLowerCase()
-      if (penult === 'ç') {
-        // ç-final vowel stem: y-buffer merges — maça → maçada
-        form = word + (isBackVowel(v) ? 'da' : 'de')
-        rule = `Soʻz <b>ç</b> bilan tugagan — sesshörünleştirme, <b>-${isBackVowel(v) ? 'da' : 'de'}</b> qoʻshiladi (y buffer toʻqtadi).`
-      } else {
-        // vowel-final stems take the y-buffer: araba → arabayda
-        form = word + 'y' + (isBackVowel(v) ? 'da' : 'de')
-        rule = `Soʻz unli bilan tugagan — <b>-(y)a / -(y)e</b> (y buffer) qoʻshiladi: ${word} → <b>${form}</b>.`
-      }
-    } else if (['p', 'k', 'ç', 'ş', 't'].includes(last)) {
-      form = word + (isBackVowel(v) ? 'ta' : 'te')
-      rule = `Soʻz p/k/ç/ş/t bilan tugagan — lokativ <b>-${isBackVowel(v) ? 'ta' : 'te'}</b> shaklida.`
+      form = penult === 'ç'
+        ? word + (isBackVowel(v) ? 'da' : 'de')
+        : word + 'y' + (isBackVowel(v) ? 'da' : 'de')
     } else {
-      form = word + (isBackVowel(v) ? 'da' : 'de')
-      rule = `Soʻz boshqa undosh bilan tugagan — <b>-${isBackVowel(v) ? 'da' : 'de'}</b>.`
+      form = word + (['p', 'k', 'ç', 'ş', 't'].includes(last)
+        ? (isBackVowel(v) ? 'ta' : 'te')
+        : (isBackVowel(v) ? 'da' : 'de'))
     }
   } else if (suffixId === 'abl') {
-    if (endsVowel) {
-      form = word + (isBackVowel(v) ? 'dan' : 'den')
-      rule = `Soʻz unli bilan tugagan — <b>-${isBackVowel(v) ? 'dan' : 'den'}</b> qoʻshimchasi toʻgʻridan-toʻgʻri qoʻshiladi.`
-    } else if (['p', 'k', 'ç', 'ş', 't'].includes(last)) {
-      form = word + (isBackVowel(v) ? 'tan' : 'ten')
-      rule = `Soʻz p/k/ç/ş/t bilan tugagan — manba <b>-${isBackVowel(v) ? 'tan' : 'ten'}</b> shaklida.`
-    } else {
-      form = word + (isBackVowel(v) ? 'dan' : 'den')
-      rule = `Soʻz boshqa undosh bilan tugagan — <b>-${isBackVowel(v) ? 'dan' : 'den'}</b>.`
-    }
+    form = word + (['p', 'k', 'ç', 'ş', 't'].includes(last) && !endsVowel
+      ? (isBackVowel(v) ? 'tan' : 'ten')
+      : (isBackVowel(v) ? 'dan' : 'den'))
   } else if (suffixId === 'gen') {
     if (endsVowel) {
-      const vow = harmonyVowel(v)
-      form = word + 'n' + vow + 'n'
-      rule = `Soʻz unli bilan tugagan — ichki <b>-n + ${vow} + n</b> (buffer -n- va suffix n).`
+      form = word + 'n' + harmonyVowel(v) + 'n'
     } else {
-      const w2 = voiceBase(word)
-      const vow = harmonyVowel(v)
-      form = w2 + vow + 'n'
-      rule = `Soʻz undosh bilan tugagan: sesshörünleştirme (${last} → ${w2.slice(-1)}) va unli moslashuvi <b>-${vow}n</b>.`
+      form = voiceBase(word) + harmonyVowel(v) + 'n'
     }
   }
-  return { form, rule }
+  return { form }
 }

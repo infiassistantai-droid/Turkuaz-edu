@@ -11,6 +11,7 @@ import {
 import { readingPassages } from '../../data/mockExamData'
 import { cn } from '../../lib/utils'
 import { saveScore, loadScores } from '../../lib/storage'
+import { useI18n } from '../../lib/i18n.jsx'
 
 // Turkish keywords with Uzbek meanings — highlighted chips inside the passage
 const KEYWORDS = [
@@ -56,6 +57,7 @@ function renderPassageText(text, pinned, onTogglePin) {
 }
 
 function KeywordChip({ kw, pinned, onTogglePin }) {
+  const { t } = useI18n()
   return (
     <button
       type="button"
@@ -76,7 +78,7 @@ function KeywordChip({ kw, pinned, onTogglePin }) {
         )}
       >
         <span className="block text-[10px] font-bold uppercase tracking-widest text-white/60">
-          Uzbekcha
+          {t('module.translation')}
         </span>
         {kw.uz}
       </span>
@@ -91,6 +93,7 @@ function levelStyle(level) {
 }
 
 export default function OkumaModule({ completeLevel }) {
+  const { t } = useI18n()
   const [passageId, setPassageId] = useState(readingPassages[0].id)
   const passage = useMemo(
     () => readingPassages.find((p) => p.id === passageId) || readingPassages[0],
@@ -159,7 +162,7 @@ export default function OkumaModule({ completeLevel }) {
         <div className="flex flex-wrap items-center gap-2">
           <BookOpenText className="h-5 w-5 text-teal-700 dark:text-teal-400" />
           <h1 className="font-display text-xl font-extrabold text-slate-800 dark:text-white">
-            Oʻqish module — Milliy Sertifikat imtihoni uslubida
+            {t('module.reading.title')}
           </h1>
           <span
             className={cn(
@@ -171,8 +174,7 @@ export default function OkumaModule({ completeLevel }) {
           </span>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-          Milliy Sertifikat imtihoni: sol tomonda matn, oʻng tomonda savollar. Kalit soʻzlarni bosing —
-          Uzbekcha izoh paydo boʻladi. Barcha savollarga javob berib «Javoblarni tekshirish»ni bosing.
+          {t('module.reading.intro')}
         </p>
       </div>
 
@@ -218,13 +220,13 @@ export default function OkumaModule({ completeLevel }) {
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-4 py-2.5 dark:border-slate-800">
               <span className="flex items-center gap-1.5 text-xs font-bold text-slate-400 dark:text-slate-500">
                 <Clock className="h-4 w-4" />
-                ~{estMin} daqiqa · {passage.words} soʻz
+                ~{estMin} {t('module.minutes')} · {passage.words} {t('module.words')}
               </span>
               <div className="flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => setFontSize((s) => Math.max(12, s - 1.5))}
-                  aria-label="Kattalikni kamaytirish"
+                  aria-label={t('module.decreaseText')}
                   className="grid h-7 w-9 place-items-center rounded-lg border border-slate-200/80 font-bold text-slate-600 transition-all active:scale-95 hover:border-teal-400 hover:text-teal-700 dark:border-slate-800 dark:text-slate-300"
                 >
                   A-
@@ -235,7 +237,7 @@ export default function OkumaModule({ completeLevel }) {
                 <button
                   type="button"
                   onClick={() => setFontSize((s) => Math.min(22, s + 1.5))}
-                  aria-label="Kattalikni oshirish"
+                  aria-label={t('module.increaseText')}
                   className="grid h-7 w-9 place-items-center rounded-lg border border-slate-200/80 font-bold text-slate-600 transition-all active:scale-95 hover:border-teal-400 hover:text-teal-700 dark:border-slate-800 dark:text-slate-300"
                 >
                   A+
@@ -254,8 +256,7 @@ export default function OkumaModule({ completeLevel }) {
                 </p>
               ))}
               <p className="pt-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-                💡 Izlangan soʻzlarni bosing yoki ustiga olib boring — Uzbekcha
-                tarjima chiqadi.
+                {t('module.reading.clickHint')}
               </p>
             </div>
           </div>
@@ -265,7 +266,7 @@ export default function OkumaModule({ completeLevel }) {
         <section className="space-y-4">
           <div className="flex flex-wrap items-center gap-2 px-1">
             <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-              Savol va javoblar · radio tanlash (A/B/C/D)
+              {t('module.reading.questions')}
             </span>
             {revealedNow && (
               <span
@@ -274,7 +275,7 @@ export default function OkumaModule({ completeLevel }) {
                   summaryTone,
                 )}
               >
-                {correctCount}/{passage.questions.length} toʻgʻri · {pct}%
+                {correctCount}/{passage.questions.length} {t('module.correct')} · {pct}%
               </span>
             )}
           </div>
@@ -284,17 +285,17 @@ export default function OkumaModule({ completeLevel }) {
               <div className="flex items-center gap-2">
                 <Trophy className="h-5 w-5" />
                 <div className="text-sm font-extrabold">
-                  Natija: {correctCount}/{passage.questions.length} toʻgʻri javob ({pct}%)
+                  {t('module.score')}: {correctCount}/{passage.questions.length} {t('module.correct')} ({pct}%)
                 </div>
               </div>
               <p className="mt-1 text-xs font-semibold">
                 {pct === 100
-                  ? 'Ajoyib! Barcha savollar toʻgʻri — module yakunlandi.'
+                  ? t('module.feedback.allCorrect')
                   : pct >= 50
-                    ? 'Yaxshi natija! Izohlarni oʻqib, xato ustida ishlang.'
-                    : 'Qayta oʻqib, izohlarga eʼtibor bering.'}
+                    ? t('module.feedback.review')
+                    : t('module.feedback.lowScore')}
               </p>
-              <p className="mt-1 text-[11px] font-bold opacity-80">Eng yaxshi natija: {best}%</p>
+              <p className="mt-1 text-[11px] font-bold opacity-80">{t('module.best')}: {best}%</p>
             </div>
           )}
 
@@ -386,7 +387,7 @@ export default function OkumaModule({ completeLevel }) {
                                       : 'border border-slate-300 bg-slate-50 text-slate-500 hover:text-teal-700 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300',
                               )}
                             >
-                              {val ? 'TOʻGʻRI' : 'YALĢIN'}
+                              {val ? t('module.true') : t('module.false')}
                             </button>
                           )
                         })}
@@ -400,7 +401,7 @@ export default function OkumaModule({ completeLevel }) {
                         value={answers[q.id] || ''}
                         disabled={revealedNow}
                         onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                        placeholder="Javobingizni yozing…"
+                        placeholder={t('module.answerPlaceholder')}
                         className="mt-3 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:opacity-60 dark:border-slate-800 dark:bg-slate-900/80 dark:text-white"
                       />
                     )}
@@ -423,17 +424,17 @@ export default function OkumaModule({ completeLevel }) {
                           )}
                           <span>
                             {q.type === 'text'
-                              ? 'Javob berilgan — model javobni solishtiring.'
+                              ? t('module.feedback.answeredModel')
                               : isCorrect(q)
-                                ? 'Toʻgʻri!'
-                                : 'Yana bir bor oʻylab koʻring — Izohga eʼtibor bering.'}
+                                ? t('module.feedback.answerCorrect')
+                                : t('module.feedback.answerIncorrect')}
                           </span>
                         </div>
 
                         {q.type === 'text' && (
                           <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 dark:bg-slate-800/50 dark:ring-slate-700">
                             <div className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400">
-                              Model javob
+                              {t('module.modelAnswer')}
                             </div>
                             <p className="mt-0.5 text-[13px] font-semibold text-slate-700 dark:text-slate-200">
                               {q.answer}
@@ -444,7 +445,7 @@ export default function OkumaModule({ completeLevel }) {
                         <div className="overflow-hidden rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200 dark:bg-slate-800/50 dark:ring-slate-700">
                           <div className="mb-1 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-teal-700 dark:text-teal-400">
                             <Sparkles className="h-3.5 w-3.5" />
-                            Izoh
+                            {t('module.explanation')}
                           </div>
                           <p
                             className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400"
@@ -470,7 +471,7 @@ export default function OkumaModule({ completeLevel }) {
           className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/20 transition-all active:scale-95 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none dark:disabled:bg-slate-700"
         >
           <Sparkles className="h-4 w-4" />
-          Javoblarni tekshirish · {answeredCount}/{passage.questions.length}
+          {t('module.checkAnswers')} · {answeredCount}/{passage.questions.length}
         </button>
         <button
           type="button"
@@ -478,12 +479,12 @@ export default function OkumaModule({ completeLevel }) {
           className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm font-bold text-slate-500 transition-all active:scale-95 hover:text-teal-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-teal-300"
         >
           <RotateCcw className="h-4 w-4" />
-          Takrorlash
+          {t('module.repeat')}
         </button>
         {isComplete && (
           <span className="flex items-center gap-2 rounded-xl bg-amber-100 px-3 py-2.5 text-sm font-bold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
             <Trophy className="h-4 w-4" />
-            Module yakunlandi · +50 XP!
+            {t('module.completed', { xp: 50 })}
           </span>
         )}
       </div>

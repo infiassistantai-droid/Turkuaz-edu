@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Check, ChevronLeft, ChevronRight, GraduationCap, Lock, Mail, ShieldCheck, Sparkles, Target, User, X } from 'lucide-react'
+import { Bell, Check, ChevronLeft, ChevronRight, GraduationCap, Lock, Mail, ShieldCheck, Sparkles, Target, User, X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
@@ -54,10 +54,10 @@ function Field({ icon: Icon, label, type = 'text', value, onChange, placeholder,
           autoComplete={autoComplete}
           required={required}
           className={cn(
-            'h-11 w-full rounded-xl border pl-10 pr-3 text-sm font-medium outline-none transition-all duration-300 focus:bg-white/10 focus:border-yellow-300 focus:ring-4 focus:ring-yellow-300/10',
+            'h-11 w-full rounded-xl border pl-10 pr-3 text-sm font-medium outline-none transition-all duration-300',
             premium
-              ? 'border-white/15 bg-white/5 text-white placeholder:text-white/40'
-              : 'border-slate-200 bg-slate-50/80 text-slate-900 placeholder:text-slate-400 focus:bg-white dark:border-slate-700 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:bg-white/10',
+              ? 'border-white/15 bg-white/5 text-white placeholder:text-white/40 focus:border-yellow-300 focus:bg-white/10 focus:ring-4 focus:ring-yellow-300/10'
+              : 'border-slate-200 bg-slate-50/80 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 dark:border-slate-700 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500 dark:focus:bg-white/10',
           )}
         />
       </span>
@@ -78,20 +78,23 @@ function LevelSelector({ value, onChange, premium }) {
             onClick={() => onChange(level.id)}
             aria-pressed={selected}
             className={cn(
-              'group relative min-h-36 rounded-2xl border p-4 text-left transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300',
+              'group relative min-h-36 rounded-2xl border p-4 text-left transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2',
+              premium ? 'focus-visible:ring-yellow-300' : 'focus-visible:ring-teal-400',
               selected
-                ? 'border-yellow-300 bg-gradient-to-br from-yellow-300/20 to-amber-500/10 shadow-[0_0_28px_rgba(250,204,21,.2)] ring-1 ring-yellow-200/60'
+                ? premium
+                  ? 'premium-level-selected border-yellow-300/70 bg-black/45 shadow-[0_0_28px_rgba(250,204,21,.2)] ring-1 ring-yellow-200/60'
+                  : 'selected-cefr-default border-teal-600 bg-gradient-to-br from-teal-600 to-cyan-500 text-white shadow-lg shadow-teal-900/20 ring-1 ring-teal-300/60'
                 : premium
                   ? 'border-white/15 bg-white/5 hover:border-white/35 hover:bg-white/10'
                   : 'border-slate-200 bg-white/70 hover:border-teal-300 hover:bg-teal-50/60 dark:border-slate-700 dark:bg-white/5 dark:hover:border-teal-400/50 dark:hover:bg-white/10',
             )}
           >
-            <span className={cn('flex items-center justify-between', selected || premium ? 'text-yellow-300' : 'text-teal-700 dark:text-teal-300')}>
+            <span className={cn('flex items-center justify-between', selected ? premium ? 'text-yellow-300' : 'text-white' : premium ? 'text-white' : 'text-teal-700 dark:text-teal-300')}>
               <span className="text-2xl font-black tracking-tight">{level.id}</span>
               {selected && <Check className="size-5" aria-hidden="true" />}
             </span>
-            <span className={cn('mt-2 block text-sm font-extrabold', premium ? 'text-white' : 'text-slate-900 dark:text-white')}>{t(level.subtitleKey)}</span>
-            <span className={cn('mt-1 block text-xs leading-relaxed', premium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t(level.descriptionKey)}</span>
+            <span className={cn('mt-2 block text-sm font-extrabold', selected ? premium ? 'text-yellow-50' : 'text-white' : premium ? 'text-white' : 'text-slate-900 dark:text-white')}>{t(level.subtitleKey)}</span>
+            <span className={cn('mt-1 block text-xs leading-relaxed', selected ? 'text-white/85' : premium ? 'text-white/65' : 'text-slate-500 dark:text-slate-400')}>{t(level.descriptionKey)}</span>
           </button>
         )
       })}
@@ -109,6 +112,11 @@ export default function ProfileSetupModal({
   onClose,
   onSave,
   onLogin,
+  onCloudRegister,
+  onCloudLogin,
+  cloudEnabled = false,
+  remindersEnabled = false,
+  onToggleReminders,
 }) {
   const { t } = useI18n()
   const [tab, setTab] = useState('signup')
@@ -119,6 +127,7 @@ export default function ProfileSetupModal({
   const [level, setLevel] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
+  const [reminderBusy, setReminderBusy] = useState(false)
   const isEdit = mode === 'edit'
   const premium = Boolean(isPremium)
 
@@ -166,11 +175,15 @@ export default function ProfileSetupModal({
     setError('')
     setBusy(true)
     try {
+      if (cloudEnabled && onCloudRegister) {
+        await onCloudRegister({ email: normalizeEmail(email), password, profile: { ...splitFullName(fullName), email: normalizeEmail(email), targetLevel: level } })
+        return
+      }
       const salt = createSalt()
       const credentialHash = await hashPassword(password, salt)
       onSave?.({ ...splitFullName(fullName), email: normalizeEmail(email), targetLevel: level, credentialSalt: salt, credentialHash })
-    } catch {
-      setError(t('auth.error.crypto'))
+    } catch (reason) {
+      setError(cloudEnabled ? (reason?.message || t('auth.error.credentials.invalid')) : t('auth.error.crypto'))
       setBusy(false)
     }
   }
@@ -193,6 +206,11 @@ export default function ProfileSetupModal({
     setError('')
     const normalized = normalizeEmail(email)
     if (!normalized || !password) { setError(t('auth.error.credentials.required')); return }
+    if (cloudEnabled && onCloudLogin) {
+      setBusy(true)
+      try { await onCloudLogin({ email: normalized, password }); return }
+      catch (reason) { setError(reason?.message || t('auth.error.credentials.invalid')); setBusy(false); return }
+    }
     if (!profile?.credentialHash || !profile?.credentialSalt) {
       setError(t('auth.error.profile.noPassword'))
       return
@@ -220,9 +238,9 @@ export default function ProfileSetupModal({
     : 'border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-white/5'
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto p-3 sm:p-6" role="presentation">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto overscroll-contain p-3 sm:p-6" role="presentation">
       <button type="button" className="absolute inset-0 bg-black/40 backdrop-blur-2xl" onClick={onClose || undefined} aria-label={t('auth.close')} />
-      <section role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" className={cn('relative my-auto w-full max-w-2xl rounded-[24px] border p-5 transition-all duration-300 sm:p-8', shellClass)}>
+      <section role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" className={cn('relative my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl overflow-y-auto rounded-[24px] border p-5 transition-all duration-300 sm:max-h-[calc(100dvh-3rem)] sm:p-8', shellClass)}>
         <header className="flex items-start gap-3">
           <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-900/20"><GraduationCap className="size-5" /></span>
           <div className="min-w-0 flex-1">
@@ -243,11 +261,15 @@ export default function ProfileSetupModal({
               <Field icon={Mail} label={t('auth.email')} type="email" value={email} onChange={setEmail} placeholder={t('auth.email.placeholder')} autoComplete="email" premium={premium} />
             </div>
             <div className="space-y-3">
-              <div className="flex items-center gap-2"><Target className="size-4 text-yellow-400"/><h3 className="text-sm font-bold">{t('auth.target.title')}</h3></div>
+              <div className="flex items-center gap-2"><Target className={cn('size-4', premium ? 'text-yellow-400' : 'text-teal-600 dark:text-teal-300')}/><h3 className="text-sm font-bold">{t('auth.target.title')}</h3></div>
               <LevelSelector value={level} onChange={setLevel} premium={premium} />
             </div>
             <div className={cn('flex items-center justify-between gap-4 rounded-2xl border p-4', premium ? 'border-yellow-300/25 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
-              <div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-rose-600 to-red-700 text-yellow-300"><Sparkles className="size-4"/></span><div><p className="text-sm font-bold">{t('auth.theme.title')}</p><p className={cn('text-xs', premium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t('auth.theme.subtitle')}</p></div></div>
+              <div className="flex items-center gap-3"><span className={cn('grid size-10 place-items-center rounded-xl', premium ? 'bg-white/10 text-yellow-300' : 'bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300')}><Bell className="size-4"/></span><div><p className="text-sm font-bold">{t('auth.reminder.title')}</p><p className={cn('text-xs', premium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t('auth.reminder.subtitle')}</p></div></div>
+              <button type="button" disabled={reminderBusy} onClick={async () => { setReminderBusy(true); try { await onToggleReminders?.(!remindersEnabled) } finally { setReminderBusy(false) } }} aria-pressed={remindersEnabled} className={cn('relative h-7 w-12 rounded-full p-1 transition-all duration-300 disabled:opacity-50', remindersEnabled ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700')}><span className={cn('block size-5 rounded-full bg-white shadow transition-transform duration-300', remindersEnabled && 'translate-x-5')} /><span className="sr-only">{remindersEnabled ? t('auth.reminder.title') : t('auth.reminder.title')}</span></button>
+            </div>
+            <div className={cn('flex items-center justify-between gap-4 rounded-2xl border p-4', premium ? 'border-yellow-300/25 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
+              <div className="flex items-center gap-3"><span className={cn('grid size-10 place-items-center rounded-xl', premium ? 'bg-gradient-to-br from-rose-600 to-red-700 text-yellow-300' : 'bg-gradient-to-br from-teal-600 to-cyan-500 text-white')}><Sparkles className="size-4"/></span><div><p className="text-sm font-bold">{t('auth.theme.title')}</p><p className={cn('text-xs', premium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t('auth.theme.subtitle')}</p></div></div>
               <button type="button" onClick={onTogglePremium} aria-pressed={premium} className={cn('relative h-7 w-12 rounded-full p-1 transition-all duration-300', premium ? 'bg-gradient-to-r from-rose-600 to-red-700 ring-1 ring-yellow-300/60' : 'bg-slate-300 dark:bg-slate-700')}><span className={cn('block size-5 rounded-full bg-white shadow transition-transform duration-300', premium && 'translate-x-5')} /> <span className="sr-only">{premium ? t('auth.theme.enabled') : t('auth.theme.disabled')}</span></button>
             </div>
             {error && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-200">{error}</p>}
@@ -263,7 +285,7 @@ export default function ProfileSetupModal({
           </form>
         ) : step === 1 ? (
           <form onSubmit={continueRegistration} className="mt-6 space-y-4">
-            <div className="mb-5 flex items-center gap-3"><span className="grid size-8 place-items-center rounded-full bg-yellow-300 font-bold text-slate-950">1</span><div><p className="text-sm font-bold">{t('auth.step1.title')}</p><p className={cn('text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('auth.step1.subtitle')}</p></div><span className="ml-auto text-xs font-bold text-yellow-400">{t('auth.step.progress1')}</span></div>
+            <div className="mb-5 flex items-center gap-3"><span className={cn('grid size-8 place-items-center rounded-full font-bold', premium ? 'bg-yellow-300 text-slate-950' : 'bg-teal-600 text-white')}>1</span><div><p className="text-sm font-bold">{t('auth.step1.title')}</p><p className={cn('text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('auth.step1.subtitle')}</p></div><span className={cn('ml-auto shrink-0 whitespace-nowrap text-right text-xs font-bold', premium ? 'text-yellow-400' : 'text-teal-700 dark:text-teal-300')}>{t('auth.step.progress1')}</span></div>
             <Field icon={User} label={t('auth.name')} value={fullName} onChange={setFullName} placeholder={t('auth.name.placeholder')} autoComplete="name" premium={premium} />
             <Field icon={Mail} label={t('auth.email')} type="email" value={email} onChange={setEmail} placeholder={t('auth.email.placeholder')} autoComplete="email" premium={premium} />
             <Field icon={Lock} label={t('auth.password')} type="password" value={password} onChange={setPassword} placeholder={t('auth.password.placeholder')} autoComplete="new-password" premium={premium} />
@@ -272,14 +294,14 @@ export default function ProfileSetupModal({
           </form>
         ) : (
           <form onSubmit={saveRegistration} className="mt-6 space-y-5">
-            <div className="flex items-center gap-3"><button type="button" onClick={() => { setStep(1); setError('') }} className={cn('grid size-9 place-items-center rounded-xl border transition-all duration-300', secondaryButton)} aria-label={t('auth.back')}><ChevronLeft className="size-4"/></button><div><h3 className="text-sm font-bold">{t('auth.step2.title')}</h3><p className={cn('mt-1 text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('auth.step2.subtitle')}</p></div><span className="ml-auto text-xs font-bold text-yellow-400">{t('auth.step.progress2')}</span></div>
+            <div className="flex items-center gap-3"><button type="button" onClick={() => { setStep(1); setError('') }} className={cn('grid size-9 place-items-center rounded-xl border transition-all duration-300', secondaryButton)} aria-label={t('auth.back')}><ChevronLeft className="size-4"/></button><div><h3 className="text-sm font-bold">{t('auth.step2.title')}</h3><p className={cn('mt-1 text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('auth.step2.subtitle')}</p></div><span className={cn('ml-auto shrink-0 whitespace-nowrap text-right text-xs font-bold', premium ? 'text-yellow-400' : 'text-teal-700 dark:text-teal-300')}>{t('auth.step.progress2')}</span></div>
             <LevelSelector value={level} onChange={setLevel} premium={premium} />
             {error && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-200">{error}</p>}
             <button type="submit" disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 py-3 text-sm font-extrabold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60"><Sparkles className="size-4"/>{busy ? t('auth.saving') : t('auth.create')}</button>
           </form>
         )}
 
-        <p className={cn('mt-5 flex items-start gap-2 text-[11px] leading-relaxed', premium ? 'text-white/45' : 'text-slate-400 dark:text-slate-500')}><ShieldCheck className="mt-0.5 size-3.5 shrink-0"/>{t('auth.local.note')}</p>
+        <p className={cn('mt-5 flex items-start gap-2 text-[11px] leading-relaxed', premium ? 'text-white/45' : 'text-slate-400 dark:text-slate-500')}><ShieldCheck className="mt-0.5 size-3.5 shrink-0"/>{cloudEnabled ? t('auth.cloud.note') : t('auth.local.note')}</p>
       </section>
     </div>
   )

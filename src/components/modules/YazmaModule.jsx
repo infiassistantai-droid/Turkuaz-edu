@@ -16,6 +16,8 @@ import {
 import { writingTasks } from '../../data/mockExamData'
 import { gradeWriting, cn } from '../../lib/utils'
 import { saveScore, loadScores } from '../../lib/storage'
+import { useI18n } from '../../lib/i18n.jsx'
+import { gradeTextMock } from '../../lib/mockAiGrader'
 
 const TURKISH_KEYS = [
   'a', 'b', 'c', 'ç', 'd', 'e', 'f', 'g', 'ğ', 'h', 'ı', 'i', 'j', 'k', 'l', 'm',
@@ -27,7 +29,7 @@ const TURKISH_KEYS = [
 // C1-level essay connectors (kalıplar) — grouped, with Uzbek meanings
 const KALIPLAR = [
   {
-    group: 'Boshlanish',
+    groupKey: 'module.write.group.opening',
     items: [
       { tr: 'Öncelikle, belirtmek gerekir ki,', uz: 'Avvalo, taʼkidlash kerakki,' },
       { tr: 'Görünen o ki,', uz: 'Koʻrinib turibdiki,' },
@@ -35,7 +37,7 @@ const KALIPLAR = [
     ],
   },
   {
-    group: 'Taraqqiyot',
+    groupKey: 'module.write.group.development',
     items: [
       { tr: 'Bunun yanı sıra,', uz: 'Buning muqobilida,' },
       { tr: 'Buna göre,', uz: 'Shuning uchun,' },
@@ -44,7 +46,7 @@ const KALIPLAR = [
     ],
   },
   {
-    group: 'Taqqoslash',
+    groupKey: 'module.write.group.comparison',
     items: [
       { tr: 'Nihayetinde,', uz: 'Nihoyat,' },
       { tr: 'İtibaren,', uz: 'Hisobga olgan holda,' },
@@ -52,7 +54,7 @@ const KALIPLAR = [
     ],
   },
   {
-    group: 'Xulosa',
+    groupKey: 'module.write.group.conclusion',
     items: [
       { tr: 'Özetlemek gerekirse,', uz: 'Xulosa qilib aytganda,' },
       { tr: 'Kanaatimce,', uz: 'Menimcha,' },
@@ -104,47 +106,43 @@ function analyzeWriting(text) {
   }
 }
 
-function critNote(score, text) {
+function critNote(score, text, t) {
   const c = analyzeWriting(text)
   return [
     {
       key: 'topic',
-      label: 'Mavzuni ochib berish',
+      label: t('module.write.rubric.topic'),
       score: c.topic,
-      note:
-        c.sentences >= 5
-          ? `${c.sentences} ta gap — fikrlar ketma-ket rivojlantirilgan. Kirish va xulosani mushtlang.`
-          : 'Koʻproq gaplar yozing — fikrni kirish, rivojlanish va xulosada oching.',
+      note: c.sentences >= 5
+        ? t('module.write.rubric.topic.good', { count: c.sentences })
+        : t('module.write.rubric.topic.improve'),
       bar: 'bg-teal-500',
     },
     {
       key: 'grammar',
-      label: 'Grammatik toʻgʻrilik',
+      label: t('module.write.rubric.grammar'),
       score: c.grammar,
-      note:
-        c.turkChars > 0
-          ? `Türkcha harflar (ç, ğ, ı, ö, ş, ü) ${c.turkChars} marta qoʻllangan — imlo aniqligi yaxshi.`
-          : 'Türkcha maxsus harflarni ishlating — matnni asliroq koʻrsatadi.',
+      note: c.turkChars > 0
+        ? t('module.write.rubric.grammar.good', { count: c.turkChars })
+        : t('module.write.rubric.grammar.improve'),
       bar: 'bg-cyan-500',
     },
     {
       key: 'lexicon',
-      label: 'Lugʻat boyligi',
+      label: t('module.write.rubric.vocabulary'),
       score: c.lexicon,
-      note:
-        c.uniqueRatio > 0.65
-          ? `Soʻz boyligi keng — ${c.wc} ta turkum soʻz ishlatilgan.`
-          : 'Takrorlanuvchi soʻzlarni kamaytiring, sinonimlardan foydalaning.',
+      note: c.uniqueRatio > 0.65
+        ? t('module.write.rubric.vocabulary.good', { count: Math.round(c.uniqueRatio * c.wc) })
+        : t('module.write.rubric.vocabulary.improve'),
       bar: 'bg-rose-500',
     },
     {
       key: 'cohesion',
-      label: 'Imlo va bogʻlanish',
+      label: t('module.write.rubric.cohesion'),
       score: c.cohesion,
-      note:
-        c.foundConn.length >= 3
-          ? `Bogʻlanish yaxshi — ${c.foundConn.length} ta kalom ibora qoʻllangan.`
-          : 'Iboralarni (buning muqobilida, shu sababli, nihoyat) bogʻlovchi sifatida ishlating.',
+      note: c.foundConn.length >= 3
+        ? t('module.write.rubric.cohesion.good', { count: c.foundConn.length })
+        : t('module.write.rubric.cohesion.improve'),
       bar: 'bg-amber-500',
     },
   ]
@@ -157,11 +155,14 @@ function levelStyle(level) {
 }
 
 export default function YazmaModule({ completeLevel }) {
+  const { language, t } = useI18n()
   const [taskId, setTaskId] = useState(writingTasks[0].id)
   const task = useMemo(() => writingTasks.find((t) => t.id === taskId) || writingTasks[0], [taskId])
   const [text, setText] = useState('')
   const gradedTextRef = useRef('')
   const [result, setResult] = useState(null)
+  const [aiFeedback, setAiFeedback] = useState(null)
+  const [analyzing, setAnalyzing] = useState(false)
   const [revealed, setRevealed] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [bestInfo, setBestInfo] = useState(() => loadScores().yazma || { best: 0, attempts: 0 })
@@ -180,12 +181,13 @@ export default function YazmaModule({ completeLevel }) {
         ? 'text-amber-600 dark:text-amber-400'
         : 'text-slate-400 dark:text-slate-500'
   const wordLabel =
-    wordState === 'ok' ? 'Normaga mos ✓' : wordState === 'long' ? 'Normadan ortiq' : wordState === 'short' ? 'Haddi normadan kam' : 'Yozishni boshlang'
+    wordState === 'ok' ? t('module.write.word.ok') : wordState === 'long' ? t('module.write.word.long') : wordState === 'short' ? t('module.write.word.short') : t('module.write.word.empty')
 
   function selectTask(id) {
     setTaskId(id)
     setText('')
     setResult(null)
+    setAiFeedback(null)
     setRevealed(false)
   }
 
@@ -218,15 +220,17 @@ export default function YazmaModule({ completeLevel }) {
     setRevealed(false)
   }
 
-  function grade() {
-    if (text.trim().length < 20 || text === gradedTextRef.current) return
+  async function grade() {
+    if (text.trim().length < 20 || text === gradedTextRef.current || analyzing) return
     gradedTextRef.current = text
-    const res = gradeWriting(text, task.targetWords)
-    setResult(res)
-    setRevealed(true)
-    const saved = saveScore('yazma', { best: res.score, attempts: 1 })
-    setBestInfo(saved)
-    completeLevel(saved.best, res.score >= 60 ? 40 : 0)
+    setAnalyzing(true)
+    try {
+      const [res, feedback] = await Promise.all([Promise.resolve(gradeWriting(text, task.targetWords)), gradeTextMock(text, { kind: 'writing' })])
+      setResult(res); setAiFeedback(feedback); setRevealed(true)
+      const saved = saveScore('yazma', { best: res.score, attempts: 1 })
+      setBestInfo(saved)
+      completeLevel(saved.best, feedback.xp)
+    } finally { setAnalyzing(false) }
   }
 
   const lv = result ? levelStyle(result.level) : levelStyle('A2')
@@ -238,32 +242,31 @@ export default function YazmaModule({ completeLevel }) {
         <div className="flex flex-wrap items-center gap-2">
           <PenLine className="h-5 w-5 text-rose-600 dark:text-rose-400" />
           <h1 className="font-display text-xl font-extrabold text-slate-800 dark:text-white">
-            Yozma module — Rasmiy 2-topshiriq struktura
+            {t('module.write.title')}
           </h1>
           <span className="rounded-lg bg-rose-50 px-2 py-1 text-[11px] font-bold tracking-wider text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
             {task.level}
           </span>
           <span className="ml-auto flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500">
             <Clock className="h-4 w-4" />
-            {task.title}
+            {t(task.task === 1 ? 'module.write.task.letter' : 'module.write.task.essay')}
           </span>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-          Milliy Sertifikat yozma ish: 1-topshiriq — rasmiy/norasmiy maktub (120–150 soʻz),
-          2-topshiriq — esse (180–220 soʻz). Virtual klaviatura matnning kursor joyiga yoziladi.
+          {t('module.write.intro')}
         </p>
       </div>
 
       {/* 1-Topshiriq / 2-Topshiriq tabs */}
       <div className="flex flex-wrap gap-2">
-        {writingTasks.map((t) => (
+        {writingTasks.map((taskOption) => (
           <button
-            key={t.id}
+            key={taskOption.id}
             type="button"
-            onClick={() => selectTask(t.id)}
+            onClick={() => selectTask(taskOption.id)}
             className={cn(
               'flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-extrabold transition-all',
-              t.id === taskId
+              taskOption.id === taskId
                 ? 'bg-rose-600 text-white shadow-lg shadow-rose-900/20'
                 : 'border border-slate-200/80 bg-white text-slate-500 hover:text-rose-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400',
             )}
@@ -271,12 +274,12 @@ export default function YazmaModule({ completeLevel }) {
             <span
               className={cn(
                 'grid h-6 w-6 place-items-center rounded-lg text-[11px] font-extrabold',
-                t.id === taskId ? 'bg-white/20' : 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-300',
+                taskOption.id === taskId ? 'bg-white/20' : 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-300',
               )}
             >
-              {t.task}
+              {taskOption.task}
             </span>
-            {t.title}
+            {taskOption.task === 1 ? t('module.write.task.letter') : t('module.write.task.essay')}
           </button>
         ))}
       </div>
@@ -286,9 +289,7 @@ export default function YazmaModule({ completeLevel }) {
         <h2 className="font-display text-base font-extrabold text-slate-800 dark:text-white">
           {task.promptTr}
         </h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
-          {task.promptUz}
-        </p>
+        {language === 'uz' && <p className="mt-2 text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">{task.promptUz}</p>}
         <div className="mt-3 flex flex-wrap gap-2">
           {task.criteria.map((c, i) => (
             <span
@@ -314,12 +315,12 @@ export default function YazmaModule({ completeLevel }) {
           onSelect={trackCaret}
           onKeyUp={trackCaret}
           onClick={trackCaret}
-          placeholder="Turk tilida matn yozing… Virtual klaviatura yoki Kalıplar panelidan foydalaning."
+          placeholder={t('module.writePlaceholder')}
           className="h-52 w-full resize-y border-0 bg-slate-50 p-4 text-[15px] leading-relaxed text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500/20 dark:bg-slate-900/80 dark:text-slate-200"
         />
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-4 py-3 dark:border-slate-800">
           <span className="text-xs font-bold">
-            <span className={wordColor}>{words}</span> soʻz · {task.targetWords} ·{' '}
+            <span className={wordColor}>{words}</span> {t('module.words')} · {task.targetWords} ·{' '}
             <span className={wordColor}>{wordLabel}</span>
           </span>
           <div className="flex gap-2">
@@ -329,7 +330,7 @@ export default function YazmaModule({ completeLevel }) {
               className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-bold text-slate-500 transition-all active:scale-95 hover:text-teal-700 dark:bg-slate-800 dark:text-slate-400"
             >
               <Wand2 className="h-3.5 w-3.5" />
-              Misol matn
+              {t('module.sampleText')}
             </button>
             <button
               type="button"
@@ -340,7 +341,7 @@ export default function YazmaModule({ completeLevel }) {
               className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1 font-bold text-slate-500 transition-all active:scale-95 hover:text-rose-600 dark:bg-slate-800 dark:text-slate-400"
             >
               <RefreshCw className="h-3.5 w-3.5" />
-              Tozalash
+              {t('module.clear')}
             </button>
             <button
               type="button"
@@ -348,7 +349,7 @@ export default function YazmaModule({ completeLevel }) {
               className="flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1 font-bold text-teal-700 ring-1 ring-teal-600/15 transition-all active:scale-95 hover:bg-teal-100 dark:bg-teal-500/10 dark:text-teal-300 dark:ring-teal-800/50"
             >
               <List className="h-3.5 w-3.5" />
-              Kalıplar
+              {t('module.usefulPhrases')}
             </button>
           </div>
         </div>
@@ -357,7 +358,7 @@ export default function YazmaModule({ completeLevel }) {
         <div className="border-t border-slate-100 bg-slate-50/95 px-4 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
           <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
             <Keyboard className="h-4 w-4" />
-            Türk virtual klaviaturasi — kursor joyiga yoziladi
+            {t('module.playbackHelp')}
           </div>
           <div className="grid grid-cols-8 gap-1.5 sm:grid-cols-14">
             {TURKISH_KEYS.map((k) => (
@@ -376,11 +377,11 @@ export default function YazmaModule({ completeLevel }) {
         <button
           type="button"
           onClick={grade}
-          disabled={text.trim().length < 20}
+          disabled={text.trim().length < 20 || analyzing}
           className="flex w-full items-center justify-center gap-2 border-t border-slate-100 bg-gradient-to-r from-rose-500 to-rose-600 py-3 text-sm font-bold text-white shadow-lg shadow-rose-900/20 transition-all active:scale-95 hover:from-rose-600 hover:to-rose-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800"
         >
-          <Sparkles className="h-4 w-4" />
-          AI Tekshiruv — 4 mezon boʻyicha tahlil
+          <Sparkles className={`h-4 w-4 ${analyzing ? 'animate-pulse' : ''}`} />
+          {analyzing ? t('grader.analyzing') : t('module.aiReview')}
         </button>
       </div>
 
@@ -399,7 +400,7 @@ export default function YazmaModule({ completeLevel }) {
                 <div className="flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-rose-500" />
                   <span className={cn('rounded-lg px-2 py-1 text-xs font-bold tracking-wider', lv.bg)}>
-                    {result.level} darajasi
+                    {result.level} {t('module.levelSuffix')}
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
@@ -411,18 +412,24 @@ export default function YazmaModule({ completeLevel }) {
               </div>
             </div>
             <p className="mt-3 text-xs font-bold text-slate-500 dark:text-slate-400">
-              Eng yaxshi natija: {bestInfo.best}/100 · {bestInfo.attempts} ta urinish
+              {t('module.best')}: {bestInfo.best}/100 · {bestInfo.attempts} {t('module.attempts')}
             </p>
           </div>
+
+          {aiFeedback && <div className="rounded-3xl border border-teal-200 bg-teal-50/70 p-5 dark:border-teal-500/20 dark:bg-teal-500/5">
+            <div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-teal-700 px-3 py-1 text-xs font-bold text-white">{t('grader.mock')}</span><span className="text-sm font-bold text-teal-900 dark:text-teal-100">{t('grader.level')}: {aiFeedback.level}</span><span className="ml-auto text-sm font-extrabold text-teal-800 dark:text-teal-200">+{aiFeedback.xp} XP</span></div>
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{Object.entries(aiFeedback.rubric).map(([key, value]) => <div key={key} className="rounded-xl bg-white/80 p-3 text-center dark:bg-slate-900/70"><p className="text-xs text-slate-500 dark:text-slate-400">{t(`grader.${key}`)}</p><p className="mt-1 font-extrabold text-slate-800 dark:text-white">{value}/100</p></div>)}</div>
+            {aiFeedback.corrections.length > 0 && <div className="mt-4 space-y-2"><p className="text-sm font-bold text-slate-800 dark:text-white">{t('grader.corrections')}</p>{aiFeedback.corrections.map((item, i) => <p key={i} className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">{item.original}</span> — {item.suggestion}</p>)}</div>}
+          </div>}
 
           {/* 4-criteria breakdown */}
           <div className="rounded-3xl border border-slate-200/80 bg-white/80 p-5 backdrop-blur-md shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]">
             <h3 className="mb-4 flex items-center gap-2 font-display text-base font-extrabold text-slate-800 dark:text-white">
               <Sparkles className="h-4 w-4 text-rose-500" />
-              AI Tekshiruv — 4 mezon boʻyicha tahlil
+              {t('module.aiReview')}
             </h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              {critNote(result.score, text).map((c) => (
+              {critNote(result.score, text, t).map((c) => (
                 <div
                   key={c.key}
                   className="rounded-2xl border border-slate-100 bg-slate-50 p-4 ring-1 ring-slate-200 dark:border-slate-800 dark:bg-slate-800/50 dark:ring-slate-700"
@@ -451,13 +458,12 @@ export default function YazmaModule({ completeLevel }) {
 
           <div className="rounded-xl bg-teal-50 p-3 text-xs leading-relaxed text-teal-700 ring-1 ring-teal-600/15 dark:bg-teal-500/10 dark:text-teal-300 dark:ring-teal-800/50">
             <Info className="mr-1 inline h-4 w-4" />
-            Bu baho AI algoritmi tomonidan soʻz hajmi, turkcha harflar, gap qurumi va soʻz
-            davomi asosida natijani koʻrsatadi — bu Milliy Sertifikat balingiz emas.
+            {t('module.write.aiDisclaimer')}
           </div>
         </div>
       )}
 
-      {/* Foydali iboralar (Kalıplar) side-drawer */}
+      {/* {t('module.usefulPhrases')} side-drawer */}
       {drawerOpen && (
         <>
           <div
@@ -468,26 +474,25 @@ export default function YazmaModule({ completeLevel }) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-display text-base font-extrabold text-slate-800 dark:text-white">
                 <Sparkles className="h-5 w-5 text-teal-700 dark:text-teal-400" />
-                Foydali iboralar (Kalıplar)
+                {t('module.usefulPhrases')}
               </div>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                aria-label="Yopish"
+                aria-label={t('module.close')}
                 className="grid h-8 w-8 place-items-center rounded-lg border border-slate-200/80 text-slate-500 transition-all active:scale-95 hover:text-rose-600 dark:border-slate-800 dark:text-slate-400"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
             <p className="text-xs leading-relaxed text-slate-400 dark:text-slate-500">
-              C1 darajasidagi bogʻlovchi iboralar. Har birini «Nusxalash» orqali matnning kursor
-              joyiga qoʻshish mumkin.
+              {t('module.write.phrasesHelp')}
             </p>
 
             {KALIPLAR.map((group) => (
-              <div key={group.group}>
+              <div key={t(group.groupKey)}>
                 <h4 className="mb-2 text-[11px] font-extrabold uppercase tracking-widest text-teal-700 dark:text-teal-400">
-                  {group.group}
+                  {t(group.groupKey)}
                 </h4>
                 <div className="space-y-2">
                   {group.items.map((item) => (
@@ -498,16 +503,14 @@ export default function YazmaModule({ completeLevel }) {
                       <p className="text-sm font-bold text-slate-800 dark:text-white">
                         {item.tr}
                       </p>
-                      <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
-                        {item.uz}
-                      </p>
+                      {language === 'uz' && <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{item.uz}</p>}
                       <button
                         type="button"
                         onClick={() => insertAtCursor(item.tr + ' ')}
                         className="mt-2 flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1.5 text-xs font-bold text-teal-700 ring-1 ring-teal-600/15 transition-all active:scale-95 hover:bg-teal-100 dark:bg-teal-500/10 dark:text-teal-300 dark:ring-teal-800/50"
                       >
                         <Clipboard className="h-3.5 w-3.5" />
-                        Nusxalash
+                        {t('module.copy')}
                       </button>
                     </div>
                   ))}
@@ -516,7 +519,7 @@ export default function YazmaModule({ completeLevel }) {
             ))}
 
             <div className="mt-auto rounded-xl bg-amber-50 p-3 text-xs font-semibold text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-900/40">
-              💡 Iboralarni roʻyxatda qalin koʻring — bu matnning bogʻlanishini kuchaytiradi.
+              {t('module.write.phrasesHint')}
             </div>
           </div>
         </>

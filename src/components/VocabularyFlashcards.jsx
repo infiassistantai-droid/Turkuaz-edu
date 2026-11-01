@@ -15,6 +15,8 @@ import {
 } from 'lucide-react'
 import { flashcards, suffixPlayground, suffixTable, vowelHarmony } from '../data/mockExamData'
 import { buildSuffix, cn } from '../lib/utils'
+import { useI18n } from '../lib/i18n.jsx'
+import FlashcardStudyMode from './FlashcardStudyMode'
 
 // ----------------------------------------------------------------------
 // Persistence — mastery ("Bilaman ✅" / "Takrorlash kerak 🔄") and
@@ -42,11 +44,11 @@ const GRAMMAR_COMPARISONS = [
     id: 'hal-ekleri',
     tr: 'Hal Ekleri',
     uz: 'Ulashish qoʻshimchalari',
-    desc: 'Feʼllardan sifat hosil qiluvchi, zamonni bildiruvchi qoʻshimchalar — -an/-en, -dık, -acak.',
+    descKey: 'vocab.grammar.desc.participles',
     forms: [
       {
         suffix: '-an / -en',
-        when: 'Hozirgi zamon',
+        whenKey: 'vocab.grammar.when.present',
         formula: 'oku + an → okuyan',
         uz: 'oʻqiydigan',
         exTr: 'Kitap okuyan öğrenci.',
@@ -54,7 +56,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '-dık / -dik',
-        when: 'Oʻtgan zamon',
+        whenKey: 'vocab.grammar.when.past',
         formula: 'yap + dık → yaptık',
         uz: 'amalga oshirilgan, qilinganlarimiz',
         exTr: 'Yaptıklarımız çok iyi oldu.',
@@ -62,7 +64,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '-acak / -ecek',
-        when: 'Kelajak zamon',
+        whenKey: 'vocab.grammar.when.future',
         formula: 'yaz + acak → yazacak',
         uz: 'yozadigan, yozmoqchi',
         exTr: 'Yazacaklarım çok fazla.',
@@ -74,11 +76,11 @@ const GRAMMAR_COMPARISONS = [
     id: 'baglaclar',
     tr: 'Bağlaçlar',
     uz: 'Bogʻlovchilar',
-    desc: 'Soʻz yoki gapni boshqasiga bogʻlovchi, soʻroq va relatif maʼno bildiruvchi qoʻshimchalar.',
+    descKey: 'vocab.grammar.desc.connectors',
     forms: [
       {
         suffix: '- mı / -mi / -mu / -mü',
-        when: 'Soʻroq',
+        whenKey: 'vocab.grammar.when.question',
         formula: 'kitap + mı → kitap mı?',
         uz: '...mi? (soʻroq)',
         exTr: 'Bu bir kitap mı?',
@@ -86,7 +88,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '- ki / -kı / -ku / -kü',
-        when: 'Nisbiy',
+        whenKey: 'vocab.grammar.when.relative',
         formula: 'ev + i + ki → evindeki',
         uz: '-da boʻlgan (qaytgan)',
         exTr: 'Öğrenci evindeki kitapları okudu.',
@@ -94,7 +96,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '- ce / - ça',
-        when: '-cha',
+        whenKey: 'vocab.grammar.when.manner',
         formula: 'Türk + ce → Türkçe',
         uz: '-cha, -bilan',
         exTr: 'Türkçe konuşuyorum.',
@@ -102,7 +104,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '-dıkça / -dikçe',
-        when: 'qancha... shuncha',
+        whenKey: 'vocab.grammar.when.repeated',
         formula: 'çalış + dıkça → çalıştıkça',
         uz: 'qancha koʻp... shuncha',
         exTr: 'Çalıştıkça şansımız artar.',
@@ -114,11 +116,11 @@ const GRAMMAR_COMPARISONS = [
     id: 'sifat-fiiller',
     tr: 'Sifat-Fiiller',
     uz: 'Sifatdoshlar (-an/-en, -dık, -acak)',
-    desc: 'Hal ekleri feʼlga qoʻshilib, gapda sifat vazifasida ishlatiladi — otga taʼsir etadi.',
+    descKey: 'vocab.grammar.desc.participleUse',
     forms: [
       {
         suffix: '-an / -en',
-        when: 'Hozirgi sifat-feʼl',
+        whenKey: 'vocab.grammar.when.presentParticiple',
         formula: 'okuyan öğrenci',
         uz: 'oʻqiydigan (talaba)',
         exTr: 'Kitap okuyan öğrenci okula gitti.',
@@ -126,7 +128,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '-dık / -dik',
-        when: 'Oʻtgan sifat-feʼl',
+        whenKey: 'vocab.grammar.when.pastParticiple',
         formula: 'yaptığımız işler',
         uz: 'qilingan, amalga oshirilgan',
         exTr: 'Dün yaptığımız işler lazım.',
@@ -134,7 +136,7 @@ const GRAMMAR_COMPARISONS = [
       },
       {
         suffix: '-acak / -ecek',
-        when: 'Kelajak sifat-feʼl',
+        whenKey: 'vocab.grammar.when.futureParticiple',
         formula: 'yapacaklarımız',
         uz: 'qilmoqchi boʻlganlarimiz',
         exTr: 'Yapacaklarımızı planlıyoruz.',
@@ -144,7 +146,7 @@ const GRAMMAR_COMPARISONS = [
   },
 ]
 
-function ComparisonCard({ item }) {
+function ComparisonCard({ item, t, language }) {
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 backdrop-blur-md shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]">
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 p-5 dark:border-slate-800">
@@ -152,12 +154,10 @@ function ComparisonCard({ item }) {
         <h3 className="font-display text-base font-extrabold text-slate-800 dark:text-white">
           {item.tr}
         </h3>
-        <span className="rounded-lg bg-teal-50 px-2 py-0.5 text-[11px] font-bold text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">
-          {item.uz}
-        </span>
+        {language === 'uz' && <span className="rounded-lg bg-teal-50 px-2 py-0.5 text-[11px] font-bold text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">{item.uz}</span>}
       </div>
       <p className="px-5 pt-3 text-xs leading-relaxed text-slate-400 dark:text-slate-500">
-        {item.desc}
+        {t(item.descKey)}
       </p>
       <div className="grid gap-4 p-5 sm:grid-cols-2">
         {item.forms.map((f) => (
@@ -170,29 +170,25 @@ function ComparisonCard({ item }) {
                 {f.suffix}
               </span>
               <span className="rounded-full bg-cyan-100 px-2 py-0.5 text-[10px] font-bold text-teal-700 dark:bg-cyan-500/10 dark:text-teal-300">
-                {f.when}
+                {t(f.whenKey)}
               </span>
             </div>
 
             {/* Formula box */}
             <div className="mt-3 rounded-lg bg-white p-3 ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700">
               <div className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                FORMULA
+                {t('vocab.formula')}
               </div>
               <div className="mt-0.5 font-mono text-sm font-extrabold text-slate-700 dark:text-slate-200">
                 {f.formula}
               </div>
-              <div className="mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                → {f.uz}
-              </div>
+              {language === 'uz' && <div className="mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">→ {f.uz}</div>}
             </div>
 
             <p className="mt-3 rounded-lg bg-teal-50 p-2.5 text-[13px] font-semibold text-slate-700 ring-1 ring-teal-100 dark:bg-teal-500/10 dark:text-slate-200 dark:ring-teal-800/40">
               {f.exTr}
             </p>
-            <p className="mt-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500">
-              {f.exUz}
-            </p>
+            {language === 'uz' && <p className="mt-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500">{f.exUz}</p>}
           </div>
         ))}
       </div>
@@ -200,7 +196,8 @@ function ComparisonCard({ item }) {
   )
 }
 
-export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMasteryCountChange }) {
+export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMasteryCountChange, onNewWordLearned, isPremium = false, onStudyComplete, onReturnToDashboard }) {
+  const { language, t } = useI18n()
   const [view, setView] = useState('vocab') // vocab | grammar
   const [mastery, setMastery] = useState(() => loadJSON(MASTERY_KEY, {}))
   const [saved, setSaved] = useState(() => loadJSON(SAVED_KEY, []))
@@ -274,6 +271,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
   }
 
   function markKnown() {
+    if (mastery[cardKey] === undefined) onNewWordLearned?.(cardKey)
     setMastery((m) => ({ ...m, [cardKey]: m[cardKey] === 'known' ? undefined : 'known' }))
   }
 
@@ -284,10 +282,10 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
   function toggleSave() {
     if (saved.includes(cardKey)) {
       setSaved((s) => s.filter((w) => w !== cardKey))
-      onToast?.(`Soʻz olib tashlandi: «${cardKey}»`, 'save')
+      onToast?.(t('vocab.toast.removed', { word: cardKey }), 'save')
     } else {
       setSaved((s) => [...s, cardKey])
-      onToast?.(`Soʻz saqlanganlarga qoʻshildi! «${cardKey}»`, 'save')
+      onToast?.(t('vocab.toast.saved', { word: cardKey }), 'save')
     }
   }
 
@@ -299,25 +297,25 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
     } catch {
       // clipboard unavailable in some browsers — toast still shows
     }
-    onToast?.(`Turkcha soʻz koʻchirildi: «${current.tr}»`, 'copy')
+    onToast?.(t('vocab.toast.copied', { word: current.tr }), 'copy')
   }
 
   const FILTERS = [
-    { id: 'all', label: 'Barchasi' },
+    { id: 'all', labelKey: 'vocab.filter.all' },
     { id: 'B1', label: 'B1' },
     { id: 'B2', label: 'B2' },
     { id: 'C1', label: 'C1' },
-    { id: 'saved', label: 'Saqlanganlar ⭐' },
+    { id: 'saved', labelKey: 'vocab.filter.saved' },
   ]
 
   const GrammarView = (
     <div className="space-y-5">
       <div className="grid gap-5">
         {GRAMMAR_COMPARISONS.map((item) => (
-          <ComparisonCard key={item.id} item={item} />
+          <ComparisonCard key={item.id} item={item} t={t} language={language} />
         ))}
       </div>
-      <EklerSection />
+      <EklerSection t={t} />
     </div>
   )
 
@@ -332,52 +330,51 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
         <div className="flex flex-wrap items-center gap-2">
           <Users2 className="h-5 w-5 text-teal-700 dark:text-teal-400" />
           <h1 className="font-display text-xl font-extrabold text-slate-800 dark:text-white">
-            Lugʻat & Grammatika
+            {t('vocab.title')}
           </h1>
           <span className="ml-auto flex flex-wrap items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500">
             <span className="flex items-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              Bilaman {knownCount}
+              {t('vocab.known')} {knownCount}
             </span>
             <span className="flex items-center gap-1 rounded-lg bg-amber-50 px-2 py-1 text-amber-600 dark:bg-amber-500/10 dark:text-amber-300">
               <RefreshCw className="h-3.5 w-3.5" />
-              Takrorlash {repeatCount}
+              {t('vocab.repeat')} {repeatCount}
             </span>
             <span className="flex items-center gap-1 rounded-lg bg-teal-50 px-2 py-1 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">
               <Star className="h-3.5 w-3.5" />
-              Saqlangan {saved.length}
+              {t('vocab.saved')} {saved.length}
             </span>
           </span>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-          Har bir karta turkcha soʻzni, uning oʻqilishi (oqishi), oʻzbek tarjimasi va ishlatilishiga misol
-          koʻrsatadi. Kartani bosing — yuzini agʻdaring. «Bilaman ✅» yoki «Takrorlash kerak 🔄» deb
-          belgilang — hisobingiz avtomatik saqlanadi.
+          {t('vocab.intro')}
         </p>
       </div>
 
       {/* View toggle — Lugʻat / Grammatika */}
       <div className="flex flex-wrap gap-2">
         {[
-          { id: 'vocab', label: 'Lugʻat', icon: Users2 },
-          { id: 'grammar', label: 'Grammatika', icon: BookText },
-        ].map((t) => {
-          const Icon = t.icon
+          { id: 'vocab', labelKey: 'vocab.tab.words', icon: Users2 },
+          { id: 'study', labelKey: 'vocab.tab.study', icon: Sparkles },
+          { id: 'grammar', labelKey: 'vocab.tab.grammar', icon: BookText },
+        ].map((tab) => {
+          const Icon = tab.icon
           return (
             <button
-              key={t.id}
+              key={tab.id}
               type="button"
-              onClick={() => setView(t.id)}
-              data-view={t.id}
+              onClick={() => setView(tab.id)}
+              data-view={tab.id}
               className={cn(
                 'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-extrabold transition-all active:scale-95',
-                view === t.id
+                view === tab.id
                   ? 'bg-gradient-to-r from-teal-600 to-cyan-500 text-white shadow-lg shadow-teal-900/20'
                   : 'border border-slate-200/80 bg-white text-slate-500 hover:text-teal-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400',
               )}
             >
               <Icon className="h-4 w-4" />
-              {t.label}
+              {t(tab.labelKey)}
             </button>
           )
         })}
@@ -386,6 +383,16 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
       {view === 'grammar' ? (
         <div key="grammar" className="animate-fadein">
           {GrammarView}
+        </div>
+      ) : view === 'study' ? (
+        <div key="study" className="animate-fadein">
+          <FlashcardStudyMode
+            savedWords={saved}
+            isPremium={isPremium}
+            onComplete={onStudyComplete}
+            onReturnToDashboard={onReturnToDashboard}
+            onReturnToVocabulary={() => setView('vocab')}
+          />
         </div>
       ) : (
         <div key="vocab" className="animate-fadein space-y-5">
@@ -408,7 +415,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                     : 'border border-slate-200/80 bg-white text-slate-500 hover:text-teal-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400',
                 )}
               >
-                {f.label}
+                {f.labelKey ? t(f.labelKey) : f.label}
                 <span
                   className={cn(
                     'grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-extrabold',
@@ -425,7 +432,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-800 dark:bg-slate-800">
               <Star className="mx-auto h-8 w-8 text-amber-500" />
               <p className="mt-3 text-sm font-bold text-slate-500 dark:text-slate-400">
-                Saqlangan soʻzlar yoʻq — kartani «⭐ Saqlash» orqali saqlang!
+                {t('vocab.empty')}
               </p>
             </div>
           ) : (
@@ -444,7 +451,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                       }
                     }}
                     className="flip-card block w-full cursor-pointer text-left outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
-                    aria-label="Kartaning yuzini agʻdarish"
+                    aria-label={t('vocab.flip')}
                   >
                     <div className={cn('flip-inner', flipped && 'flipped')}>
                       {/* Face */}
@@ -456,7 +463,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                               e.stopPropagation()
                               copyWord()
                             }}
-                            aria-label="Turkcha soʻzni nushalash"
+                            aria-label={t('vocab.copy')}
                             className="grid h-9 w-9 place-items-center rounded-lg bg-white/80 text-teal-700 shadow-sm ring-1 ring-slate-200 backdrop-blur transition-all hover:scale-110 active:scale-95 dark:bg-slate-700/80 dark:text-teal-300 dark:ring-slate-600"
                           >
                             <Copy className="h-4 w-4" />
@@ -467,7 +474,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                               e.stopPropagation()
                               toggleSave()
                             }}
-                            aria-label="Soʻzni saqlash"
+                            aria-label={t('vocab.save')}
                             className="grid h-9 w-9 place-items-center rounded-lg bg-white/80 shadow-sm ring-1 ring-slate-200 backdrop-blur transition-all hover:scale-110 active:scale-95 dark:bg-slate-700/80 dark:ring-slate-600"
                           >
                             {isSaved ? (
@@ -478,7 +485,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                           </button>
                         </span>
                         <span className="rounded-full bg-teal-100 px-3 py-1 text-[11px] font-bold tracking-widest text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">
-                          TÜRKÇE · {current.level}
+                          {t('vocab.turkish')} · {current.level}
                         </span>
                         <div className="font-display text-5xl font-extrabold text-slate-800 dark:text-white">
                           {current.tr}
@@ -496,13 +503,13 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                           className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-teal-600/90 to-cyan-500/90 px-4 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:scale-105 active:scale-95"
                         >
                           <Copy className="h-3.5 w-3.5" />
-                          Koʻchirish
+                          {t('vocab.copy')}
                         </button>
                       </div>
                       {/* Back */}
                       <div className="flip-face flip-back flex flex-col items-center justify-center gap-4 rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-8 shadow-xl dark:border-rose-900/50 dark:from-rose-950/60 dark:to-slate-800">
                         <div className="text-xs font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
-                          OʻZBEK
+                          {t('vocab.uzbek')}
                         </div>
                         <div className="font-display text-3xl font-extrabold text-slate-800 dark:text-white">
                           {current.uz}
@@ -524,7 +531,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                           className="flex items-center gap-1.5 rounded-full bg-rose-600/90 px-4 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:scale-105 active:scale-95"
                         >
                           <Copy className="h-3.5 w-3.5" />
-                          Nusxalash
+                          {t('vocab.copy')}
                         </button>
                       </div>
                     </div>
@@ -538,7 +545,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                       className="flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-sm font-bold text-slate-500 shadow-sm transition-all hover:border-teal-300 active:scale-95 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400"
                     >
                       <ChevronLeft className="h-4 w-4" />
-                      Ortaga
+                      {t('common.previous')}
                     </button>
                     <span className="font-display font-extrabold text-slate-700 dark:text-slate-200">
                       {index + 1} / {list.length}
@@ -548,7 +555,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                       onClick={nextCard}
                       className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-3 py-2 text-sm font-bold text-white shadow-lg shadow-teal-900/20 transition-all hover:from-teal-700 hover:to-cyan-600 active:scale-95"
                     >
-                      Keyingi
+                      {t('common.next')}
                       <ChevronRight className="h-4 w-4" />
                     </button>
                   </div>
@@ -557,7 +564,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                   <div className="mt-3 flex gap-2">
                     <button
                       type="button"
-                      aria-label="Bilaman"
+                      aria-label={t('vocab.markKnown')}
                       onClick={markKnown}
                       className={cn(
                         'flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-extrabold transition-all active:scale-95',
@@ -567,11 +574,11 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                       )}
                     >
                       <CheckCircle2 className="h-4 w-4" />
-                      Bilaman ✅
+                      {t('vocab.markKnown')} ✅
                     </button>
                     <button
                       type="button"
-                      aria-label="Takrorlash kerak"
+                      aria-label={t('vocab.markRepeat')}
                       onClick={markRepeat}
                       className={cn(
                         'flex flex-1 items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-extrabold transition-all active:scale-95',
@@ -581,7 +588,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                       )}
                     >
                       <RefreshCw className="h-4 w-4" />
-                      Takrorlash kerak 🔄
+                      {t('vocab.markRepeat')} 🔄
                     </button>
                   </div>
                 </div>
@@ -595,7 +602,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                   className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition-all hover:border-teal-300 active:scale-95 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-400"
                 >
                   <RotateCcw className={cn('h-4 w-4', shuffled && 'animate-spin')} />
-                  Aralashtirish
+                  {t('vocab.shuffle')}
                 </button>
                 <button
                   type="button"
@@ -606,10 +613,10 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
                   className="flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700 shadow-sm ring-1 ring-amber-200 transition-all hover:bg-amber-100 active:scale-95 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-900/40"
                 >
                   <Star className="h-4 w-4" />
-                  {isSaved ? 'Saqlangan ⭐ — olib tashlash' : '⭐ Saqlash'}
+                  {isSaved ? `${t('vocab.saved')} ⭐ — ${t('vocab.removeSaved')}` : `⭐ ${t('vocab.save')}`}
                 </button>
                 <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">
-                  Mastery va saqlalgan soʻzlar avtomatik saqlanadi.
+                  {t('vocab.autoSave')}
                 </span>
               </div>
             </>
@@ -624,7 +631,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
 // Ekler (suffix cheat sheet) section — vowel harmony + suffix table +
 // suffix playground
 // ----------------------------------------------------------------------
-function EklerSection() {
+function EklerSection({ t }) {
   const [playWord, setPlayWord] = useState(suffixPlayground.words[0])
   const [playSuffix, setPlaySuffix] = useState(suffixPlayground.suffixes[0].id)
   const built = buildSuffix(playWord, playSuffix)
@@ -636,7 +643,7 @@ function EklerSection() {
         <div className="mb-4 flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-amber-500" />
           <h2 className="font-display text-lg font-extrabold text-slate-800 dark:text-white">
-            Unli moslashuvi (vowel harmony)
+            {t('vocab.harmony')}
           </h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -645,7 +652,7 @@ function EklerSection() {
               key={group.group}
               className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-800/50 dark:ring-slate-700"
             >
-              <div className="mb-3 font-bold text-slate-700 dark:text-slate-200">{group.label}</div>
+              <div className="mb-3 font-bold text-slate-700 dark:text-slate-200">{t(group.labelKey)}</div>
               <div className="mb-3 flex flex-wrap gap-2">
                 {group.vowels.map((v) => (
                   <span
@@ -686,30 +693,30 @@ function EklerSection() {
         <div className="flex items-center gap-2 border-b border-slate-100 p-5 dark:border-slate-800">
           <Table2 className="h-5 w-5 text-teal-700 dark:text-teal-400" />
           <h2 className="font-display text-lg font-extrabold text-slate-800 dark:text-white">
-            Qoʻshimchalar (Ekler) — 8 ta asosiy
+            {t('vocab.suffixTable')}
           </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 text-left text-xs font-bold uppercase tracking-widest text-slate-500 dark:bg-slate-800/50 dark:text-slate-400">
-                <th className="px-5 py-3">Tip</th>
-                <th className="px-5 py-3">Qoʻshimcha</th>
-                <th className="px-5 py-3">Maʼno</th>
-                <th className="px-5 py-3">Misol</th>
+                <th className="px-5 py-3">{t('vocab.type')}</th>
+                <th className="px-5 py-3">{t('vocab.suffix')}</th>
+                <th className="px-5 py-3">{t('vocab.meaning')}</th>
+                <th className="px-5 py-3">{t('vocab.example')}</th>
               </tr>
             </thead>
             <tbody>
               {suffixTable.map((row) => (
                 <tr
-                  key={row.type}
+                  key={row.typeKey}
                   className="border-t border-slate-100 text-slate-600 dark:border-slate-800/50 dark:text-slate-300"
                 >
-                  <td className="px-5 py-3 font-bold text-slate-800 dark:text-white">{row.type}</td>
+                  <td className="px-5 py-3 font-bold text-slate-800 dark:text-white">{t(row.typeKey)}</td>
                   <td className="px-5 py-3 font-mono font-bold text-teal-700 dark:text-teal-300">
                     {row.suffix}
                   </td>
-                  <td className="px-5 py-3">{row.meaning}</td>
+                  <td className="px-5 py-3">{t(row.meaningKey)}</td>
                   <td className="px-5 py-3 font-mono text-xs">{row.example}</td>
                 </tr>
               ))}
@@ -723,14 +730,14 @@ function EklerSection() {
         <div className="mb-4 flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-teal-700 dark:text-teal-400" />
           <h2 className="font-display text-lg font-extrabold text-slate-800 dark:text-white">
-            Suffix oʻyini — oʻzingiz yasab koʻring!
+            {t('vocab.suffixGame')}
           </h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Word selector */}
           <div>
             <div className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-              Soʻzni tanlang
+              {t('vocab.chooseWord')}
             </div>
             <div className="flex flex-wrap gap-2">
               {suffixPlayground.words.map((w) => (
@@ -753,7 +760,7 @@ function EklerSection() {
           {/* Suffix selector */}
           <div>
             <div className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-              Qoʻshimchani tanlang
+              {t('vocab.chooseSuffix')}
             </div>
             <div className="flex flex-wrap gap-2">
               {suffixPlayground.suffixes.map((s) => (
@@ -764,11 +771,11 @@ function EklerSection() {
                   className={cn(
                     'rounded-lg px-3 py-1.5 text-xs font-bold transition-all active:scale-95',
                     playSuffix === s.id
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-900/20'
+                      ? 'bg-teal-700 text-white shadow-md shadow-teal-900/20'
                       : 'bg-white text-slate-500 ring-1 ring-slate-200 hover:text-rose-600 dark:bg-slate-800 dark:text-slate-400 dark:ring-slate-700',
                   )}
                 >
-                  {s.name}
+                  {t(s.nameKey)}
                 </button>
               ))}
             </div>
@@ -781,9 +788,9 @@ function EklerSection() {
             <span className="font-display text-4xl font-extrabold text-slate-800 dark:text-white">
               {playWord}
             </span>
-            <span className="font-display text-3xl font-extrabold text-rose-500">+</span>
+            <span className="font-display text-3xl font-extrabold text-teal-500">+</span>
             <span className="font-mono text-xl font-bold text-teal-700 dark:text-teal-300">
-              {suffixPlayground.suffixes.find((s) => s.id === playSuffix)?.name}
+              {t(suffixPlayground.suffixes.find((s) => s.id === playSuffix)?.nameKey || 'vocab.suffix')}
             </span>
             <span className="ml-auto font-display text-3xl font-extrabold text-white">
               <span className="rounded-2xl bg-gradient-to-br from-teal-600 to-cyan-600 px-4 py-2 shadow-lg shadow-teal-900/20">
@@ -791,10 +798,9 @@ function EklerSection() {
               </span>
             </span>
           </div>
-          <p
-            className="mt-4 rounded-lg bg-slate-50 p-3 text-[13px] leading-relaxed text-slate-500 ring-1 ring-slate-200 dark:bg-slate-950/60 dark:text-slate-400 dark:ring-slate-800"
-            dangerouslySetInnerHTML={{ __html: built.rule }}
-          />
+          <p className="mt-4 rounded-lg bg-slate-50 p-3 text-[13px] leading-relaxed text-slate-500 ring-1 ring-slate-200 dark:bg-slate-950/60 dark:text-slate-400 dark:ring-slate-800">
+            {t('vocab.suffix.rule', { word: playWord, suffix: t(suffixPlayground.suffixes.find((s) => s.id === playSuffix)?.nameKey || 'vocab.suffix'), form: built.form })}
+          </p>
         </div>
       </div>
     </div>

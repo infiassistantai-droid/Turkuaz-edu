@@ -1,19 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  Bell,
+  Activity,
   BookOpenText,
   CalendarCheck,
   ChevronsLeft,
   ChevronsRight,
+  ChevronDown,
   ClipboardCheck,
   Download,
-  Flame,
-  Globe,
-  GraduationCap,
-  Check,
   Headphones,
   House,
   Library,
+  Lock,
   Mic,
   Menu,
   Moon,
@@ -22,13 +20,16 @@ import {
   Sun,
   Sparkles,
   Target,
+  Trophy,
   X,
   Zap,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
 import { useI18n } from '../lib/i18n.jsx'
-import ProfileMenu from './ProfileMenu'
+import NotificationPopover from './NotificationPopover'
+import MedalBadge from './MedalBadge'
+import UserProfileModal from './UserProfileModal'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -40,6 +41,8 @@ const NAV = [
     items: [
       { id: 'home', labelKey: 'nav.home', icon: House },
       { id: 'plan', labelKey: 'nav.plan', icon: CalendarCheck },
+      { id: 'leagues', labelKey: 'nav.leagues', icon: Trophy },
+      { id: 'analytics', labelKey: 'nav.analytics', icon: Activity },
     ],
   },
   {
@@ -56,6 +59,7 @@ const NAV = [
     items: [
       { id: 'lugat', labelKey: 'nav.vocabulary', icon: Library },
       { id: 'mock', labelKey: 'nav.mock', icon: ClipboardCheck, badgeKey: 'nav.new', urgent: true },
+      { id: 'exams', labelKey: 'nav.exams', icon: Trophy },
     ],
   },
 ]
@@ -64,7 +68,7 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
+function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, level, equippedMedal, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
   const { t } = useI18n()
   return (
     <>
@@ -77,10 +81,11 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
         aria-hidden="true"
       />
       <aside
+        id="app-sidebar"
         aria-label={t('nav.aria')}
         className={cn(
-          'glass fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200/80 bg-white/90 backdrop-blur-md transition-all duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/90',
-          'lg:sticky lg:top-0 lg:h-screen lg:translate-x-0',
+          'glass fixed inset-y-3 left-3 z-50 flex flex-col rounded-[26px] border border-slate-200/80 bg-white/90 shadow-2xl backdrop-blur-md transition-all duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/90',
+          'lg:sticky lg:inset-y-auto lg:left-auto lg:top-7 lg:my-0 lg:h-[calc(100vh-3.5rem)] lg:translate-x-0',
           mobileOpen ? 'translate-x-0' : '-translate-x-full',
           collapsed ? 'w-72 lg:w-[84px]' : 'w-72',
         )}
@@ -89,12 +94,10 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           {isPremium && <img src="/icons/turkish-ay-yildiz.svg" alt="" aria-hidden="true" className="pointer-events-none absolute -right-2 -top-2 z-0 size-20 opacity-[0.09]" />}
           <div className="relative z-10">
             <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-400 opacity-60 blur-md" aria-hidden="true" />
-            <div className="relative grid size-9 place-items-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white ring-1 ring-white/20">
-              <GraduationCap className="size-5" aria-hidden="true" />
-            </div>
+            <div className="relative grid size-9 place-items-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 font-serif text-xl font-black text-white ring-1 ring-white/20" aria-hidden="true">T</div>
           </div>
           <div className={cn('relative z-10 min-w-0 leading-none', collapsed && 'lg:hidden')}>
-            <p className="text-[15px] font-semibold tracking-tight text-slate-900 dark:text-white">Türkçe</p>
+            <p className="font-serif text-[18px] font-extrabold tracking-[-.055em] text-slate-900 dark:text-white">turkuaz<span className="text-teal-600">.</span></p>
             <span className="mt-1 inline-flex items-center rounded-md bg-gradient-to-r from-teal-600/10 to-cyan-500/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.12em] text-teal-700 ring-1 ring-teal-600/20 dark:text-teal-300 dark:ring-teal-400/25">
               TURKCHA CEFR PRO
             </span>
@@ -125,12 +128,14 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                 {group.items.map((item) => {
                   const Icon = item.icon
                   const isActive = active === item.id
+                  const isLocked = item.id !== 'home' && item.id !== 'plan'
                   return (
                     <li key={item.id}>
                       <button
                         type="button"
                         onClick={() => onNavigate(item.id)}
-                        title={collapsed ? t(item.labelKey) : undefined}
+                        title={isLocked ? `${t(item.labelKey)} · ${t('comingSoon.title')}` : collapsed ? t(item.labelKey) : undefined}
+                        aria-label={isLocked ? `${t(item.labelKey)} · ${t('comingSoon.title')}` : undefined}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
                           'nav-glow group relative flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition-all duration-200 active:scale-[0.98]',
@@ -144,21 +149,13 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                         <span className={cn('min-w-0 flex-1 truncate', collapsed && 'lg:sr-only')}>
                           {t(item.labelKey)}
                         </span>
-                        {(item.badgeKey || item.badge) && (
-                          <span
-                            className={cn(
-                              'rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
-                              collapsed && 'lg:absolute lg:right-1.5 lg:top-1 lg:size-2 lg:p-0 lg:text-[0px]',
-                              isActive
-                                ? 'bg-white/20 text-white'
-                                : item.urgent
-                                  ? 'bg-rose-500 text-white'
-                                  : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
-                            )}
-                          >
+                        {isLocked ? (
+                          <Lock className={cn('size-3.5 shrink-0', isActive ? 'text-white/80' : isPremium ? 'text-yellow-100/65' : 'text-slate-400', collapsed && 'lg:absolute lg:right-1.5 lg:top-1')} aria-hidden="true" />
+                        ) : (item.badgeKey || item.badge) ? (
+                          <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                             {item.badgeKey ? t(item.badgeKey) : item.badge}
                           </span>
-                        )}
+                        ) : null}
                       </button>
                     </li>
                   )
@@ -213,16 +210,30 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               }
             }}
             className={cn(
-              'cursor-pointer rounded-2xl border border-slate-200/80 bg-gradient-to-b from-slate-50 to-white p-3 transition-all hover:shadow-md active:scale-[0.98] dark:border-slate-800 dark:from-slate-900 dark:to-slate-900/60',
+              'cursor-pointer rounded-2xl border p-3 transition-all hover:shadow-md active:scale-[0.98]',
+              isPremium
+                ? collapsed ? 'border-transparent bg-transparent text-white' : 'premium-profile-card border-yellow-300/35 bg-black/70 text-white shadow-lg'
+                : 'border-slate-200/80 bg-gradient-to-b from-slate-50 to-white dark:border-slate-800 dark:from-slate-900 dark:to-slate-900/60',
               collapsed && 'lg:border-0 lg:bg-none lg:p-0 lg:justify-center',
             )}
           >
             <div className={cn('flex items-center gap-3', collapsed && 'lg:justify-center')}>
-              <div className="relative shrink-0">
-                <div className="grid size-9 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white">
+              <div className={cn('relative flex shrink-0 items-center gap-2', collapsed && 'lg:items-start')}>
+                <div className="relative grid size-9 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white">
                   {profile ? getInitials(profile.name, profile.surname) : t('nav.profile').slice(0, 2).toLocaleUpperCase()}
+                  <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="absolute -right-1 -top-1 size-4" />
+                  <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900" aria-hidden="true" />
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900" aria-hidden="true" />
+                <span
+                  className={cn(
+                    'shrink-0 rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide',
+                    isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800',
+                    collapsed && 'lg:absolute lg:left-1/2 lg:top-10 lg:-translate-x-1/2 lg:px-1 lg:text-[8px]',
+                  )}
+                  title={`Level ${level}`}
+                >
+                  Lvl {level}
+                </span>
               </div>
               <div className={cn('min-w-0 flex-1', collapsed && 'lg:hidden')}>
                 <p className="truncate text-sm font-semibold tracking-tight text-slate-900 dark:text-white">
@@ -267,67 +278,20 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function LanguageSwitcher({ isPremium }) {
-  const { language, setLanguage, t } = useI18n()
-  const [open, setOpen] = useState(false)
-  const wrapperRef = useRef(null)
-  const options = [
-    { id: 'uz', key: 'language.uz' },
-    { id: 'tr', key: 'language.tr' },
-    { id: 'en', key: 'language.en' },
-  ]
+function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOpen, onToggleSidebar, xp, level, equippedMedal, profile, onOpenProfile }) {
+  const { language, t } = useI18n()
+  const searchRef = useRef(null)
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(min-width: 1024px)').matches))
+  const sidebarExpanded = isDesktop ? !collapsed : mobileOpen
 
   useEffect(() => {
-    if (!open) return undefined
-    const onPointerDown = (event) => { if (!wrapperRef.current?.contains(event.target)) setOpen(false) }
-    const onKeyDown = (event) => { if (event.key === 'Escape') setOpen(false) }
-    document.addEventListener('mousedown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [open])
-
-  return (
-    <div className="relative" ref={wrapperRef}>
-      <button
-        type="button"
-        aria-label={t('language.label')}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-        className={cn(
-          'inline-flex h-9 items-center gap-1.5 rounded-xl border px-2.5 text-xs font-bold transition-all duration-300 hover:bg-white/10 active:scale-95',
-          isPremium ? 'border-white/20 bg-black/20 text-white' : 'border-slate-200/80 bg-white/70 text-slate-700 hover:border-teal-300 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200',
-        )}
-      >
-        <Globe size={16} aria-hidden="true" />
-        <span>{language.toUpperCase()}</span>
-      </button>
-      {open && <div role="listbox" aria-label={t('language.label')} className={cn(
-        'absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl border p-1.5 shadow-2xl transition-all duration-300',
-        isPremium ? 'border-white/20 bg-black/40 text-white backdrop-blur-2xl' : 'border-slate-200/80 bg-white/90 text-slate-800 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/90 dark:text-white',
-      )}>
-        {options.map((option) => {
-          const selected = option.id === language
-          return <button key={option.id} type="button" role="option" aria-selected={selected} onClick={() => { setLanguage(option.id); setOpen(false) }} className={cn(
-            'flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition-all duration-300 hover:bg-white/10',
-            selected
-              ? isPremium
-                ? 'bg-yellow-300/15 font-extrabold text-yellow-200'
-                : 'bg-amber-100/80 font-extrabold text-amber-800 dark:bg-yellow-300/15 dark:text-yellow-200'
-              : 'font-medium',
-          )}>{t(option.key)}{selected && <Check className="size-4 text-yellow-500" aria-hidden="true"/>}</button>
-        })}
-      </div>}
-    </div>
-  )
-}
-
-function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, streak, xp, profile, profileOpen, setProfileOpen, onEditProfile, onClearData, onLogout }) {
-  const { t } = useI18n()
-  const searchRef = useRef(null)
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined
+    const breakpoint = window.matchMedia('(min-width: 1024px)')
+    const updateViewport = () => setIsDesktop(breakpoint.matches)
+    updateViewport()
+    breakpoint.addEventListener?.('change', updateViewport)
+    return () => breakpoint.removeEventListener?.('change', updateViewport)
+  }, [])
 
   useEffect(() => {
     const onKey = (e) => {
@@ -341,15 +305,17 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
   }, [])
 
   return (
-    <header className="glass sticky top-0 z-30 border-b border-slate-200/80 bg-white/80 backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-950/80">
-      <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
+    <header className="glass rise-in sticky top-3 z-30 flex min-h-[70px] items-center rounded-[20px] bg-white/80 px-3 py-3 backdrop-blur-xl dark:bg-slate-950/80 sm:px-5">
+      <div className="flex w-full items-center gap-3">
         <button
           type="button"
-          onClick={onOpenMobile}
-          className="grid size-9 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-colors hover:bg-slate-100 active:scale-95 lg:hidden dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
-          aria-label={t('header.menu.open')}
+          onClick={onToggleSidebar}
+          className="grid size-9 shrink-0 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
+          aria-label={sidebarExpanded ? t('header.menu.close') : t('header.menu.open')}
+          aria-expanded={sidebarExpanded}
+          aria-controls="app-sidebar"
         >
-          <Menu className="size-4" />
+          <Menu className="size-4" aria-hidden="true" />
         </button>
 
         <nav aria-label="Breadcrumb" className="min-w-0">
@@ -384,34 +350,33 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
         </div>
 
         <div className="ml-auto flex items-center gap-2 md:ml-0">
-          <span className="hidden items-center gap-1.5 rounded-full border border-orange-200/80 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 sm:inline-flex dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-300">
-            <Flame className="size-3.5 fill-orange-500 text-orange-500" aria-hidden="true" />
-            {t('header.streak', { count: streak })}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-3 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+          <span role="img" aria-label={`${xp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300 sm:px-3">
             <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
-            {xp.toLocaleString('en-US')} XP
+            <span className="hidden min-[400px]:inline">{xp.toLocaleString(language)} XP</span>
           </span>
-          <LanguageSwitcher isPremium={isPremium} />
           {profile && (
-            <ProfileMenu
-              profile={profile}
-              stats={{ xp, streak }}
-              open={profileOpen}
-              onOpenChange={setProfileOpen}
-              onEdit={onEditProfile}
-              onClear={onClearData}
-              onLogout={onLogout}
-            />
+            <button
+              type="button"
+              onClick={onOpenProfile}
+              aria-label={`${profile.name || t('nav.profile')} · ${t('profile.settings')}`}
+              aria-haspopup="dialog"
+              className={cn(
+                'flex shrink-0 items-center gap-2 rounded-full border py-1 pl-1 pr-2.5 transition-all hover:-translate-y-0.5 active:translate-y-0',
+                isPremium ? 'border-white/10 bg-black/30 text-white hover:bg-white/10' : 'border-slate-200/80 bg-white/80 text-slate-700 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200',
+              )}
+            >
+              <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white ring-1 ring-white/20">
+                {getInitials(profile.name, profile.surname)}
+                <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="absolute -right-1.5 -top-1 size-4" />
+              </span>
+              <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
+                Lvl {level}
+              </span>
+              <span className="hidden max-w-20 truncate text-sm font-bold sm:block">{profile.name}</span>
+              <ChevronDown className="size-3.5 shrink-0 opacity-60" aria-hidden="true" />
+            </button>
           )}
-          <button
-            type="button"
-            className="relative grid size-9 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
-            aria-label={t('header.notifications')}
-          >
-            <Bell className="size-4" />
-            <span className="absolute right-2 top-2 size-1.5 rounded-full bg-rose-500" aria-hidden="true" />
-          </button>
+          <NotificationPopover isPremium={isPremium} />
           <button
             type="button"
             onClick={onToggleDark}
@@ -431,14 +396,26 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, onOpenMobile, strea
 /*                                   App shell                                */
 /* -------------------------------------------------------------------------- */
 
-export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, streak, xp, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
+export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, xp, unlockedMedals, equippedMedal, onEquipMedal, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
+  const { t } = useI18n()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const level = Math.floor(Math.max(0, Number(xp) || 0) / 500) + 1
   const [isInstalled, setIsInstalled] = useState(() => {
     if (typeof window === 'undefined') return false
     return Boolean(window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true)
   })
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined
+    const breakpoint = window.matchMedia('(min-width: 1024px)')
+    const closeMobileDrawerOnDesktop = (event) => {
+      if (event.matches) setMobileOpen(false)
+    }
+    breakpoint.addEventListener?.('change', closeMobileDrawerOnDesktop)
+    return () => breakpoint.removeEventListener?.('change', closeMobileDrawerOnDesktop)
+  }, [])
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined
@@ -469,16 +446,24 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
     setMobileOpen(false)
   }
 
+  const toggleSidebar = () => {
+    const desktopViewport = window.matchMedia?.('(min-width: 1024px)').matches ?? window.innerWidth >= 1024
+    if (desktopViewport) {
+      setCollapsed((value) => !value)
+      setMobileOpen(false)
+    } else {
+      setMobileOpen((value) => !value)
+    }
+  }
+
   return (
-    <div className={cn('min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : 'theme-default') }>
-      <div
-        className={cn(
-          'pointer-events-none fixed inset-x-0 top-0 h-80',
-          isPremium ? 'bg-gradient-to-b from-amber-300/15 via-red-600/5 to-transparent' : 'bg-gradient-to-b from-teal-500/[0.07] to-transparent dark:from-teal-400/[0.05]',
-        )}
-        aria-hidden="true"
-      />
-      <div className="relative flex">
+    <div data-theme={isPremium ? 'premium' : 'default'} className={cn('min-h-[100dvh] bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : 'theme-default')}>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <div className={`absolute -right-32 top-28 size-96 rounded-full blur-[100px] ${isPremium ? 'bg-amber-300/10' : 'bg-cyan-300/10'}`} />
+        <div className={`absolute -left-36 bottom-[-4rem] size-[32rem] rounded-full blur-[100px] ${isPremium ? 'bg-red-950/45' : 'bg-teal-900/10'}`} />
+        <div className="absolute inset-0 opacity-[.035]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,.55) .65px, transparent .65px)', backgroundSize: '5px 5px' }} />
+      </div>
+      <div className="relative mx-auto flex min-h-[100dvh] max-w-[1600px] gap-3 p-3 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
         <Sidebar
           active={active}
           onNavigate={navigate}
@@ -487,8 +472,10 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           mobileOpen={mobileOpen}
           onCloseMobile={() => setMobileOpen(false)}
           targetPct={targetPct}
+          level={level}
+          equippedMedal={equippedMedal}
           profile={profile}
-          onOpenProfile={onEditProfile}
+          onOpenProfile={() => setProfileOpen(true)}
           onInstallApp={onInstallApp}
           showInstall={!isInstalled}
           isPremium={isPremium}
@@ -501,22 +488,35 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
             dark={dark}
             onToggleDark={onToggleDark}
             isPremium={isPremium}
-            onOpenMobile={() => setMobileOpen(true)}
-            streak={streak}
+            collapsed={collapsed}
+            mobileOpen={mobileOpen}
+            onToggleSidebar={toggleSidebar}
             xp={xp}
+            level={level}
+            equippedMedal={equippedMedal}
             profile={profile}
-            profileOpen={profileOpen}
-            setProfileOpen={setProfileOpen}
-            onEditProfile={onEditProfile}
-            onClearData={onClearData}
-            onLogout={onLogout}
+            onOpenProfile={() => setProfileOpen(true)}
           />
 
-          <main className="mx-auto w-full max-w-7xl flex-1 space-y-4 p-4 sm:space-y-6 sm:p-6 lg:p-8">
+          <main className="mx-auto w-full max-w-[1320px] min-w-0 flex-1 pb-10 pt-4 sm:pt-6">
             {children}
           </main>
         </div>
       </div>
+      <UserProfileModal
+        open={profileOpen}
+        onOpenChange={setProfileOpen}
+        profile={profile}
+        stats={{ xp }}
+        level={level}
+        unlockedMedals={unlockedMedals}
+        equippedMedal={equippedMedal}
+        onEquipMedal={onEquipMedal}
+        onEditProfile={onEditProfile}
+        onClearData={onClearData}
+        onLogout={onLogout}
+        isPremium={isPremium}
+      />
     </div>
   )
 }
