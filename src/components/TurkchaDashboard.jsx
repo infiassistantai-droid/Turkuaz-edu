@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Activity,
   BookOpenText,
@@ -16,8 +16,8 @@ import {
   Menu,
   Moon,
   PenLine,
-  Search,
   Sun,
+  Snowflake,
   Sparkles,
   Target,
   Trophy,
@@ -27,9 +27,13 @@ import {
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
 import { useI18n } from '../lib/i18n.jsx'
+import { useWinterUpdate } from '../features/winter/WinterUpdateContext'
 import NotificationPopover from './NotificationPopover'
-import MedalBadge from './MedalBadge'
+import RankUpModal from './RankUpModal'
+import StreakMilestoneModal from './StreakMilestoneModal'
+import TrophyCelebrationModal from './TrophyCelebrationModal'
 import UserProfileModal from './UserProfileModal'
+import WinterEffects from '../features/winter/WinterEffects'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -68,8 +72,9 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, level, equippedMedal, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
+function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, level, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
   const { t } = useI18n()
+  const { enabled: winterModeEnabled, featureEnabled: winterFeatureEnabled, toggle: toggleWinterMode } = useWinterUpdate()
   return (
     <>
       <div
@@ -128,7 +133,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                 {group.items.map((item) => {
                   const Icon = item.icon
                   const isActive = active === item.id
-                  const isLocked = item.id !== 'home' && item.id !== 'plan'
+                  const isLocked = !['home', 'plan', 'okuma', 'dinleme'].includes(item.id)
                   return (
                     <li key={item.id}>
                       <button
@@ -199,6 +204,33 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               <span className={cn('block size-3 rounded-full bg-white shadow transition-transform', isPremium && 'translate-x-3')} />
             </span>
           </button>
+          {winterFeatureEnabled && (
+            <button
+              type="button"
+              onClick={toggleWinterMode}
+              aria-pressed={winterModeEnabled}
+              aria-label={t(winterModeEnabled ? 'winter.mode.disable' : 'winter.mode.enable')}
+              title={collapsed ? t('winter.mode.label') : undefined}
+              className={cn(
+                'mb-3 flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold transition active:scale-[0.98]',
+                winterModeEnabled
+                  ? isPremium
+                    ? 'winter-frost border-sky-100/30 bg-emerald-950/55 text-sky-100 shadow-[0_0_20px_rgba(125,211,252,.13)]'
+                    : 'border-sky-200 bg-gradient-to-r from-sky-50 to-emerald-50 text-emerald-900 dark:border-sky-400/20 dark:from-slate-900 dark:to-emerald-950/50 dark:text-sky-100'
+                  : isPremium
+                    ? 'border-white/10 bg-white/[.035] text-white/60 hover:bg-white/[.07]'
+                    : 'border-slate-200/80 text-slate-600 hover:bg-sky-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800',
+                collapsed && 'lg:justify-center lg:px-0',
+              )}
+              data-testid="toggle-winter-mode"
+            >
+              <Snowflake className="size-4 shrink-0 text-sky-500" aria-hidden="true" />
+              <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>{t('winter.mode.label')}</span>
+              <span className={cn('h-4 w-7 rounded-full p-0.5 transition-colors', winterModeEnabled ? 'bg-sky-400' : 'bg-slate-300 dark:bg-slate-700')} aria-hidden="true">
+                <span className={cn('block size-3 rounded-full bg-white shadow transition-transform', winterModeEnabled && 'translate-x-3')} />
+              </span>
+            </button>
+          )}
           <div
             role="button"
             tabIndex={0}
@@ -221,7 +253,6 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               <div className={cn('relative flex shrink-0 items-center gap-2', collapsed && 'lg:items-start')}>
                 <div className="relative grid size-9 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white">
                   {profile ? getInitials(profile.name, profile.surname) : t('nav.profile').slice(0, 2).toLocaleUpperCase()}
-                  <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="absolute -right-1 -top-1 size-4" />
                   <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900" aria-hidden="true" />
                 </div>
                 <span
@@ -278,9 +309,8 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOpen, onToggleSidebar, xp, level, equippedMedal, profile, onOpenProfile }) {
+function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOpen, onToggleSidebar, xp, level, profile, onOpenProfile }) {
   const { language, t } = useI18n()
-  const searchRef = useRef(null)
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(min-width: 1024px)').matches))
   const sidebarExpanded = isDesktop ? !collapsed : mobileOpen
 
@@ -291,17 +321,6 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
     updateViewport()
     breakpoint.addEventListener?.('change', updateViewport)
     return () => breakpoint.removeEventListener?.('change', updateViewport)
-  }, [])
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        searchRef.current?.focus()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   return (
@@ -328,28 +347,7 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
           </ol>
         </nav>
 
-        <div className="mx-auto hidden w-full max-w-md md:block">
-          <label className="group relative flex items-center">
-            <span className="sr-only">{t('header.search')}</span>
-            <Search className="search-icon pointer-events-none absolute left-3 size-4 text-gray-500" aria-hidden="true" />
-            <input
-              ref={searchRef}
-              type="search"
-              placeholder={t('header.search')}
-              className={cn(
-                'h-10 w-full rounded-xl border pl-9 pr-14 text-sm font-medium outline-none transition-all',
-                isPremium
-                  ? 'premium-search border-yellow-200/70 bg-white text-gray-900 shadow-[0_3px_14px_rgba(0,0,0,.16)] placeholder:text-gray-600 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300/40'
-                  : 'border-slate-200/80 bg-slate-50/80 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 dark:border-slate-800 dark:bg-slate-900/80 dark:text-white dark:placeholder:text-slate-500',
-              )}
-            />
-            <kbd className={cn("pointer-events-none absolute right-2.5 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-medium", isPremium ? "border border-yellow-200/50 bg-white text-gray-600 shadow-sm" : "border border-slate-200 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400")}>
-              ⌘K
-            </kbd>
-          </label>
-        </div>
-
-        <div className="ml-auto flex items-center gap-2 md:ml-0">
+        <div className="ml-auto flex items-center gap-2">
           <span role="img" aria-label={`${xp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300 sm:px-3">
             <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
             <span className="hidden min-[400px]:inline">{xp.toLocaleString(language)} XP</span>
@@ -367,7 +365,6 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
             >
               <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white ring-1 ring-white/20">
                 {getInitials(profile.name, profile.surname)}
-                <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="absolute -right-1.5 -top-1 size-4" />
               </span>
               <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
                 Lvl {level}
@@ -396,8 +393,9 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
 /*                                   App shell                                */
 /* -------------------------------------------------------------------------- */
 
-export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, xp, unlockedMedals, equippedMedal, onEquipMedal, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
+export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, xp, rankUpEvent, onDismissRankUp, currentStreak = 0, streakMilestones = [], winterStudy = null, streakMilestoneEvent, onDismissStreakMilestone, trophyMetrics, trophyUnlocks = [], trophyCelebrationEvent, onDismissTrophyCelebration, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
   const { t } = useI18n()
+  const { enabled: winterModeEnabled } = useWinterUpdate()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -457,13 +455,14 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
   }
 
   return (
-    <div data-theme={isPremium ? 'premium' : 'default'} className={cn('min-h-[100dvh] bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : 'theme-default')}>
+    <div data-theme={isPremium ? 'premium' : 'default'} data-winter={winterModeEnabled || undefined} className={cn('min-h-[100dvh] bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : 'theme-default', winterModeEnabled && 'winter-mode')}>
+      <WinterEffects />
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
         <div className={`absolute -right-32 top-28 size-96 rounded-full blur-[100px] ${isPremium ? 'bg-amber-300/10' : 'bg-cyan-300/10'}`} />
         <div className={`absolute -left-36 bottom-[-4rem] size-[32rem] rounded-full blur-[100px] ${isPremium ? 'bg-red-950/45' : 'bg-teal-900/10'}`} />
         <div className="absolute inset-0 opacity-[.035]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,.55) .65px, transparent .65px)', backgroundSize: '5px 5px' }} />
       </div>
-      <div className="relative mx-auto flex min-h-[100dvh] max-w-[1600px] gap-3 p-3 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
+      <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1600px] gap-3 p-3 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
         <Sidebar
           active={active}
           onNavigate={navigate}
@@ -473,7 +472,6 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           onCloseMobile={() => setMobileOpen(false)}
           targetPct={targetPct}
           level={level}
-          equippedMedal={equippedMedal}
           profile={profile}
           onOpenProfile={() => setProfileOpen(true)}
           onInstallApp={onInstallApp}
@@ -493,8 +491,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
             onToggleSidebar={toggleSidebar}
             xp={xp}
             level={level}
-            equippedMedal={equippedMedal}
-            profile={profile}
+              profile={profile}
             onOpenProfile={() => setProfileOpen(true)}
           />
 
@@ -508,15 +505,22 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
         onOpenChange={setProfileOpen}
         profile={profile}
         stats={{ xp }}
+        currentStreak={currentStreak}
+        streakMilestones={streakMilestones}
+        winterStudy={winterStudy}
+        winterChampionUnlocked={trophyUnlocks.some((record) => record?.id === 'winter-champion')}
+        trophyMetrics={trophyMetrics}
+        trophyUnlocks={trophyUnlocks}
         level={level}
-        unlockedMedals={unlockedMedals}
-        equippedMedal={equippedMedal}
-        onEquipMedal={onEquipMedal}
         onEditProfile={onEditProfile}
         onClearData={onClearData}
         onLogout={onLogout}
         isPremium={isPremium}
+        dark={dark}
       />
+      <RankUpModal event={trophyCelebrationEvent || streakMilestoneEvent ? null : rankUpEvent} isPremium={isPremium} dark={dark} onDismiss={onDismissRankUp} />
+      <StreakMilestoneModal event={trophyCelebrationEvent ? null : streakMilestoneEvent} isPremium={isPremium} dark={dark} onDismiss={onDismissStreakMilestone} />
+      <TrophyCelebrationModal event={trophyCelebrationEvent} isPremium={isPremium} dark={dark} onDismiss={onDismissTrophyCelebration} />
     </div>
   )
 }

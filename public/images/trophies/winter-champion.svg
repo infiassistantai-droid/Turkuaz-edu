@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none">
+  <defs>
+    <linearGradient id="ice" x1="76" x2="246" y1="44" y2="248" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E0F2FE"/>
+      <stop offset=".48" stop-color="#7DD3FC"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="111" x2="212" y1="105" y2="245" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset=".5" stop-color="#CBD5E1"/>
+      <stop offset="1" stop-color="#64748B"/>
+    </linearGradient>
+    <filter id="glow" width="1.6" height="1.6" x="-.3" y="-.3" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <circle cx="160" cy="159" r="119" fill="#0F766E" fill-opacity=".12"/>
+  <g stroke="#BAE6FD" stroke-linecap="round" stroke-width="5" opacity=".88">
+    <path d="M159 31v43m0-43-10 12m10-12 10 12M159 289v-43m0 43-10-12m10 12 10-12M31 160h43m-43 0 12-10m-12 10 12 10m246 0h-43m43 0-12-10m12 10-12 10"/>
+    <path d="m69 69 31 31m-31-31 15 2m-15-2 2 15m180 180-31-31m31 31-15-2m15 2-2-15M251 69l-31 31m31-31-15 2m15-2-2 15M69 251l31-31m-31 31 2-15m-2 15 15-2"/>
+  </g>
+  <g filter="url(#glow)">
+    <path d="M91 91h138v45c0 50-30 83-69 83s-69-33-69-83V91Z" fill="url(#ice)" stroke="#F8FAFC" stroke-width="7"/>
+    <path d="M91 105H54v20c0 37 20 58 54 60m121-80h37v20c0 37-20 58-54 60" stroke="url(#silver)" stroke-linecap="round" stroke-width="16"/>
+    <path d="M146 219h28v31h-28z" fill="url(#silver)" stroke="#F8FAFC" stroke-width="5"/>
+    <path d="M119 252h82v18h-82z" fill="url(#silver)" stroke="#F8FAFC" stroke-width="5"/>
+    <path d="m160 107 8 18 20 2-15 13 5 19-18-10-18 10 5-19-15-13 20-2 8-18Z" fill="#F8FAFC" stroke="#0F766E" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+  <g stroke="#F8FAFC" stroke-linecap="round" stroke-width="3">
+    <path d="m78 123 8 8m0-8-8 8m157 44 8 8m0-8-8 8m-139 47 7 7m0-7-7 7"/>
+  </g>
+</svg>

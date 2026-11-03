@@ -8,14 +8,19 @@ import {
   loadProfile,
   saveProfile,
   AUTH_KEY,
+  ONBOARDING_PENDING_KEY,
+  READING_COMPLETIONS_PREFIX,
+  SAVED_KEY,
   clearAllStorage,
+  loadScores,
+  saveScore,
 } from './lib/storage'
 import TurkchaDashboard from './components/TurkchaDashboard'
 import Dashboard from './components/Dashboard'
 import ComingSoon from './components/ComingSoon'
 import KunlikReja from './components/KunlikReja'
-import OkumaModule from './components/modules/OkumaModule'
-import DinlemeModule from './components/modules/DinlemeModule'
+import ReadingLibrary from './components/modules/ReadingLibrary'
+import ListeningHub from './components/modules/ListeningHub'
 import YazmaModule from './components/modules/YazmaModule'
 import WritingPractice from './components/modules/WritingPractice'
 import KonusmaModule from './components/modules/KonusmaModule'
@@ -23,16 +28,26 @@ import VocabularyFlashcards from './components/VocabularyFlashcards'
 import MockExam from './components/MockExam'
 import MockExamSimulator from './components/MockExamSimulator'
 import ProfileSetupModal from './components/ProfileSetupModal'
+import OnboardingFlow from './components/OnboardingFlow'
 import Leaderboard from './components/Leaderboard'
 import AnalyticsDashboard from './components/AnalyticsDashboard'
-import { fetchLearnerProgress, isSupabaseConfigured, supabase, syncLearnerProgress } from './lib/supabaseClient'
+import { deleteLearnerCloudData, fetchLearnerGamification, fetchLearnerProgress, isSupabaseConfigured, mergeCloudVocabularyIntoLocal, supabase, syncLearnerProgress } from './lib/supabase'
 import { disableDailyReminder, enableDailyReminder, getReminderPreference, showDailyReminderIfDue } from './lib/dailyReminders'
 import { calculateCertificate } from './lib/multilevelScoring'
 import { useI18n } from './lib/i18n.jsx'
 import { DEFAULT_EQUIPPED_MEDAL, DEFAULT_UNLOCKED_MEDALS } from './lib/medals'
+import { getRankProgress } from './lib/ranks'
+import { getStreakMilestonesUpTo, STREAK_MILESTONES } from './lib/streakMilestones'
+import { getTrophyProgress, TROPHIES, TROPHY_REWARD_XP } from './lib/trophies'
+import { getListeningCompletedCount } from './lib/listeningProgress'
+import { useMascot } from './context/MascotContext'
+import { useWinterUpdate } from './features/winter/WinterUpdateContext'
+import { getWinterStudyDayCount, normalizeWinterStudy, recordWinterStudyDay } from './features/winter/winterSeason'
 
 // Learner stats and skill results start empty and are persisted after real activity.
-const DEFAULT_STATS = { xp: 0, streak: 0, weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
+const DEFAULT_STATS = { xp: 0, streak: 0, streakMilestones: [], winterStudy: { seasonId: null, days: [] }, completedQuizzes: 0, readingCompletedCount: 0, listeningLessonsCompleted: 0, savedWordsCount: 0, flawlessQuizAchieved: false, speedBonusAchieved: false, trophyUnlocks: [], weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
+const STREAK_MILESTONE_STORAGE_PREFIX = 'turkuaz-edu-streak-milestones-v1:'
+const TROPHY_UNLOCK_STORAGE_PREFIX = 'turkuaz-edu-trophy-unlocks-v1:'
 const DEFAULT_PROGRESS = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
 
 function localDateKey(date = new Date()) {
@@ -46,6 +61,47 @@ function previousDateKey(key) {
   const date = new Date(`${key}T12:00:00`)
   date.setDate(date.getDate() - 1)
   return localDateKey(date)
+}
+
+function hasPendingOnboarding(userId) {
+  try {
+    const marker = window.localStorage.getItem(ONBOARDING_PENDING_KEY)
+    if (marker === 'pending' && userId) window.localStorage.setItem(ONBOARDING_PENDING_KEY, userId)
+    return marker === 'pending' || marker === String(userId)
+  } catch {
+    return false
+  }
+}
+
+function mergeTrophyRecords(...recordLists) {
+  const byId = new Map()
+  for (const record of recordLists.flat()) {
+    if (!record?.id || !TROPHIES.some((trophy) => trophy.id === record.id)) continue
+    const previous = byId.get(record.id)
+    if (!previous || (!previous.unlockedAt && record.unlockedAt)) byId.set(record.id, record)
+  }
+  return [...byId.values()]
+}
+
+function getLearnerProfileFromAuth(user, targetLevel, hasExistingProgress = true, forceOnboarding = false, cloudProfile = null) {
+  const metadata = user?.user_metadata || {}
+  const nameParts = String(cloudProfile?.full_name || metadata.full_name || metadata.name || '').trim().split(/\s+/u).filter(Boolean)
+  const email = user?.email || ''
+  const firstNameFromFullName = nameParts.shift()
+  const name = metadata.given_name || firstNameFromFullName || email.split('@')[0] || 'Learner'
+  const surname = metadata.surname || metadata.family_name || nameParts.join(' ')
+  return {
+    name,
+    surname,
+    email,
+    avatarUrl: cloudProfile?.avatar_url || metadata.avatar_url || metadata.picture || null,
+    targetLevel: targetLevel || metadata.target_level || 'B1',
+    learningGoal: metadata.learning_goal || null,
+    startingPath: metadata.starting_path || null,
+    startingLevel: metadata.starting_level || null,
+    onboardingCompleted: typeof metadata.onboarding_completed === 'boolean' ? metadata.onboarding_completed : forceOnboarding ? false : Boolean(hasExistingProgress),
+    userId: user?.id,
+  }
 }
 
 function getDailyQuestProgress(stats, dateKey = localDateKey()) {
@@ -63,25 +119,65 @@ function getDailyQuestProgress(stats, dateKey = localDateKey()) {
   return { date: dateKey, words: [], listening: 0, xp: Number.isFinite(recordedXp) ? Math.max(0, recordedXp) : 0, wordRewardClaimed: false }
 }
 
-function loadLearnerStats() {
-  const stored = loadJSON(STORAGE_KEY, {})?.stats
-  if (!stored) return DEFAULT_STATS
+function getReadingCompletionCount(profile) {
+  const identity = String(profile?.userId || profile?.email || 'local').trim().toLowerCase()
+  const completionKey = `${READING_COMPLETIONS_PREFIX}${encodeURIComponent(identity)}`
+  const completed = loadJSON(completionKey, [])
+  return Array.isArray(completed) ? new Set(completed).size : 0
+}
+
+function getSavedWordCount() {
+  const saved = loadJSON(SAVED_KEY, [])
+  if (!Array.isArray(saved)) return 0
+  const terms = saved.map((item) => typeof item === 'string' ? item.trim().toLocaleLowerCase('tr-TR') : String(item?.term || '').trim().toLocaleLowerCase('tr-TR')).filter(Boolean)
+  return new Set(terms).size
+}
+
+function getLegacyQuizCount(profile, storedStats, localState) {
+  const moduleAttempts = Object.values(loadScores() || {}).reduce((sum, item) => sum + Math.max(0, Number(item?.attempts) || 0), 0)
+  const sectionAttempts = Object.values(localState?.multilevelSectionResults || {}).reduce((sum, item) => sum + Math.max(0, Number(item?.attempts) || 0), 0)
+  const completedMocks = Math.max(0, Number(storedStats?.completedMocks) || 0)
+  return moduleAttempts + Math.max(sectionAttempts, completedMocks) + getReadingCompletionCount(profile)
+}
+
+function loadLearnerStats(profile = null) {
+  const localState = loadJSON(STORAGE_KEY, {})
+  const stored = localState?.stats
+  if (!stored) return { ...DEFAULT_STATS, savedWordsCount: getSavedWordCount(), readingCompletedCount: getReadingCompletionCount(profile), completedQuizzes: getLegacyQuizCount(profile, null, localState) }
 
   // Earlier builds shipped with invented starter totals. Remove that known
   // demo baseline while preserving earned progress above it.
   const hasOldDemoBaseline = stored.xp >= 12480 && stored.streak >= 23 &&
     stored.wordsLearned >= 148 && stored.levelsCompleted >= 9
-  if (!hasOldDemoBaseline) return { ...DEFAULT_STATS, ...stored }
+  const normalized = hasOldDemoBaseline
+    ? {
+        ...DEFAULT_STATS,
+        ...stored,
+        xp: Math.max(0, stored.xp - 12480),
+        streak: Math.max(0, stored.streak - 23),
+        wordsLearned: Math.max(0, stored.wordsLearned - 148),
+        levelsCompleted: Math.max(0, stored.levelsCompleted - 9),
+      }
+    : { ...DEFAULT_STATS, ...stored }
 
-  // Retain activity earned on top of the old sample baseline, not its invented totals.
-  return {
-    ...DEFAULT_STATS,
-    ...stored,
-    xp: Math.max(0, stored.xp - 12480),
-    streak: Math.max(0, stored.streak - 23),
-    wordsLearned: Math.max(0, stored.wordsLearned - 148),
-    levelsCompleted: Math.max(0, stored.levelsCompleted - 9),
-  }
+  // Migrate real persisted streaks into their permanent milestone inventory.
+  // No streak or XP is seeded: awards are inferred only from recorded streak days.
+  const recordedDays = Number.isFinite(Number(normalized.streak)) ? Math.max(0, Math.floor(Number(normalized.streak))) : 0
+  normalized.streak = recordedDays
+  normalized.streakMilestones = Array.isArray(stored.streakMilestones)
+    ? stored.streakMilestones.map(Number).filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days))
+    : getStreakMilestonesUpTo(recordedDays)
+  normalized.winterStudy = normalizeWinterStudy(stored.winterStudy)
+  const savedQuizCount = Number(stored.completedQuizzes)
+  normalized.completedQuizzes = Number.isFinite(savedQuizCount) && savedQuizCount >= 0
+    ? Math.floor(savedQuizCount)
+    : getLegacyQuizCount(profile, stored, localState)
+  normalized.savedWordsCount = getSavedWordCount()
+  normalized.readingCompletedCount = getReadingCompletionCount(profile)
+  normalized.flawlessQuizAchieved = Boolean(stored.flawlessQuizAchieved)
+  normalized.speedBonusAchieved = Boolean(stored.speedBonusAchieved)
+  normalized.trophyUnlocks = Array.isArray(stored.trophyUnlocks) ? stored.trophyUnlocks.filter((record) => TROPHIES.some((trophy) => trophy.id === record?.id)) : []
+  return normalized
 }
 
 function loadLearnerProgress() {
@@ -141,6 +237,8 @@ function ToastItem({ toast }) {
 
 export default function App() {
   const { t } = useI18n()
+  const { showMascot } = useMascot()
+  const { enabled: winterModeEnabled, featureEnabled: winterFeatureEnabled } = useWinterUpdate()
   // Lazy initial state — hydrated straight from localStorage (SSR-safe via try/catch).
   const [active, setActive] = useState('home')
   const [resetVersion, setResetVersion] = useState(0)
@@ -170,7 +268,21 @@ export default function App() {
     }
   })
   const [editingProfile, setEditingProfile] = useState(false)
-  const [stats, setStats] = useState(() => isSupabaseConfigured ? DEFAULT_STATS : loadLearnerStats())
+  const [stats, setStats] = useState(() => isSupabaseConfigured
+    ? { ...DEFAULT_STATS, savedWordsCount: getSavedWordCount(), readingCompletedCount: getReadingCompletionCount(profile) }
+    : loadLearnerStats(profile))
+  const [rankUpEvent, setRankUpEvent] = useState(null)
+  const [streakMilestoneEvent, setStreakMilestoneEvent] = useState(null)
+  const [trophyCelebrationEvent, setTrophyCelebrationEvent] = useState(null)
+  const [queuedTrophyEvents, setQueuedTrophyEvents] = useState([])
+  const streakActivityRef = useRef({ streak: stats.streak, lastActivityDate: stats.lastActivityDate })
+  const streakMilestoneSequenceRef = useRef(0)
+  const trophySequenceRef = useRef(0)
+  const trophyBaselineIdentityRef = useRef(null)
+  const trophyMascotEventRef = useRef(null)
+  const xpForRankRef = useRef(stats.xp)
+  const rankUpSequenceRef = useRef(0)
+  xpForRankRef.current = stats.xp
   const claimedQuestRewards = useRef(new Set())
   const [progress, setProgress] = useState(() => isSupabaseConfigured ? DEFAULT_PROGRESS : loadLearnerProgress())
   const [sectionResults, setSectionResults] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelSectionResults || {})
@@ -183,6 +295,57 @@ export default function App() {
     const saved = loadJSON(STORAGE_KEY, {})?.equippedMedal
     return saved === undefined ? DEFAULT_EQUIPPED_MEDAL : saved
   })
+
+  useEffect(() => {
+    streakActivityRef.current = { streak: stats.streak, lastActivityDate: stats.lastActivityDate }
+  }, [stats.streak, stats.lastActivityDate])
+
+  useEffect(() => {
+    if (!profile) return
+    const readingCompletedCount = getReadingCompletionCount(profile)
+    const savedWordsCount = getSavedWordCount()
+    const completedQuizzes = Math.max(Number(stats.completedQuizzes) || 0, getLegacyQuizCount(profile, stats, loadJSON(STORAGE_KEY, {})))
+    const listeningLessonsCompleted = getListeningCompletedCount(profile.userId || profile.email)
+    if (stats.readingCompletedCount !== readingCompletedCount || stats.savedWordsCount !== savedWordsCount || stats.completedQuizzes !== completedQuizzes || stats.listeningLessonsCompleted !== listeningLessonsCompleted) {
+      setStats((current) => ({ ...current, readingCompletedCount, savedWordsCount, completedQuizzes, listeningLessonsCompleted }))
+    }
+  }, [profile?.userId, profile?.email])
+
+  // Keep a per-user local cache of streak badges as an offline fallback; the
+  // normalized user_streaks row is synced whenever the learner state changes.
+  useEffect(() => {
+    if (!isSupabaseConfigured || !profile?.userId) return
+    const key = `${STREAK_MILESTONE_STORAGE_PREFIX}${profile.userId}`
+    const stored = loadJSON(key, [])
+    const isValidMilestone = (days) => STREAK_MILESTONES.some((milestone) => milestone.days === Number(days))
+    const savedDays = Array.isArray(stored) ? stored.map(Number).filter(isValidMilestone) : []
+    const currentDays = Array.isArray(stats.streakMilestones) ? stats.streakMilestones.filter(isValidMilestone) : []
+    const mergedDays = [...new Set([...savedDays, ...currentDays])].sort((a, b) => a - b)
+    saveJSON(key, mergedDays)
+    if (mergedDays.length !== currentDays.length || mergedDays.some((days, index) => days !== currentDays[index])) {
+      setStats((current) => ({ ...current, streakMilestones: mergedDays }))
+    }
+  }, [profile?.userId, stats.streakMilestones])
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !profile?.userId) return
+    const key = `${TROPHY_UNLOCK_STORAGE_PREFIX}${profile.userId}`
+    const stored = loadJSON(key, [])
+    const savedRecords = Array.isArray(stored) ? stored.filter((record) => TROPHIES.some((trophy) => trophy.id === record?.id)) : []
+    const currentRecords = Array.isArray(stats.trophyUnlocks) ? stats.trophyUnlocks : []
+    const mergedById = new Map(savedRecords.map((record) => [record.id, record]))
+    for (const record of currentRecords) {
+      const previous = mergedById.get(record.id)
+      if (!previous || record.unlockedAt || !previous.unlockedAt) mergedById.set(record.id, record)
+    }
+    const mergedRecords = [...mergedById.values()]
+    saveJSON(key, mergedRecords)
+    const isSame = mergedRecords.length === currentRecords.length && mergedRecords.every((record, index) => {
+      const current = currentRecords[index]
+      return current && record.id === current.id && record.unlockedAt === current.unlockedAt && record.rewardXp === current.rewardXp
+    })
+    if (!isSame) setStats((current) => ({ ...current, trophyUnlocks: mergedRecords }))
+  }, [profile?.userId, stats.trophyUnlocks])
 
   // Theme classes and full local persistence for learner progress/settings.
   useEffect(() => {
@@ -234,16 +397,53 @@ export default function App() {
       }
       setAuthenticated(true)
       const metadata = session.user.user_metadata || {}
-      setProfile({ name: metadata.name || session.user.email?.split('@')[0] || 'Learner', surname: metadata.surname || '', email: session.user.email || '', targetLevel: metadata.target_level || 'B1', userId: session.user.id })
+      const forceOnboarding = hasPendingOnboarding(session.user.id)
+      let row = null
+      let cloudData = null
+      let progressLookupSucceeded = false
       try {
-        const row = await fetchLearnerProgress(session.user.id)
-        if (!alive) return
-        if (row) {
-          setProfile((current) => ({ ...current, targetLevel: row.target_level || current.targetLevel }))
-          setStats((current) => ({ ...current, xp: row.xp || 0, streak: row.streak || 0, completedLessons: row.completed_lessons || [], weeklyXp: row.weekly_xp || 0, weekStart: row.week_start || null, lastActivityDate: row.last_activity_date || null, dailyXp: row.daily_xp || current.dailyXp || {}, analyticsTrackingSince: row.analytics_tracking_since || current.analyticsTrackingSince || null, dailyQuests: row.daily_quests || current.dailyQuests || null, questWordsCredited: row.quest_words_credited || current.questWordsCredited || [], skillsCompleted: row.completed_lessons || [] }))
-        }
+        row = await fetchLearnerProgress(session.user.id)
+        progressLookupSucceeded = true
       } catch (error) { console.error('Could not load cloud progress:', error) }
-      finally { if (alive) { setCloudReady(true); setAuthLoading(false) } }
+      try {
+        cloudData = await fetchLearnerGamification(session.user.id)
+      } catch (error) { console.warn('Could not load cloud profile, streak, achievements, or vocabulary. Apply the latest Supabase schema to enable full sync.', error) }
+      if (!alive) return
+      if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
+      const cloudAchievementRecords = (cloudData?.achievements || []).map((record) => ({
+        id: record.trophy_id,
+        unlockedAt: record.unlocked_at || null,
+        rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0,
+        historical: Boolean(record.progress_data?.historical),
+      }))
+      const cloudStreak = cloudData?.streak
+      const cloudProfile = cloudData?.profile
+      const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudProfile?.current_streak ?? 0)
+      const cloudMilestones = Array.isArray(cloudStreak?.unlocked_milestones)
+        ? cloudStreak.unlocked_milestones.map(Number).filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days))
+        : []
+      setStats((current) => ({
+        ...current,
+        xp: Math.max(0, Number(row?.xp ?? cloudProfile?.total_xp) || 0),
+        streak: Math.max(0, streakCount),
+        streakMilestones: [...new Set([...(current.streakMilestones || []), ...cloudMilestones, ...getStreakMilestonesUpTo(streakCount)])].sort((a, b) => a - b),
+        trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], cloudAchievementRecords),
+        winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
+        savedWordsCount: getSavedWordCount(),
+        completedLessons: row?.completed_lessons || current.completedLessons || [],
+        weeklyXp: row?.weekly_xp ?? current.weeklyXp ?? 0,
+        weekStart: row?.week_start ?? current.weekStart ?? null,
+        lastActivityDate: row?.last_activity_date || cloudStreak?.last_active_date || current.lastActivityDate || null,
+        dailyXp: row?.daily_xp || current.dailyXp || {},
+        analyticsTrackingSince: row?.analytics_tracking_since || current.analyticsTrackingSince || null,
+        dailyQuests: row?.daily_quests || current.dailyQuests || null,
+        questWordsCredited: row?.quest_words_credited || current.questWordsCredited || [],
+        skillsCompleted: row?.completed_lessons || current.skillsCompleted || [],
+      }))
+      const hasExistingProgress = progressLookupSucceeded ? Boolean(row || cloudProfile || cloudStreak) : true
+      setProfile(getLearnerProfileFromAuth(session.user, row?.target_level || metadata.target_level, hasExistingProgress, forceOnboarding, cloudProfile))
+      setCloudReady(true)
+      setAuthLoading(false)
     }
     supabase.auth.getSession().then(({ data }) => hydrateSession(data.session)).catch(() => setAuthLoading(false))
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => { void hydrateSession(session) })
@@ -259,10 +459,10 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !cloudReady || !cloudSession?.user || !profile) return undefined
+    if (!isSupabaseConfigured || !cloudReady || !cloudSession?.user || !profile || profile.onboardingCompleted === false) return undefined
     const timeout = window.setTimeout(() => {
       syncLearnerProgress(cloudSession.user.id, profile, stats).catch((error) => console.error('Cloud progress sync failed:', error))
-    }, 600)
+    }, 250)
     return () => window.clearTimeout(timeout)
   }, [cloudReady, cloudSession, profile, stats])
 
@@ -282,10 +482,10 @@ export default function App() {
 
   const handleCloudRegister = useCallback(async ({ email, password, profile: newProfile }) => {
     if (!supabase) throw new Error('Supabase is not configured.')
-    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name: newProfile.name, surname: newProfile.surname, target_level: newProfile.targetLevel } } })
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name: newProfile.name, surname: newProfile.surname, target_level: newProfile.targetLevel, onboarding_completed: false } } })
     if (error) throw error
     if (!data.session) throw new Error('Account created. Confirm your email, then sign in to continue.')
-    const learner = { ...newProfile, userId: data.user.id }
+    const learner = { ...newProfile, onboardingCompleted: false, userId: data.user.id }
     setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(true); setAuthLoading(false)
     try { await syncLearnerProgress(data.user.id, learner, DEFAULT_STATS) } catch (error) { console.error('Initial cloud progress write failed:', error) }
     showToast('Hisob Supabase’da yaratildi va bulut bilan ulandi.', 'success')
@@ -296,11 +496,41 @@ export default function App() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
     let row = null
-    try { row = await fetchLearnerProgress(data.user.id) } catch (error) { console.error('Could not load cloud progress:', error) }
+    let cloudData = null
+    let progressLookupSucceeded = false
+    try {
+      row = await fetchLearnerProgress(data.user.id)
+      progressLookupSucceeded = true
+    } catch (error) { console.error('Could not load cloud progress:', error) }
+    try {
+      cloudData = await fetchLearnerGamification(data.user.id)
+    } catch (error) { console.warn('Could not load cloud gamification data. Apply the latest Supabase schema to enable full sync.', error) }
+    if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
     const metadata = data.user.user_metadata || {}
-    const learner = { name: metadata.name || data.user.email?.split('@')[0] || 'Learner', surname: metadata.surname || '', email: data.user.email || email, targetLevel: row?.target_level || metadata.target_level || 'B1', userId: data.user.id }
+    const forceOnboarding = hasPendingOnboarding(data.user.id)
+    const learner = getLearnerProfileFromAuth(data.user, row?.target_level || metadata.target_level, progressLookupSucceeded ? Boolean(row || cloudData?.profile || cloudData?.streak) : true, forceOnboarding, cloudData?.profile)
     setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(true); setAuthLoading(false)
-    if (row) setStats((current) => ({ ...current, xp: row.xp || 0, streak: row.streak || 0, completedLessons: row.completed_lessons || [], skillsCompleted: row.completed_lessons || [], weeklyXp: row.weekly_xp || 0, weekStart: row.week_start || null, lastActivityDate: row.last_activity_date || null, dailyXp: row.daily_xp || current.dailyXp || {}, analyticsTrackingSince: row.analytics_tracking_since || current.analyticsTrackingSince || null, dailyQuests: row.daily_quests || current.dailyQuests || null, questWordsCredited: row.quest_words_credited || current.questWordsCredited || [] }))
+    const remoteAchievements = (cloudData?.achievements || []).map((record) => ({ id: record.trophy_id, unlockedAt: record.unlocked_at || null, rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0, historical: Boolean(record.progress_data?.historical) }))
+    const cloudStreak = cloudData?.streak
+    const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? 0)
+    if (row || cloudData) setStats((current) => ({
+      ...current,
+      xp: Math.max(0, Number(row?.xp ?? cloudData?.profile?.total_xp) || 0),
+      streak: Math.max(0, streakCount),
+      streakMilestones: [...new Set([...(current.streakMilestones || []), ...(Array.isArray(cloudStreak?.unlocked_milestones) ? cloudStreak.unlocked_milestones.map(Number) : []), ...getStreakMilestonesUpTo(streakCount)])].filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days)).sort((a, b) => a - b),
+      trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], remoteAchievements),
+      winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
+      savedWordsCount: getSavedWordCount(),
+      completedLessons: row?.completed_lessons || current.completedLessons || [],
+      skillsCompleted: row?.completed_lessons || current.skillsCompleted || [],
+      weeklyXp: row?.weekly_xp ?? current.weeklyXp ?? 0,
+      weekStart: row?.week_start ?? current.weekStart ?? null,
+      lastActivityDate: row?.last_activity_date || cloudStreak?.last_active_date || current.lastActivityDate || null,
+      dailyXp: row?.daily_xp || current.dailyXp || {},
+      analyticsTrackingSince: row?.analytics_tracking_since || current.analyticsTrackingSince || null,
+      dailyQuests: row?.daily_quests || current.dailyQuests || null,
+      questWordsCredited: row?.quest_words_credited || current.questWordsCredited || [],
+    }))
     showToast('Bulut hisobingizga muvaffaqiyatli kirdingiz.', 'success')
   }, [showToast])
 
@@ -321,6 +551,24 @@ export default function App() {
 
   const updateWordsLearned = useCallback((count) => {
     setStats((s) => s.wordsLearned === count ? s : { ...s, wordsLearned: count })
+  }, [])
+
+  const updateSavedWordsCount = useCallback((count) => {
+    const safeCount = Math.max(0, Math.floor(Number(count) || 0))
+    setStats((current) => current.savedWordsCount === safeCount ? current : { ...current, savedWordsCount: safeCount })
+  }, [])
+
+  const updateReadingCompletedCount = useCallback((count) => {
+    const safeCount = Math.max(0, Math.floor(Number(count) || 0))
+    setStats((current) => current.readingCompletedCount === safeCount ? current : { ...current, readingCompletedCount: safeCount })
+  }, [])
+
+  const recordFlawlessQuiz = useCallback(() => {
+    setStats((current) => current.flawlessQuizAchieved ? current : { ...current, flawlessQuizAchieved: true })
+  }, [])
+
+  const recordSpeedBonus = useCallback(() => {
+    setStats((current) => current.speedBonusAchieved ? current : { ...current, speedBonusAchieved: true })
   }, [])
 
   const recordNewQuestWord = useCallback((word) => {
@@ -352,6 +600,35 @@ export default function App() {
     (amount, { countTowardDailyXpQuest = true, markLessonActivity = true } = {}) => {
       const today = localDateKey()
       const award = Math.max(0, Number(amount) || 0)
+      if (award > 0) {
+        const previousXp = Math.max(0, Number(xpForRankRef.current) || 0)
+        const nextXp = previousXp + award
+        xpForRankRef.current = nextXp
+        const previousRank = getRankProgress(previousXp).rank
+        const nextRankState = getRankProgress(nextXp)
+        if (nextRankState.rank.id !== previousRank.id) {
+          rankUpSequenceRef.current += 1
+          setRankUpEvent({ id: rankUpSequenceRef.current, level: nextRankState.level, xp: nextXp })
+        }
+      }
+      if (markLessonActivity) {
+        const previousActivity = streakActivityRef.current
+        const previousStreak = Math.max(0, Number(previousActivity.streak) || 0)
+        const startsNewDay = previousActivity.lastActivityDate !== today
+        const nextStreak = !startsNewDay
+          ? previousStreak
+          : !previousActivity.lastActivityDate || previousActivity.lastActivityDate === previousDateKey(today)
+            ? previousStreak + 1
+            : 1
+        if (startsNewDay) {
+          streakActivityRef.current = { streak: nextStreak, lastActivityDate: today }
+          const reachedMilestone = STREAK_MILESTONES.find(({ days }) => previousStreak < days && nextStreak >= days)
+          if (reachedMilestone) {
+            streakMilestoneSequenceRef.current += 1
+            setStreakMilestoneEvent({ id: streakMilestoneSequenceRef.current, days: reachedMilestone.days })
+          }
+        }
+      }
       const monday = new Date(); monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
       const weekStart = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
       const historyCutoffDate = new Date(); historyCutoffDate.setDate(historyCutoffDate.getDate() - 89)
@@ -366,6 +643,13 @@ export default function App() {
         if (award > 0) dailyXp[today] = (Number(dailyXp[today]) || 0) + award
         const dailyQuests = getDailyQuestProgress(s, today)
         if (countTowardDailyXpQuest && award > 0) dailyQuests.xp += award
+        const winterStudy = winterFeatureEnabled && markLessonActivity
+          ? recordWinterStudyDay(s.winterStudy, today)
+          : normalizeWinterStudy(s.winterStudy)
+        const savedMilestones = Array.isArray(s.streakMilestones) ? s.streakMilestones : []
+        const streakMilestones = markLessonActivity
+          ? [...new Set([...savedMilestones, ...getStreakMilestonesUpTo(streak)])]
+          : savedMilestones
         return {
           ...s,
           xp: s.xp + award,
@@ -376,18 +660,20 @@ export default function App() {
           dailyQuests,
           levelsCompleted: s.levelsCompleted + (markLessonActivity ? 1 : 0),
           streak,
+          streakMilestones,
+          winterStudy,
           lastActivityDate: markLessonActivity ? today : s.lastActivityDate,
         }
       })
       if (award > 0) showToast(`+${award} XP qoʻshildi! 🎉`, 'xp')
     },
-    [showToast],
+    [showToast, winterFeatureEnabled],
   )
 
   const claimDailyWordReward = useCallback(() => {
     const today = localDateKey()
     const currentQuests = getDailyQuestProgress(stats, today)
-    if (currentQuests.words.length < 3 || currentQuests.wordRewardClaimed || claimedQuestRewards.current.has(today)) return
+    if (currentQuests.words.length < 3 || currentQuests.wordRewardClaimed || claimedQuestRewards.current.has(today)) return false
     claimedQuestRewards.current.add(today)
     setStats((current) => {
       const quests = getDailyQuestProgress(current, today)
@@ -395,6 +681,7 @@ export default function App() {
       return { ...current, dailyQuests: { ...quests, wordRewardClaimed: true } }
     })
     addXp(25, { countTowardDailyXpQuest: false, markLessonActivity: false })
+    return true
   }, [addXp, stats])
 
   const completeLevel = useCallback(
@@ -409,13 +696,40 @@ export default function App() {
         return next
       })
       setStats((s) => {
-        if (!skill || (s.skillsCompleted || []).includes(skill)) return s
-        return { ...s, skillsCompleted: [...(s.skillsCompleted || []), skill], completedLessons: [...new Set([...(s.completedLessons || []), skill])] }
+        const skillsCompleted = Array.isArray(s.skillsCompleted) ? s.skillsCompleted : []
+        const isNewSkill = Boolean(skill && !skillsCompleted.includes(skill))
+        return {
+          ...s,
+          completedQuizzes: (Number(s.completedQuizzes) || 0) + 1,
+          ...(isNewSkill ? {
+            skillsCompleted: [...skillsCompleted, skill],
+            completedLessons: [...new Set([...(s.completedLessons || []), skill])],
+          } : {}),
+        }
       })
       addXp(xpAward)
+      if (Number.isFinite(resultPercent)) {
+        const passed = resultPercent > 0
+        showMascot({
+          message: t(winterModeEnabled ? (passed ? 'winter.mascot.success' : 'winter.mascot.encourage') : (passed ? 'mascot.success' : 'mascot.encourage')),
+          emotion: passed ? 'cheer' : 'sad',
+          duration: 4200,
+        })
+      }
     },
-    [addXp],
+    [addXp, showMascot, t, winterModeEnabled],
   )
+
+  useEffect(() => {
+    if (authLoading || !authenticated || !profile || profile.onboardingCompleted === false) return
+    if (active === 'home') {
+      showMascot({ message: t(winterModeEnabled ? (stats.streak > 0 ? 'winter.mascot.streak' : 'winter.mascot.greeting') : 'mascot.greeting'), emotion: 'idle', duration: 4200 })
+      return
+    }
+    if (['plan', 'okuma', 'dinleme', 'writing-practice', 'yazma', 'konusma', 'lugat', 'mock', 'exams'].includes(active)) {
+      showMascot({ message: t('mascot.focus'), emotion: 'focus', duration: 3600 })
+    }
+  }, [active, authLoading, authenticated, profile, showMascot, stats.streak, t, winterModeEnabled])
 
   const navigate = useCallback((id) => {
     setActive(id)
@@ -434,12 +748,100 @@ export default function App() {
   const targetScore = profile?.targetLevel === 'B1' ? 38 : profile?.targetLevel === 'B2' ? 51 : profile?.targetLevel === 'C1' ? 65 : 0
   const targetPct = targetScore ? Math.min(100, Math.round((totalScore / targetScore) * 100)) : 0
   const todaysQuests = getDailyQuestProgress(stats, localDateKey())
+  const trophyMetrics = useMemo(() => ({
+    xp: stats.xp,
+    completedQuizzes: stats.completedQuizzes,
+    currentStreak: stats.streak,
+    streakMilestones: stats.streakMilestones,
+    readingCompletedCount: stats.readingCompletedCount,
+    listeningPercent: progress.dinleme,
+    savedWordsCount: stats.savedWordsCount,
+    flawlessQuizAchieved: stats.flawlessQuizAchieved,
+    speedBonusAchieved: stats.speedBonusAchieved,
+    winterStudyDays: winterFeatureEnabled ? getWinterStudyDayCount(stats.winterStudy) : 0,
+  }), [stats.xp, stats.completedQuizzes, stats.streak, stats.streakMilestones, stats.readingCompletedCount, stats.savedWordsCount, stats.flawlessQuizAchieved, stats.speedBonusAchieved, stats.winterStudy, progress.dinleme, winterFeatureEnabled])
+
+  useEffect(() => {
+    if (authLoading || !authenticated || !profile || profile.onboardingCompleted === false) return
+    const identity = String(profile.userId || profile.email || 'local')
+    const identityChanged = trophyBaselineIdentityRef.current !== identity
+    if (identityChanged) trophyBaselineIdentityRef.current = identity
+
+    const records = Array.isArray(stats.trophyUnlocks) ? stats.trophyUnlocks : []
+    const knownIds = new Set(records.map((record) => record.id))
+    const eligibilityMetrics = identityChanged ? {
+      ...trophyMetrics,
+      savedWordsCount: getSavedWordCount(),
+      readingCompletedCount: getReadingCompletionCount(profile),
+      completedQuizzes: Math.max(Number(trophyMetrics.completedQuizzes) || 0, getLegacyQuizCount(profile, stats, loadJSON(STORAGE_KEY, {}))),
+    } : trophyMetrics
+    const newlyEligible = TROPHIES.filter((trophy) => getTrophyProgress(trophy, eligibilityMetrics).unlocked && !knownIds.has(trophy.id))
+    if (!newlyEligible.length) return
+
+    if (identityChanged) {
+      const historicalRecords = newlyEligible.map((trophy) => ({ id: trophy.id, unlockedAt: null, rewardXp: 0, historical: true }))
+      setStats((current) => ({ ...current, trophyUnlocks: [...(current.trophyUnlocks || []), ...historicalRecords] }))
+      return
+    }
+
+    const unlockedAt = new Date().toISOString()
+    const newRecords = newlyEligible.map((trophy) => ({
+      id: trophy.id,
+      unlockedAt,
+      rewardXp: TROPHY_REWARD_XP[trophy.id] || 0,
+      historical: false,
+    }))
+    setStats((current) => {
+      const currentRecords = Array.isArray(current.trophyUnlocks) ? current.trophyUnlocks : []
+      const currentIds = new Set(currentRecords.map((record) => record.id))
+      return { ...current, trophyUnlocks: [...currentRecords, ...newRecords.filter((record) => !currentIds.has(record.id))] }
+    })
+    setQueuedTrophyEvents((queue) => {
+      const queuedIds = new Set(queue.map((event) => event.trophyId))
+      return [...queue, ...newRecords.filter((record) => !queuedIds.has(record.id)).map((record) => {
+        trophySequenceRef.current += 1
+        return { id: trophySequenceRef.current, trophyId: record.id, unlockedAt, rewardXp: record.rewardXp }
+      })]
+    })
+    const rewardTotal = newRecords.reduce((sum, record) => sum + record.rewardXp, 0)
+    if (rewardTotal > 0) addXp(rewardTotal, { countTowardDailyXpQuest: false, markLessonActivity: false })
+  }, [authLoading, authenticated, profile, stats.trophyUnlocks, trophyMetrics, addXp])
+
+  useEffect(() => {
+    if (trophyCelebrationEvent || queuedTrophyEvents.length === 0) return
+    const [nextEvent, ...remaining] = queuedTrophyEvents
+    setQueuedTrophyEvents(remaining)
+    setTrophyCelebrationEvent(nextEvent)
+  }, [trophyCelebrationEvent, queuedTrophyEvents])
+
+  useEffect(() => {
+    if (!trophyCelebrationEvent || trophyMascotEventRef.current === trophyCelebrationEvent.id) return
+    const trophy = TROPHIES.find((item) => item.id === trophyCelebrationEvent.trophyId)
+    if (!trophy) return
+    trophyMascotEventRef.current = trophyCelebrationEvent.id
+    showMascot({
+      message: t('trophy.celebrate.mascot', { trophy: t(trophy.titleKey) }),
+      emotion: 'cheer',
+      duration: 7200,
+    })
+  }, [trophyCelebrationEvent, showMascot, t])
 
   // ------------------------------ auth flow ------------------------------
 
   const handleSaveProfile = (p) => {
-    if (isSupabaseConfigured && supabase && cloudSession?.user) supabase.auth.updateUser({ data: { name: p.name, surname: p.surname, target_level: p.targetLevel } }).catch((error) => console.error('Profile sync failed:', error))
-    setProfile(p)
+    const learnerProfile = editingProfile ? p : { ...p, onboardingCompleted: false }
+    if (isSupabaseConfigured && supabase && cloudSession?.user) {
+      supabase.auth.updateUser({ data: {
+        name: learnerProfile.name,
+        surname: learnerProfile.surname,
+        target_level: learnerProfile.targetLevel,
+        onboarding_completed: learnerProfile.onboardingCompleted,
+        learning_goal: learnerProfile.learningGoal,
+        starting_path: learnerProfile.startingPath,
+        starting_level: learnerProfile.startingLevel,
+      } }).catch((error) => console.error('Profile sync failed:', error))
+    }
+    setProfile(learnerProfile)
     setAuthenticated(true)
     setEditingProfile(false)
     showToast(editingProfile ? 'Profil yangilandi! ✅' : 'Roʻyxatdan oʻtdingiz! 🎉', 'success')
@@ -450,17 +852,53 @@ export default function App() {
     showToast('Tekrar hoş geldiniz! ✅', 'success')
   }
 
+  const completeOnboarding = useCallback((choices) => {
+    const completedProfile = {
+      ...profile,
+      ...choices,
+      onboardingCompleted: true,
+    }
+    setProfile(completedProfile)
+    setActive('home')
+    try {
+      const pendingOwner = window.localStorage.getItem(ONBOARDING_PENDING_KEY)
+      if (pendingOwner === 'pending' || pendingOwner === String(profile?.userId)) window.localStorage.removeItem(ONBOARDING_PENDING_KEY)
+    } catch { /* profile state still persists onboarding completion */ }
+
+    if (isSupabaseConfigured && supabase && cloudSession?.user) {
+      void supabase.auth.updateUser({ data: {
+        onboarding_completed: true,
+        learning_goal: choices.learningGoal,
+        starting_path: choices.startingPath,
+        starting_level: choices.startingLevel,
+      } }).then(({ error }) => {
+        if (error) console.error('Onboarding profile sync failed:', error)
+      }).catch((error) => console.error('Onboarding profile sync failed:', error))
+    }
+  }, [cloudSession?.user, profile])
+
   const handleClearData = () => {
     claimedQuestRewards.current.clear()
     clearAllStorage()
-    if (isSupabaseConfigured && cloudSession?.user) void supabase.from('user_progress').delete().eq('user_id', cloudSession.user.id).catch((error) => console.error('Cloud progress deletion failed:', error))
-    if (isSupabaseConfigured) void supabase?.auth.signOut()
+    const cloudUserId = cloudSession?.user?.id
+    if (isSupabaseConfigured && cloudUserId) {
+      void (async () => {
+        try { await deleteLearnerCloudData(cloudUserId) }
+        catch (error) { console.error('Cloud learner data deletion failed:', error) }
+        finally { await supabase?.auth.signOut() }
+      })()
+    } else if (isSupabaseConfigured) {
+      void supabase?.auth.signOut()
+    }
     setCloudSession(null)
     setCloudReady(false)
     setProfile(null)
     setAuthenticated(false)
     setEditingProfile(false)
     setStats(DEFAULT_STATS)
+    setTrophyCelebrationEvent(null)
+    setQueuedTrophyEvents([])
+    trophyBaselineIdentityRef.current = null
     setProgress(DEFAULT_PROGRESS)
     setSectionResults({})
     setMultilevelExamResult(null)
@@ -485,22 +923,36 @@ export default function App() {
   // ------------------------------ views --------------------------------
 
   const renderView = () => {
-    // Keep the dashboard and daily plan open; all other sections remain in phased release.
-    if (active !== 'home' && active !== 'plan') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
+    // The dashboard, daily plan, and Reading Library are currently available.
+    if (active !== 'home' && active !== 'plan' && active !== 'okuma' && active !== 'dinleme') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
 
     switch (active) {
       case 'home':
         return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} />
       case 'leagues':
-        return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} isPremium={isPremium} equippedMedal={equippedMedal} />
+        return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} isPremium={isPremium} />
       case 'analytics':
         return <AnalyticsDashboard sectionResults={sectionResults} progress={progress} stats={stats} isPremium={isPremium} />
       case 'plan':
         return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} isPremium={isPremium} />
       case 'okuma':
-        return <OkumaModule completeLevel={(percent) => completeLevel('okuma', percent)} />
+        return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onSpeedBonus={recordSpeedBonus} />
       case 'dinleme':
-        return <DinlemeModule completeLevel={(percent) => { completeLevel('dinleme', percent); recordListeningQuest() }} />
+        return <ListeningHub
+          key={profile?.userId || profile?.email || 'local'}
+          profile={profile}
+          isPremium={isPremium}
+          dark={dark}
+          onSavedWordsChange={updateSavedWordsCount}
+          onLessonComplete={({ scorePct, xpAward, flawlessAwarded, completedCount }) => {
+            const saved = saveScore('dinleme', { best: scorePct, attempts: 1 })
+            setStats((current) => current.listeningLessonsCompleted === completedCount ? current : { ...current, listeningLessonsCompleted: completedCount })
+            completeLevel('dinleme', saved.best, xpAward)
+            recordListeningQuest()
+            if (flawlessAwarded) recordFlawlessQuiz()
+            showMascot({ message: t('listening.feedback.celebration'), emotion: 'cheer', duration: 6500 })
+          }}
+        />
       case 'writing-practice':
         return <WritingPractice isPremium={isPremium} onBack={() => navigate('plan')} />
       case 'yazma':
@@ -508,7 +960,7 @@ export default function App() {
       case 'konusma':
         return <KonusmaModule onComplete={(xp = 35) => completeLevel('konusma', undefined, xp)} />
       case 'lugat':
-        return <VocabularyFlashcards onToast={showToast} onMasteryCountChange={updateWordsLearned} onNewWordLearned={recordNewQuestWord} isPremium={isPremium} onStudyComplete={addXp} onReturnToDashboard={() => navigate('home')} />
+        return <VocabularyFlashcards onToast={showToast} onMasteryCountChange={updateWordsLearned} onNewWordLearned={recordNewQuestWord} onSavedWordsChange={updateSavedWordsCount} isPremium={isPremium} onStudyComplete={addXp} onReturnToDashboard={() => navigate('home')} />
       case 'exams':
         return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} />
       case 'mock':
@@ -539,6 +991,34 @@ export default function App() {
     }
   }
 
+  if (authLoading) {
+    const loadingSurface = isPremium
+      ? 'border-white/10 bg-black/30 text-white shadow-2xl shadow-black/30 backdrop-blur-xl'
+      : dark
+        ? 'border-slate-800 bg-slate-900 text-slate-100 shadow-2xl shadow-black/30'
+        : 'border-white bg-white text-slate-900 shadow-2xl shadow-teal-950/10'
+    const skeletonTone = isPremium ? 'bg-white/10' : dark ? 'bg-slate-700' : 'bg-slate-200'
+    return (
+      <main className={cn('grid min-h-screen place-items-center px-4 py-10', isPremium ? 'bg-[#061617]' : dark ? 'bg-slate-950' : 'bg-gradient-to-br from-teal-50 via-white to-cyan-50')}>
+        <section role="status" aria-live="polite" aria-busy="true" className={cn('w-full max-w-md rounded-3xl border p-6 sm:p-8', loadingSurface)}>
+          <span className={cn('mb-5 block h-1.5 w-16 animate-pulse rounded-full bg-gradient-to-r from-teal-400 to-cyan-400')} />
+          <h1 className="text-xl font-black tracking-tight">{t('cloud.loading.title')}</h1>
+          <p className={cn('mt-2 text-sm leading-relaxed', isPremium ? 'text-white/60' : dark ? 'text-slate-400' : 'text-slate-500')}>{t('cloud.loading.subtitle')}</p>
+          <div className="mt-6 space-y-3" aria-hidden="true">
+            <div className={cn('h-12 animate-pulse rounded-2xl', skeletonTone)} />
+            <div className="grid grid-cols-2 gap-3"><div className={cn('h-20 animate-pulse rounded-2xl', skeletonTone)} /><div className={cn('h-20 animate-pulse rounded-2xl', skeletonTone)} /></div>
+            <div className={cn('h-10 animate-pulse rounded-2xl', skeletonTone)} />
+          </div>
+          <p className={cn('mt-5 text-xs font-semibold', isPremium ? 'text-teal-200/75' : dark ? 'text-teal-300' : 'text-teal-800')}>{t('cloud.loading.status')}</p>
+        </section>
+      </main>
+    )
+  }
+
+  if (!authLoading && authenticated && profile?.onboardingCompleted === false) {
+    return <OnboardingFlow isPremium={isPremium} profile={profile} onComplete={completeOnboarding} />
+  }
+
   return (
     <>
       <TurkchaDashboard
@@ -549,9 +1029,17 @@ export default function App() {
         isPremium={isPremium}
         onTogglePremium={() => setIsPremium((value) => !value)}
         xp={stats.xp}
-        unlockedMedals={unlockedMedals}
-        equippedMedal={equippedMedal}
-        onEquipMedal={setEquippedMedal}
+        rankUpEvent={rankUpEvent}
+        onDismissRankUp={() => setRankUpEvent(null)}
+        currentStreak={stats.streak}
+        streakMilestones={stats.streakMilestones}
+        winterStudy={stats.winterStudy}
+        streakMilestoneEvent={streakMilestoneEvent}
+        onDismissStreakMilestone={() => setStreakMilestoneEvent(null)}
+        trophyMetrics={trophyMetrics}
+        trophyUnlocks={stats.trophyUnlocks}
+        trophyCelebrationEvent={trophyCelebrationEvent}
+        onDismissTrophyCelebration={() => setTrophyCelebrationEvent(null)}
         targetPct={targetPct}
         profile={profile}
         onEditProfile={() => setEditingProfile(true)}

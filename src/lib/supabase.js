@@ -1,0 +1,214 @@
+import { createClient } from '@supabase/supabase-js'
+import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON } from './storage.js'
+import { getRankProgress } from './ranks.js'
+import { normalizeWinterStudy } from '../features/winter/winterSeason.js'
+import { translations } from './i18n.jsx'
+
+const configuredUrl = import.meta.env.VITE_SUPABASE_URL?.trim()
+const configuredAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
+
+function normalizeSupabaseUrl(value) {
+  return String(value || '')
+    .trim()
+    .replace(/\/rest\/v1\/?$/iu, '')
+    .replace(/\/+$/u, '')
+}
+
+export const supabaseUrl = normalizeSupabaseUrl(configuredUrl)
+const hasSupabaseConfiguration = Boolean(supabaseUrl && configuredAnonKey)
+
+let client = null
+if (hasSupabaseConfiguration) {
+  try {
+    client = createClient(supabaseUrl, configuredAnonKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    })
+  } catch (error) {
+    console.warn('[Turkuaz Edu] Supabase configuration is invalid; using local-only mode.', error)
+  }
+}
+export const supabase = client
+export const isSupabaseConfigured = Boolean(supabase)
+export const isCloudSyncAvailable = Boolean(supabase)
+
+function throwQueryError(error) {
+  if (error) throw error
+}
+
+export async function fetchLearnerProgress(userId) {
+  if (!supabase || !userId) return null
+  const { data, error } = await supabase.from('user_progress')
+    .select('xp,streak,completed_lessons,target_level,weekly_xp,week_start,last_activity_date,daily_xp,analytics_tracking_since,daily_quests,quest_words_credited')
+    .eq('user_id', userId)
+    .maybeSingle()
+  throwQueryError(error)
+  return data
+}
+
+/** Fetch the normalized cloud profile and the durable streak/achievement/vocabulary records. */
+export async function fetchLearnerGamification(userId) {
+  if (!supabase || !userId) return null
+  const [profileResult, streakResult, achievementResult, vocabularyResult] = await Promise.all([
+    supabase.from('profiles').select('id,user_id,full_name,avatar_url,current_streak,total_xp,level,rank_title,created_at,updated_at').eq('user_id', userId).maybeSingle(),
+    supabase.from('user_streaks').select('user_id,streak_count,last_active_date,unlocked_milestones,winter_study_days').eq('user_id', userId).maybeSingle(),
+    supabase.from('user_achievements').select('user_id,trophy_id,unlocked_at,progress_data').eq('user_id', userId),
+    supabase.from('user_vocabulary').select('user_id,word,translation,lesson_id,created_at').eq('user_id', userId),
+  ])
+  for (const result of [profileResult, streakResult, achievementResult, vocabularyResult]) throwQueryError(result.error)
+  return {
+    profile: profileResult.data,
+    streak: streakResult.data,
+    achievements: achievementResult.data || [],
+    vocabulary: vocabularyResult.data || [],
+  }
+}
+
+function collectVocabularyRows(userId) {
+  const savedWords = loadJSON(SAVED_KEY, [])
+  const glossaryWords = loadJSON(READING_VOCABULARY_KEY, [])
+  const rows = new Map()
+  const add = (item) => {
+    const word = typeof item === 'string' ? item.trim() : String(item?.term || item?.word || '').trim()
+    if (!word) return
+    const key = word.toLocaleLowerCase('tr-TR')
+    const previous = rows.get(key)
+    const translationKey = typeof item === 'object' && item ? item.translationKey : null
+    const translation = typeof item === 'object' && item
+      ? String(item.uz || item.translation || (translationKey ? translations.uz[translationKey] : '') || '')
+      : ''
+    rows.set(key, {
+      user_id: userId,
+      word: previous?.word || word,
+      translation: translation || previous?.translation || '',
+      lesson_id: (typeof item === 'object' && item ? item.lessonId || item.lesson_id : null) || previous?.lesson_id || null,
+    })
+  }
+  if (Array.isArray(glossaryWords)) glossaryWords.forEach(add)
+  if (Array.isArray(savedWords)) savedWords.forEach(add)
+  return [...rows.values()]
+}
+
+/** Merge newly discovered cloud vocabulary into the local stores consumed by the study view. */
+export function mergeCloudVocabularyIntoLocal(remoteRows) {
+  if (!Array.isArray(remoteRows) || remoteRows.length === 0) return
+  const saved = loadJSON(SAVED_KEY, [])
+  const glossary = loadJSON(READING_VOCABULARY_KEY, [])
+  const savedList = Array.isArray(saved) ? saved : []
+  const glossaryList = Array.isArray(glossary) ? glossary : []
+  const savedTerms = new Set(savedList.map((item) => String(typeof item === 'string' ? item : item?.term || '').trim().toLocaleLowerCase('tr-TR')).filter(Boolean))
+  const glossaryTerms = new Set(glossaryList.map((item) => String(item?.term || '').trim().toLocaleLowerCase('tr-TR')).filter(Boolean))
+  let savedChanged = false
+  let glossaryChanged = false
+  for (const row of remoteRows) {
+    const term = String(row?.word || '').trim()
+    const normalized = term.toLocaleLowerCase('tr-TR')
+    if (!normalized) continue
+    if (!savedTerms.has(normalized)) {
+      savedList.push(term)
+      savedTerms.add(normalized)
+      savedChanged = true
+    }
+    if (!glossaryTerms.has(normalized)) {
+      glossaryList.push({
+        id: `cloud-${encodeURIComponent(normalized)}`,
+        term,
+        uz: String(row.translation || ''),
+        lessonId: row.lesson_id || null,
+        source: 'cloud',
+      })
+      glossaryTerms.add(normalized)
+      glossaryChanged = true
+    }
+  }
+  if (savedChanged) saveJSON(SAVED_KEY, savedList)
+  if (glossaryChanged) saveJSON(READING_VOCABULARY_KEY, glossaryList)
+}
+
+/** Sync legacy progress plus the normalized profile, streak, trophies, and vocabulary tables. */
+export async function syncLearnerProgress(userId, profile, stats) {
+  if (!supabase || !userId) return
+  const safeStats = stats || {}
+  const now = new Date().toISOString()
+  const weekStart = new Date()
+  const day = (weekStart.getDay() + 6) % 7
+  weekStart.setDate(weekStart.getDate() - day)
+  const weekKey = `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')}`
+  const xp = Math.max(0, Number(safeStats.xp) || 0)
+  const streak = Math.max(0, Number(safeStats.streak) || 0)
+  const rankProgress = getRankProgress(xp)
+  const fullName = [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.fullName || profile?.full_name || 'Learner'
+  const trophies = Array.isArray(safeStats.trophyUnlocks) ? safeStats.trophyUnlocks : []
+  const milestones = [...new Set((Array.isArray(safeStats.streakMilestones) ? safeStats.streakMilestones : []).map(Number).filter(Number.isFinite))].sort((a, b) => a - b)
+
+  const progressRow = {
+    user_id: userId,
+    display_name: fullName,
+    target_level: profile?.targetLevel || null,
+    xp,
+    streak,
+    completed_lessons: Array.isArray(safeStats.completedLessons) ? safeStats.completedLessons : [],
+    weekly_xp: safeStats.weekStart === weekKey ? Math.max(0, Number(safeStats.weeklyXp) || 0) : 0,
+    week_start: weekKey,
+    last_activity_date: safeStats.lastActivityDate || null,
+    daily_xp: safeStats.dailyXp && typeof safeStats.dailyXp === 'object' && !Array.isArray(safeStats.dailyXp) ? safeStats.dailyXp : {},
+    analytics_tracking_since: safeStats.analyticsTrackingSince || null,
+    daily_quests: safeStats.dailyQuests && typeof safeStats.dailyQuests === 'object' ? safeStats.dailyQuests : {},
+    quest_words_credited: Array.isArray(safeStats.questWordsCredited) ? safeStats.questWordsCredited : [],
+    updated_at: now,
+  }
+  const profileRow = {
+    user_id: userId,
+    full_name: fullName,
+    avatar_url: profile?.avatarUrl || profile?.avatar_url || null,
+    current_streak: streak,
+    total_xp: xp,
+    level: rankProgress.level,
+    rank_title: rankProgress.rank.id,
+    updated_at: now,
+  }
+  const streakRow = {
+    user_id: userId,
+    streak_count: streak,
+    last_active_date: safeStats.lastActivityDate || null,
+    unlocked_milestones: [...milestones, ...(trophies.some((record) => record.id === 'winter-champion') ? ['winter-champion'] : [])],
+    winter_study_days: normalizeWinterStudy(safeStats.winterStudy),
+    updated_at: now,
+  }
+
+  const writes = [
+    supabase.from('user_progress').upsert(progressRow, { onConflict: 'user_id' }),
+    supabase.from('profiles').upsert(profileRow, { onConflict: 'user_id' }),
+    supabase.from('user_streaks').upsert(streakRow, { onConflict: 'user_id' }),
+  ]
+  if (trophies.length) {
+    writes.push(supabase.from('user_achievements').upsert(trophies.map((record) => ({
+      user_id: userId,
+      trophy_id: record.id,
+      unlocked_at: record.unlockedAt || null,
+      progress_data: { rewardXp: Math.max(0, Number(record.rewardXp) || 0), historical: Boolean(record.historical) },
+    })), { onConflict: 'user_id,trophy_id' }))
+  }
+  const vocabularyRows = collectVocabularyRows(userId)
+  if (vocabularyRows.length) {
+    writes.push(supabase.from('user_vocabulary').upsert(vocabularyRows, { onConflict: 'user_id,word' }))
+  }
+  const results = await Promise.all(writes)
+  for (const result of results) throwQueryError(result.error)
+}
+
+export async function deleteLearnerCloudData(userId) {
+  if (!supabase || !userId) return
+  const tables = ['user_vocabulary', 'user_achievements', 'user_streaks', 'profiles', 'user_progress']
+  const results = await Promise.all(tables.map((table) => supabase.from(table).delete().eq('user_id', userId)))
+  for (const result of results) throwQueryError(result.error)
+}
+
+export async function fetchWeeklyLeaderboard() {
+  if (!supabase) return []
+  const monday = new Date()
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
+  const weekKey = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
+  const { data, error } = await supabase.rpc('get_weekly_leaderboard', { requested_week_start: weekKey })
+  throwQueryError(error)
+  return data || []
+}

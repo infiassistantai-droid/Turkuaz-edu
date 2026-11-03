@@ -29,7 +29,7 @@ export default function MedalInventory({ unlockedMedals = [], equippedMedal, onE
         </h3>
       )}
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-4">
         {MEDALS.map((medal) => {
           const Icon = medal.icon
           const unlocked = unlockedMedals.includes(medal.id)
@@ -48,17 +48,33 @@ export default function MedalInventory({ unlockedMedals = [], equippedMedal, onE
                 'relative flex min-h-[92px] flex-col items-center justify-center gap-1.5 overflow-hidden rounded-xl border p-2 text-center transition-all duration-300',
                 unlocked
                   ? cn('hover:-translate-y-0.5 hover:brightness-105', isPremium ? 'bg-white/[.045] text-white' : 'bg-white text-slate-800', tone[isPremium ? 'premium' : 'default'])
-                  : cn('cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 grayscale opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500', isPremium && 'border-white/10 bg-black/25 text-white/35'),
+                  : isPremium
+                    ? 'cursor-not-allowed border-white/10 bg-black/30 text-white/45 grayscale opacity-60'
+                    : 'cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 grayscale opacity-60 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500',
                 selectedId === medal.id && unlocked && (isPremium ? 'ring-1 ring-yellow-100/35' : 'ring-1 ring-slate-300'),
               )}
             >
-              {equipped && <span className="absolute left-1 top-1 inline-flex items-center gap-0.5 rounded-full bg-emerald-500/15 px-1 py-0.5 text-[7px] font-black leading-none text-emerald-700 dark:text-emerald-300"><Check className="size-2" aria-hidden="true" />{t('medals.equipped')}</span>}
+              {equipped && (
+                <span className={cn(
+                  'absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[8px] font-black leading-none shadow-sm',
+                  isPremium ? 'border-emerald-300/35 bg-emerald-400 text-emerald-950 shadow-emerald-500/20' : 'border-emerald-700 bg-emerald-600 text-white shadow-emerald-900/15',
+                )}>
+                  <Check className="size-2.5" aria-hidden="true" />{t('medals.equipped')}
+                </span>
+              )}
               {!unlocked && <Lock className="absolute right-1.5 top-1.5 size-3" aria-hidden="true" />}
-              <span className={cn('grid size-9 place-items-center rounded-xl border', unlocked ? tone[isPremium ? 'premium' : 'default'] : 'border-slate-300 bg-slate-200 dark:border-slate-700 dark:bg-slate-700')}>
+              <span className={cn(
+                'grid size-9 place-items-center rounded-xl border',
+                unlocked
+                  ? tone[isPremium ? 'premium' : 'default']
+                  : isPremium
+                    ? 'border-white/10 bg-white/5 text-white/45'
+                    : 'border-slate-300 bg-slate-200 text-slate-500 dark:border-slate-700 dark:bg-slate-700 dark:text-slate-400',
+              )}>
                 <Icon className="size-5" aria-hidden="true" />
               </span>
               <span className="text-[10px] font-extrabold leading-tight">{t(medal.nameKey)}</span>
-              <span className={cn('text-[9px] font-bold uppercase tracking-wider', unlocked ? isPremium ? 'text-white/50' : 'text-slate-500' : 'text-slate-400')}>
+              <span className={cn('text-[9px] font-bold uppercase tracking-wider', unlocked ? isPremium ? 'text-white/50' : 'text-slate-500' : isPremium ? 'text-white/40' : 'text-slate-400')}>
                 {t(`medals.tier.${medal.tier}`)}
               </span>
             </button>
@@ -78,7 +94,7 @@ export default function MedalInventory({ unlockedMedals = [], equippedMedal, onE
             className={cn(
               'shrink-0 rounded-lg px-2.5 py-1.5 text-[10px] font-extrabold transition-all disabled:cursor-default',
               selectedIsEquipped
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                ? isPremium ? 'bg-emerald-400/10 text-emerald-300' : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
                 : isPremium
                   ? 'bg-gradient-to-r from-yellow-300 to-amber-400 text-slate-950 shadow-[0_0_16px_rgba(250,204,21,.2)] hover:shadow-[0_0_22px_rgba(250,204,21,.35)]'
                   : 'bg-teal-700 text-white shadow-sm hover:bg-teal-800',

@@ -20,6 +20,7 @@ import { loadJSON, saveJSON } from '../lib/storage'
 import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
 import DailyQuestsWidget from './DailyQuestsWidget'
+import StreakMilestones from './StreakMilestones'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -431,6 +432,12 @@ function SkillCard({ skill, onOpen }) {
         {t(skill.nextKey)}
       </div>
 
+      {skill.id === 'dinleme' && (
+        <p className="mt-2 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+          {t('listening.completedCount', { count: skill.completedCount || 0 })}
+        </p>
+      )}
+
       <button
         type="button"
         onClick={() => onOpen(skill.id)}
@@ -767,13 +774,21 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
           </Card>
         ))}
       </div>
+      <StreakMilestones
+        currentStreak={stats?.streak ?? 0}
+        unlockedMilestones={stats?.streakMilestones ?? []}
+        isPremium={isPremium}
+        winterStudy={stats?.winterStudy}
+        winterChampionUnlocked={(stats?.trophyUnlocks || []).some((record) => record?.id === 'winter-champion')}
+        compact
+      />
       <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} />
 
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
         {SKILLS.map((skill) => (
           <SkillCard
             key={skill.id}
-            skill={{ ...skill, score: scores?.[skill.id] ?? skill.score, level: sectionResults[skill.id]?.level }}
+            skill={{ ...skill, score: scores?.[skill.id] ?? skill.score, level: sectionResults[skill.id]?.level, completedCount: skill.id === 'dinleme' ? stats?.listeningLessonsCompleted ?? 0 : undefined }}
             onOpen={navigate}
           />
         ))}

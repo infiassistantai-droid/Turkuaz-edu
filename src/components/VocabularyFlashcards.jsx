@@ -15,8 +15,9 @@ import {
 } from 'lucide-react'
 import { flashcards, suffixPlayground, suffixTable, vowelHarmony } from '../data/mockExamData'
 import { buildSuffix, cn } from '../lib/utils'
-import { useI18n } from '../lib/i18n.jsx'
+import { translations, useI18n } from '../lib/i18n.jsx'
 import FlashcardStudyMode from './FlashcardStudyMode'
+import { READING_VOCABULARY_KEY } from '../lib/storage'
 
 // ----------------------------------------------------------------------
 // Persistence — mastery ("Bilaman ✅" / "Takrorlash kerak 🔄") and
@@ -196,23 +197,43 @@ function ComparisonCard({ item, t, language }) {
   )
 }
 
-export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMasteryCountChange, onNewWordLearned, isPremium = false, onStudyComplete, onReturnToDashboard }) {
+export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMasteryCountChange, onNewWordLearned, onSavedWordsChange, isPremium = false, onStudyComplete, onReturnToDashboard }) {
   const { language, t } = useI18n()
   const [view, setView] = useState('vocab') // vocab | grammar
   const [mastery, setMastery] = useState(() => loadJSON(MASTERY_KEY, {}))
   const [saved, setSaved] = useState(() => loadJSON(SAVED_KEY, []))
+  const [readingWords] = useState(() => {
+    const stored = loadJSON(READING_VOCABULARY_KEY, [])
+    return Array.isArray(stored) ? stored : []
+  })
   const [filter, setFilter] = useState('all') // all | B1 | B2 | C1 | saved
   const [index, setIndex] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [shuffled, setShuffled] = useState(false)
 
+  const readingCards = useMemo(
+    () => readingWords
+      .filter((word) => !flashcards.some((card) => card.tr === word.term))
+      .map((word) => ({
+        tr: word.term,
+        level: word.level || 'A1',
+        oqishi: word.term,
+        uz: word.uz || translations.uz[word.translationKey] || word.term,
+        en: word.en || word.term,
+        exTr: word.context || word.term,
+        exUz: '',
+        source: 'reading',
+      })),
+    [readingWords],
+  )
+  const allFlashcards = useMemo(() => [...flashcards, ...readingCards], [readingCards])
   const list = useMemo(() => {
-    let l = flashcards.filter((c) =>
+    let l = allFlashcards.filter((c) =>
       filter === 'saved' ? saved.includes(c.tr) : filter === 'all' || c.level === filter,
     )
     if (shuffled) l = [...l].sort(() => Math.random() - 0.5)
     return l
-  }, [filter, saved, shuffled])
+  }, [allFlashcards, filter, saved, shuffled])
 
   useEffect(() => {
     if (index >= list.length) {
@@ -236,14 +257,15 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
     } catch {
       // ignore storage failures
     }
-  }, [saved])
+    onSavedWordsChange?.(saved.length)
+  }, [saved, onSavedWordsChange])
 
   const counts = {
-    all: flashcards.length,
-    B1: flashcards.filter((c) => c.level === 'B1').length,
-    B2: flashcards.filter((c) => c.level === 'B2').length,
-    C1: flashcards.filter((c) => c.level === 'C1').length,
-    saved: saved.length,
+    all: allFlashcards.length,
+    B1: allFlashcards.filter((c) => c.level === 'B1').length,
+    B2: allFlashcards.filter((c) => c.level === 'B2').length,
+    C1: allFlashcards.filter((c) => c.level === 'C1').length,
+    saved: allFlashcards.filter((c) => saved.includes(c.tr)).length,
   }
   const knownCount = Object.values(mastery).filter((v) => v === 'known').length
   const repeatCount = Object.values(mastery).filter((v) => v === 'repeat').length
@@ -388,6 +410,7 @@ export default function VocabularyFlashcards({ cheatOnly = false, onToast, onMas
         <div key="study" className="animate-fadein">
           <FlashcardStudyMode
             savedWords={saved}
+            additionalCards={readingCards}
             isPremium={isPremium}
             onComplete={onStudyComplete}
             onReturnToDashboard={onReturnToDashboard}
