@@ -2,7 +2,7 @@ import { createPortal } from 'react-dom'
 import { useEffect, useRef } from 'react'
 import { cn } from '../../lib/utils'
 
-export function Dialog({ open, onOpenChange, children, isPremium = false, labelledBy, className }) {
+export function Dialog({ open, onOpenChange, children, isPremium = false, dark = false, labelledBy, className }) {
   const panelRef = useRef(null)
 
   useEffect(() => {
@@ -42,7 +42,9 @@ export function Dialog({ open, onOpenChange, children, isPremium = false, labell
           'relative my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl overflow-y-auto rounded-[28px] border shadow-2xl outline-none sm:max-h-[calc(100dvh-3rem)]',
           isPremium
             ? 'border-white/10 bg-[#1b080a]/95 text-white shadow-black/60 backdrop-blur-2xl'
-            : 'border-slate-200 bg-white text-slate-900 shadow-slate-950/25',
+            : dark
+              ? 'border-slate-700 bg-slate-900 text-slate-100 shadow-black/60'
+              : 'border-slate-200 bg-white text-slate-900 shadow-slate-950/25',
           className,
         )}
       >

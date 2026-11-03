@@ -38,7 +38,7 @@ export default function DailyQuests({ isPremium = false }) {
               key={task.id}
               className={cn(
                 'rounded-2xl border p-4 transition-colors',
-                isPremium ? 'border-white/10 bg-black/40' : 'border-slate-100 bg-white',
+                isPremium ? 'border-white/10 bg-black/30 text-white shadow-black/20 backdrop-blur-xl' : 'border-slate-100 bg-white text-slate-900',
               )}
             >
               <div className="flex items-start gap-3">

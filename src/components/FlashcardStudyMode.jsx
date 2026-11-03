@@ -4,9 +4,10 @@ import { flashcards } from '../data/mockExamData'
 import { useI18n } from '../lib/i18n.jsx'
 import { recordVocabularyRating } from '../lib/vocabularySrs'
 
-export default function FlashcardStudyMode({ savedWords = [], isPremium = false, onComplete, onReturnToDashboard, onReturnToVocabulary }) {
+export default function FlashcardStudyMode({ savedWords = [], additionalCards = [], isPremium = false, onComplete, onReturnToDashboard, onReturnToVocabulary }) {
   const { t } = useI18n()
-  const cards = useMemo(() => savedWords.map((word) => flashcards.find((item) => item.tr === word)).filter(Boolean), [savedWords])
+  const cardPool = useMemo(() => [...flashcards, ...additionalCards], [additionalCards])
+  const cards = useMemo(() => savedWords.map((word) => cardPool.find((item) => item.tr === word)).filter(Boolean), [cardPool, savedWords])
   const [index, setIndex] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [leaving, setLeaving] = useState(false)
@@ -111,7 +112,7 @@ export default function FlashcardStudyMode({ savedWords = [], isPremium = false,
             <div className={`my-3 h-px w-20 ${premium ? 'bg-yellow-400/30' : 'bg-slate-200'}`}/>
             <p className={`text-[10px] font-bold uppercase tracking-widest ${muted}`}>{t('srs.example')}</p>
             <p className={`text-sm font-semibold leading-relaxed ${premium ? 'text-white/85' : 'text-slate-700'}`} lang="tr">{current.exTr}</p>
-            <p className={`text-sm ${muted}`}>{current.exUz}</p>
+            {current.exUz && <p className={`text-sm ${muted}`}>{current.exUz}</p>}
             <button type="button" onClick={() => setFlipped(false)} className={`mt-4 inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold ${premium ? 'bg-white/10 text-yellow-100 hover:bg-white/15' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}><RotateCcw className="size-3.5"/>{t('srs.flipBack')}</button>
           </article>
         </div>

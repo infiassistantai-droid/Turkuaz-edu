@@ -3,8 +3,6 @@ import { ChevronDown, Settings, Trash2, LogOut, Target, Zap, AlertTriangle, Chec
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
 import { useI18n } from '../lib/i18n.jsx'
-import MedalBadge from './MedalBadge'
-import MedalInventory from './MedalInventory'
 
 function MenuItem({ icon: Icon, label, onClick, danger, isPremium }) {
   return (
@@ -33,7 +31,7 @@ function MenuItem({ icon: Icon, label, onClick, danger, isPremium }) {
  *   edit profile · clear all data (with confirm step) · logout
  * Controlled: `open` / `onOpenChange` let the sidebar user card open it too.
  */
-export default function ProfileMenu({ profile, stats, level = 1, unlockedMedals = [], equippedMedal, onEquipMedal, open, onOpenChange, onEdit, onClear, onLogout, isPremium = false }) {
+export default function ProfileMenu({ profile, stats, level = 1, open, onOpenChange, onEdit, onClear, onLogout, isPremium = false }) {
   const { language, setLanguage, t } = useI18n()
   const [confirming, setConfirming] = useState(false)
   const wrapRef = useRef(null)
@@ -72,7 +70,6 @@ export default function ProfileMenu({ profile, stats, level = 1, unlockedMedals 
       >
         <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white ring-1 ring-white/20">
           {initials}
-          <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="absolute -right-1.5 -top-1 size-4" />
         </span>
         <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
           Lvl {level}
@@ -97,7 +94,6 @@ export default function ProfileMenu({ profile, stats, level = 1, unlockedMedals 
             <div className="relative shrink-0">
               <div className="relative grid size-11 place-items-center rounded-full bg-white/20 font-display text-sm font-extrabold ring-1 ring-white/30">
                 {initials}
-                <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="absolute -right-1 -top-1 size-5" />
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-teal-600 bg-emerald-400" aria-hidden="true" />
             </div>
@@ -161,13 +157,6 @@ export default function ProfileMenu({ profile, stats, level = 1, unlockedMedals 
               })}
             </div>
           </div>
-
-          <MedalInventory
-            unlockedMedals={unlockedMedals}
-            equippedMedal={equippedMedal}
-            onEquipMedal={onEquipMedal}
-            isPremium={isPremium}
-          />
 
           {/* actions */}
           <div className="p-2">

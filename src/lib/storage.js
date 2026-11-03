@@ -7,10 +7,13 @@
 export const STORAGE_KEY = 'turkish-marathon-v1'          // app state: stats / progress / examResult / dark
 export const PROFILE_KEY = 'turkish-marathon-profile-v1'  // auth profile: name / surname / email / targetLevel
 export const AUTH_KEY = 'turkish-marathon-auth-v1'          // device-local signed-in state
+export const ONBOARDING_PENDING_KEY = 'turkuaz-edu-onboarding-pending-v1'
+export const READING_COMPLETIONS_PREFIX = 'turkuaz-edu-reading-quiz-completions-v2:'
 export const SCORES_KEY = 'turkish-marathon-scores-v1'    // best + attempts per skill module
 export const KONUSMA_KEY = 'turkish-marathon-konusma-v1'  // speaking exam progress
 export const MASTERY_KEY = 'turkish-marathon-mastery-v2'  // vocab mastery (used by VocabularyFlashcards)
 export const SAVED_KEY = 'turkish-marathon-saved-words-v2' // saved vocab words
+export const READING_VOCABULARY_KEY = 'turkuaz-edu-reading-vocabulary-v1' // user-saved glossary words
 
 /** Safe JSON reader — falls back when storage is missing/corrupt (SSR-safe). */
 export function loadJSON(key, fallback) {
@@ -101,7 +104,7 @@ export function saveKonusma(state) {
 
 /** Remove every key the app owns — used by "Maʼlumotlarni tozalash". */
 export function clearAllStorage() {
-  [STORAGE_KEY, PROFILE_KEY, AUTH_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY].forEach((key) => {
+  [STORAGE_KEY, PROFILE_KEY, AUTH_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY, READING_VOCABULARY_KEY].forEach((key) => {
     try {
       localStorage.removeItem(key)
     } catch {
@@ -112,7 +115,7 @@ export function clearAllStorage() {
   // during normal use, but a full reset should remove every checklist record.
   try {
     Object.keys(localStorage)
-      .filter((key) => key.startsWith('turkish-marathon-daily-plan-') || key.startsWith('turkish-marathon-dashboard-plan-'))
+      .filter((key) => key.startsWith('turkish-marathon-daily-plan-') || key.startsWith('turkish-marathon-dashboard-plan-') || key.startsWith(READING_COMPLETIONS_PREFIX) || key.startsWith('turkuaz-edu-streak-milestones-v1:') || key.startsWith('turkuaz-edu-trophy-unlocks-v1:') || key.startsWith('turkuaz-edu-listening-progress-v1:'))
       .forEach((key) => localStorage.removeItem(key))
   } catch {
     // ignore unavailable storage

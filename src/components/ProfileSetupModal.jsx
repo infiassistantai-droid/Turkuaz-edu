@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Bell, Check, ChevronLeft, ChevronRight, GraduationCap, Lock, Mail, ShieldCheck, Sparkles, Target, User, X } from 'lucide-react'
+import { Bell, Check, ChevronLeft, ChevronRight, GraduationCap, LoaderCircle, Lock, Mail, ShieldCheck, Sparkles, Target, User, X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
+import { ONBOARDING_PENDING_KEY } from '../lib/storage'
+import { supabase } from '../lib/supabase'
 
 const LEVELS = [
   { id: 'B1', subtitleKey: 'auth.level.B1.name', descriptionKey: 'auth.level.B1.desc' },
@@ -9,6 +11,45 @@ const LEVELS = [
   { id: 'C1', subtitleKey: 'auth.level.C1.name', descriptionKey: 'auth.level.C1.desc' },
 ]
 const PBKDF2_ITERATIONS = 180_000
+
+function GoogleMark() {
+  return (
+    <svg viewBox="0 0 48 48" className="size-5 shrink-0" aria-hidden="true" focusable="false">
+      <path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.6-4 6v5h6.5c3.8-3.5 6.1-8.6 6.1-14.7z" />
+      <path fill="#34A853" d="M24 44c5.4 0 9.9-1.8 13.2-4.8l-6.5-5c-1.8 1.2-4 2-6.7 2-5.2 0-9.6-3.5-11.2-8.2H6.1v5.2C9.4 39.6 16.2 44 24 44z" />
+      <path fill="#FBBC05" d="M12.8 28c-.4-1.2-.7-2.6-.7-4s.2-2.8.7-4v-5.2H6.1C4.7 17.6 4 20.7 4 24s.7 6.4 2.1 9.2l6.7-5.2z" />
+      <path fill="#EA4335" d="M24 11.8c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 5.9 29.4 4 24 4 16.2 4 9.4 8.4 6.1 14.8l6.7 5.2c1.6-4.7 6-8.2 11.2-8.2z" />
+    </svg>
+  )
+}
+
+function GoogleAuthAction({ premium, busy, onClick }) {
+  const { t } = useI18n()
+
+  return (
+    <div className="space-y-4">
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={busy}
+        className={cn(
+          'flex min-h-12 w-full items-center justify-center gap-3 rounded-xl border px-4 py-3 text-sm font-extrabold transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60',
+          premium
+            ? 'border-white/10 bg-white/5 text-white hover:bg-white/10'
+            : 'border-slate-200 bg-white text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 hover:shadow-md',
+        )}
+      >
+        {busy ? <LoaderCircle className="size-5 animate-spin" aria-hidden="true" /> : <GoogleMark />}
+        {busy ? t('auth.google.loading') : t('auth.google')}
+      </button>
+      <div className={cn('flex items-center gap-3 text-xs font-semibold', premium ? 'text-white/45' : 'text-slate-400')}>
+        <span className={cn('h-px flex-1', premium ? 'bg-white/15' : 'bg-slate-200')} aria-hidden="true" />
+        <span>{t('auth.or')}</span>
+        <span className={cn('h-px flex-1', premium ? 'bg-white/15' : 'bg-slate-200')} aria-hidden="true" />
+      </div>
+    </div>
+  )
+}
 
 function normalizeEmail(value) {
   return value.trim().toLocaleLowerCase('en-US')
@@ -230,6 +271,28 @@ export default function ProfileSetupModal({
     }
   }
 
+  const signInWithGoogle = async () => {
+    setError('')
+    if (!supabase) {
+      setError(t('auth.google.unavailable'))
+      return
+    }
+
+    try { window.localStorage.setItem(ONBOARDING_PENDING_KEY, 'pending') } catch { /* onboarding still works for this session */ }
+    setBusy(true)
+    try {
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin },
+      })
+      if (oauthError) throw oauthError
+    } catch (reason) {
+      try { window.localStorage.removeItem(ONBOARDING_PENDING_KEY) } catch { /* ignore unavailable storage */ }
+      setError(reason?.message || t('auth.error.credentials.invalid'))
+      setBusy(false)
+    }
+  }
+
   const shellClass = premium
     ? 'border-white/20 bg-black/40 text-white shadow-2xl backdrop-blur-2xl'
     : 'border-white/50 bg-white/95 text-slate-900 shadow-2xl backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/95 dark:text-white'
@@ -277,6 +340,7 @@ export default function ProfileSetupModal({
           </form>
         ) : tab === 'login' ? (
           <form onSubmit={logIn} className="mt-6 space-y-4">
+            <GoogleAuthAction premium={premium} busy={busy} onClick={signInWithGoogle} />
             <Field icon={Mail} label={t('auth.email')} type="email" value={email} onChange={setEmail} placeholder={t('auth.email.placeholder')} autoComplete="email" premium={premium} />
             <Field icon={Lock} label={t('auth.password')} type="password" value={password} onChange={setPassword} placeholder={t('auth.password.login.placeholder')} autoComplete="current-password" premium={premium} />
             {error && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-200">{error}</p>}
@@ -285,6 +349,7 @@ export default function ProfileSetupModal({
           </form>
         ) : step === 1 ? (
           <form onSubmit={continueRegistration} className="mt-6 space-y-4">
+            <GoogleAuthAction premium={premium} busy={busy} onClick={signInWithGoogle} />
             <div className="mb-5 flex items-center gap-3"><span className={cn('grid size-8 place-items-center rounded-full font-bold', premium ? 'bg-yellow-300 text-slate-950' : 'bg-teal-600 text-white')}>1</span><div><p className="text-sm font-bold">{t('auth.step1.title')}</p><p className={cn('text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('auth.step1.subtitle')}</p></div><span className={cn('ml-auto shrink-0 whitespace-nowrap text-right text-xs font-bold', premium ? 'text-yellow-400' : 'text-teal-700 dark:text-teal-300')}>{t('auth.step.progress1')}</span></div>
             <Field icon={User} label={t('auth.name')} value={fullName} onChange={setFullName} placeholder={t('auth.name.placeholder')} autoComplete="name" premium={premium} />
             <Field icon={Mail} label={t('auth.email')} type="email" value={email} onChange={setEmail} placeholder={t('auth.email.placeholder')} autoComplete="email" premium={premium} />

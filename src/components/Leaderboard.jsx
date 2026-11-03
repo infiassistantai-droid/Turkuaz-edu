@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Crown, Medal, RefreshCw, Trophy } from 'lucide-react'
 import { useI18n } from '../lib/i18n.jsx'
-import { fetchWeeklyLeaderboard, isSupabaseConfigured } from '../lib/supabaseClient'
-import MedalBadge from './MedalBadge'
+import { fetchWeeklyLeaderboard, isSupabaseConfigured } from '../lib/supabase'
 
 // Shown only without Supabase credentials and always labeled as demo data.
 // Zeynep is a fictional sample account, not the learner's stored profile or XP.
@@ -47,7 +46,7 @@ function rankClasses(index, premium) {
   return index < 3 ? (premium ? premiumTones[index] : defaultTones[index]) : ''
 }
 
-export default function Leaderboard({ userId, profile, stats, isPremium = false, equippedMedal }) {
+export default function Leaderboard({ userId, profile, stats, isPremium = false }) {
   const { t } = useI18n()
   const [rows, setRows] = useState(() => isSupabaseConfigured ? [] : SAMPLE_ROWS)
   const [busy, setBusy] = useState(false)
@@ -121,7 +120,6 @@ export default function Leaderboard({ userId, profile, stats, isPremium = false,
               <span className="min-w-0 truncate">{row.display_name}</span>
               {row.isSampleCurrent && <span className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold ${isPremium ? 'bg-white/10 text-white/70' : 'bg-slate-100 text-slate-500'}`}>{t('leaderboard.demoPlayer')}</span>}
               {isCurrent && !row.isSampleCurrent && <span className={`shrink-0 text-xs font-semibold ${isPremium ? 'text-yellow-200' : 'text-teal-700'}`}>{t('leaderboard.you')}</span>}
-              {isCurrent && !row.isSampleCurrent && equippedMedal && <MedalBadge medalId={equippedMedal} isPremium={isPremium} className="size-4" />}
             </p>
             <p className={`text-xs ${isPremium ? 'text-white/45' : 'text-slate-500'}`}>{t('leaderboard.weekly')}</p>
           </div>
