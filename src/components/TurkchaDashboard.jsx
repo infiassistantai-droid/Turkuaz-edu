@@ -16,9 +16,9 @@ import {
   Menu,
   Moon,
   PenLine,
-  Sun,
   Snowflake,
   Sparkles,
+  Sun,
   Target,
   Trophy,
   X,
@@ -133,7 +133,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                 {group.items.map((item) => {
                   const Icon = item.icon
                   const isActive = active === item.id
-                  const isLocked = !['home', 'plan', 'okuma', 'dinleme'].includes(item.id)
+                  const isLocked = !['home', 'plan', 'okuma', 'dinleme', 'lugat'].includes(item.id)
                   return (
                     <li key={item.id}>
                       <button
@@ -396,6 +396,8 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
 export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, xp, rankUpEvent, onDismissRankUp, currentStreak = 0, streakMilestones = [], winterStudy = null, streakMilestoneEvent, onDismissStreakMilestone, trophyMetrics, trophyUnlocks = [], trophyCelebrationEvent, onDismissTrophyCelebration, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
   const { t } = useI18n()
   const { enabled: winterModeEnabled } = useWinterUpdate()
+  const safeStreakMilestones = Array.isArray(streakMilestones) ? streakMilestones : []
+  const safeTrophyUnlocks = Array.isArray(trophyUnlocks) ? trophyUnlocks : []
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -506,11 +508,11 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
         profile={profile}
         stats={{ xp }}
         currentStreak={currentStreak}
-        streakMilestones={streakMilestones}
+        streakMilestones={safeStreakMilestones}
         winterStudy={winterStudy}
-        winterChampionUnlocked={trophyUnlocks.some((record) => record?.id === 'winter-champion')}
+        winterChampionUnlocked={safeTrophyUnlocks.some((record) => record?.id === 'winter-champion')}
         trophyMetrics={trophyMetrics}
-        trophyUnlocks={trophyUnlocks}
+        trophyUnlocks={safeTrophyUnlocks}
         level={level}
         onEditProfile={onEditProfile}
         onClearData={onClearData}

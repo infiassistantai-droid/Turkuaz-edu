@@ -1,7 +1,82 @@
 const q = (id, prompt, options, answer, explanation) => ({ id, prompt, options, answer, explanation })
 const v = (term, uz, en) => ({ term, uz, en })
 
+const mcq = (id, prompt, options, correctIndex, explanation) => ({ id, prompt, options, correctIndex, explanation })
+
+// Short core course requested for the Dinleme module: Turkish audio, localized quiz UI.
 export const listeningLessons = [
+  {
+    id: 'cafe-a1',
+    title: 'Kafede Bir Sabah',
+    level: 'A1',
+    transcript: `Garson: Günaydın, ne almak istersiniz?\nMüşteri: Günaydın. Bir çay ve peynirli tost alabilir miyim?\nGarson: Tabii. Çayınız açık mı, demli mi olsun?\nMüşteri: Açık olsun, lütfen. Tost ne kadar?\nGarson: Tost altmış lira, çay yirmi lira.\nMüşteri: Tamam. Bir de su alabilir miyim?\nGarson: Elbette. Başka bir şey ister misiniz?\nMüşteri: Hayır, teşekkür ederim. Hesabı sonra alabilir miyim?`,
+    quizQuestions: [
+      mcq('cafe-q1', { uz: 'Mijoz nima buyurtma qiladi?', en: 'What does the customer order?', tr: 'Müşteri ne sipariş ediyor?' }, [
+        { uz: 'Qahva va tort.', en: 'Coffee and cake.', tr: 'Kahve ve pasta.' },
+        { uz: 'Choy va pishloqli tost.', en: 'Tea and a cheese toastie.', tr: 'Çay ve peynirli tost.' },
+        { uz: 'Sharbat va salat.', en: 'Juice and salad.', tr: 'Meyve suyu ve salata.' },
+      ], 1, { uz: 'Mijoz bir choy va pishloqli tost so‘raydi.', en: 'The customer asks for tea and a cheese toastie.', tr: 'Müşteri bir çay ve peynirli tost istiyor.' }),
+      mcq('cafe-q2', { uz: 'Mijoz choyni qanday xohlaydi?', en: 'How does the customer want the tea?', tr: 'Müşteri çayını nasıl istiyor?' }, [
+        { uz: 'Quyuq.', en: 'Strong.', tr: 'Demli.' },
+        { uz: 'Sovuq.', en: 'Cold.', tr: 'Soğuk.' },
+        { uz: 'Och.', en: 'Light.', tr: 'Açık.' },
+      ], 2, { uz: 'U choyning och bo‘lishini so‘raydi.', en: 'The customer asks for light tea.', tr: 'Müşteri çayın açık olmasını istiyor.' }),
+      mcq('cafe-q3', { uz: 'Tost qancha turadi?', en: 'How much is the toastie?', tr: 'Tost ne kadar?' }, [
+        { uz: 'Yigirma lira.', en: 'Twenty lira.', tr: 'Yirmi lira.' },
+        { uz: 'Oltmish lira.', en: 'Sixty lira.', tr: 'Altmış lira.' },
+        { uz: 'Sakson lira.', en: 'Eighty lira.', tr: 'Seksen lira.' },
+      ], 1, { uz: 'Garson tostning narxi oltmish lira ekanini aytadi.', en: 'The server says the toastie costs sixty lira.', tr: 'Garson tostun altmış lira olduğunu söylüyor.' }),
+    ],
+  },
+  {
+    id: 'airport-a2',
+    title: 'Havalimanında Anons',
+    level: 'A2',
+    transcript: `Sayın yolcularımız, Ankara Esenboğa Havalimanı'ndan İzmir'e gidecek TK 214 sefer sayılı uçuşumuzla ilgili önemli bir duyuru yapılacaktır. Uçağımızın kalkış saati teknik kontrol nedeniyle kırk dakika gecikmiştir. Yeni kalkış saati saat 15.20'dir. Yolcularımızdan, biniş kartlarında belirtilen 108 numaralı kapının önünde hazır bulunmaları rica olunur. Bagajı henüz teslim edilmemiş yolcular, lütfen 6 numaralı kontuara başvursun. Gecikme için özür diler, anlayışınız için teşekkür ederiz.`,
+    quizQuestions: [
+      mcq('airport-q1', { uz: 'Parvoz qayerga uchadi?', en: 'Where is the flight going?', tr: 'Uçuş nereye gidiyor?' }, [
+        { uz: 'Izmirga.', en: 'To Izmir.', tr: 'İzmir’e.' },
+        { uz: 'Anqaraga.', en: 'To Ankara.', tr: 'Ankara’ya.' },
+        { uz: 'Istanbulga.', en: 'To Istanbul.', tr: 'İstanbul’a.' },
+      ], 0, { uz: 'E’londa Anqaradan Izmirga boradigan parvoz aytiladi.', en: 'The announcement is for a flight from Ankara to Izmir.', tr: 'Anons, Ankara’dan İzmir’e gidecek uçuş için yapılıyor.' }),
+      mcq('airport-q2', { uz: 'Parvoz qancha vaqtga kechikdi?', en: 'How long is the flight delayed?', tr: 'Uçuş ne kadar gecikti?' }, [
+        { uz: 'Yigirma daqiqa.', en: 'Twenty minutes.', tr: 'Yirmi dakika.' },
+        { uz: 'Qirq daqiqa.', en: 'Forty minutes.', tr: 'Kırk dakika.' },
+        { uz: 'Bir soat.', en: 'One hour.', tr: 'Bir saat.' },
+      ], 1, { uz: 'Texnik tekshiruv sababli qirq daqiqa kechikadi.', en: 'It is delayed by forty minutes because of a technical check.', tr: 'Teknik kontrol nedeniyle kırk dakika gecikiyor.' }),
+      mcq('airport-q3', { uz: 'Yo‘lovchilar qaysi darvoza oldida kutishi kerak?', en: 'Which gate should passengers wait at?', tr: 'Yolcular hangi kapının önünde beklemeli?' }, [
+        { uz: '108-darvoza.', en: 'Gate 108.', tr: '108 numaralı kapı.' },
+        { uz: '6-darvoza.', en: 'Gate 6.', tr: '6 numaralı kapı.' },
+        { uz: '214-darvoza.', en: 'Gate 214.', tr: '214 numaralı kapı.' },
+      ], 0, { uz: 'Yo‘lovchilardan 108-darvoza oldida bo‘lish so‘raladi.', en: 'Passengers are asked to wait at gate 108.', tr: 'Yolculardan 108 numaralı kapının önünde hazır olmaları isteniyor.' }),
+    ],
+  },
+  {
+    id: 'travel-story-b1',
+    title: 'Karadeniz Yolculuğu',
+    level: 'B1',
+    transcript: `Geçen yaz tek başıma Karadeniz kıyılarını keşfetmeye karar verdim. İstanbul'dan gece otobüsüne bindim ve sabah erkenden Trabzon'a vardım. İlk gün hava yağmurluydu; bu yüzden planladığım uzun yürüyüşü erteleyip şehir merkezindeki müzeleri gezdim. Yerel bir lokantada mısır ekmeği ve hamsi yedim. Garson, bölgedeki yemeklerin mevsime göre değiştiğini anlattı.\nErtesi gün hava açınca küçük bir minibüsle Uzungöl'e gittim. Yol boyunca sisli dağları ve çay bahçelerini gördüm. Gölün çevresinde yürürken başka gezginlerle tanıştım; birlikte fotoğraf çektik ve rotalarımız hakkında konuştuk. Dönüşte otobüsü kaçırmamak için erken çıktım. Yolculuk beklediğimden daha yorucuydu ama yerel insanlarla sohbet etmek ve doğayı yakından görmek bütün yorgunluğuma değdi. Bir sonraki seyahatimde daha uzun kalmayı düşünüyorum.`,
+    quizQuestions: [
+      mcq('travel-q1', { uz: 'Hikoyachi Trabzonga qachon yetib keldi?', en: 'When did the narrator arrive in Trabzon?', tr: 'Anlatıcı Trabzon’a ne zaman vardı?' }, [
+        { uz: 'Kechqurun.', en: 'In the evening.', tr: 'Akşam.' },
+        { uz: 'Ertalab erta.', en: 'Early in the morning.', tr: 'Sabah erkenden.' },
+        { uz: 'Tush payti.', en: 'At noon.', tr: 'Öğle vakti.' },
+      ], 1, { uz: 'U tunda avtobusga chiqib, ertalab Trabzonga yetib keladi.', en: 'They take the night bus and arrive in the morning.', tr: 'Gece otobüsüne binip sabah Trabzon’a varıyor.' }),
+      mcq('travel-q2', { uz: 'Nega hikoyachi birinchi kuni uzoq piyoda sayr qilmadi?', en: 'Why did the narrator postpone the long walk on the first day?', tr: 'Anlatıcı ilk gün uzun yürüyüşü neden erteledi?' }, [
+        { uz: 'Ob-havo yomg‘irli edi.', en: 'The weather was rainy.', tr: 'Hava yağmurluydu.' },
+        { uz: 'Avtobus kechikdi.', en: 'The bus was late.', tr: 'Otobüs gecikti.' },
+        { uz: 'U o‘zini yomon his qildi.', en: 'They felt unwell.', tr: 'Kendini iyi hissetmedi.' },
+      ], 0, { uz: 'Yomg‘ir sababli sayrni keyinga qoldirib, muzeylarga boradi.', en: 'Because of the rain, they postpone the walk and visit museums.', tr: 'Yağmur nedeniyle yürüyüşü erteleyip müzeleri geziyor.' }),
+      mcq('travel-q3', { uz: 'Safarning eng qadrli tomoni nima bo‘ldi?', en: 'What made the trip especially worthwhile?', tr: 'Yolculuğu özellikle değerli kılan ne oldu?' }, [
+        { uz: 'Qimmatbaho xaridlar.', en: 'Expensive shopping.', tr: 'Pahalı alışveriş.' },
+        { uz: 'Mahalliy odamlar bilan suhbat va tabiatni ko‘rish.', en: 'Talking with locals and seeing nature.', tr: 'Yerel insanlarla sohbet etmek ve doğayı görmek.' },
+        { uz: 'Uzoq avtobus safarining o‘zi.', en: 'The long bus ride itself.', tr: 'Uzun otobüs yolculuğunun kendisi.' },
+      ], 1, { uz: 'Hikoyachi mahalliylar bilan suhbat va tabiat manzaralarini eng yaxshi tajriba deb biladi.', en: 'The narrator values conversations with locals and seeing the landscape.', tr: 'Anlatıcı, yerel insanlarla sohbet etmeyi ve doğayı görmeyi en değerli deneyim olarak anlatıyor.' }),
+    ],
+  },
+]
+
+export const extendedListeningLessons = [
   {
     id: 'istanbul-simit-cay', level: 'A1', title: "İstanbul'da Bir Sabah: Simit ve Çay", minutes: 3,
     transcript: [
@@ -126,4 +201,4 @@ export const listeningLessons = [
   }
 ]
 
-export const LISTENING_LESSON_IDS = listeningLessons.map(({ id }) => id)
+export const LISTENING_LESSON_IDS = [...listeningLessons, ...extendedListeningLessons].map(({ id }) => id)

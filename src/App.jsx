@@ -20,11 +20,11 @@ import Dashboard from './components/Dashboard'
 import ComingSoon from './components/ComingSoon'
 import KunlikReja from './components/KunlikReja'
 import ReadingLibrary from './components/modules/ReadingLibrary'
-import ListeningHub from './components/modules/ListeningHub'
+import Dinleme from './components/modules/Dinleme'
 import YazmaModule from './components/modules/YazmaModule'
-import WritingPractice from './components/modules/WritingPractice'
+import Yozish from './components/modules/Yozish'
 import KonusmaModule from './components/modules/KonusmaModule'
-import VocabularyFlashcards from './components/VocabularyFlashcards'
+import Kelimeler from './components/modules/Kelimeler'
 import MockExam from './components/MockExam'
 import MockExamSimulator from './components/MockExamSimulator'
 import ProfileSetupModal from './components/ProfileSetupModal'
@@ -45,7 +45,7 @@ import { useWinterUpdate } from './features/winter/WinterUpdateContext'
 import { getWinterStudyDayCount, normalizeWinterStudy, recordWinterStudyDay } from './features/winter/winterSeason'
 
 // Learner stats and skill results start empty and are persisted after real activity.
-const DEFAULT_STATS = { xp: 0, streak: 0, streakMilestones: [], winterStudy: { seasonId: null, days: [] }, completedQuizzes: 0, readingCompletedCount: 0, listeningLessonsCompleted: 0, savedWordsCount: 0, flawlessQuizAchieved: false, speedBonusAchieved: false, trophyUnlocks: [], weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
+const DEFAULT_STATS = { xp: 0, streak: 0, streakMilestones: [], winterStudy: { seasonId: null, days: [] }, completedQuizzes: 0, readingCompletedCount: 0, readingPerfectExamAchieved: false, listeningLessonsCompleted: 0, savedWordsCount: 0, flawlessQuizAchieved: false, speedBonusAchieved: false, trophyUnlocks: [], weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
 const STREAK_MILESTONE_STORAGE_PREFIX = 'turkuaz-edu-streak-milestones-v1:'
 const TROPHY_UNLOCK_STORAGE_PREFIX = 'turkuaz-edu-trophy-unlocks-v1:'
 const DEFAULT_PROGRESS = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
@@ -174,6 +174,7 @@ function loadLearnerStats(profile = null) {
     : getLegacyQuizCount(profile, stored, localState)
   normalized.savedWordsCount = getSavedWordCount()
   normalized.readingCompletedCount = getReadingCompletionCount(profile)
+  normalized.readingPerfectExamAchieved = Boolean(stored.readingPerfectExamAchieved)
   normalized.flawlessQuizAchieved = Boolean(stored.flawlessQuizAchieved)
   normalized.speedBonusAchieved = Boolean(stored.speedBonusAchieved)
   normalized.trophyUnlocks = Array.isArray(stored.trophyUnlocks) ? stored.trophyUnlocks.filter((record) => TROPHIES.some((trophy) => trophy.id === record?.id)) : []
@@ -365,13 +366,14 @@ export default function App() {
 
   useEffect(() => {
     const localState = { multilevelSectionResults: sectionResults, multilevelExamResult, dark, isPremium, unlockedMedals, equippedMedal }
-    if (!isSupabaseConfigured) Object.assign(localState, { stats, progress })
+    if (profile) Object.assign(localState, { stats, progress })
     saveJSON(STORAGE_KEY, localState)
-  }, [stats, progress, sectionResults, multilevelExamResult, dark, isPremium, unlockedMedals, equippedMedal])
+  }, [stats, progress, profile, sectionResults, multilevelExamResult, dark, isPremium, unlockedMedals, equippedMedal])
 
   // Profile persistence — stays logged in across refreshes
   useEffect(() => {
-    if (profile && !isSupabaseConfigured) saveProfile(profile)
+    // Cache non-empty profiles locally so a later cloud outage can still render the learner UI.
+    if (profile) saveProfile(profile)
   }, [profile])
 
   useEffect(() => {
@@ -392,10 +394,27 @@ export default function App() {
       setCloudReady(false)
       if (!session?.user) {
         setCloudReady(false)
-        setAuthenticated(false); setProfile(null); setStats(DEFAULT_STATS); setProgress(DEFAULT_PROGRESS); setAuthLoading(false)
+        setAuthenticated(false)
+        setProfile(null)
+        setStats(DEFAULT_STATS)
+        setProgress(DEFAULT_PROGRESS)
+        setAuthLoading(false)
         return
       }
       setAuthenticated(true)
+      const cachedProfile = loadProfile()
+      const sessionEmail = String(session.user.email || '').trim().toLowerCase()
+      const cachedEmail = String(cachedProfile?.email || '').trim().toLowerCase()
+      const cachedProfileMatchesSession = Boolean(cachedProfile && (
+        cachedProfile.userId === session.user.id || (sessionEmail && cachedEmail && sessionEmail === cachedEmail)
+      ))
+      if (cachedProfileMatchesSession) {
+        setStats(loadLearnerStats(cachedProfile))
+        setProgress(loadLearnerProgress())
+      } else {
+        setStats(DEFAULT_STATS)
+        setProgress(DEFAULT_PROGRESS)
+      }
       const metadata = session.user.user_metadata || {}
       const forceOnboarding = hasPendingOnboarding(session.user.id)
       let row = null
@@ -410,12 +429,14 @@ export default function App() {
       } catch (error) { console.warn('Could not load cloud profile, streak, achievements, or vocabulary. Apply the latest Supabase schema to enable full sync.', error) }
       if (!alive) return
       if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
-      const cloudAchievementRecords = (cloudData?.achievements || []).map((record) => ({
-        id: record.trophy_id,
-        unlockedAt: record.unlocked_at || null,
-        rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0,
-        historical: Boolean(record.progress_data?.historical),
-      }))
+      const cloudAchievementRecords = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
+        .filter((record) => record && typeof record === 'object' && typeof record.trophy_id === 'string')
+        .map((record) => ({
+          id: record.trophy_id,
+          unlockedAt: record.unlocked_at || null,
+          rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0,
+          historical: Boolean(record.progress_data?.historical),
+        }))
       const cloudStreak = cloudData?.streak
       const cloudProfile = cloudData?.profile
       const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudProfile?.current_streak ?? 0)
@@ -424,8 +445,8 @@ export default function App() {
         : []
       setStats((current) => ({
         ...current,
-        xp: Math.max(0, Number(row?.xp ?? cloudProfile?.total_xp) || 0),
-        streak: Math.max(0, streakCount),
+        xp: Math.max(0, Number(row?.xp ?? cloudProfile?.total_xp ?? current.xp) || 0),
+        streak: Math.max(0, Number(row?.streak ?? cloudStreak?.streak_count ?? cloudProfile?.current_streak ?? current.streak) || 0),
         streakMilestones: [...new Set([...(current.streakMilestones || []), ...cloudMilestones, ...getStreakMilestonesUpTo(streakCount)])].sort((a, b) => a - b),
         trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], cloudAchievementRecords),
         winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
@@ -442,12 +463,44 @@ export default function App() {
       }))
       const hasExistingProgress = progressLookupSucceeded ? Boolean(row || cloudProfile || cloudStreak) : true
       setProfile(getLearnerProfileFromAuth(session.user, row?.target_level || metadata.target_level, hasExistingProgress, forceOnboarding, cloudProfile))
-      setCloudReady(true)
+      setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures)
       setAuthLoading(false)
     }
-    supabase.auth.getSession().then(({ data }) => hydrateSession(data.session)).catch(() => setAuthLoading(false))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => { void hydrateSession(session) })
-    return () => { alive = false; subscription.unsubscribe() }
+    const restoreLocalFallback = () => {
+      if (!alive) return
+      const localProfile = loadProfile()
+      setCloudSession(null)
+      setCloudReady(false)
+      setProfile(localProfile)
+      setAuthenticated(Boolean(localProfile))
+      setStats(loadLearnerStats(localProfile))
+      setProgress(loadLearnerProgress())
+      setAuthLoading(false)
+    }
+
+    const safelyHydrateSession = async (session) => {
+      try {
+        await hydrateSession(session)
+      } catch (error) {
+        console.warn('[Turkuaz Edu] Cloud session hydration failed; continuing with cached local data.', error)
+        restoreLocalFallback()
+      }
+    }
+
+    let subscription = null
+    try {
+      const authState = supabase.auth.onAuthStateChange((_event, session) => { void safelyHydrateSession(session) })
+      subscription = authState?.data?.subscription || null
+    } catch (error) {
+      console.warn('[Turkuaz Edu] Supabase auth listener could not start; continuing with cached local data.', error)
+    }
+    supabase.auth.getSession()
+      .then((result) => safelyHydrateSession(result?.data?.session ?? null))
+      .catch((error) => {
+        console.warn('[Turkuaz Edu] Supabase session could not be restored; continuing with cached local data.', error)
+        restoreLocalFallback()
+      })
+    return () => { alive = false; subscription?.unsubscribe?.() }
   }, [])
 
   const showToast = useCallback((message, type = 'default') => {
@@ -495,6 +548,19 @@ export default function App() {
     if (!supabase) throw new Error('Supabase is not configured.')
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+    const cachedProfile = loadProfile()
+    const cachedEmail = String(cachedProfile?.email || '').trim().toLowerCase()
+    const sessionEmail = String(data.user?.email || '').trim().toLowerCase()
+    const cachedProfileMatchesSession = Boolean(cachedProfile && (
+      cachedProfile.userId === data.user?.id || (cachedEmail && sessionEmail && cachedEmail === sessionEmail)
+    ))
+    if (cachedProfileMatchesSession) {
+      setStats(loadLearnerStats(cachedProfile))
+      setProgress(loadLearnerProgress())
+    } else {
+      setStats(DEFAULT_STATS)
+      setProgress(DEFAULT_PROGRESS)
+    }
     let row = null
     let cloudData = null
     let progressLookupSucceeded = false
@@ -509,14 +575,16 @@ export default function App() {
     const metadata = data.user.user_metadata || {}
     const forceOnboarding = hasPendingOnboarding(data.user.id)
     const learner = getLearnerProfileFromAuth(data.user, row?.target_level || metadata.target_level, progressLookupSucceeded ? Boolean(row || cloudData?.profile || cloudData?.streak) : true, forceOnboarding, cloudData?.profile)
-    setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(true); setAuthLoading(false)
-    const remoteAchievements = (cloudData?.achievements || []).map((record) => ({ id: record.trophy_id, unlockedAt: record.unlocked_at || null, rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0, historical: Boolean(record.progress_data?.historical) }))
+    setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures); setAuthLoading(false)
+    const remoteAchievements = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
+      .filter((record) => record && typeof record === 'object' && typeof record.trophy_id === 'string')
+      .map((record) => ({ id: record.trophy_id, unlockedAt: record.unlocked_at || null, rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0, historical: Boolean(record.progress_data?.historical) }))
     const cloudStreak = cloudData?.streak
     const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? 0)
     if (row || cloudData) setStats((current) => ({
       ...current,
-      xp: Math.max(0, Number(row?.xp ?? cloudData?.profile?.total_xp) || 0),
-      streak: Math.max(0, streakCount),
+      xp: Math.max(0, Number(row?.xp ?? cloudData?.profile?.total_xp ?? current.xp) || 0),
+      streak: Math.max(0, Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? current.streak) || 0),
       streakMilestones: [...new Set([...(current.streakMilestones || []), ...(Array.isArray(cloudStreak?.unlocked_milestones) ? cloudStreak.unlocked_milestones.map(Number) : []), ...getStreakMilestonesUpTo(streakCount)])].filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days)).sort((a, b) => a - b),
       trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], remoteAchievements),
       winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
@@ -565,6 +633,10 @@ export default function App() {
 
   const recordFlawlessQuiz = useCallback(() => {
     setStats((current) => current.flawlessQuizAchieved ? current : { ...current, flawlessQuizAchieved: true })
+  }, [])
+
+  const recordPerfectReadingExam = useCallback(() => {
+    setStats((current) => current.readingPerfectExamAchieved ? current : { ...current, readingPerfectExamAchieved: true })
   }, [])
 
   const recordSpeedBonus = useCallback(() => {
@@ -754,12 +826,13 @@ export default function App() {
     currentStreak: stats.streak,
     streakMilestones: stats.streakMilestones,
     readingCompletedCount: stats.readingCompletedCount,
+    readingPerfectExamAchieved: stats.readingPerfectExamAchieved,
     listeningPercent: progress.dinleme,
     savedWordsCount: stats.savedWordsCount,
     flawlessQuizAchieved: stats.flawlessQuizAchieved,
     speedBonusAchieved: stats.speedBonusAchieved,
     winterStudyDays: winterFeatureEnabled ? getWinterStudyDayCount(stats.winterStudy) : 0,
-  }), [stats.xp, stats.completedQuizzes, stats.streak, stats.streakMilestones, stats.readingCompletedCount, stats.savedWordsCount, stats.flawlessQuizAchieved, stats.speedBonusAchieved, stats.winterStudy, progress.dinleme, winterFeatureEnabled])
+  }), [stats.xp, stats.completedQuizzes, stats.streak, stats.streakMilestones, stats.readingCompletedCount, stats.readingPerfectExamAchieved, stats.savedWordsCount, stats.flawlessQuizAchieved, stats.speedBonusAchieved, stats.winterStudy, progress.dinleme, winterFeatureEnabled])
 
   useEffect(() => {
     if (authLoading || !authenticated || !profile || profile.onboardingCompleted === false) return
@@ -924,11 +997,11 @@ export default function App() {
 
   const renderView = () => {
     // The dashboard, daily plan, and Reading Library are currently available.
-    if (active !== 'home' && active !== 'plan' && active !== 'okuma' && active !== 'dinleme') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
+    if (active !== 'home' && active !== 'plan' && active !== 'okuma' && active !== 'dinleme' && active !== 'lugat' && active !== 'writing-practice') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
 
     switch (active) {
       case 'home':
-        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} />
+        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
       case 'leagues':
         return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} isPremium={isPremium} />
       case 'analytics':
@@ -936,31 +1009,36 @@ export default function App() {
       case 'plan':
         return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} isPremium={isPremium} />
       case 'okuma':
-        return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onSpeedBonus={recordSpeedBonus} />
+        return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onPerfectReadingExam={recordPerfectReadingExam} onSpeedBonus={recordSpeedBonus} />
       case 'dinleme':
-        return <ListeningHub
+        return <Dinleme
           key={profile?.userId || profile?.email || 'local'}
           profile={profile}
           isPremium={isPremium}
           dark={dark}
-          onSavedWordsChange={updateSavedWordsCount}
-          onLessonComplete={({ scorePct, xpAward, flawlessAwarded, completedCount }) => {
-            const saved = saveScore('dinleme', { best: scorePct, attempts: 1 })
+          onLessonComplete={({ scorePct, xpAward, firstCompletion, completedCount }) => {
             setStats((current) => current.listeningLessonsCompleted === completedCount ? current : { ...current, listeningLessonsCompleted: completedCount })
+            if (!firstCompletion) return
+            const saved = saveScore('dinleme', { best: scorePct, attempts: 1 })
             completeLevel('dinleme', saved.best, xpAward)
             recordListeningQuest()
-            if (flawlessAwarded) recordFlawlessQuiz()
-            showMascot({ message: t('listening.feedback.celebration'), emotion: 'cheer', duration: 6500 })
           }}
         />
       case 'writing-practice':
-        return <WritingPractice isPremium={isPremium} onBack={() => navigate('plan')} />
+        return <Yozish onEarnXp={addXp} onReturnToDashboard={() => navigate('home')} isPremium={isPremium} dark={dark} />
       case 'yazma':
         return <YazmaModule completeLevel={(percent, award) => completeLevel('yazma', percent, award)} />
       case 'konusma':
         return <KonusmaModule onComplete={(xp = 35) => completeLevel('konusma', undefined, xp)} />
       case 'lugat':
-        return <VocabularyFlashcards onToast={showToast} onMasteryCountChange={updateWordsLearned} onNewWordLearned={recordNewQuestWord} onSavedWordsChange={updateSavedWordsCount} isPremium={isPremium} onStudyComplete={addXp} onReturnToDashboard={() => navigate('home')} />
+        return <Kelimeler
+          key={profile?.userId || profile?.email || 'local'}
+          onSavedWordsChange={updateSavedWordsCount}
+          onWordLearned={() => addXp(5)}
+          onNewQuestWord={recordNewQuestWord}
+          isPremium={isPremium}
+          dark={dark}
+        />
       case 'exams':
         return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} />
       case 'mock':
@@ -987,7 +1065,7 @@ export default function App() {
           />
         )
       default:
-        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} />
+        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
     }
   }
 
@@ -1025,7 +1103,7 @@ export default function App() {
         active={active === 'writing-practice' ? 'plan' : active}
         onNavigate={navigate}
         dark={dark}
-        onToggleDark={() => setDark((d) => !d)}
+        onToggleDark={() => setDark((value) => !value)}
         isPremium={isPremium}
         onTogglePremium={() => setIsPremium((value) => !value)}
         xp={stats.xp}

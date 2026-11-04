@@ -1,3 +1,5 @@
+export { readingExamSections, READING_SECTION_COUNT, QUESTIONS_PER_READING_SECTION, ACTIVE_READING_SECTION_COUNT } from './readingExamSections.js'
+
 // =====================================================================
 // Türkçe Marathon — Data layer
 // Realistic Turkish / Uzbek educational content for Milliy Sertifikat

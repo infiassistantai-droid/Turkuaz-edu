@@ -481,7 +481,7 @@ function AudioPlayer({ text, premium, voiceId = ELEVENLABS_VOICE_ID }) {
   )
 }
 
-export default function ReadingLibrary({ addXp, completeLevel, isPremium = false, dark = false, profile, onReadingCompletionsChange, onSavedWordsChange, onFlawlessQuiz, onSpeedBonus }) {
+export default function ReadingLibrary({ addXp, completeLevel, isPremium = false, dark = false, profile, onReadingCompletionsChange, onSavedWordsChange, onFlawlessQuiz, onPerfectReadingExam, onSpeedBonus }) {
   const { t } = useI18n()
   const { showMascot } = useMascot()
   // Reuse the dark glass reading palette when the app's regular dark mode is on,
@@ -505,7 +505,7 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
   const timerStartedAtRef = useRef(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState(0)
-  const [view, setView] = useState('library')
+  const [view, setView] = useState('sections')
   const [selectedId, setSelectedId] = useState(null)
   const [quizStep, setQuizStep] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState('')
@@ -713,22 +713,16 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
     setAnswerFeedback(null)
   }
 
-  if (view === 'practice') {
+  if (view === 'sections') {
     return (
-      <section className="mx-auto max-w-6xl space-y-5">
-        <button
-          type="button"
-          onClick={backToLibrary}
-          className={cn(
-            'inline-flex min-h-10 items-center gap-2 rounded-xl border px-3 py-2 text-sm font-bold transition-colors',
-            premium ? 'border-white/15 text-white/80 hover:bg-white/10' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50',
-          )}
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          {t('reading.backLibrary')}
-        </button>
-        <OkumaModule completeLevel={completeLevel} />
-      </section>
+      <OkumaModule
+        completeLevel={completeLevel}
+        premium={premium}
+        onPerfectScore={() => {
+          onFlawlessQuiz?.()
+          onPerfectReadingExam?.()
+        }}
+      />
     )
   }
 
@@ -1201,7 +1195,7 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
         </div>
         <button
           type="button"
-          onClick={() => { setSelectedId(null); setView('practice'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+          onClick={() => { setSelectedId(null); setView('sections'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
           className={cn(
             'inline-flex min-h-10 items-center gap-2 rounded-xl border px-4 py-2 text-sm font-extrabold transition-colors',
             premium ? 'border-yellow-200/25 bg-white/5 text-yellow-100 hover:bg-white/10' : 'border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100',

@@ -13,6 +13,8 @@ export const SCORES_KEY = 'turkish-marathon-scores-v1'    // best + attempts per
 export const KONUSMA_KEY = 'turkish-marathon-konusma-v1'  // speaking exam progress
 export const MASTERY_KEY = 'turkish-marathon-mastery-v2'  // vocab mastery (used by VocabularyFlashcards)
 export const SAVED_KEY = 'turkish-marathon-saved-words-v2' // saved vocab words
+export const VOCABULARY_STATE_KEY = 'turkuaz-edu-vocabulary-state-v1'
+export const VOCABULARY_XP_CLAIMED_KEY = 'turkuaz-edu-vocabulary-xp-claimed-v1'
 export const READING_VOCABULARY_KEY = 'turkuaz-edu-reading-vocabulary-v1' // user-saved glossary words
 
 /** Safe JSON reader — falls back when storage is missing/corrupt (SSR-safe). */
@@ -104,7 +106,7 @@ export function saveKonusma(state) {
 
 /** Remove every key the app owns — used by "Maʼlumotlarni tozalash". */
 export function clearAllStorage() {
-  [STORAGE_KEY, PROFILE_KEY, AUTH_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY, READING_VOCABULARY_KEY].forEach((key) => {
+  [STORAGE_KEY, PROFILE_KEY, AUTH_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY, VOCABULARY_STATE_KEY, VOCABULARY_XP_CLAIMED_KEY, READING_VOCABULARY_KEY].forEach((key) => {
     try {
       localStorage.removeItem(key)
     } catch {

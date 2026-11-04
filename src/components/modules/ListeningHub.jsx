@@ -4,7 +4,7 @@ import {
   FileText, Flame, Gauge, Headphones, Pause, Play, RotateCcw, SkipBack, SkipForward,
   Sparkles, Volume2, XCircle,
 } from 'lucide-react'
-import { listeningLessons } from '../../data/listeningLessons'
+import { extendedListeningLessons as listeningLessons } from '../../data/listeningLessons'
 import { completeListeningLesson, loadListeningProgress } from '../../lib/listeningProgress'
 import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON } from '../../lib/storage'
 import { cn, formatTime } from '../../lib/utils'

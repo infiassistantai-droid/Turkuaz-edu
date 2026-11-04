@@ -4,18 +4,34 @@ import { getRankProgress } from './ranks.js'
 import { normalizeWinterStudy } from '../features/winter/winterSeason.js'
 import { translations } from './i18n.jsx'
 
-const configuredUrl = import.meta.env.VITE_SUPABASE_URL?.trim()
-const configuredAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
+const configuredUrl = typeof import.meta.env.VITE_SUPABASE_URL === 'string'
+  ? import.meta.env.VITE_SUPABASE_URL.trim()
+  : ''
+const configuredAnonKey = typeof import.meta.env.VITE_SUPABASE_ANON_KEY === 'string'
+  ? import.meta.env.VITE_SUPABASE_ANON_KEY.trim()
+  : ''
 
 function normalizeSupabaseUrl(value) {
-  return String(value || '')
-    .trim()
-    .replace(/\/rest\/v1\/?$/iu, '')
-    .replace(/\/+$/u, '')
+  const raw = String(value ?? '').trim().replace(/\/rest\/v1\/?$/iu, '').replace(/\/+$/u, '')
+  if (!raw) return ''
+  try {
+    const parsed = new URL(raw)
+    const localHttp = parsed.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname)
+    if (!['http:', 'https:'].includes(parsed.protocol) || (!parsed.hostname || parsed.username || parsed.password) || (parsed.protocol !== 'https:' && !localHttp)) return ''
+    if (parsed.pathname !== '/' || parsed.search || parsed.hash) return ''
+    return parsed.origin
+  } catch {
+    return ''
+  }
+}
+
+function isPublicSupabaseKey(value) {
+  // Supabase supports legacy anon JWTs and the newer publishable-key format.
+  return /^eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/u.test(value) || value.startsWith('sb_publishable_')
 }
 
 export const supabaseUrl = normalizeSupabaseUrl(configuredUrl)
-const hasSupabaseConfiguration = Boolean(supabaseUrl && configuredAnonKey)
+const hasSupabaseConfiguration = Boolean(supabaseUrl && isPublicSupabaseKey(configuredAnonKey))
 
 let client = null
 if (hasSupabaseConfiguration) {
@@ -23,13 +39,26 @@ if (hasSupabaseConfiguration) {
     client = createClient(supabaseUrl, configuredAnonKey, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
     })
-  } catch (error) {
-    console.warn('[Turkuaz Edu] Supabase configuration is invalid; using local-only mode.', error)
+  } catch {
+    // Malformed configuration should never prevent the local-first app from rendering.
+    console.warn('[Turkuaz Edu] Supabase configuration is invalid; using local-only mode.')
   }
+} else if (configuredUrl || configuredAnonKey) {
+  // Do not print environment values: they may contain credentials.
+  console.warn('[Turkuaz Edu] Supabase URL/key is missing or malformed; using local-only mode.')
 }
 export const supabase = client
 export const isSupabaseConfigured = Boolean(supabase)
 export const isCloudSyncAvailable = Boolean(supabase)
+
+const CLOUD_READ_TIMEOUT_MS = 10_000
+function withReadTimeout(request, label) {
+  let timeoutId
+  const timeout = new Promise((_, reject) => {
+    timeoutId = globalThis.setTimeout(() => reject(new Error(`Supabase ${label} request timed out.`)), CLOUD_READ_TIMEOUT_MS)
+  })
+  return Promise.race([Promise.resolve(request), timeout]).finally(() => globalThis.clearTimeout(timeoutId))
+}
 
 function throwQueryError(error) {
   if (error) throw error
@@ -37,29 +66,49 @@ function throwQueryError(error) {
 
 export async function fetchLearnerProgress(userId) {
   if (!supabase || !userId) return null
-  const { data, error } = await supabase.from('user_progress')
+  const { data, error } = await withReadTimeout(supabase.from('user_progress')
     .select('xp,streak,completed_lessons,target_level,weekly_xp,week_start,last_activity_date,daily_xp,analytics_tracking_since,daily_quests,quest_words_credited')
     .eq('user_id', userId)
-    .maybeSingle()
+    .maybeSingle(), 'progress')
   throwQueryError(error)
   return data
 }
 
+/** Run one cloud read independently so a missing table/network outage cannot break rendering. */
+async function readOrFallback(label, request, fallback) {
+  try {
+    const { data, error } = await withReadTimeout(request(), label)
+    if (error) {
+      console.warn(`[Turkuaz Edu] Could not read ${label}; keeping local data.`, error)
+      return { data: fallback, ok: false }
+    }
+    return { data: data ?? fallback, ok: true }
+  } catch (error) {
+    console.warn(`[Turkuaz Edu] Could not read ${label}; keeping local data.`, error)
+    return { data: fallback, ok: false }
+  }
+}
+
 /** Fetch the normalized cloud profile and the durable streak/achievement/vocabulary records. */
 export async function fetchLearnerGamification(userId) {
-  if (!supabase || !userId) return null
-  const [profileResult, streakResult, achievementResult, vocabularyResult] = await Promise.all([
-    supabase.from('profiles').select('id,user_id,full_name,avatar_url,current_streak,total_xp,level,rank_title,created_at,updated_at').eq('user_id', userId).maybeSingle(),
-    supabase.from('user_streaks').select('user_id,streak_count,last_active_date,unlocked_milestones,winter_study_days').eq('user_id', userId).maybeSingle(),
-    supabase.from('user_achievements').select('user_id,trophy_id,unlocked_at,progress_data').eq('user_id', userId),
-    supabase.from('user_vocabulary').select('user_id,word,translation,lesson_id,created_at').eq('user_id', userId),
+  if (!supabase || !userId) return { profile: null, streak: null, achievements: [], vocabulary: [] }
+  const profileRequest = () => supabase.from('profiles').select('id,user_id,full_name,avatar_url,current_streak,total_xp,level,rank_title,created_at,updated_at').eq('user_id', userId).maybeSingle()
+  const streakRequest = () => supabase.from('user_streaks').select('user_id,streak_count,last_active_date,unlocked_milestones,winter_study_days').eq('user_id', userId).maybeSingle()
+  const achievementRequest = () => supabase.from('user_achievements').select('user_id,trophy_id,unlocked_at,progress_data').eq('user_id', userId)
+  const vocabularyRequest = () => supabase.from('user_vocabulary').select('user_id,word,translation,lesson_id,created_at').eq('user_id', userId)
+  const results = await Promise.all([
+    readOrFallback('profile', profileRequest, null),
+    readOrFallback('streaks', streakRequest, null),
+    readOrFallback('achievements', achievementRequest, []),
+    readOrFallback('vocabulary', vocabularyRequest, []),
   ])
-  for (const result of [profileResult, streakResult, achievementResult, vocabularyResult]) throwQueryError(result.error)
+  const [profileResult, streakResult, achievementResult, vocabularyResult] = results
   return {
-    profile: profileResult.data,
-    streak: streakResult.data,
-    achievements: achievementResult.data || [],
-    vocabulary: vocabularyResult.data || [],
+    profile: profileResult.data && typeof profileResult.data === 'object' ? profileResult.data : null,
+    streak: streakResult.data && typeof streakResult.data === 'object' ? streakResult.data : null,
+    achievements: Array.isArray(achievementResult.data) ? achievementResult.data : [],
+    vocabulary: Array.isArray(vocabularyResult.data) ? vocabularyResult.data : [],
+    hasReadFailures: results.some((result) => !result.ok),
   }
 }
 
@@ -205,10 +254,15 @@ export async function deleteLearnerCloudData(userId) {
 
 export async function fetchWeeklyLeaderboard() {
   if (!supabase) return []
-  const monday = new Date()
-  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
-  const weekKey = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
-  const { data, error } = await supabase.rpc('get_weekly_leaderboard', { requested_week_start: weekKey })
-  throwQueryError(error)
-  return data || []
+  try {
+    const monday = new Date()
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
+    const weekKey = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
+    const { data, error } = await withReadTimeout(supabase.rpc('get_weekly_leaderboard', { requested_week_start: weekKey }), 'leaderboard')
+    throwQueryError(error)
+    return Array.isArray(data) ? data.filter((row) => row && typeof row === 'object') : []
+  } catch (error) {
+    console.warn('[Turkuaz Edu] Could not read leaderboard; using an empty list.', error)
+    return []
+  }
 }

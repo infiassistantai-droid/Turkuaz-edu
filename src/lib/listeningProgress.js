@@ -21,13 +21,15 @@ export function getListeningCompletedCount(identity) {
 }
 
 /** Records one completed lesson attempt and grants each lesson/flawless reward once. */
-export function completeListeningLesson(identity, lessonId, scorePct) {
+export function completeListeningLesson(identity, lessonId, scorePct, rewards = {}) {
   const progress = loadListeningProgress(identity)
   const previous = progress.lessons[lessonId] || {}
   const flawless = scorePct === 100
   const firstCompletion = !previous.completedAt
   const newlyFlawless = flawless && !previous.flawlessAwarded
-  const xpAward = (firstCompletion ? 35 : 0) + (newlyFlawless ? 15 : 0)
+  const completionXp = Math.max(0, Number(rewards.completionXp ?? 35) || 0)
+  const flawlessXp = Math.max(0, Number(rewards.flawlessXp ?? 15) || 0)
+  const xpAward = (firstCompletion ? completionXp : 0) + (newlyFlawless ? flawlessXp : 0)
   const now = new Date().toISOString()
   const record = {
     ...previous,

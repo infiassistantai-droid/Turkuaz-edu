@@ -5,7 +5,6 @@ import {
   CalendarCheck,
   Check,
   Headphones,
-  Flame,
   Mic,
   PenLine,
   RotateCcw,
@@ -20,7 +19,6 @@ import { loadJSON, saveJSON } from '../lib/storage'
 import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
 import DailyQuestsWidget from './DailyQuestsWidget'
-import StreakMilestones from './StreakMilestones'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -725,7 +723,7 @@ function DailyPlanCard({ addXp }) {
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp, dailyQuests, onClaimDailyReward, isPremium = false }) {
+export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp, dailyQuests, onClaimDailyReward, isPremium = false, dark = false }) {
   const { language, t } = useI18n()
   const locale = { uz: 'uz-UZ', tr: 'tr-TR', en: 'en-US' }[language] || 'tr-TR'
   const todayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
@@ -755,10 +753,9 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
         <ReadinessCard total={total} targetLevel={targetLevel} />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
         {[
           { label: t('dashboard.stat.xp'), value: (stats?.xp ?? 0).toLocaleString(language), icon: Zap, hint: t('dashboard.stat.xp.hint') },
-          { label: t('dashboard.stat.streak'), value: `${stats?.streak ?? 0} ${t('profile.days')}`, icon: Flame, hint: t('dashboard.stat.streak.hint') },
           { label: t('dashboard.stat.target'), value: targetLevel || '—', icon: Target, hint: t('dashboard.stat.target.hint'), testId: 'card-target-level' },
           { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
         ].map(({ label, value, icon: Icon, hint, testId }) => (
@@ -774,15 +771,7 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
           </Card>
         ))}
       </div>
-      <StreakMilestones
-        currentStreak={stats?.streak ?? 0}
-        unlockedMilestones={stats?.streakMilestones ?? []}
-        isPremium={isPremium}
-        winterStudy={stats?.winterStudy}
-        winterChampionUnlocked={(stats?.trophyUnlocks || []).some((record) => record?.id === 'winter-champion')}
-        compact
-      />
-      <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} />
+      <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} dark={dark} />
 
       <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
         {SKILLS.map((skill) => (
