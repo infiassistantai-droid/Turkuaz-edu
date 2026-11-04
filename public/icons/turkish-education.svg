@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Türkçe Marathon — Turkish education</title>
+  <desc id="desc">A white Turkish crescent and star above an open book on a ruby-red background.</desc>
+  <defs>
+    <mask id="icon-crescent">
+      <rect width="512" height="512" fill="#fff"/>
+      <circle cx="258" cy="158" r="91" fill="#000"/>
+    </mask>
+    <linearGradient id="ruby" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E30A17"/>
+      <stop offset="1" stop-color="#8a0000"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset="1" stop-color="#f2dfb1"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#310000" flood-opacity=".32"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="92" fill="url(#ruby)"/>
+  <path d="M42 94C130 20 332 9 455 83" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="3"/>
+  <path d="M57 418c90 66 294 78 401 0" fill="none" stroke="#fff" stroke-opacity=".09" stroke-width="3"/>
+  <g filter="url(#shadow)">
+    <circle cx="218" cy="190" r="105" fill="#fff" mask="url(#icon-crescent)"/>
+    <path d="m333 114 13 27 30 4-22 21 6 30-27-15-27 15 6-30-22-21 30-4z" fill="#fff"/>
+    <path d="M91 337c59-28 117-20 165 11v86c-48-31-106-39-165-11z" fill="url(#page)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M421 337c-59-28-117-20-165 11v86c48-31 106-39 165-11z" fill="url(#page)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M256 348v86" fill="none" stroke="#b87918" stroke-width="8" stroke-linecap="round"/>
+    <path d="M118 362c39-14 76-11 108 4m-108 18c39-14 76-11 108 4m160-22c-39-14-76-11-108 4m108 18c-39-14-76-11-108 4" fill="none" stroke="#b87918" stroke-opacity=".65" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <rect x="8" y="8" width="496" height="496" rx="86" fill="none" stroke="#fff" stroke-opacity=".24" stroke-width="4"/>
+</svg>

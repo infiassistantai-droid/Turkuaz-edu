@@ -1,0 +1,204 @@
+const q = (id, prompt, options, answer, explanation) => ({ id, prompt, options, answer, explanation })
+const v = (term, uz, en) => ({ term, uz, en })
+
+const mcq = (id, prompt, options, correctIndex, explanation) => ({ id, prompt, options, correctIndex, explanation })
+
+// Short core course requested for the Dinleme module: Turkish audio, localized quiz UI.
+export const listeningLessons = [
+  {
+    id: 'cafe-a1',
+    title: 'Kafede Bir Sabah',
+    level: 'A1',
+    transcript: `Garson: Günaydın, ne almak istersiniz?\nMüşteri: Günaydın. Bir çay ve peynirli tost alabilir miyim?\nGarson: Tabii. Çayınız açık mı, demli mi olsun?\nMüşteri: Açık olsun, lütfen. Tost ne kadar?\nGarson: Tost altmış lira, çay yirmi lira.\nMüşteri: Tamam. Bir de su alabilir miyim?\nGarson: Elbette. Başka bir şey ister misiniz?\nMüşteri: Hayır, teşekkür ederim. Hesabı sonra alabilir miyim?`,
+    quizQuestions: [
+      mcq('cafe-q1', { uz: 'Mijoz nima buyurtma qiladi?', en: 'What does the customer order?', tr: 'Müşteri ne sipariş ediyor?' }, [
+        { uz: 'Qahva va tort.', en: 'Coffee and cake.', tr: 'Kahve ve pasta.' },
+        { uz: 'Choy va pishloqli tost.', en: 'Tea and a cheese toastie.', tr: 'Çay ve peynirli tost.' },
+        { uz: 'Sharbat va salat.', en: 'Juice and salad.', tr: 'Meyve suyu ve salata.' },
+      ], 1, { uz: 'Mijoz bir choy va pishloqli tost so‘raydi.', en: 'The customer asks for tea and a cheese toastie.', tr: 'Müşteri bir çay ve peynirli tost istiyor.' }),
+      mcq('cafe-q2', { uz: 'Mijoz choyni qanday xohlaydi?', en: 'How does the customer want the tea?', tr: 'Müşteri çayını nasıl istiyor?' }, [
+        { uz: 'Quyuq.', en: 'Strong.', tr: 'Demli.' },
+        { uz: 'Sovuq.', en: 'Cold.', tr: 'Soğuk.' },
+        { uz: 'Och.', en: 'Light.', tr: 'Açık.' },
+      ], 2, { uz: 'U choyning och bo‘lishini so‘raydi.', en: 'The customer asks for light tea.', tr: 'Müşteri çayın açık olmasını istiyor.' }),
+      mcq('cafe-q3', { uz: 'Tost qancha turadi?', en: 'How much is the toastie?', tr: 'Tost ne kadar?' }, [
+        { uz: 'Yigirma lira.', en: 'Twenty lira.', tr: 'Yirmi lira.' },
+        { uz: 'Oltmish lira.', en: 'Sixty lira.', tr: 'Altmış lira.' },
+        { uz: 'Sakson lira.', en: 'Eighty lira.', tr: 'Seksen lira.' },
+      ], 1, { uz: 'Garson tostning narxi oltmish lira ekanini aytadi.', en: 'The server says the toastie costs sixty lira.', tr: 'Garson tostun altmış lira olduğunu söylüyor.' }),
+    ],
+  },
+  {
+    id: 'airport-a2',
+    title: 'Havalimanında Anons',
+    level: 'A2',
+    transcript: `Sayın yolcularımız, Ankara Esenboğa Havalimanı'ndan İzmir'e gidecek TK 214 sefer sayılı uçuşumuzla ilgili önemli bir duyuru yapılacaktır. Uçağımızın kalkış saati teknik kontrol nedeniyle kırk dakika gecikmiştir. Yeni kalkış saati saat 15.20'dir. Yolcularımızdan, biniş kartlarında belirtilen 108 numaralı kapının önünde hazır bulunmaları rica olunur. Bagajı henüz teslim edilmemiş yolcular, lütfen 6 numaralı kontuara başvursun. Gecikme için özür diler, anlayışınız için teşekkür ederiz.`,
+    quizQuestions: [
+      mcq('airport-q1', { uz: 'Parvoz qayerga uchadi?', en: 'Where is the flight going?', tr: 'Uçuş nereye gidiyor?' }, [
+        { uz: 'Izmirga.', en: 'To Izmir.', tr: 'İzmir’e.' },
+        { uz: 'Anqaraga.', en: 'To Ankara.', tr: 'Ankara’ya.' },
+        { uz: 'Istanbulga.', en: 'To Istanbul.', tr: 'İstanbul’a.' },
+      ], 0, { uz: 'E’londa Anqaradan Izmirga boradigan parvoz aytiladi.', en: 'The announcement is for a flight from Ankara to Izmir.', tr: 'Anons, Ankara’dan İzmir’e gidecek uçuş için yapılıyor.' }),
+      mcq('airport-q2', { uz: 'Parvoz qancha vaqtga kechikdi?', en: 'How long is the flight delayed?', tr: 'Uçuş ne kadar gecikti?' }, [
+        { uz: 'Yigirma daqiqa.', en: 'Twenty minutes.', tr: 'Yirmi dakika.' },
+        { uz: 'Qirq daqiqa.', en: 'Forty minutes.', tr: 'Kırk dakika.' },
+        { uz: 'Bir soat.', en: 'One hour.', tr: 'Bir saat.' },
+      ], 1, { uz: 'Texnik tekshiruv sababli qirq daqiqa kechikadi.', en: 'It is delayed by forty minutes because of a technical check.', tr: 'Teknik kontrol nedeniyle kırk dakika gecikiyor.' }),
+      mcq('airport-q3', { uz: 'Yo‘lovchilar qaysi darvoza oldida kutishi kerak?', en: 'Which gate should passengers wait at?', tr: 'Yolcular hangi kapının önünde beklemeli?' }, [
+        { uz: '108-darvoza.', en: 'Gate 108.', tr: '108 numaralı kapı.' },
+        { uz: '6-darvoza.', en: 'Gate 6.', tr: '6 numaralı kapı.' },
+        { uz: '214-darvoza.', en: 'Gate 214.', tr: '214 numaralı kapı.' },
+      ], 0, { uz: 'Yo‘lovchilardan 108-darvoza oldida bo‘lish so‘raladi.', en: 'Passengers are asked to wait at gate 108.', tr: 'Yolculardan 108 numaralı kapının önünde hazır olmaları isteniyor.' }),
+    ],
+  },
+  {
+    id: 'travel-story-b1',
+    title: 'Karadeniz Yolculuğu',
+    level: 'B1',
+    transcript: `Geçen yaz tek başıma Karadeniz kıyılarını keşfetmeye karar verdim. İstanbul'dan gece otobüsüne bindim ve sabah erkenden Trabzon'a vardım. İlk gün hava yağmurluydu; bu yüzden planladığım uzun yürüyüşü erteleyip şehir merkezindeki müzeleri gezdim. Yerel bir lokantada mısır ekmeği ve hamsi yedim. Garson, bölgedeki yemeklerin mevsime göre değiştiğini anlattı.\nErtesi gün hava açınca küçük bir minibüsle Uzungöl'e gittim. Yol boyunca sisli dağları ve çay bahçelerini gördüm. Gölün çevresinde yürürken başka gezginlerle tanıştım; birlikte fotoğraf çektik ve rotalarımız hakkında konuştuk. Dönüşte otobüsü kaçırmamak için erken çıktım. Yolculuk beklediğimden daha yorucuydu ama yerel insanlarla sohbet etmek ve doğayı yakından görmek bütün yorgunluğuma değdi. Bir sonraki seyahatimde daha uzun kalmayı düşünüyorum.`,
+    quizQuestions: [
+      mcq('travel-q1', { uz: 'Hikoyachi Trabzonga qachon yetib keldi?', en: 'When did the narrator arrive in Trabzon?', tr: 'Anlatıcı Trabzon’a ne zaman vardı?' }, [
+        { uz: 'Kechqurun.', en: 'In the evening.', tr: 'Akşam.' },
+        { uz: 'Ertalab erta.', en: 'Early in the morning.', tr: 'Sabah erkenden.' },
+        { uz: 'Tush payti.', en: 'At noon.', tr: 'Öğle vakti.' },
+      ], 1, { uz: 'U tunda avtobusga chiqib, ertalab Trabzonga yetib keladi.', en: 'They take the night bus and arrive in the morning.', tr: 'Gece otobüsüne binip sabah Trabzon’a varıyor.' }),
+      mcq('travel-q2', { uz: 'Nega hikoyachi birinchi kuni uzoq piyoda sayr qilmadi?', en: 'Why did the narrator postpone the long walk on the first day?', tr: 'Anlatıcı ilk gün uzun yürüyüşü neden erteledi?' }, [
+        { uz: 'Ob-havo yomg‘irli edi.', en: 'The weather was rainy.', tr: 'Hava yağmurluydu.' },
+        { uz: 'Avtobus kechikdi.', en: 'The bus was late.', tr: 'Otobüs gecikti.' },
+        { uz: 'U o‘zini yomon his qildi.', en: 'They felt unwell.', tr: 'Kendini iyi hissetmedi.' },
+      ], 0, { uz: 'Yomg‘ir sababli sayrni keyinga qoldirib, muzeylarga boradi.', en: 'Because of the rain, they postpone the walk and visit museums.', tr: 'Yağmur nedeniyle yürüyüşü erteleyip müzeleri geziyor.' }),
+      mcq('travel-q3', { uz: 'Safarning eng qadrli tomoni nima bo‘ldi?', en: 'What made the trip especially worthwhile?', tr: 'Yolculuğu özellikle değerli kılan ne oldu?' }, [
+        { uz: 'Qimmatbaho xaridlar.', en: 'Expensive shopping.', tr: 'Pahalı alışveriş.' },
+        { uz: 'Mahalliy odamlar bilan suhbat va tabiatni ko‘rish.', en: 'Talking with locals and seeing nature.', tr: 'Yerel insanlarla sohbet etmek ve doğayı görmek.' },
+        { uz: 'Uzoq avtobus safarining o‘zi.', en: 'The long bus ride itself.', tr: 'Uzun otobüs yolculuğunun kendisi.' },
+      ], 1, { uz: 'Hikoyachi mahalliylar bilan suhbat va tabiat manzaralarini eng yaxshi tajriba deb biladi.', en: 'The narrator values conversations with locals and seeing the landscape.', tr: 'Anlatıcı, yerel insanlarla sohbet etmeyi ve doğayı görmeyi en değerli deneyim olarak anlatıyor.' }),
+    ],
+  },
+]
+
+export const extendedListeningLessons = [
+  {
+    id: 'istanbul-simit-cay', level: 'A1', title: "İstanbul'da Bir Sabah: Simit ve Çay", minutes: 3,
+    transcript: [
+      "Sabah saat sekizde İstanbul'da küçük bir fırına girdim. Dışarıda vapurlar çalışıyor, insanlar işe gidiyordu. Fırının içi sıcak ve güzel kokuyordu. Tezgâhta simit, poğaça ve taze ekmek vardı.",
+      "Kasadaki görevliye, “Bir simit ve bir çay alabilir miyim?” diye sordum. Görevli gülümsedi ve “Tabii, çayınız hazır,” dedi. Simit gevrekti, çay da sıcaktı. Pencerenin yanında oturup kahvaltımı yaptım. Fırındaki insanlar birbirine günaydın diyordu. Çayımı yudumlarken sokağın hareketini izledim; bu küçük kahvaltı, güne başlamam için bana enerji verdi. İstanbul'da güne başlamak için simit ve çay çok güzel bir seçim."
+    ],
+    summaries: { tr: 'Bir ziyaretçi sabah fırından simit ve çay alır, pencere kenarında kahvaltı yapar.', uz: 'Mehmon ertalab novvoyxonadan simit va choy olib, deraza yonida nonushta qiladi.', en: 'A visitor buys a simit and tea at a bakery and has breakfast by the window.', ru: 'Утром гость покупает в пекарне симит и чай и завтракает у окна.' },
+    vocabulary: [v('fırın','novvoyxona','bakery'),v('tezgâh','rastalik','counter'),v('gevrek','qarsildoq','crisp'),v('sıcak','issiq','hot'),v('görevli','xodim','attendant'),v('pencere','deraza','window'),v('kahvaltı','nonushta','breakfast'),v('seçim','tanlov','choice')],
+    questions: [
+      q('q1',{uz:'Anlatıcı ertalab soat nechada novvoyxonaga kirdi?',en:'What time did the narrator enter the bakery?',tr:'Anlatıcı sabah saat kaçta fırına girdi?'},[{uz:'Soat yettida.',en:'At seven.',tr:'Saat yedide.'},{uz:'Soat sakkizda.',en:'At eight.',tr:'Saat sekizde.'},{uz:'Soat to‘qqizda.',en:'At nine.',tr:'Saat dokuzda.'},{uz:'Tushdan keyin.',en:'In the afternoon.',tr:'Öğleden sonra.'}],1,{uz:'Matnda novvoyxonaga ertalab soat sakkizda kirgani aytiladi.',en:'The passage says the narrator entered the bakery at eight in the morning.',tr:'Metinde fırına sabah saat sekizde girdiği söyleniyor.'}),
+      q('q2',{uz:'Anlatıcı fırından ne satın aldı?',en:'What did the narrator buy?',tr:'Anlatıcı fırından ne satın aldı?'},[{uz:'Poğaça va sut.',en:'A pastry and milk.',tr:'Poğaça ve süt.'},{uz:'Simit va choy.',en:'A simit and tea.',tr:'Simit ve çay.'},{uz:'Non va qahva.',en:'Bread and coffee.',tr:'Ekmek ve kahve.'},{uz:'Faqat choy.',en:'Only tea.',tr:'Sadece çay.'}],1,{uz:'U xodimdan bir simit va bir choy so‘raydi.',en:'The narrator asks for one simit and one tea.',tr:'Anlatıcı bir simit ve bir çay ister.'}),
+      q('q3',{uz:'Simit qanday edi?',en:'How was the simit?',tr:'Simit nasıldı?'},[{uz:'Yumshoq.',en:'Soft.',tr:'Yumuşaktı.'},{uz:'Sovuq.',en:'Cold.',tr:'Soğuktu.'},{uz:'Qarsildoq.',en:'Crisp.',tr:'Gevrekti.'},{uz:'Shirin.',en:'Sweet.',tr:'Tatlıydı.'}],2,{uz:'Matnda simit qarsildoq bo‘lgani aytiladi.',en:'The passage describes the simit as crisp.',tr:'Metinde simidin gevrek olduğu söyleniyor.'}),
+      q('q4',{uz:'Anlatıcı nonushtani qayerda qildi?',en:'Where did the narrator have breakfast?',tr:'Anlatıcı kahvaltısını nerede yaptı?'},[{uz:'Vokzalda.',en:'At the station.',tr:'İstasyonda.'},{uz:'Deraza yonida.',en:'By the window.',tr:'Pencerenin yanında.'},{uz:'Uyida.',en:'At home.',tr:'Evinde.'},{uz:'Vapurda.',en:'On the ferry.',tr:'Vapurda.'}],1,{uz:'U deraza yonida o‘tirib nonushta qiladi.',en:'The narrator sits by the window to eat breakfast.',tr:'Pencerenin yanında oturup kahvaltı yapar.'})
+    ],
+    gaps: [
+      {id:'g1',sentence:'Sabah küçük bir ____ girdim.',uz:'Ertalab kichik ____ ga kirdim.',en:'In the morning I entered a small ____.',answer:'fırına',options:['fırına','limana','okula']},
+      {id:'g2',sentence:'Görevliye bir simit ve bir ____ istedim.',uz:'Xodimdan bir simit va bir ____ so‘radim.',en:'I asked the attendant for a simit and a ____.',answer:'çay',options:['çay','meyve','çorba']},
+      {id:'g3',sentence:'Pencerenin yanında ____ yaptım.',uz:'Deraza yonida ____ qildim.',en:'I had ____ by the window.',answer:'kahvaltı',options:['alışveriş','kahvaltı','spor']}
+    ]
+  },
+  {
+    id: 'yeni-komsular', level: 'A1', title: 'Yeni Komşularla Tanışma', minutes: 3,
+    transcript: [
+      "Geçen hafta yeni bir eve taşındık. Dün akşam kapımız çaldı. Yan komşumuz Elif Hanım, elinde küçük bir kekle bizi ziyarete geldi. Önce kendini tanıttı. Eşi Murat Bey ve iki çocukları var. Çocukların adları Deniz ve Ece.",
+      "Ben de ailemi anlattım. Eşim sabahları hastanede çalışıyor, ben evden ders veriyorum. Oğlumuz Ali okula saat sekizde gidiyor. Hafta içi erken kalkıyoruz ama pazar günleri hep birlikte kahvaltı ediyoruz. Elif Hanım bizi hafta sonu çaya davet etti. Apartmandaki diğer komşuların da yardımsever olduğunu söyledi. Yeni evimizde kendimizi daha rahat hissettik ve komşularımızla tanıştığımıza çok sevindik."
+    ],
+    summaries: { tr:'Yeni taşınan bir aile komşuları Elif Hanım ile tanışır ve hafta sonu çaya davet edilir.', uz:'Yangi ko‘chib kelgan oila qo‘shnisi Elif xonim bilan tanishadi va dam olish kuni choyga taklif qilinadi.', en:'A family who has just moved meets their neighbor Elif and is invited for tea at the weekend.', ru:'Переехавшая семья знакомится с соседкой Элиф, которая приглашает их на чай в выходные.' },
+    vocabulary:[v('komşu','qo‘shni','neighbor'),v('taşınmak','ko‘chib o‘tmoq','to move'),v('ziyaret','tashrif','visit'),v('eş','turmush o‘rtoq','spouse'),v('hafta içi','ish kunlari','weekdays'),v('erken','erta','early'),v('birlikte','birgalikda','together'),v('davet etmek','taklif qilmoq','to invite')],
+    questions:[
+      q('q1',{uz:'Oila yangi uyga qachon ko‘chdi?',en:'When did the family move to the new home?',tr:'Aile yeni eve ne zaman taşındı?'},[{uz:'Bir oy oldin.',en:'A month ago.',tr:'Bir ay önce.'},{uz:'O‘tgan hafta.',en:'Last week.',tr:'Geçen hafta.'},{uz:'Kecha ertalab.',en:'Yesterday morning.',tr:'Dün sabah.'},{uz:'O‘tgan yili.',en:'Last year.',tr:'Geçen yıl.'}],1,{uz:'Birinchi gapda ular o‘tgan hafta ko‘chib kelgani aytiladi.',en:'The first sentence says they moved last week.',tr:'İlk cümlede geçen hafta taşındıkları söyleniyor.'}),
+      q('q2',{uz:'Elif xonim tashrifga nima olib keldi?',en:'What did Mrs. Elif bring on her visit?',tr:'Elif Hanım ziyarete ne getirdi?'},[{uz:'Gul.',en:'Flowers.',tr:'Çiçek.'},{uz:'Kichik tort.',en:'A small cake.',tr:'Küçük bir kek.'},{uz:'Kitob.',en:'A book.',tr:'Kitap.'},{uz:'Choynak.',en:'A teapot.',tr:'Çaydanlık.'}],1,{uz:'Qo‘shni qo‘lida kichik tort bilan keladi.',en:'The neighbor arrives carrying a small cake.',tr:'Komşu elinde küçük bir kekle gelir.'}),
+      q('q3',{uz:'Ali maktabga soat nechada boradi?',en:'What time does Ali go to school?',tr:'Ali okula saat kaçta gidiyor?'},[{uz:'Soat yettida.',en:'At seven.',tr:'Saat yedide.'},{uz:'Soat sakkizda.',en:'At eight.',tr:'Saat sekizde.'},{uz:'Soat to‘qqizda.',en:'At nine.',tr:'Saat dokuzda.'},{uz:'Tushda.',en:'At noon.',tr:'Öğlen.'}],1,{uz:'Ularning o‘g‘li maktabga soat sakkizda boradi.',en:'Their son goes to school at eight.',tr:'Oğulları okula saat sekizde gider.'}),
+      q('q4',{uz:'Oila qaysi kuni birga nonushta qiladi?',en:'On which day does the family have breakfast together?',tr:'Aile hangi gün birlikte kahvaltı ediyor?'},[{uz:'Har dushanba.',en:'Every Monday.',tr:'Her pazartesi.'},{uz:'Shanba kuni.',en:'On Saturday.',tr:'Cumartesi günü.'},{uz:'Yakshanba kuni.',en:'On Sunday.',tr:'Pazar günleri.'},{uz:'Juma kuni.',en:'On Friday.',tr:'Cuma günü.'}],2,{uz:'Ular yakshanba kunlari birga nonushta qilishadi.',en:'They have breakfast together on Sundays.',tr:'Pazar günleri hep birlikte kahvaltı ederler.'})
+    ],
+    gaps:[
+      {id:'g1',sentence:'Geçen hafta yeni bir eve ____.',uz:'O‘tgan hafta yangi uyga ____.',en:'Last week we ____ to a new home.',answer:'taşındık',options:['taşındık','uyuduk','yüzdük']},
+      {id:'g2',sentence:'Elif Hanım küçük bir ____ getirdi.',uz:'Elif xonim kichik ____ olib keldi.',en:'Mrs. Elif brought a small ____.',answer:'kek',options:['kek','harita','çanta']},
+      {id:'g3',sentence:'Pazar günleri hep birlikte ____ ediyoruz.',uz:'Yakshanba kunlari hammamiz birga ____ qilamiz.',en:'On Sundays we have ____ together.',answer:'kahvaltı',options:['alışveriş','kahvaltı','yolculuk']}
+    ]
+  },
+  {
+    id:'kapalicarsi-alisveris',level:'A2',title:"Kapalıçarşı'da Alışveriş",minutes:4,
+    transcript:[
+      "İstanbul'a gelen Zeynep, Kapalıçarşı'dan ailesi için birkaç hatıra almak istedi. İlk dükkânda renkli seramik tabaklar ve el yapımı çantalar gördü. Bir tabağın fiyatını sordu. Esnaf, “Bu tabak el işi, dört yüz lira,” dedi. Zeynep fiyatı biraz yüksek buldu. Dükkân sahibi tabakların farklı renklerde olduğunu ve her birinin ustalar tarafından boyandığını anlattı. Zeynep desenleri dikkatle inceledi; annesinin mavi renkleri sevdiğini hatırlayıp iki mavi tabak seçti.",
+      "“İki tabak alırsam indirim yapar mısınız?” diye sordu. Esnaf önce üç yüz elli lira önerdi; Zeynep ise üç yüz lira teklif etti. Birkaç dakika konuştuktan sonra iki tabakta anlaştılar. Zeynep ayrıca küçük bir nazarlık aldı. Parasını nakit ödedi, fişini çantasına koydu ve dükkândan teşekkür ederek ayrıldı. Çarşıdan çıkarken ailesine fotoğraf gönderip aldığı hediyeleri anlattı."
+    ],
+    summaries:{tr:'Zeynep Kapalıçarşı’da seramik tabak için pazarlık yapar, indirim alır ve nazarlık satın alır.',uz:'Zeynep Kapalıçarshida sopol likopcha uchun savdolashib, chegirma oladi va ko‘zmunchoq sotib oladi.',en:'Zeynep bargains for ceramic plates at the Grand Bazaar, gets a discount, and buys a small evil-eye charm.',ru:'Зейнеп торгуется за керамические тарелки на Гранд-базаре, получает скидку и покупает маленький амулет-назар.'},
+    vocabulary:[v('hatıra','esdalik','souvenir'),v('seramik','sopol','ceramic'),v('el yapımı','qo‘lda yasalgan','handmade'),v('fiyat','narx','price'),v('indirim','chegirma','discount'),v('pazarlık','savdolashish','bargaining'),v('nakit','naqd pul','cash'),v('fiş','chek','receipt')],
+    questions:[
+      q('q1',{uz:'Zeynep Kapalıçarshidan kimlar uchun esdalik olmoqchi?',en:'Who does Zeynep want to buy souvenirs for?',tr:'Zeynep Kapalıçarşı’dan kimler için hatıra almak istiyor?'},[{uz:'Do‘stlari uchun.',en:'For her friends.',tr:'Arkadaşları için.'},{uz:'Oilasi uchun.',en:'For her family.',tr:'Ailesi için.'},{uz:'Hamkasblari uchun.',en:'For her colleagues.',tr:'İş arkadaşları için.'},{uz:'O‘zi uchun.',en:'For herself.',tr:'Kendisi için.'}],1,{uz:'Zeynep oilasi uchun bir nechta esdalik olmoqchi.',en:'Zeynep wants a few souvenirs for her family.',tr:'Zeynep ailesi için birkaç hatıra almak istiyor.'}),
+      q('q2',{uz:'Bitta likopchaning dastlabki narxi qancha edi?',en:'What was the initial price of one plate?',tr:'Bir tabağın ilk fiyatı ne kadardı?'},[{uz:'200 lira.',en:'200 lira.',tr:'200 lira.'},{uz:'300 lira.',en:'300 lira.',tr:'300 lira.'},{uz:'400 lira.',en:'400 lira.',tr:'400 lira.'},{uz:'500 lira.',en:'500 lira.',tr:'500 lira.'}],2,{uz:'Sotuvchi qo‘lda yasalgan likopcha 400 lira ekanini aytadi.',en:'The shopkeeper says the handmade plate costs 400 lira.',tr:'Esnaf, el işi tabağın dört yüz lira olduğunu söyler.'}),
+      q('q3',{uz:'Zeynep ikki likopcha uchun qancha taklif qildi?',en:'How much did Zeynep offer for two plates?',tr:'Zeynep iki tabak için ne kadar teklif etti?'},[{uz:'250 lira.',en:'250 lira.',tr:'250 lira.'},{uz:'300 lira.',en:'300 lira.',tr:'300 lira.'},{uz:'350 lira.',en:'350 lira.',tr:'350 lira.'},{uz:'400 lira.',en:'400 lira.',tr:'400 lira.'}],1,{uz:'Sotuvchi 350 lira degach, Zeynep 300 lira taklif qiladi.',en:'After the seller suggests 350 lira, Zeynep offers 300.',tr:'Esnaf 350 lira önerince Zeynep 300 lira teklif eder.'}),
+      q('q4',{uz:'Zeynep xarid uchun qanday to‘ladi?',en:'How did Zeynep pay for her purchase?',tr:'Zeynep alışveriş için nasıl ödeme yaptı?'},[{uz:'Karta bilan.',en:'By card.',tr:'Kartla.'},{uz:'Naqd pul bilan.',en:'In cash.',tr:'Nakit olarak.'},{uz:'Telefon orqali.',en:'By phone.',tr:'Telefonla.'},{uz:'Keyinroq to‘ladi.',en:'She paid later.',tr:'Daha sonra ödedi.'}],1,{uz:'Matn uning pulni naqd to‘laganini bildiradi.',en:'The text states that she paid in cash.',tr:'Metinde parasını nakit ödediği söyleniyor.'})
+    ],
+    gaps:[
+      {id:'g1',sentence:'Zeynep ailesi için birkaç ____ almak istedi.',uz:'Zeynep oilasi uchun bir nechta ____ olmoqchi bo‘ldi.',en:'Zeynep wanted to buy a few ____ for her family.',answer:'hatıra',options:['hatıra','bilet','sebze']},
+      {id:'g2',sentence:'Esnaf iki tabak için ____ lira önerdi.',uz:'Sotuvchi ikki likopcha uchun ____ lira taklif qildi.',en:'The shopkeeper suggested ____ lira for two plates.',answer:'üç yüz elli',options:['iki yüz','üç yüz elli','beş yüz']},
+      {id:'g3',sentence:'Zeynep parasını ____ ödedi.',uz:'Zeynep pulni ____ to‘ladi.',en:'Zeynep paid ____.',answer:'nakit',options:['nakit','çekle','sonra']}
+    ]
+  },
+  {
+    id:'istanbul-havalimani',level:'A2',title:"İstanbul Havalimanı'nda Anons ve Uçuş",minutes:4,
+    transcript:[
+      "İstanbul Havalimanı'nda görevli, İzmir uçuşu için kapının değiştiğini anons etti: “Sayın yolcular, TK 231 sefer sayılı İzmir uçağının biniş kapısı 204 yerine 216 olmuştur. Yolcularımızın yeni kapıya ilerlemesini rica ederiz. Biniş saat 10.20'de başlayacaktır.”",
+      "Elif anonsu duyunca ekrandaki uçuş bilgilerini kontrol etti. Havalimanına erken geldiği için acele etmesine gerek yoktu; yanında küçük bir valiz ve el çantası vardı. Uçağı saat 10.50'de kalkacaktı. Yanındaki yolcuya, “Kapı 216 bu tarafta mı?” diye sordu. Yolcu tabelayı göstererek doğru yolda olduğunu söyledi. Elif güvenlik kontrolünden geçti, kapıda kimliğini ve biniş kartını hazırladı. Beklerken telefonuna ailesine kısa bir mesaj gönderdi ve uçuş ekranını yeniden kontrol etti. Kapıdaki görevli yolcuları sırayla çağırdı; Elif pasaportunu ve biniş kartını gösterdi. Uçağa zamanında bindi ve İzmir'e rahat bir yolculuk yaptı."
+    ],
+    summaries:{tr:'Elif, kapı değişikliği anonsunu duyar, yeni kapıyı bulur ve İzmir uçağına zamanında biner.',uz:'Elif darvoza o‘zgargani haqidagi e’lonni eshitadi, yangi darvozani topib, Izmir samolyotiga vaqtida chiqadi.',en:'Elif hears a gate-change announcement, finds the new gate, and boards her İzmir flight on time.',ru:'Элиф слышит объявление о смене выхода, находит новый выход и вовремя садится на рейс в Измир.'},
+    vocabulary:[v('anons','e’lon','announcement'),v('sefer sayılı','reys raqamli','flight number'),v('biniş kapısı','chiqish darvozasi','boarding gate'),v('ilerlemek','oldinga yurmoq','to proceed'),v('uçuş bilgisi','parvoz ma’lumoti','flight information'),v('tabela','ko‘rsatkich','sign'),v('güvenlik kontrolü','xavfsizlik tekshiruvi','security check'),v('biniş kartı','chiqish taloni','boarding pass')],
+    questions:[
+      q('q1',{uz:'Izmir reysining yangi darvozasi qaysi?',en:'What is the new gate for the İzmir flight?',tr:'İzmir uçuşunun yeni kapısı hangisidir?'},[{uz:'204.',en:'204.',tr:'204.'},{uz:'216.',en:'216.',tr:'216.'},{uz:'231.',en:'231.',tr:'231.'},{uz:'220.',en:'220.',tr:'220.'}],1,{uz:'E’londa 204 o‘rniga 216-darvoza deyilgan.',en:'The announcement changes the gate from 204 to 216.',tr:'Anons, 204 yerine 216 numaralı kapıyı bildiriyor.'}),
+      q('q2',{uz:'Biniş soat nechada boshlanadi?',en:'What time does boarding begin?',tr:'Biniş saat kaçta başlayacak?'},[{uz:'10:00 da.',en:'At 10:00.',tr:'10.00’da.'},{uz:'10:20 da.',en:'At 10:20.',tr:'10.20’de.'},{uz:'10:50 da.',en:'At 10:50.',tr:'10.50’de.'},{uz:'11:20 da.',en:'At 11:20.',tr:'11.20’de.'}],1,{uz:'E’londa biniş 10:20 da boshlanishi aytiladi.',en:'The announcement says boarding starts at 10:20.',tr:'Anonsa göre biniş saat 10.20’de başlıyor.'}),
+      q('q3',{uz:'Elif yangi darvozani qanday topdi?',en:'How did Elif find the new gate?',tr:'Elif yeni kapıyı nasıl buldu?'},[{uz:'Xodimdan so‘radi.',en:'She asked a staff member.',tr:'Bir görevliye sordu.'},{uz:'Ko‘rsatkichga qarab yo‘l oldi.',en:'She followed the signs.',tr:'Tabelayı takip etti.'},{uz:'Taksiga chiqdi.',en:'She took a taxi.',tr:'Taksiye bindi.'},{uz:'Eski darvozada kutdi.',en:'She waited at the old gate.',tr:'Eski kapıda bekledi.'}],1,{uz:'Yonidagi yo‘lovchi unga ko‘rsatkichni ko‘rsatadi.',en:'The nearby passenger points her toward the sign.',tr:'Yanındaki yolcu tabelayı göstererek yardımcı oluyor.'}),
+      q('q4',{uz:'Elif samolyotga qanday chiqdi?',en:'How did Elif board the plane?',tr:'Elif uçağa nasıl bindi?'},[{uz:'Kechikib.',en:'Late.',tr:'Geç kalarak.'},{uz:'Vaqtida.',en:'On time.',tr:'Zamanında.'},{uz:'Darvoza o‘zgarmasdan oldin.',en:'Before the gate changed.',tr:'Kapı değişmeden önce.'},{uz:'Ucha olmadi.',en:'She missed the flight.',tr:'Uçağa binemedi.'}],1,{uz:'Matnda Elif samolyotga vaqtida chiqqani aytiladi.',en:'The passage says she boarded on time.',tr:'Metin, Elif’in uçağa zamanında bindiğini söylüyor.'})
+    ],
+    gaps:[
+      {id:'g1',sentence:'İzmir uçağının biniş kapısı 216 ____.',uz:'Izmir samolyotining chiqish darvozasi 216 ga ____.',en:'The İzmir flight’s boarding gate ____ to 216.',answer:'olmuştur',options:['olmuştur','kapanmıştır','kaybolmuştur']},
+      {id:'g2',sentence:'Biniş saat 10.20’de ____.',uz:'Samolyotga chiqish 10:20 da ____.',en:'Boarding ____ at 10:20.',answer:'başlayacaktır',options:['başlayacaktır','bitmiştir','unutulmuştur']},
+      {id:'g3',sentence:'Elif kimliğini ve ____ kartını hazırladı.',uz:'Elif shaxsiy guvohnomasi va ____ talonini tayyorladi.',en:'Elif prepared her ID and ____ pass.',answer:'biniş',options:['biniş','alışveriş','park']}
+    ]
+  },
+  {
+    id:'kapadokya-balon',level:'B1',title:"Kapadokya'da Balon Turu Macerası",minutes:5,
+    transcript:[
+      "Geçen sonbahar Kapadokya'ya gittiğimde gün doğmadan önce otelimizin önünde toplandık. Hava serindi ama gökyüzü açıktı. Rehberimiz, rüzgâr ölçümlerinin uygun olduğunu ve balonların birkaç dakika içinde hazırlanacağını söyledi. Sepete binerken biraz heyecanlandım; daha önce hiç bu kadar yükseğe çıkmamıştım.",
+      "Balon yavaşça yükselince vadiler, taş evler ve küçük yollar aşağıda görünmeye başladı. Güneş doğarken kayaların rengi pembeden turuncuya döndü. Pilotumuz çevredeki oluşumları anlattı ve güvenlik kurallarını hatırlattı. Rehberimiz, vadilerin milyonlarca yıl içinde rüzgâr ve yağmurun etkisiyle şekillendiğini söyledi. Balonlar arasında güvenli mesafe bırakıldığını, pilotların hava durumunu sürekli izlediğini öğrendik. Sepet oldukça sakindi; yalnızca rüzgârın hafif sesi duyuluyordu. Fotoğraf çektik ama manzarayı sadece ekrandan izlememek için telefonlarımızı bir süre kenara koyduk.",
+      "Yaklaşık bir saat sonra başka bir tarlaya indik. Ekip bizi sıcak çayla karşıladı. Bu turu yıllardır hayal ediyordum; şimdi yeniden gidebilirsem farklı bir mevsimde uçmayı planlıyorum. İnişte ekiple birlikte kısa bir kutlama yaptık. Havadaki sessizlik ve aşağıdaki manzara, günlük telaşımı unutmamı sağladı. Kapadokya'yı gökyüzünden görmek, yolculuğumun en unutulmaz anı oldu."
+    ],
+    summaries:{tr:'Anlatıcı Kapadokya’da gün doğumunda balon turuna katılır ve bölgeyi gökyüzünden izlemeyi unutulmaz bulur.',uz:'Hikoyachi Kapadokiyada tongda havo sharida uchadi va manzarani osmondan ko‘rishni unutilmas deb biladi.',en:'The narrator takes a sunrise balloon ride in Cappadocia and finds the view unforgettable.',ru:'Рассказчик отправляется на воздушном шаре на рассвете в Каппадокии и считает вид незабываемым.'},
+    vocabulary:[v('gün doğumu','quyosh chiqishi','sunrise'),v('rüzgâr ölçümü','shamol o‘lchovi','wind measurement'),v('sepete binmek','savatga chiqmoq','to board the basket'),v('vadi','vodiy','valley'),v('oluşum','shakllanish','formation'),v('hatırlatmak','eslatmoq','to remind'),v('karşılamak','kutib olmoq','to welcome'),v('unutulmaz','unutilmas','unforgettable')],
+    questions:[
+      q('q1',{uz:'Guruh mehmonxona oldida qachon yig‘ildi?',en:'When did the group gather outside the hotel?',tr:'Grup otelin önünde ne zaman toplandı?'},[{uz:'Quyosh botgandan keyin.',en:'After sunset.',tr:'Gün batımından sonra.'},{uz:'Tong otishidan oldin.',en:'Before sunrise.',tr:'Gün doğmadan önce.'},{uz:'Tush paytida.',en:'At noon.',tr:'Öğle vakti.'},{uz:'Yarim tunda.',en:'At midnight.',tr:'Gece yarısı.'}],1,{uz:'Ular quyosh chiqishidan oldin to‘planishadi.',en:'They gather before the sun rises.',tr:'Gün doğmadan önce otelin önünde toplanırlar.'}),
+      q('q2',{uz:'Balon ko‘tarilganda qahramon nimalarni ko‘rdi?',en:'What did the narrator see as the balloon rose?',tr:'Balon yükselirken anlatıcı neleri gördü?'},[{uz:'Dengiz va kemalarni.',en:'The sea and ships.',tr:'Denizi ve gemileri.'},{uz:'Vodiylar, tosh uylar va yo‘llarni.',en:'Valleys, stone houses, and paths.',tr:'Vadileri, taş evleri ve yolları.'},{uz:'Faqat aeroportni.',en:'Only the airport.',tr:'Sadece havaalanını.'},{uz:'Qorli tog‘larni.',en:'Snow-covered mountains.',tr:'Karlı dağları.'}],1,{uz:'Pastda vodiylar, tosh uylar va kichik yo‘llar ko‘rinadi.',en:'The narrator sees valleys, stone houses, and small paths below.',tr:'Aşağıda vadiler, taş evler ve küçük yollar görünür.'}),
+      q('q3',{uz:'Guruh nega telefonlarini bir muddat chetga qo‘ydi?',en:'Why did the group put their phones aside for a while?',tr:'Grup telefonlarını neden bir süre kenara koydu?'},[{uz:'Batareya tugagani uchun.',en:'Because the batteries were dead.',tr:'Şarjları bittiği için.'},{uz:'Manzarani bevosita tomosha qilish uchun.',en:'To experience the view directly.',tr:'Manzarayı doğrudan izlemek için.'},{uz:'Pilot so‘ragani uchun.',en:'Because the pilot asked.',tr:'Pilot istediği için.'},{uz:'Rasmga tushish taqiqlangani uchun.',en:'Because photos were forbidden.',tr:'Fotoğraf çekmek yasak olduğu için.'}],1,{uz:'Ular manzarani faqat ekrandan ko‘rmaslik uchun telefonlarni chetga qo‘yishadi.',en:'They put their phones away so they would not see the view only through a screen.',tr:'Manzarayı yalnızca ekrandan izlememek için telefonlarını kenara koyarlar.'}),
+      q('q4',{uz:'Hikoyachi keyingi safar nima qilishni rejalashtiradi?',en:'What does the narrator plan to do on a future visit?',tr:'Anlatıcı bir sonraki ziyaretinde ne yapmayı planlıyor?'},[{uz:'Boshqa faslda uchishni.',en:'Fly in a different season.',tr:'Farklı bir mevsimde uçmayı.'},{uz:'Avtobusda borishni.',en:'Take a bus instead.',tr:'Otobüsle gitmeyi.'},{uz:'Bir hafta qolishni.',en:'Stay for a week.',tr:'Bir hafta kalmayı.'},{uz:'Turdan voz kechishni.',en:'Give up the tour.',tr:'Turdan vazgeçmeyi.'}],0,{uz:'U qayta borsa, boshqa faslda uchishni rejalashtiradi.',en:'If they return, they plan to fly in a different season.',tr:'Yeniden giderse farklı bir mevsimde uçmayı planlıyor.'})
+    ],
+    gaps:[
+      {id:'g1',sentence:'Balonlar rüzgâr ölçümleri ____ olduğu için hazırlandı.',uz:'Shamol o‘lchovlari ____ bo‘lgani uchun sharlar tayyorlandi.',en:'The balloons were prepared because the wind readings were ____.',answer:'uygun',options:['uygun','tehlikeli','belirsiz']},
+      {id:'g2',sentence:'Güneş doğarken kayaların rengi pembeden ____ döndü.',uz:'Quyosh chiqqanda qoyalar rangi pushtidan ____ tusga o‘tdi.',en:'As the sun rose, the rocks changed from pink to ____.',answer:'turuncuya',options:['turuncuya','maviye','siyaha']},
+      {id:'g3',sentence:'Yaklaşık bir saat sonra başka bir tarlaya ____.',uz:'Taxminan bir soatdan so‘ng boshqa dalaga ____.',en:'About an hour later, we ____ in another field.',answer:'indik',options:['indik','yükseldik','kaybolduk']}
+    ]
+  },
+  {
+    id:'turk-kahvesi-kulturu',level:'B2/C1',title:'Türk Kahvesi Kültürü ve Tarihi',minutes:6,
+    transcript:[
+      "Bir fincan Türk kahvesi, küçük görünmesine rağmen uzun bir tarih ve zengin bir toplumsal hafıza taşır. Kahve, Osmanlı döneminde Yemen üzerinden İstanbul'a ulaştı; on altıncı yüzyılda sarayda ve şehirde yaygınlaştı. Kahvehaneler yalnızca içecek sunulan yerler değildi. İnsanlar burada haberleri dinler, şiir ve edebiyat üzerine konuşur, iş bağlantıları kurardı.",
+      "Türk kahvesini hazırlama yöntemi, onu başka kahve türlerinden ayırır. İnce çekilmiş kahve, su ve isteğe göre şeker cezvede yavaşça ısıtılır; kaynamaya yaklaşınca oluşan köpük fincanlara paylaştırılır. Kahve telvesi fincanın dibinde kaldığı için içecek süzülmeden servis edilir. Yanında çoğu zaman bir bardak su ve küçük bir tatlı ikram edilir.",
+      "Bu ritüelin önemli bir parçası da misafirperverliktir. Ev sahibi kahveyi sunarken konuğuna nasıl içtiğini sorar: sade, az şekerli, orta ya da şekerli. Kahvenin hazırlanması aceleye getirilmez; beklemek sohbetin doğal bir bölümüdür. UNESCO, Türk kahvesi kültürünü 2013 yılında Somut Olmayan Kültürel Miras listesine aldı. Böylece yalnızca bir tarif değil, paylaşma ve birlikte zaman geçirme geleneği de tanınmış oldu. Günümüzde kahve makineleri yaygınlaşsa da cezvede hazırlanan kahve, aile buluşmalarında ve özel günlerde değerini koruyor. Bu geleneğin kuşaktan kuşağa aktarılması, kahvenin günlük yaşamdan daha geniş bir anlam taşıdığını gösteriyor. Bir fincanın etrafındaki sohbet, farklı kuşakları aynı masada buluşturabiliyor. Bu yüzden kahve yalnızca bir içecek değildir."
+    ],
+    summaries:{tr:'Podcast, Türk kahvesinin Osmanlı’dan günümüze uzanan tarihini, hazırlanışını ve misafirperverlikteki rolünü anlatır.',uz:'Podkast turk qahvasining Usmonli davridan hozirgacha bo‘lgan tarixi, tayyorlanishi va mehmondo‘stlikdagi o‘rnini tushuntiradi.',en:'The podcast explores Turkish coffee’s history, preparation, and role in hospitality from the Ottoman era to today.',ru:'Подкаст рассказывает об истории турецкого кофе, способе приготовления и его роли в гостеприимстве от Османской эпохи до наших дней.'},
+    vocabulary:[v('toplumsal hafıza','ijtimoiy xotira','collective memory'),v('yaygınlaşmak','keng tarqalmoq','to become widespread'),v('bağlantı kurmak','aloqa o‘rnatmoq','to establish a connection'),v('ince çekilmiş','mayda maydalangan','finely ground'),v('cezve','jezva','coffee pot (cezve)'),v('köpük','ko‘pik','foam'),v('telve','qahva quyqasi','coffee grounds'),v('misafirperverlik','mehmondo‘stlik','hospitality'),v('aceleye getirmek','shoshma-shosharlik qilmoq','to rush'),v('miras','meros','heritage')],
+    questions:[
+      q('q1',{uz:'Usmonli davrida qahva Istanbulga qaysi yo‘l orqali kelgan?',en:'Through which route did coffee reach Istanbul in the Ottoman period?',tr:'Osmanlı döneminde kahve İstanbul’a hangi yol üzerinden ulaştı?'},[{uz:'Misr orqali.',en:'Through Egypt.',tr:'Mısır üzerinden.'},{uz:'Yaman orqali.',en:'Through Yemen.',tr:'Yemen üzerinden.'},{uz:'Bolqon orqali.',en:'Through the Balkans.',tr:'Balkanlar üzerinden.'},{uz:'Hindiston orqali.',en:'Through India.',tr:'Hindistan üzerinden.'}],1,{uz:'Matnda qahva Yaman orqali Istanbulga kelgani aytiladi.',en:'The passage says coffee reached Istanbul via Yemen.',tr:'Metin, kahvenin Yemen üzerinden İstanbul’a ulaştığını söylüyor.'}),
+      q('q2',{uz:'An’anaviy usulda qahva nimada isitiladi?',en:'What is coffee heated in using the traditional method?',tr:'Geleneksel yöntemde kahve neyin içinde ısıtılır?'},[{uz:'Choynakda.',en:'In a teapot.',tr:'Çaydanlıkta.'},{uz:'Jezvada.',en:'In a cezve.',tr:'Cezvede.'},{uz:'Tandirda.',en:'In an oven.',tr:'Fırında.'},{uz:'Shisha idishda.',en:'In a glass vessel.',tr:'Cam kapta.'}],1,{uz:'Mayda qahva, suv va shakar jezvada isitiladi.',en:'Finely ground coffee, water, and sugar are heated in a cezve.',tr:'İnce çekilmiş kahve, su ve isteğe göre şeker cezvede ısıtılır.'}),
+      q('q3',{uz:'Qahva yonida ko‘pincha nima tortiladi?',en:'What is often served alongside the coffee?',tr:'Kahvenin yanında çoğu zaman ne ikram edilir?'},[{uz:'Bir stakan suv va kichik shirinlik.',en:'A glass of water and a small sweet.',tr:'Bir bardak su ve küçük bir tatlı.'},{uz:'Faqat non.',en:'Only bread.',tr:'Yalnızca ekmek.'},{uz:'Meva sharbati.',en:'Fruit juice.',tr:'Meyve suyu.'},{uz:'Sho‘rva.',en:'Soup.',tr:'Çorba.'}],0,{uz:'Matnda qahva bilan suv va kichik shirinlik berilishi aytiladi.',en:'The text mentions water and a small sweet served with coffee.',tr:'Metinde kahvenin yanında su ve küçük bir tatlı ikram edildiği belirtiliyor.'}),
+      q('q4',{uz:'UNESCO turk qahvasi madaniyatini qachon ro‘yxatga kiritdi?',en:'When did UNESCO add Turkish coffee culture to its list?',tr:'UNESCO, Türk kahvesi kültürünü listeye ne zaman aldı?'},[{uz:'2003-yilda.',en:'In 2003.',tr:'2003 yılında.'},{uz:'2010-yilda.',en:'In 2010.',tr:'2010 yılında.'},{uz:'2013-yilda.',en:'In 2013.',tr:'2013 yılında.'},{uz:'2020-yilda.',en:'In 2020.',tr:'2020 yılında.'}],2,{uz:'Matnda UNESCO 2013-yilda ro‘yxatga kiritgani aytiladi.',en:'The passage gives the year 2013.',tr:'Metinde UNESCO’nun 2013 yılında listeye aldığı belirtiliyor.'})
+    ],
+    gaps:[
+      {id:'g1',sentence:'Kahve, Osmanlı döneminde Yemen ____ İstanbul’a ulaştı.',uz:'Qahva Usmonli davrida Yamandan Istanbulga ____.',en:'In the Ottoman period, coffee reached Istanbul ____ Yemen.',answer:'üzerinden',options:['üzerinden','karşısında','dışında']},
+      {id:'g2',sentence:'Kahve telvesi fincanın ____ kalır.',uz:'Qahva quyqasi finjonning ____ qoladi.',en:'The coffee grounds remain at the ____ of the cup.',answer:'dibinde',options:['dibinde','kapağında','yanında']},
+      {id:'g3',sentence:'UNESCO bu kültürü 2013 yılında Somut Olmayan Kültürel ____ listesine aldı.',uz:'UNESCO bu madaniyatni 2013-yilda Nomoddiy madaniy ____ ro‘yxatiga kiritdi.',en:'UNESCO added this culture to the Intangible Cultural ____ list in 2013.',answer:'Miras',options:['Miras','Seyahat','Sanat']}
+    ]
+  }
+]
+
+export const LISTENING_LESSON_IDS = [...listeningLessons, ...extendedListeningLessons].map(({ id }) => id)

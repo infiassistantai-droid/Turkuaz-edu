@@ -1,0 +1,791 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 130, 140, 0.4);
+  border-radius: 99px;
+}
+
+/* ---------- 3D flashcard flip ---------- */
+.flip-card {
+  perspective: 1400px;
+}
+.flip-inner {
+  position: relative;
+  min-height: 320px;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1rem;
+}
+.flip-back {
+  transform: rotateY(180deg);
+  display: flex;
+}
+
+/* ---------- Recording waveform ---------- */
+.wave i {
+  display: inline-block;
+  width: 4px;
+  height: 26px;
+  border-radius: 999px;
+  background: currentColor;
+  animation: wave 1s ease-in-out infinite;
+  margin: 0 3px;
+}
+.wave i:nth-child(2) { animation-delay: 0.12s; }
+.wave i:nth-child(3) { animation-delay: 0.24s; }
+.wave i:nth-child(4) { animation-delay: 0.36s; }
+.wave i:nth-child(5) { animation-delay: 0.48s; }
+.wave i:nth-child(6) { animation-delay: 0.6s; }
+.wave i:nth-child(7) { animation-delay: 0.72s; }
+.wave i:nth-child(8) { animation-delay: 0.84s; }
+.wave i:nth-child(9) { animation-delay: 0.96s; }
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+
+/* ---------- Utilities ---------- */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.pbar {
+  transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- Module upgrades: slide-up / fade / drawer / tooltip / pulse ---------- */
+@keyframes slideup {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes drawerIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseRing {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-slideup {
+  animation: slideup 0.25s ease-out both;
+}
+.animate-view {
+  animation: viewIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes onboardingStepIn {
+  from { opacity: 0; transform: translate3d(12px, 8px, 0); filter: blur(4px); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
+}
+@keyframes onboardingProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.onboarding-step-enter {
+  animation: onboardingStepIn 420ms cubic-bezier(.2, .75, .25, 1) both;
+}
+.animate-onboarding-progress {
+  animation: onboardingProgress 1900ms cubic-bezier(.2, .72, .2, 1) both;
+}
+@keyframes mascotBubbleIn {
+  from { opacity: 0; transform: translate3d(10px, 8px, 0) scale(.96); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes mascotBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.055); }
+}
+@keyframes mascotWiggle {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-2px) rotate(-2deg); }
+  40% { transform: translateX(2px) rotate(2deg); }
+  60% { transform: translateX(-1px) rotate(-1deg); }
+  80% { transform: translateX(1px) rotate(1deg); }
+}
+@keyframes mascotCelebrate {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0); }
+  20% { transform: translateY(-7px) scale(1.06) rotate(-5deg); }
+  40% { transform: translateY(0) scale(.98) rotate(4deg); }
+  60% { transform: translateY(-4px) scale(1.04) rotate(-3deg); }
+  80% { transform: translateY(0) scale(1) rotate(0); }
+}
+@keyframes mascotFocus {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-2px) rotate(-1deg); }
+}
+@keyframes mascotHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes mascotSpeedCheer {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  18% { transform: translateY(-13px) rotate(-9deg) scale(1.1); }
+  36% { transform: translateY(1px) rotate(8deg) scale(.98); }
+  58% { transform: translateY(-9px) rotate(-6deg) scale(1.08); }
+  78% { transform: translateY(0) rotate(4deg) scale(1.02); }
+}
+.mascot-speed-cheer { animation: mascotSpeedCheer .78s cubic-bezier(.3, .7, .2, 1) 5; }
+.reading-prose {
+  max-width: 68ch;
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+.reading-prose p { margin: 0; }
+.reading-prose p + p { margin-top: 1.45em; }
+.reading-prose-default p { color: #334155; }
+.reading-prose-premium p { color: rgba(255, 255, 255, .88); }
+.reading-audio-wave.is-playing span { animation: readingWave .65s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes readingWave { from { transform: scaleY(.42); opacity: .7; } to { transform: scaleY(1); opacity: 1; } }
+.reading-quiz-option-correct { border-color: #4ade80; background: rgba(34, 197, 94, .1); color: #166534; }
+.reading-quiz-option-wrong { border-color: #fb7185; background: rgba(244, 63, 94, .1); color: #9f1239; }
+.reading-quiz-error { border-color: #fecdd3; background: #fff1f2; color: #9f1239; }
+:is(.premium-theme, .theme-premium) #root .reading-quiz-option-correct { border-color: rgba(74, 222, 128, .62); background: rgba(34, 197, 94, .16); color: #d1fae5; }
+:is(.premium-theme, .theme-premium) #root .reading-quiz-option-wrong { border-color: rgba(251, 113, 133, .62); background: rgba(244, 63, 94, .16); color: #ffe4e6; }
+:is(.premium-theme, .theme-premium) #root .reading-quiz-error { border-color: rgba(251, 113, 133, .28); background: rgba(244, 63, 94, .12); color: #ffe4e6; }
+.mascot-bubble { animation: mascotBubbleIn 240ms cubic-bezier(.2, .8, .2, 1) both; }
+.mascot-breathe { animation: mascotBreathe 3.8s ease-in-out infinite; }
+.mascot-cheer { animation: mascotCelebrate 1.15s cubic-bezier(.3, .7, .2, 1) infinite; }
+.mascot-wiggle { animation: mascotWiggle 1.8s ease-in-out infinite; }
+.mascot-focus { animation: mascotFocus 3.4s ease-in-out infinite; }
+.mascot-hint { animation: mascotHint 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-step-enter,
+  .animate-onboarding-progress,
+  .mascot-bubble,
+  .mascot-breathe,
+  .mascot-cheer,
+  .mascot-wiggle,
+  .mascot-focus,
+  .mascot-hint,
+  .mascot-speed-cheer { animation-duration: 1ms; animation-iteration-count: 1; }
+  .reading-audio-wave.is-playing span { animation-duration: 1ms; animation-iteration-count: 1; }
+}
+.animate-drawerin {
+  animation: drawerIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-fadein {
+  animation: fadeIn 0.2s ease-out both;
+}
+.animate-tooltip {
+  animation: tooltipIn 0.15s ease-out both;
+}
+.pulse-ring {
+  animation: pulseRing 1s ease-in-out infinite;
+}
+
+/* Default is the existing clean Turkuaz teal/slate theme; Premium is opt-in. */
+html.theme-default body { background-image: none; }
+
+/* -------------------------------------------------------------------------- */
+/* Premium View — glossy Turkish ruby red with dark laminated glass and gold  */
+/* -------------------------------------------------------------------------- */
+html.premium-theme,
+html.theme-premium,
+html.premium-theme body,
+html.theme-premium body,
+html:is(.premium-theme, .theme-premium) #root,
+html.theme-premium #root {
+  min-height: 100%;
+  background-color: #4a0000;
+}
+
+html.premium-theme body,
+html.theme-premium body {
+  background-image:
+    radial-gradient(ellipse at 12% 8%, rgba(250, 204, 21, 0.16), transparent 28%),
+    radial-gradient(ellipse at 88% 84%, rgba(250, 204, 21, 0.1), transparent 30%),
+    linear-gradient(135deg, #4a0000 0%, #E30A17 50%, #8a0000 100%);
+  background-attachment: fixed;
+}
+
+:is(.premium-theme, .theme-premium) #root > div.min-h-screen {
+  color: #fff !important;
+  background-color: #E30A17 !important;
+  background-image:
+    radial-gradient(ellipse at 8% 6%, rgba(250, 204, 21, 0.14), transparent 26%),
+    radial-gradient(ellipse at 92% 94%, rgba(250, 204, 21, 0.09), transparent 28%),
+    linear-gradient(135deg, #4a0000 0%, #E30A17 50%, #8a0000 100%) !important;
+  background-attachment: fixed !important;
+}
+
+:is(.premium-theme, .theme-premium) #root > div > .pointer-events-none.fixed {
+  opacity: 0.72 !important;
+}
+
+/* The signature dark-tinted laminated glass treatment. */
+:is(.premium-theme, .theme-premium) #root .glass,
+:is(.premium-theme, .theme-premium) #root .premium-glass,
+:is(.premium-theme, .theme-premium) #root aside,
+:is(.premium-theme, .theme-premium) #root header,
+:is(.premium-theme, .theme-premium) #root [class*="rounded-3xl"][class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-2xl"][class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-xl"][class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-3xl"][class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-2xl"][class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-xl"][class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-2xl"][class*="bg-slate-800/"],
+:is(.premium-theme, .theme-premium) #root [class*="rounded-xl"][class*="bg-slate-800/"] {
+  color: #fff !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(234, 179, 8, 0.35) !important;
+  border-radius: 1rem !important;
+  -webkit-backdrop-filter: blur(40px) saturate(155%);
+  backdrop-filter: blur(40px) saturate(155%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root aside {
+  border-radius: 26px !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(234, 179, 8, 0.4) !important;
+}
+
+/* The global Premium glass styling should apply to the speech bubble, not the
+   floating mascot's transparent, image-only hit target. */
+:is(.premium-theme, .theme-premium) #root aside.mascot-container {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root .mascot-container button.van-cat-button,
+:is(.premium-theme, .theme-premium) #root .mascot-container button.van-cat-button:hover,
+:is(.premium-theme, .theme-premium) #root .mascot-container button.van-cat-button:focus-visible {
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: var(--van-cat-glow) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root header {
+  border-radius: 20px !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(234, 179, 8, 0.34) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="from-teal-"][class*="to-cyan-"] {
+  background-image: linear-gradient(to right, #eab308 0%, #d97706 100%) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root .premium-hero {
+  background-color: #E30A17 !important;
+  background-image:
+    radial-gradient(circle at 82% 20%, rgba(250, 204, 21, 0.18), transparent 25%),
+    linear-gradient(135deg, #4a0000 0%, #E30A17 50%, #8a0000 100%) !important;
+  border: 1px solid rgba(250, 204, 21, 0.46) !important;
+  box-shadow: 0 12px 42px rgba(220, 38, 38, 0.5), inset 0 1px rgba(255, 255, 255, 0.24) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root .premium-stat {
+  background-color: rgba(0, 0, 0, 0.32) !important;
+  border-color: rgba(234, 179, 8, 0.42) !important;
+  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.48), inset 0 1px rgba(255, 255, 255, 0.14) !important;
+}
+
+/* Keep legacy light utility backgrounds from bleaching the glass palette. */
+:is(.premium-theme, .theme-premium) #root [class*="bg-white"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-slate-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-slate-100"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-slate-200"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-turk-"] {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Never leave low-contrast slate text on a light surface in Premium View. */
+:is(.premium-theme, .theme-premium) #root [class*="text-slate-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-turk-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-emerald-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-rose-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-red-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-orange-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-amber-"] {
+  color: #fff !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="text-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-turk-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-amber-"],
+:is(.premium-theme, .theme-premium) #root [class*="text-orange-700"],
+:is(.premium-theme, .theme-premium) #root [class*="text-yellow-"] {
+  color: #facc15 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="text-white/"] {
+  color: rgba(255, 255, 255, 0.94) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="border-slate-"],
+:is(.premium-theme, .theme-premium) #root [class*="border-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="border-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="border-rose-"] {
+  border-color: rgba(234, 179, 8, 0.38) !important;
+}
+
+/* Gold is the Premium icon/accent color, including lucide outline icons. */
+:is(.premium-theme, .theme-premium) #root svg {
+  color: #facc15 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="fill-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="fill-cyan-"],
+:is(.premium-theme, .theme-premium) #root [class*="fill-orange-"],
+:is(.premium-theme, .theme-premium) #root [class*="fill-amber-"] {
+  fill: #facc15 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="stroke-teal-"],
+:is(.premium-theme, .theme-premium) #root [class*="stroke-cyan-"] {
+  stroke: #facc15 !important;
+}
+
+/* Gold/red chips stay dark enough to preserve text contrast. */
+:is(.premium-theme, .theme-premium) #root [class*="bg-orange-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-amber-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-yellow-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-teal-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-cyan-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-emerald-50"] {
+  color: #facc15 !important;
+  border-color: rgba(234, 179, 8, 0.35) !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [class*="bg-rose-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-red-50"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-rose-100"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-red-100"] {
+  color: #fff !important;
+  background-color: rgba(70, 0, 0, 0.45) !important;
+  border-color: rgba(234, 179, 8, 0.35) !important;
+}
+
+/* Gold action controls; secondary controls retain a dark glass face. */
+:is(.premium-theme, .theme-premium) #root button[class*="from-teal-"],
+:is(.premium-theme, .theme-premium) #root button[class*="from-rose-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-gradient-to-r"] {
+  color: #451a03 !important;
+  border: 1px solid rgba(253, 230, 138, 0.78) !important;
+  background-image: linear-gradient(to right, #eab308 0%, #d97706 100%) !important;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.48), inset 0 1px rgba(255, 255, 255, 0.48) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button {
+  border-color: rgba(234, 179, 8, 0.42);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.14);
+}
+
+:is(.premium-theme, .theme-premium) #root button:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 10px 28px rgba(220, 38, 38, 0.55), inset 0 1px rgba(255, 255, 255, 0.26) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[aria-current="page"] {
+  color: #451a03 !important;
+  background-image: linear-gradient(to right, #eab308, #d97706) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-gradient-to-r"] svg,
+:is(.premium-theme, .theme-premium) #root button[aria-current="page"] svg {
+  color: #7f1d1d !important;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.45));
+}
+
+:is(.premium-theme, .theme-premium) #root input,
+:is(.premium-theme, .theme-premium) #root textarea,
+:is(.premium-theme, .theme-premium) #root select,
+:is(.premium-theme, .theme-premium) #root kbd {
+  color: #fff !important;
+  border-color: rgba(234, 179, 8, 0.42) !important;
+  background-color: rgba(0, 0, 0, 0.38) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root input::placeholder,
+:is(.premium-theme, .theme-premium) #root textarea::placeholder {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root ::selection {
+  color: #451a03;
+  background: #facc15;
+}
+
+:is(.premium-theme, .theme-premium) #root ::-webkit-scrollbar-thumb {
+  background: rgba(250, 204, 21, 0.42);
+}
+
+:is(.premium-theme, .theme-premium) #root main .premium-hero::after {
+  content: '';
+  position: absolute;
+  right: -2.5rem;
+  bottom: -6rem;
+  z-index: 0;
+  width: clamp(18rem, 42vw, 31rem);
+  aspect-ratio: 1;
+  background: url('/icons/turkish-ay-yildiz.svg') center / contain no-repeat;
+  opacity: 0.085;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Visual-only utility classes adapted from the attached ruby-and-gold mockup. */
+:is(.premium-theme, .theme-premium) #root .glass {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(234, 179, 8, 0.35) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(145%);
+  backdrop-filter: blur(40px) saturate(145%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root .nav-glow {
+  border: 1px solid transparent;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+:is(.premium-theme, .theme-premium) #root .nav-glow:not([aria-current="page"]) {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root .nav-glow:hover:not([aria-current="page"]) {
+  color: #fff !important;
+  border-color: rgba(250, 204, 21, 0.28) !important;
+  background: rgba(250, 204, 21, 0.08) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root .gold-button {
+  color: #451a03 !important;
+  border: 1px solid rgba(254, 240, 138, 0.78) !important;
+  background: linear-gradient(115deg, #fde68a 0%, #eab308 48%, #d97706 100%) !important;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.38), inset 0 1px rgba(255, 255, 255, 0.52) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root input.premium-search {
+  color: #fff !important;
+  border-color: rgba(234, 179, 8, 0.62) !important;
+  background-color: rgba(0, 0, 0, 0.38) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root input.premium-search::placeholder {
+  color: rgba(255, 255, 255, 0.72) !important;
+  opacity: 1;
+}
+
+:is(.premium-theme, .theme-premium) #root svg.search-icon {
+  color: #facc15 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root kbd {
+  color: #fde68a !important;
+  border-color: rgba(234, 179, 8, 0.4) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Default Turkuaz is strictly teal/cyan/slate. Warm utility tokens in legacy
+   modules are remapped only while Premium is off, so semantic states never
+   leak ruby or gold into the default palette. */
+html.theme-default #root [class*="text-rose-"],
+html.theme-default #root [class*="text-red-"],
+html.theme-default #root [class*="text-amber-"],
+html.theme-default #root [class*="text-yellow-"],
+html.theme-default #root [class*="text-orange-"] {
+  color: #0f766e !important;
+}
+
+html.theme-default #root [class*="bg-rose-"],
+html.theme-default #root [class*="bg-red-"],
+html.theme-default #root [class*="bg-amber-"],
+html.theme-default #root [class*="bg-yellow-"],
+html.theme-default #root [class*="bg-orange-"] {
+  background-color: rgba(20, 184, 166, 0.1) !important;
+}
+
+html.theme-default #root [class*="border-rose-"],
+html.theme-default #root [class*="border-red-"],
+html.theme-default #root [class*="border-amber-"],
+html.theme-default #root [class*="border-yellow-"],
+html.theme-default #root [class*="border-orange-"] {
+  border-color: rgba(13, 148, 136, 0.32) !important;
+}
+
+html.theme-default #root [class*="ring-rose-"],
+html.theme-default #root [class*="ring-red-"],
+html.theme-default #root [class*="ring-amber-"],
+html.theme-default #root [class*="ring-yellow-"],
+html.theme-default #root [class*="ring-orange-"] {
+  --tw-ring-color: rgba(13, 148, 136, 0.22) !important;
+}
+
+html.theme-default #root [class*="from-rose-"],
+html.theme-default #root [class*="from-red-"],
+html.theme-default #root [class*="from-amber-"],
+html.theme-default #root [class*="from-yellow-"],
+html.theme-default #root [class*="from-orange-"],
+html.theme-default #root [class*="to-rose-"],
+html.theme-default #root [class*="to-red-"],
+html.theme-default #root [class*="to-amber-"],
+html.theme-default #root [class*="to-yellow-"],
+html.theme-default #root [class*="to-orange-"] {
+  --tw-gradient-from: #0f766e var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(6 182 212 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), #06b6d4 var(--tw-gradient-via-position), #06b6d4 var(--tw-gradient-to-position) !important;
+}
+
+html.theme-default #root [class*="fill-rose-"],
+html.theme-default #root [class*="fill-red-"],
+html.theme-default #root [class*="fill-amber-"],
+html.theme-default #root [class*="fill-yellow-"],
+html.theme-default #root [class*="fill-orange-"] {
+  fill: #0f766e !important;
+}
+
+html.theme-default #root [class*="stroke-rose-"],
+html.theme-default #root [class*="stroke-red-"],
+html.theme-default #root [class*="stroke-amber-"],
+html.theme-default #root [class*="stroke-yellow-"],
+html.theme-default #root [class*="stroke-orange-"] {
+  stroke: #0f766e !important;
+}
+
+html.theme-default #root .premium-hero {
+  background-image: linear-gradient(135deg, #0f766e 0%, #0891b2 55%, #06b6d4 100%) !important;
+}
+
+/* Bring remaining legacy surfaces and solid-color actions into the Ruby & Gold
+   palette without whitening cards in Premium. */
+:is(.premium-theme, .theme-premium) #root [class*="bg-rose-"],
+:is(.premium-theme, .theme-premium) #root [class*="bg-red-"] {
+  color: #fff !important;
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(234, 179, 8, 0.38) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-rose-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-red-"] {
+  color: #fff !important;
+  background-image: linear-gradient(115deg, #7f1d1d 0%, #be123c 100%) !important;
+  border-color: rgba(253, 230, 138, 0.78) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-teal-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-cyan-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-emerald-"] {
+  color: #451a03 !important;
+  background-image: linear-gradient(115deg, #fde68a 0%, #eab308 52%, #d97706 100%) !important;
+  border-color: rgba(253, 230, 138, 0.78) !important;
+}
+
+html.theme-default #root [class*="shadow-rose-"],
+html.theme-default #root [class*="shadow-red-"],
+html.theme-default #root [class*="shadow-amber-"],
+html.theme-default #root [class*="shadow-yellow-"],
+html.theme-default #root [class*="shadow-orange-"] {
+  --tw-shadow-color: rgba(13, 148, 136, 0.18) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root option {
+  color: #fff !important;
+  background-color: #111 !important;
+}
+
+html.theme-default {
+  --exam-timer-primary: #0f766e;
+  --exam-timer-active: #0891b2;
+  --exam-timer-alert: #155e75;
+}
+
+:is(html.theme-premium, html.premium-theme) {
+  --exam-timer-primary: #facc15;
+  --exam-timer-active: #eab308;
+  --exam-timer-alert: #be123c;
+}
+
+/* Legacy pastel chips become dark glass in Premium; solid action buttons are
+   restyled separately below so their labels retain contrast. */
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-amber-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-yellow-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-cyan-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-teal-"],
+:is(.premium-theme, .theme-premium) #root :not(button)[class*="bg-emerald-"] {
+  background-color: rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(234, 179, 8, 0.35) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root button[class*="bg-amber-"],
+:is(.premium-theme, .theme-premium) #root button[class*="bg-yellow-"] {
+  color: #451a03 !important;
+  background-image: linear-gradient(115deg, #fde68a 0%, #eab308 52%, #d97706 100%) !important;
+  border-color: rgba(253, 230, 138, 0.78) !important;
+}
+
+/* Preserve button contrast after warming legacy Tailwind tokens to Turkuaz. */
+html.theme-default #root button[class*="bg-rose-"],
+html.theme-default #root button[class*="bg-red-"],
+html.theme-default #root button[class*="bg-amber-"],
+html.theme-default #root button[class*="bg-yellow-"],
+html.theme-default #root button[class*="bg-orange-"] {
+  color: #fff !important;
+  background-color: #0f766e !important;
+  background-image: none !important;
+}
+
+html.theme-default #root button[class*="from-rose-"],
+html.theme-default #root button[class*="from-red-"],
+html.theme-default #root button[class*="from-amber-"],
+html.theme-default #root button[class*="from-yellow-"],
+html.theme-default #root button[class*="from-orange-"] {
+  color: #fff !important;
+  background-image: linear-gradient(115deg, #0f766e, #0891b2) !important;
+}
+
+/* Screenshot fixes: selected CEFR choices keep strong contrast, while sidebar
+   profile surfaces and account dialogs stay dark glass in Premium. */
+:is(.premium-theme, .theme-premium) #root .premium-level-selected {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.48) !important;
+  border-color: rgba(250, 204, 21, 0.78) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+  backdrop-filter: blur(24px) saturate(145%);
+}
+
+:is(.premium-theme, .theme-premium) #root .premium-profile-card {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.72) !important;
+  border-color: rgba(234, 179, 8, 0.48) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  backdrop-filter: blur(32px) saturate(150%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [role="dialog"] {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.78) !important;
+  border-color: rgba(234, 179, 8, 0.48) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
+  backdrop-filter: blur(36px) saturate(150%);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [role="dialog"] > header {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+:is(.premium-theme, .theme-premium) #root [role="menu"] {
+  color: #fff !important;
+  background: rgba(17, 7, 9, 0.96) !important;
+  border-color: rgba(234, 179, 8, 0.42) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
+  backdrop-filter: blur(36px) saturate(150%);
+}
+
+html.theme-default #root .selected-cefr-default {
+  color: #fff !important;
+  background-image: linear-gradient(135deg, #0f766e, #0891b2) !important;
+  border-color: #0f766e !important;
+}
+
+/* The first-run Turkuaz experience is intentionally bright and crisp. Premium
+   Ruby/Gold retains its separate dark-glass surfaces above. */
+html.theme-default:not(.dark),
+html.theme-default:not(.dark) body {
+  background: #eef7f7;
+  color: #1e293b;
+}
+html.theme-default:not(.dark) #root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #edf7f7 0%, #f3f7fa 48%, #eef5f7 100%);
+}
+html.theme-default:not(.dark) #root .glass {
+  background-color: rgba(255, 255, 255, 0.96);
+  border-color: rgba(203, 213, 225, 0.78);
+}
+
+/* Rank-up celebration: staggered turquoise and gold particles burst around the new emblem. */
+.rank-particle {
+  opacity: 0;
+  filter: drop-shadow(0 0 7px currentColor);
+  animation-name: rankParticleBurst;
+  animation-timing-function: cubic-bezier(.12, .72, .28, 1);
+  animation-fill-mode: both;
+  animation-iteration-count: 2;
+}
+.rank-particle-teal { color: #5eead4; background: #5eead4; }
+.rank-particle-gold { color: #facc15; background: #fde68a; }
+@keyframes rankParticleBurst {
+  0% { opacity: 0; transform: translate3d(0, 8px, 0) scale(.15); }
+  16% { opacity: 1; transform: translate3d(var(--rank-x, 0), var(--rank-y, -34px), 0) scale(1.2); }
+  58% { opacity: .9; transform: translate3d(var(--rank-x, 0), var(--rank-y, -34px), 0) scale(.8); }
+  100% { opacity: 0; transform: translate3d(var(--rank-x, 0), var(--rank-y, -34px), 0) scale(.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rank-particle { animation: none; opacity: .55; }
+}
+
+/* Streak celebrations: lightweight confetti that respects reduced-motion preferences. */
+.streak-confetti {
+  opacity: 0;
+  animation-name: streakConfettiBurst;
+  animation-timing-function: cubic-bezier(.12, .72, .28, 1);
+  animation-fill-mode: both;
+  animation-iteration-count: 2;
+}
+.streak-confetti-tone-0 { background: #facc15; box-shadow: 0 0 8px rgba(250,204,21,.7); }
+.streak-confetti-tone-1 { background: #2dd4bf; box-shadow: 0 0 8px rgba(45,212,191,.65); }
+.streak-confetti-tone-2 { background: #fb7185; box-shadow: 0 0 8px rgba(251,113,133,.62); }
+.streak-confetti-tone-3 { background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,.62); }
+@keyframes streakConfettiBurst {
+  0% { opacity: 0; transform: translate3d(0, 12px, 0) rotate(0) scale(.25); }
+  18% { opacity: 1; transform: translate3d(var(--streak-x, 0), var(--streak-y, -70px), 0) rotate(var(--streak-rotation, 90deg)) scale(1); }
+  64% { opacity: .9; transform: translate3d(var(--streak-x, 0), -10px, 0) rotate(var(--streak-rotation, 90deg)) scale(.8); }
+  100% { opacity: 0; transform: translate3d(0, 40px, 0) rotate(0) scale(.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .streak-confetti { animation: none; opacity: .65; }
+}
