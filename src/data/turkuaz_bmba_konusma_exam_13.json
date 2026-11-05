@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Kitaplar ve Okuma Alışkanlıkları",
+      "questions": [
+        "Kitap okumayı sever misiniz? Genellikle hangi tür kitaplar okumayı tercih edersiniz?",
+        "Fiziksel kitap okumayı mı yoksa e-kitap (veya sesli kitap) dinlemeyi mi tercih edersiniz? Neden?",
+        "Okuduğunuz ve sizi en çok etkileyen son kitap hangisiydi?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Gelecekteki Bir İcat Hayali",
+      "prompt": "Henüz icat edilmemiş ama gelecekte olmasını çok istediğiniz, hayatınızı veya dünyayı değiştirecek bir icadı hayal edip anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu icadın ne olduğu ve temel işlevinin ne olacağı.",
+        "Bu icadın insanların hayatındaki hangi büyük sorunu çözeceği.",
+        "Bu icadın potansiyel tehlikelerinin (veya kötüye kullanımının) ne olabileceği.",
+        "Eğer bu icada sahip olsaydınız ilk olarak ne yapacağınız."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Bilim Kurgu Gerçek mi Oluyor?",
+      "questions": [
+        "Geçmişte bilim kurgu filmlerinde gördüğümüz (yapay zeka, akıllı evler, uzay seyahati) birçok teknolojinin bugün gerçek olması sizi korkutuyor mu, yoksa heyecanlandırıyor mu?",
+        "Teknolojinin çok hızlı gelişmesiyle insanın 'doğal yeteneklerinin' (ezberleme, hesaplama, yön bulma) giderek köreldiğini düşünüyor musunuz? Bu durum insan evrimini nasıl etkileyecek?"
+      ]
+    }
+  }
+]

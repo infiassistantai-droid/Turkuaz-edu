@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Ulaşım ve Trafik",
+      "questions": [
+        "Günlük hayatınızda (işe veya okula giderken) en çok hangi ulaşım aracını kullanırsınız?",
+        "Yaşadığınız şehirde trafik büyük bir sorun mu? Sizce bu sorun nasıl çözülebilir?",
+        "Uzun bir yolculuğa çıkacağınız zaman uçağı mı, treni mi yoksa otobüsü mü tercih edersiniz? Neden?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "İdeal Şehir Ulaşımı",
+      "prompt": "Yaşadığınız şehirde (veya hayalinizdeki bir şehirde) ideal ulaşım sisteminin nasıl olması gerektiğini anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Şehirdeki mevcut ulaşım sorunlarının neler olduğu.",
+        "Toplu taşıma (metro, otobüs vb.) sisteminde nelerin geliştirilmesi gerektiği.",
+        "Bisiklet kullanımı veya yürüyüş yollarının artırılmasının önemi.",
+        "İnsanları özel araç kullanmak yerine toplu taşımaya teşvik etmek için neler yapılabileceği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Otonom (Sürücüsüz) Araçlar ve Gelecek",
+      "questions": [
+        "Gelecekte trafiğin tamamen yapay zeka tarafından yönetilen sürücüsüz (otonom) araçlardan oluşacağını hayal edin. Bu durum kazaları sıfıra indirir mi, yoksa teknolojinin çökmesi ihtimali daha büyük bir felakete mi yol açar?",
+        "Trafiği ve hava kirliliğini azaltmak için büyük şehirlerin merkezine (şehir içine) özel araçların girmesinin tamamen yasaklanması fikrine katılıyor musunuz?"
+      ]
+    }
+  }
+]

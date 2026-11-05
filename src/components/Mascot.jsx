@@ -127,45 +127,47 @@ export default function Mascot() {
         </div>
       )}
 
-      <button
-        key={`${id}-${emotion}`}
-        type="button"
-        onClick={toggleBubble}
-        onPointerEnter={(event) => {
-          if (event.pointerType === 'mouse') showGreeting()
-        }}
-        onFocus={(event) => {
-          if (event.currentTarget.matches(':focus-visible')) showGreeting()
-        }}
-        aria-label={visible ? t('mascot.dismiss') : t('mascot.open')}
-        aria-expanded={visible}
-        className={cn(
-          'van-cat-button pointer-events-auto relative grid size-16 shrink-0 place-items-center rounded-full transition-transform duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-4 motion-reduce:animate-none sm:size-20',
-          animation,
-          isPremium ? 'focus-visible:ring-yellow-200/45' : 'focus-visible:ring-teal-500/35',
-        )}
-        style={{ '--van-cat-glow': vanCatGlow, boxShadow: vanCatGlow }}
-      >
-        <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_32%_30%,rgba(56,189,248,.18),transparent_54%),radial-gradient(circle_at_72%_76%,rgba(251,191,36,.18),transparent_56%)]" aria-hidden="true" />
-        <img
-          src={artwork}
-          alt=""
-          width="160"
-          height="160"
-          draggable="false"
-          className="relative z-10 size-full select-none object-contain drop-shadow-[0_3px_5px_rgba(15,23,42,.2)]"
-        />
-        {winterModeEnabled && (
-          <svg className="pointer-events-none absolute inset-0 z-20 size-full drop-shadow-[0_2px_2px_rgba(15,23,42,.2)]" viewBox="0 0 160 160" aria-hidden="true">
-            <path d="M73 41c3-11 14-18 26-16 10 1 17 7 19 16H73Z" fill="#064e3b" stroke="#dbeafe" strokeWidth="2.2" strokeLinejoin="round" />
-            <path d="M70 40c14 5 34 5 50 0l2 6c-16 6-38 6-54 0l2-6Z" fill="#bfdbfe" stroke="#f8fafc" strokeWidth="1.6" />
-            <circle cx="113" cy="24" r="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5" />
-            <path d="M53 87c13 8 35 10 55 0l4 7c-17 11-43 10-62 0l3-7Z" fill="#0f766e" stroke="#e0f2fe" strokeWidth="2" strokeLinejoin="round" />
-            <path d="M91 94l12-3 2 21-12 4-2-22Z" fill="#0f766e" stroke="#e0f2fe" strokeWidth="2" strokeLinejoin="round" />
-            <path d="M54 90c16 8 36 9 53 1" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="3 4" strokeLinecap="round" />
-          </svg>
-        )}
-      </button>
+      <span className={cn('mascot-cat-traveler pointer-events-none relative z-20 shrink-0', visible && 'mascot-cat-traveler-bubble-open')}>
+        <button
+          key={`${id}-${emotion}`}
+          type="button"
+          onClick={toggleBubble}
+          onPointerEnter={(event) => {
+            if (event.pointerType === 'mouse') showGreeting()
+          }}
+          onFocus={(event) => {
+            if (event.currentTarget.matches(':focus-visible')) showGreeting()
+          }}
+          aria-label={visible ? t('mascot.dismiss') : t('mascot.open')}
+          aria-expanded={visible}
+          className={cn(
+            'van-cat-button pointer-events-auto relative grid size-16 shrink-0 place-items-center rounded-full transition-transform duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-4 motion-reduce:animate-none sm:size-20',
+            animation,
+            isPremium ? 'focus-visible:ring-yellow-200/45' : 'focus-visible:ring-teal-500/35',
+          )}
+          style={{ '--van-cat-glow': vanCatGlow, boxShadow: vanCatGlow }}
+        >
+          <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_32%_30%,rgba(56,189,248,.18),transparent_54%),radial-gradient(circle_at_72%_76%,rgba(251,191,36,.18),transparent_56%)]" aria-hidden="true" />
+          <img
+            src={artwork}
+            alt=""
+            width="160"
+            height="160"
+            draggable="false"
+            className="mascot-art-3d relative z-10 size-full select-none object-contain drop-shadow-[0_3px_5px_rgba(15,23,42,.2)]"
+          />
+          {winterModeEnabled && (
+            <svg className="pointer-events-none absolute inset-0 z-20 size-full drop-shadow-[0_2px_2px_rgba(15,23,42,.2)]" viewBox="0 0 160 160" aria-hidden="true">
+              <path d="M73 41c3-11 14-18 26-16 10 1 17 7 19 16H73Z" fill="#064e3b" stroke="#dbeafe" strokeWidth="2.2" strokeLinejoin="round" />
+              <path d="M70 40c14 5 34 5 50 0l2 6c-16 6-38 6-54 0l2-6Z" fill="#bfdbfe" stroke="#f8fafc" strokeWidth="1.6" />
+              <circle cx="113" cy="24" r="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5" />
+              <path d="M53 87c13 8 35 10 55 0l4 7c-17 11-43 10-62 0l3-7Z" fill="#0f766e" stroke="#e0f2fe" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M91 94l12-3 2 21-12 4-2-22Z" fill="#0f766e" stroke="#e0f2fe" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M54 90c16 8 36 9 53 1" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="3 4" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
+      </span>
     </aside>
   )
 }

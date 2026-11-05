@@ -6,6 +6,7 @@ create table if not exists public.user_progress (
   xp integer not null default 0 check (xp >= 0),
   streak integer not null default 0 check (streak >= 0),
   completed_lessons jsonb not null default '[]'::jsonb,
+  module_scores jsonb not null default '{}'::jsonb,
   weekly_xp integer not null default 0 check (weekly_xp >= 0),
   week_start date,
   daily_xp jsonb not null default '{}'::jsonb,
@@ -16,6 +17,7 @@ create table if not exists public.user_progress (
   updated_at timestamptz not null default now()
 );
 -- Safe migration for projects that applied an earlier version of this schema.
+alter table public.user_progress add column if not exists module_scores jsonb not null default '{}'::jsonb;
 alter table public.user_progress add column if not exists daily_xp jsonb not null default '{}'::jsonb;
 alter table public.user_progress add column if not exists analytics_tracking_since date;
 alter table public.user_progress add column if not exists daily_quests jsonb not null default '{}'::jsonb;

@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Tatil ve Turizm",
+      "questions": [
+        "Tatillerinizi genellikle nerede geçirmeyi seversiniz (deniz kenarı, dağ evi, tarihi şehirler)? Neden?",
+        "Tatile yalnız çıkmayı mı, yoksa aileniz veya arkadaşlarınızla çıkmayı mı tercih edersiniz?",
+        "Şimdiye kadar gittiğiniz yerler arasında en çok beğendiğiniz şehir/ülke hangisiydi?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "İdeal Bir Toplum",
+      "prompt": "Yaşamak istediğiniz 'ideal ve kusursuz toplumu' hayal edip anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu toplumda adaletin, eğitimin ve sağlık hizmetlerinin nasıl işleyeceği.",
+        "İnsanlar arasındaki sosyal ilişkilerin (saygı, yardımlaşma) nasıl olacağı.",
+        "Çevreye ve doğaya karşı nasıl bir tutum sergileneceği.",
+        "Günümüz toplumlarında eksik olan ama sizin hayalinizdeki toplumda mutlaka bulunacak o 'temel değerin' ne olduğu."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Turizmin Karanlık Yüzü: Overtourism",
+      "questions": [
+        "Venedik veya Barselona gibi tarihi şehirlerin aşırı turist akınına (overtourism) uğraması ve yerli halkın bu durumdan şikayetçi olması hakkında ne düşünüyorsunuz? Turist sayısına sınır getirilmesi demokratik midir?",
+        "Sizce modern turizm, insanların gerçekten yeni kültürler öğrenmesini mi sağlıyor, yoksa sadece sosyal medyada fotoğraf paylaşmak için yapılan yüzeysel (sığ) bir tüketim alışkanlığına mı dönüştü?"
+      ]
+    }
+  }
+]

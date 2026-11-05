@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Hayvanlar ve Doğa",
+      "questions": [
+        "Evcil bir hayvanınız var mı? Eğer yoksa gelecekte hangi hayvanı beslemek isterdiniz?",
+        "Sizce insanların evde hayvan beslemesi onlara ne gibi sorumluluklar yükler?",
+        "Doğadaki vahşi hayvanları (aslan, fil vb.) hayvanat bahçesinde görmeyi mi yoksa belgesellerde izlemeyi mi tercih edersiniz? Neden?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Unutulmaz Bir Doğa Olayı veya Felaket",
+      "prompt": "Hayatınızda bizzat yaşadığınız veya haberlerde görüp sizi derinden etkileyen bir doğa olayını (deprem, sel, fırtına veya çok güzel bir doğa manzarası) anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu doğa olayının ne olduğu, nerede ve ne zaman yaşandığı.",
+        "Olay anında (veya haberi aldığınızda) neler hissettiğiniz.",
+        "Bu olayın insanlar, çevre veya sizin üzerinizdeki etkileri.",
+        "İnsanların bu tür doğa olaylarına (felaketlere) karşı nasıl daha hazırlıklı olabileceği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Hayvan Hakları ve Etik",
+      "questions": [
+        "Kozmetik ve tıp sektöründe yeni ürünlerin hayvanlar üzerinde test edilmesini (deney hayvanları kullanılmasını) etik buluyor musunuz? Bilimsel ilerleme için hayvanların feda edilmesi zorunlu mudur?",
+        "Sokak hayvanları sorununun çözümü için bazı ülkelerde uygulanan 'uyutma' (ötanazi) politikası hakkında ne düşünüyorsunuz? Devletler hem insan güvenliğini hem de hayvan haklarını nasıl dengelemelidir?"
+      ]
+    }
+  }
+]

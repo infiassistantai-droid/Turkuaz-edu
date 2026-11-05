@@ -117,7 +117,7 @@ export function clearAllStorage() {
   // during normal use, but a full reset should remove every checklist record.
   try {
     Object.keys(localStorage)
-      .filter((key) => key.startsWith('turkish-marathon-daily-plan-') || key.startsWith('turkish-marathon-dashboard-plan-') || key.startsWith(READING_COMPLETIONS_PREFIX) || key.startsWith('turkuaz-edu-streak-milestones-v1:') || key.startsWith('turkuaz-edu-trophy-unlocks-v1:') || key.startsWith('turkuaz-edu-listening-progress-v1:'))
+      .filter((key) => key.startsWith('turkish-marathon-daily-plan-') || key.startsWith('turkish-marathon-dashboard-plan-') || key.startsWith(READING_COMPLETIONS_PREFIX) || key.startsWith('turkuaz-edu-streak-milestones-v1:') || key.startsWith('turkuaz-edu-trophy-unlocks-v1:') || key.startsWith('turkuaz-edu-listening-progress-v1:') || key.startsWith('turkuaz-edu-speaking-recording-progress-v1:'))
       .forEach((key) => localStorage.removeItem(key))
   } catch {
     // ignore unavailable storage

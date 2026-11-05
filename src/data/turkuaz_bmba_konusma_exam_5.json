@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Yemek ve Mutfak Kültürü",
+      "questions": [
+        "En sevdiğiniz yemek nedir ve onu neden seviyorsunuz?",
+        "Genellikle evde mi yemek yersiniz, yoksa dışarıda (restoranda) mı? Neden?",
+        "Kendiniz yemek pişirmeyi sever misiniz? En iyi yaptığınız yemek hangisidir?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Sağlıklı Yaşam ve Beslenme",
+      "prompt": "Günümüzde insanların beslenme ve sağlıklı yaşam alışkanlıkları hakkında konuşunuz. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Kendi beslenme alışkanlıklarınızın (sağlıklı veya sağlıksız) nasıl olduğu.",
+        "Günümüz toplumunda 'fast-food' tüketiminin neden bu kadar arttığı.",
+        "Sağlıklı bir yaşam için beslenme dışında (spor, uyku vb.) nelerin önemli olduğu.",
+        "İnsanların sağlıklı yaşama daha fazla dikkat etmesi için neler yapılabileceği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Küresel Gıda Krizi ve GDO",
+      "questions": [
+        "Artan dünya nüfusunu doyurmak için Genetiği Değiştirilmiş Organizmalar (GDO) içeren gıdaların üretilmesi sizce bir zorunluluk mudur, yoksa insan sağlığı ve doğa için büyük bir tehdit midir?",
+        "Bazı ülkelerde 'şeker ve abur cubur vergisi' uygulanmaya başlandı. Devletin, halkın sağlığını korumak adına sağlıksız gıdalara yüksek vergi koymasını (müdahale etmesini) doğru buluyor musunuz?"
+      ]
+    }
+  }
+]

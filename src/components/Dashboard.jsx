@@ -12,7 +12,6 @@ import {
   Target,
   TrendingUp,
   Trophy,
-  Zap,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { loadJSON, saveJSON } from '../lib/storage'
@@ -90,10 +89,10 @@ const WEEK = (() => {
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
 
-function masteryTone(score, t) {
-  if (score <= 0)
+function masteryTone(score, t, isEvaluated) {
+  if (!isEvaluated)
     return {
-      label: t('level.beginner'),
+      label: t('dashboard.notEvaluated'),
       stroke: 'stroke-slate-300 dark:stroke-slate-600',
       bar: 'from-slate-400 to-slate-300',
       text: 'text-slate-500 dark:text-slate-400',
@@ -219,7 +218,7 @@ function CardHeader({ icon: Icon, title, subtitle, right }) {
 /*                                  Hero card                                 */
 /* -------------------------------------------------------------------------- */
 
-function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
+function HeroCard({ onStart, name, weakest, targetLevel, totalScore, hasResults }) {
   const { t } = useI18n()
   const target = targetLevel || '—'
   const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : target === 'C1' ? 65 : 0
@@ -267,12 +266,13 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/65">{t('dashboard.progress')}</p>
           <div className="mt-2 flex items-end justify-between gap-3">
             <span className="text-3xl font-semibold tracking-tight text-yellow-300">{target}</span>
-            <span className="text-right text-sm font-medium tabular-nums text-white/85">{Number(totalScore).toFixed(2)} <span className="text-white/55">{t('skill.scoreUnit')}</span></span>
+            <span className="text-right text-sm font-semibold tabular-nums text-white/85">
+              {hasResults && threshold ? `${pct}%` : '—'}
+            </span>
           </div>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
             <div className="h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 transition-[width] duration-700" style={{ width: `${pct}%` }} />
           </div>
-          <p className="mt-2 text-[11px] text-white/65">{t('dashboard.currentScore')}</p>
         </div>
       </div>
     </section>
@@ -283,7 +283,7 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore }) {
 /*                               Target / summary                             */
 /* -------------------------------------------------------------------------- */
 
-function ReadinessCard({ total, targetLevel }) {
+function ReadinessCard({ total, targetLevel, hasResults }) {
   const { t } = useI18n()
   const mounted = useMounted()
   const pct = Math.round((total / 75) * 100)
@@ -305,10 +305,10 @@ function ReadinessCard({ total, targetLevel }) {
         }
       />
       <div className="mt-6 flex items-end gap-2">
-        <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{Number(total).toFixed(2)}</span>
+        <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{hasResults ? Number(total).toFixed(2) : '—'}</span>
         <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">{t('dashboard.scoreAverage')}</span>
         <span className="mb-1.5 ml-auto rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-900">
-          {t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}
+          {hasResults ? t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`) : t('dashboard.notEvaluated')}
         </span>
       </div>
 
@@ -346,7 +346,9 @@ function ReadinessCard({ total, targetLevel }) {
             <Target className="size-4" aria-hidden="true" />
           </span>
           <p className="text-xs leading-relaxed text-rose-900 dark:text-rose-200">
-            {remaining === null ? (
+            {!hasResults ? (
+              <>{t('dashboard.noScores')}</>
+            ) : remaining === null ? (
               <>{t('dashboard.chooseTarget')}</>
             ) : remaining > 0 ? (
               <>{t('dashboard.pointsNeeded', { target, count: remaining })}</>
@@ -390,8 +392,8 @@ function SkillCard({ skill, onOpen }) {
   const { t } = useI18n()
   const mounted = useMounted()
   const Icon = skill.icon
-  const tone = masteryTone(skill.score, t)
-  const pct = Math.round((skill.score / 75) * 100)
+  const tone = masteryTone(skill.score, t, skill.isEvaluated)
+  const pct = skill.isEvaluated ? Math.round((skill.score / 75) * 100) : null
 
   return (
     <Card className="group flex flex-col p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300/80 hover:shadow-lg dark:hover:border-slate-700">
@@ -411,17 +413,19 @@ function SkillCard({ skill, onOpen }) {
       <div className="mt-5 flex items-center justify-between">
         <div>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{skill.score.toFixed(2).replace(/\.00$/, '')}</span>
-            <span className="text-sm text-slate-500 dark:text-slate-400">{t('skill.scoreUnit')}</span>
+            <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
+              {skill.isEvaluated ? skill.score.toFixed(2).replace(/\.00$/, '') : '—'}
+            </span>
+            {skill.isEvaluated && <span className="text-sm text-slate-500 dark:text-slate-400">{t('skill.scoreUnit')}</span>}
           </div>
           <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
             <TrendingUp className="size-3" aria-hidden="true" />
-            {skill.score > 0 ? t('dashboard.skillEvaluated', { level: skill.level || getCefrLevel(skill.score) }) : t('dashboard.notEvaluated')}
+            {skill.isEvaluated ? t('dashboard.skillEvaluated', { level: skill.level || getCefrLevel(skill.score) }) : t('dashboard.notEvaluated')}
           </p>
         </div>
         <div className="relative">
           <ProgressRing value={skill.score} max={75} toneStroke={tone.stroke} mounted={mounted} />
-          <span className={cn('absolute inset-0 grid place-items-center text-xs font-semibold tabular-nums', tone.text)}>{pct}%</span>
+          <span className={cn('absolute inset-0 grid place-items-center text-xs font-semibold tabular-nums', tone.text)}>{pct === null ? '—' : `${pct}%`}</span>
         </div>
       </div>
 
@@ -728,38 +732,36 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
   const locale = { uz: 'uz-UZ', tr: 'tr-TR', en: 'en-US' }[language] || 'tr-TR'
   const todayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
   const total = overallScore ?? SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0) / 4
+  const hasResults = SKILLS.some((skill) => Boolean(sectionResults[skill.id]))
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
     [scores],
   )
-  // Weakest skill right now — the hero highlights it
+  // Only evaluated skills can be identified as the learner's weakest skill.
   const weakestSkill = useMemo(
-    () => SKILLS.reduce((a, s) => (scores?.[s.id] ?? s.score) < (scores?.[a.id] ?? a.score) ? s : a),
-    [scores],
+    () => SKILLS.filter((skill) => Boolean(sectionResults[skill.id]))
+      .reduce((weakest, skill) => !weakest || (scores?.[skill.id] ?? skill.score) < (scores?.[weakest.id] ?? weakest.score) ? skill : weakest, null),
+    [scores, sectionResults],
   )
-  const weakest = total > 0 ? t(weakestSkill.labelKey) : null
+  const weakest = weakestSkill ? t(weakestSkill.labelKey) : null
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="mb-1 flex flex-wrap items-end justify-between gap-3 px-1">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[.22em] text-teal-700 dark:text-teal-300">{todayLabel}</p>
-          <h1 className="mt-1.5 font-serif text-[26px] font-extrabold tracking-[-.045em] text-slate-900 dark:text-white sm:text-[30px]" data-testid="text-page-heading">{t('dashboard.home.title')}<span className={isPremium ? 'text-yellow-300' : 'text-teal-600'}>.</span></h1>
-        </div>
-        <span className={`mb-1 rounded-xl border px-3 py-2 text-[10px] font-semibold ${isPremium ? 'border-yellow-300/25 bg-black/25 text-yellow-100' : 'border-slate-200 bg-white/80 text-slate-500'}`}>{t('dashboard.stat.target')}: {targetLevel || '—'}</span>
+      <div className="mb-1 px-1">
+        <p className="text-[10px] font-bold uppercase tracking-[.22em] text-teal-700 dark:text-teal-300">{todayLabel}</p>
+        <h1 className="mt-1.5 font-serif text-[26px] font-extrabold tracking-[-.045em] text-slate-900 dark:text-white sm:text-[30px]" data-testid="text-page-heading">{t('dashboard.home.title')}<span className={isPremium ? 'text-yellow-300' : 'text-teal-600'}>.</span></h1>
       </div>
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest} targetLevel={targetLevel} totalScore={total} />
-        <ReadinessCard total={total} targetLevel={targetLevel} />
+        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest} targetLevel={targetLevel} totalScore={total} hasResults={hasResults} />
+        <ReadinessCard total={total} targetLevel={targetLevel} hasResults={hasResults} />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-4">
         {[
-          { label: t('dashboard.stat.xp'), value: (stats?.xp ?? 0).toLocaleString(language), icon: Zap, hint: t('dashboard.stat.xp.hint') },
-          { label: t('dashboard.stat.target'), value: targetLevel || '—', icon: Target, hint: t('dashboard.stat.target.hint'), testId: 'card-target-level' },
+          { label: t('dashboard.stat.quizzes'), value: stats?.completedQuizzes ?? 0, icon: Check, hint: t('dashboard.stat.quizzes.hint') },
           { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
-        ].map(({ label, value, icon: Icon, hint, testId }) => (
-          <Card key={label} data-testid={testId} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
+        ].map(({ label, value, icon: Icon, hint }) => (
+          <Card key={label} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-amber-300/20 bg-amber-300/10 text-amber-300 shadow-inner shadow-white/10">
               <Icon className="size-5" aria-hidden="true" />
             </span>
@@ -771,17 +773,27 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
           </Card>
         ))}
       </div>
-      <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} dark={dark} />
 
-      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
-        {SKILLS.map((skill) => (
-          <SkillCard
-            key={skill.id}
-            skill={{ ...skill, score: scores?.[skill.id] ?? skill.score, level: sectionResults[skill.id]?.level, completedCount: skill.id === 'dinleme' ? stats?.listeningLessonsCompleted ?? 0 : undefined }}
-            onOpen={navigate}
-          />
-        ))}
-      </div>
+      <section aria-labelledby="dashboard-skills-heading">
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-2 px-1">
+          <div>
+            <h2 id="dashboard-skills-heading" className="text-base font-bold tracking-tight text-slate-900 dark:text-white">{t('dashboard.skills.title')}</h2>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{t('dashboard.skills.subtitle')}</p>
+          </div>
+          <span className="rounded-lg border border-slate-200 bg-white/80 px-2.5 py-1 text-[10px] font-semibold text-slate-500 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-400">{SKILLS.length}</span>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
+          {SKILLS.map((skill) => (
+            <SkillCard
+              key={skill.id}
+              skill={{ ...skill, score: scores?.[skill.id] ?? skill.score, isEvaluated: Boolean(sectionResults[skill.id]), level: sectionResults[skill.id]?.level, completedCount: skill.id === 'dinleme' ? stats?.listeningLessonsCompleted ?? 0 : undefined }}
+              onOpen={navigate}
+            />
+          ))}
+        </div>
+      </section>
+
+      <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} dark={dark} />
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         <CertificateCalculator initial={initialScores} />

@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Gelenekler ve Bayramlar",
+      "questions": [
+        "Ülkenizdeki en önemli ulusal veya dini bayram hangisidir? Bu bayramda genellikle neler yapılır?",
+        "Sizce gelenekleri korumak neden önemlidir? Ailenizden öğrendiğiniz ve devam ettirdiğiniz bir gelenek var mı?",
+        "Bayramlarda ailenizle vakit geçirmeyi mi, yoksa arkadaşlarınızla tatil yapmayı mı tercih edersiniz?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Büyük Bir Hata ve Alınan Ders",
+      "prompt": "Hayatınızda yaptığınız büyük bir hatayı (veya yanlış bir seçimi) ve bu olaydan ne öğrendiğinizi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu hatanın ne zaman ve neyle ilgili olduğu (okul, iş, ilişkiler vb.).",
+        "O dönemde neden böyle bir karar aldığınız (sizi neyin yanılttığı).",
+        "Bu hatanın hayatınızdaki kısa ve uzun vadeli sonuçları.",
+        "Geriye dönüp baktığınızda bu olayın sizi nasıl daha olgun bir insan yaptığı (aldığınız ders)."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Başarısızlık ve Toplumsal Baskı",
+      "questions": [
+        "Modern toplumda 'başarısızlığın' bir utanç kaynağı (tabu) olarak görülmesi hakkında ne düşünüyorsunuz? Çocuklara hata yapma hakkı neden verilmiyor?",
+        "Sosyal medyanın, insanları sürekli 'kusursuz ve başarılı' görünmeye zorlayarak gençlerde başarısızlık korkusunu (anksiyeteyi) artırdığına katılıyor musunuz?"
+      ]
+    }
+  }
+]

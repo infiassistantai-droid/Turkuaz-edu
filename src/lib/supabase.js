@@ -67,7 +67,7 @@ function throwQueryError(error) {
 export async function fetchLearnerProgress(userId) {
   if (!supabase || !userId) return null
   const { data, error } = await withReadTimeout(supabase.from('user_progress')
-    .select('xp,streak,completed_lessons,target_level,weekly_xp,week_start,last_activity_date,daily_xp,analytics_tracking_since,daily_quests,quest_words_credited')
+    .select('xp,streak,completed_lessons,module_scores,target_level,weekly_xp,week_start,last_activity_date,daily_xp,analytics_tracking_since,daily_quests,quest_words_credited')
     .eq('user_id', userId)
     .maybeSingle(), 'progress')
   throwQueryError(error)
@@ -186,6 +186,8 @@ export async function syncLearnerProgress(userId, profile, stats) {
   const streak = Math.max(0, Number(safeStats.streak) || 0)
   const rankProgress = getRankProgress(xp)
   const fullName = [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.fullName || profile?.full_name || 'Learner'
+  const avatarCandidate = profile?.avatarUrl || profile?.avatar_url || ''
+  const avatarUrl = /^https?:\/\/\S+$/u.test(avatarCandidate) ? avatarCandidate : null
   const trophies = Array.isArray(safeStats.trophyUnlocks) ? safeStats.trophyUnlocks : []
   const milestones = [...new Set((Array.isArray(safeStats.streakMilestones) ? safeStats.streakMilestones : []).map(Number).filter(Number.isFinite))].sort((a, b) => a - b)
 
@@ -196,6 +198,7 @@ export async function syncLearnerProgress(userId, profile, stats) {
     xp,
     streak,
     completed_lessons: Array.isArray(safeStats.completedLessons) ? safeStats.completedLessons : [],
+    module_scores: safeStats.moduleScores && typeof safeStats.moduleScores === 'object' && !Array.isArray(safeStats.moduleScores) ? safeStats.moduleScores : {},
     weekly_xp: safeStats.weekStart === weekKey ? Math.max(0, Number(safeStats.weeklyXp) || 0) : 0,
     week_start: weekKey,
     last_activity_date: safeStats.lastActivityDate || null,
@@ -208,7 +211,7 @@ export async function syncLearnerProgress(userId, profile, stats) {
   const profileRow = {
     user_id: userId,
     full_name: fullName,
-    avatar_url: profile?.avatarUrl || profile?.avatar_url || null,
+    avatar_url: avatarUrl,
     current_streak: streak,
     total_xp: xp,
     level: rankProgress.level,

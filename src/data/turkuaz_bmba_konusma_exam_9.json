@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "İklim ve Doğa",
+      "questions": [
+        "En sevdiğiniz mevsim hangisidir? Neden bu mevsimi seviyorsunuz?",
+        "Yaşadığınız şehrin (veya ülkenin) iklimi nasıldır? Bu iklimin günlük hayatınıza etkisi nedir?",
+        "Doğada zaman geçirmekten hoşlanır mısınız? (Kamp yapmak, yürüyüş vb.)"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Çevre Kirliliği ve Kişisel Önlemler",
+      "prompt": "Gözlemlediğiniz çevre kirliliği sorunlarını ve bireysel olarak alabildiğiniz (veya almayı düşündüğünüz) önlemleri anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Çevrenizde en çok dikkatinizi çeken kirlilik türü (hava, su, gürültü, çöp vb.).",
+        "Bu kirliliğin insan sağlığına ve doğaya olan etkileri.",
+        "Geri dönüşüm, enerji tasarrufu veya plastik kullanımı konusunda bireysel olarak neler yaptığınız.",
+        "Çevreyi korumak için başka ne gibi küçük alışkanlıkların (önlemlerin) faydalı olabileceği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "İklim Krizi ve Küresel Sorumluluk",
+      "questions": [
+        "Küresel iklim krizinin (küresel ısınmanın) asıl sorumlusu sizce kimdir? Sıradan vatandaşlar mı, yoksa dev sanayi kuruluşları ve hükümetler mi?",
+        "Karbon ayak izini azaltmak için devletlerin benzinli araçları veya et tüketimini yasaklamak (veya aşırı vergi koymak) gibi radikal kararlar alması sizce doğru bir yaklaşım mıdır?"
+      ]
+    }
+  }
+]

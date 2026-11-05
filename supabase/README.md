@@ -25,7 +25,7 @@ Open the Supabase project's **SQL Editor**, paste the complete [`schema.sql`](./
 | `user_streaks` | Current streak, last active date, unlocked streak-milestone values, and winter-season study-day progress. |
 | `user_achievements` | Earned trophy ID, unlock date, and reward/historical metadata. |
 | `user_vocabulary` | Saved Turkish word, Uzbek translation, and optional lesson ID. |
-| `user_progress` | Existing app counters and learning analytics, including XP, streak, weekly XP, lesson completions, and quest state. |
+| `user_progress` | Existing app counters and learning analytics, including XP, streak, weekly XP, lesson completions, per-test module scores, and quest state. |
 
 Each table is keyed to `auth.users`; RLS is enabled and policies restrict each signed-in learner to their own rows. The existing leaderboard RPC continues to expose only its public ranking fields.
 
@@ -35,7 +35,7 @@ Enable email/password under **Authentication → Providers**. For Google sign-in
 
 ## 4. What synchronizes
 
-After sign-in, the app loads the legacy progress row and normalized profile, streak, achievement, and vocabulary rows before showing the learner interface. A localized loading skeleton is shown during that initial fetch. Changes to XP, streaks and unlocked streak badges, profile details, trophy unlocks, or saved vocabulary are upserted to Supabase. Vocabulary already on the device is merged into the signed-in learner's cloud list and is available to the vocabulary study view.
+After sign-in, the app loads the legacy progress row and normalized profile, streak, achievement, and vocabulary rows before showing the learner interface. A localized loading skeleton is shown during that initial fetch. Changes to XP, streaks and unlocked streak badges, profile details, per-test listening scores, trophy unlocks, or saved vocabulary are upserted to Supabase. Vocabulary already on the device is merged into the signed-in learner's cloud list and is available to the vocabulary study view.
 
 Cloud writes are debounced briefly during normal activity. If a request fails, the app remains usable and logs a non-blocking sync warning; it does not crash the UI. Apply the schema before expecting all new tables to sync.
 

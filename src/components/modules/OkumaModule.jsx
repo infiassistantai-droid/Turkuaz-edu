@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeft, BookOpenText, CheckCircle2, LockKeyhole, RotateCcw } from 'lucide-react'
 import { readingExamSections, READING_SECTION_COUNT, QUESTIONS_PER_READING_SECTION } from '../../data/mockExamData'
+import { loadJSON, saveJSON } from '../../lib/storage'
 import { useI18n } from '../../lib/i18n.jsx'
 import { cn } from '../../lib/utils'
 
@@ -11,6 +12,15 @@ function isSectionReady(section) {
       Array.isArray(question.options) && question.options.length === 4 &&
       Number.isInteger(question.correctOption) && question.correctOption >= 0 && question.correctOption < question.options.length,
     )
+}
+
+export function getUnlockedReadingSectionNumber(sectionScores = {}) {
+  let unlockedSectionNumber = 1
+  for (const section of readingExamSections) {
+    if (!isSectionReady(section) || !Object.prototype.hasOwnProperty.call(sectionScores, section.id)) break
+    unlockedSectionNumber = section.sectionNumber + 1
+  }
+  return Math.min(unlockedSectionNumber, READING_SECTION_COUNT)
 }
 
 export function scoreReadingExam(answers, questions = []) {
@@ -28,14 +38,24 @@ export function scoreReadingExam(answers, questions = []) {
   }
 }
 
-export default function OkumaModule({ completeLevel, onPerfectScore, premium = false }) {
+export default function OkumaModule({ completeLevel, onPerfectScore, premium = false, profile }) {
   const { t } = useI18n()
+  const learnerId = String(profile?.userId || profile?.email || 'local').trim().toLowerCase()
+  const sectionProgressKey = `turkuaz-edu-reading-section-progress-v1:${encodeURIComponent(learnerId)}`
   const [selectedSectionId, setSelectedSectionId] = useState(null)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState(null)
   const [answers, setAnswers] = useState([])
   const [result, setResult] = useState(null)
-  const [sectionScores, setSectionScores] = useState({})
+  const [sectionScores, setSectionScores] = useState(() => {
+    const stored = loadJSON(sectionProgressKey, {})
+    return stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {}
+  })
+  const unlockedSectionNumber = getUnlockedReadingSectionNumber(sectionScores)
+
+  useEffect(() => {
+    saveJSON(sectionProgressKey, sectionScores)
+  }, [sectionProgressKey, sectionScores])
 
   const section = readingExamSections.find((item) => item.id === selectedSectionId) || null
   const currentQuestion = section?.questions?.[questionIndex]
@@ -47,7 +67,7 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
   const muted = premium ? 'text-slate-300' : 'text-slate-600'
 
   function startSection(sectionToStart) {
-    if (!isSectionReady(sectionToStart)) return
+    if (!isSectionReady(sectionToStart) || sectionToStart.sectionNumber > unlockedSectionNumber) return
     setSelectedSectionId(sectionToStart.id)
     setQuestionIndex(0)
     setSelectedOption(null)
@@ -254,7 +274,7 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
             {t('reading.sections.title')}
           </h2>
           <p className={cn('mt-2 max-w-2xl text-sm leading-relaxed', muted)}>
-            {t('reading.sections.subtitle', { active: readingExamSections.filter((item) => item.status === 'active').length, total: READING_SECTION_COUNT, questions: QUESTIONS_PER_READING_SECTION })}
+            {t('reading.sections.subtitle', { active: unlockedSectionNumber, total: READING_SECTION_COUNT, questions: QUESTIONS_PER_READING_SECTION })}
           </p>
         </div>
         <button
@@ -273,36 +293,46 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {readingExamSections.map((item) => {
-          const isActive = isSectionReady(item)
+          const isReady = isSectionReady(item)
+          const isUnlocked = isReady && item.sectionNumber <= unlockedSectionNumber
+          const isLocked = isReady && !isUnlocked
           const bestScore = sectionScores[item.id]
+          const actionLabel = isUnlocked
+            ? 'reading.sections.start'
+            : isLocked
+              ? 'reading.sections.locked'
+              : 'reading.sections.comingSoon'
           return (
-            <article key={item.id} className={cn('flex min-h-32 flex-col justify-between rounded-xl border p-4', surface, !isActive && (premium ? 'opacity-65' : 'bg-slate-50 text-slate-500'))}>
+            <article key={item.id} className={cn('flex min-h-32 flex-col justify-between rounded-xl border p-4', surface, !isUnlocked && (premium ? 'opacity-75' : 'bg-slate-50/80 text-slate-500'))}>
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold">{t('reading.sections.section', { number: item.sectionNumber })}</h3>
                   <p className={cn('mt-1 text-xs', muted)}>
-                    {isActive
+                    {isReady
                       ? t('reading.sections.summary', { passages: item.passages.length, questions: item.questions.length })
                       : item.questions.length
                         ? t('reading.sections.upcomingSummary', { passages: item.passages.length, questions: item.questions.length })
                         : t('reading.sections.comingSoon')}
                   </p>
                 </div>
-                {bestScore !== undefined && <span className="rounded-md border border-slate-200 px-2 py-1 text-xs font-semibold tabular-nums dark:border-slate-700">{t('reading.sections.bestScore', { percent: bestScore })}</span>}
+                <div className="flex items-center gap-2">
+                  {isLocked && <LockKeyhole className="size-4 shrink-0 text-slate-400" aria-hidden="true" />}
+                  {bestScore !== undefined && <span className="rounded-md border border-slate-200 px-2 py-1 text-xs font-semibold tabular-nums dark:border-slate-700">{t('reading.sections.bestScore', { percent: bestScore })}</span>}
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => startSection(item)}
-                disabled={!isActive}
+                disabled={!isUnlocked}
                 className={cn(
                   'mt-4 inline-flex min-h-9 w-full items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold disabled:cursor-not-allowed',
-                  isActive
+                  isUnlocked
                     ? premium ? 'border-teal-400 bg-teal-400 text-slate-950 hover:bg-teal-300' : 'border-teal-700 bg-teal-700 text-white hover:bg-teal-800'
                     : premium ? 'border-slate-700 text-slate-400' : 'border-slate-200 text-slate-400',
                 )}
-                aria-label={t(isActive ? 'reading.sections.start' : 'reading.sections.comingSoon')}
+                aria-label={t(actionLabel)}
               >
-                {t(isActive ? 'reading.sections.start' : 'reading.sections.comingSoon')}
+                {t(actionLabel)}
               </button>
             </article>
           )

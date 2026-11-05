@@ -33,6 +33,7 @@ import RankUpModal from './RankUpModal'
 import StreakMilestoneModal from './StreakMilestoneModal'
 import TrophyCelebrationModal from './TrophyCelebrationModal'
 import UserProfileModal from './UserProfileModal'
+import ProfileAvatar from './ProfileAvatar'
 import WinterEffects from '../features/winter/WinterEffects'
 
 /* -------------------------------------------------------------------------- */
@@ -45,7 +46,6 @@ const NAV = [
     items: [
       { id: 'home', labelKey: 'nav.home', icon: House },
       { id: 'plan', labelKey: 'nav.plan', icon: CalendarCheck },
-      { id: 'leagues', labelKey: 'nav.leagues', icon: Trophy },
       { id: 'analytics', labelKey: 'nav.analytics', icon: Activity },
     ],
   },
@@ -64,6 +64,7 @@ const NAV = [
       { id: 'lugat', labelKey: 'nav.vocabulary', icon: Library },
       { id: 'mock', labelKey: 'nav.mock', icon: ClipboardCheck, badgeKey: 'nav.new', urgent: true },
       { id: 'exams', labelKey: 'nav.exams', icon: Trophy },
+      { id: 'leagues', labelKey: 'nav.leagues', icon: Trophy },
     ],
   },
 ]
@@ -133,7 +134,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                 {group.items.map((item) => {
                   const Icon = item.icon
                   const isActive = active === item.id
-                  const isLocked = !['home', 'plan', 'okuma', 'dinleme', 'lugat'].includes(item.id)
+                  const isLocked = !['home', 'plan', 'okuma', 'dinleme', 'yazma', 'konusma', 'lugat'].includes(item.id)
                   return (
                     <li key={item.id}>
                       <button
@@ -251,8 +252,12 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           >
             <div className={cn('flex items-center gap-3', collapsed && 'lg:justify-center')}>
               <div className={cn('relative flex shrink-0 items-center gap-2', collapsed && 'lg:items-start')}>
-                <div className="relative grid size-9 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white">
-                  {profile ? getInitials(profile.name, profile.surname) : t('nav.profile').slice(0, 2).toLocaleUpperCase()}
+                <div className="relative">
+                  <ProfileAvatar
+                    profile={profile}
+                    fallbackText={profile ? getInitials(profile.name, profile.surname) : t('nav.profile').slice(0, 2).toLocaleUpperCase()}
+                    sizeClass="size-9"
+                  />
                   <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900" aria-hidden="true" />
                 </div>
                 <span
@@ -363,9 +368,11 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
                 isPremium ? 'border-white/10 bg-black/30 text-white hover:bg-white/10' : 'border-slate-200/80 bg-white/80 text-slate-700 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200',
               )}
             >
-              <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white ring-1 ring-white/20">
-                {getInitials(profile.name, profile.surname)}
-              </span>
+              <ProfileAvatar
+                profile={profile}
+                sizeClass="size-8"
+                className="ring-1 ring-white/20"
+              />
               <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
                 Lvl {level}
               </span>

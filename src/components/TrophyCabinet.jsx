@@ -64,7 +64,7 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
           aria-pressed={isSelected}
           aria-label={`${t(trophy.titleKey)} · ${t(unlocked ? 'trophy.status.unlocked' : 'trophy.status.locked')} · ${requirement}`}
           className={cn(
-            'relative z-0 flex h-full min-h-[146px] w-full flex-col items-center overflow-visible rounded-xl border px-2 pb-2.5 pt-2 text-center transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 sm:min-h-[166px] sm:px-2.5 sm:pt-2.5',
+            'relative z-0 flex h-full min-h-[196px] w-full flex-col items-center overflow-hidden rounded-xl border px-2 pb-2.5 pt-2 text-center transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 sm:min-h-[212px] sm:px-2.5 sm:pt-2.5',
             isPremium
               ? 'border-white/10 bg-black/35 hover:border-amber-200/40 hover:bg-white/[.045] hover:shadow-[0_0_26px_rgba(250,204,21,.22)] focus-visible:ring-amber-200/50'
               : 'border-slate-200/80 bg-white hover:border-amber-200 hover:bg-amber-50/35 hover:shadow-[0_0_24px_rgba(245,158,11,.2)] focus-visible:ring-teal-500/40 dark:border-slate-700 dark:bg-slate-900/80 dark:hover:border-amber-200/30',
@@ -73,14 +73,14 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
           )}
         >
           <span className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(ellipse_at_center,rgba(255,230,130,.24),transparent_68%)] opacity-0 transition-opacity duration-300 group-hover/trophy:opacity-100 group-focus-within/trophy:opacity-100" aria-hidden="true" />
-          <span className="relative grid h-[90px] w-full place-items-center sm:h-[104px]">
+          <span className="relative grid h-[90px] w-full shrink-0 place-items-center overflow-hidden sm:h-[104px]">
             <img
               src={trophy.image}
               alt=""
               loading="lazy"
               draggable="false"
               className={cn(
-                'size-full object-contain transition-all duration-300',
+                'absolute inset-0 size-full object-contain transition-all duration-300',
                 unlocked
                   ? isPremium
                     ? 'drop-shadow-[0_0_14px_rgba(250,204,21,.28)] group-hover/trophy:drop-shadow-[0_0_24px_rgba(45,212,191,.5)]'
@@ -99,13 +99,13 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
             )}
             {unlocked && <Sparkles className={cn('absolute left-1 top-1 size-4 animate-pulse', isPremium ? 'text-yellow-100' : 'text-amber-500')} aria-hidden="true" />}
           </span>
-          <span className={cn('relative mt-1 line-clamp-2 min-h-8 text-[10px] font-black leading-tight sm:text-[11px]', isPremium ? 'text-white' : 'text-slate-800 dark:text-white')}>
+          <span className={cn('relative mt-1 line-clamp-2 min-h-8 shrink-0 text-[10px] font-black leading-tight sm:text-[11px]', isPremium ? 'text-white' : 'text-slate-800 dark:text-white')}>
             {t(trophy.titleKey)}
           </span>
-          <span className={cn('relative mt-1 text-[9px] font-bold leading-tight', unlocked ? isPremium ? 'text-emerald-200' : 'text-emerald-700 dark:text-emerald-300' : isPremium ? 'text-white/50' : 'text-slate-500 dark:text-slate-400')}>
+          <span className={cn('relative mt-1 shrink-0 text-[9px] font-bold leading-tight', unlocked ? isPremium ? 'text-emerald-200' : 'text-emerald-700 dark:text-emerald-300' : isPremium ? 'text-white/50' : 'text-slate-500 dark:text-slate-400')}>
             {isPreviewUnlock ? t('trophy.cabinet.previewBadge') : unlocked ? t('trophy.status.unlocked') : progressLabel(trophy, progress, language, t)}
           </span>
-          <span className={cn('relative mt-2 h-1.5 w-full overflow-hidden rounded-full', isPremium ? 'bg-white/10' : 'bg-slate-100 dark:bg-slate-800')}>
+          <span className={cn('relative mt-2 h-1.5 w-full shrink-0 overflow-hidden rounded-full', isPremium ? 'bg-white/10' : 'bg-slate-100 dark:bg-slate-800')}>
             <span className={cn('block h-full rounded-full transition-[width] duration-500', unlocked ? isPremium ? 'bg-gradient-to-r from-amber-300 to-teal-300 shadow-[0_0_10px_rgba(45,212,191,.5)]' : 'bg-gradient-to-r from-amber-500 to-yellow-300' : isPremium ? 'bg-gradient-to-r from-amber-300/70 to-teal-300/70' : 'bg-gradient-to-r from-amber-400 to-teal-500')} style={{ width: `${shownPercent}%` }} />
           </span>
         </button>

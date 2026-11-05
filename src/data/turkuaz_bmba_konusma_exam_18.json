@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Para ve Tasarruf",
+      "questions": [
+        "Para biriktirmekte (tasarruf yapmakta) iyi misinizdir, yoksa kazandığınızı hemen harcar mısınız?",
+        "Elinize büyük bir miktarda para (ikramiye vb.) geçseydi, bu parayla yapacağınız ilk üç şey ne olurdu?",
+        "Sizce okullarda öğrencilere erken yaşta 'finansal okuryazarlık' (para yönetimi) dersi verilmeli midir?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "İlham Veren Bir Kişi",
+      "prompt": "Hayatınızda size en çok ilham veren, örnek aldığınız kişiyi (bu kişi aileden biri, ünlü bir lider veya tarihi bir karakter olabilir) anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu kişinin kim olduğu ve ne iş yaptığı (veya tarihteki rolü).",
+        "Bu kişiyi diğer insanlardan ayıran en belirgin fiziksel veya karakteristik özelliklerinin neler olduğu.",
+        "Onun hayatındaki hangi başarının veya zorluğun sizi bu kadar etkilediği.",
+        "Bu kişiden kendi hayatınız için hangi önemli dersleri (veya ilhamı) aldığınız."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Liderlik ve Güç",
+      "questions": [
+        "Gerçek bir liderde bulunması gereken en önemli üç özellik sizce nedir? Liderlik doğuştan gelen bir yetenek midir, yoksa sonradan mı öğrenilir?",
+        "Tarih boyunca 'Güç yozlaştırır, mutlak güç mutlaka yozlaştırır' sözü sıkça söylenmiştir. Çok fazla güce (veya zenginliğe) sahip olan insanların ahlaki olarak bozulması (yozlaşması) sizce kaçınılmaz bir insan doğası mıdır?"
+      ]
+    }
+  }
+]

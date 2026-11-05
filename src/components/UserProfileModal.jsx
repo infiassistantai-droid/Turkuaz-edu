@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { getRankProgress } from '../lib/ranks'
 import StreakMilestones from './StreakMilestones'
 import TrophyCabinet from './TrophyCabinet'
+import ProfileAvatar from './ProfileAvatar'
 
 export default function UserProfileModal({
   open,
@@ -68,9 +69,12 @@ export default function UserProfileModal({
         'relative flex items-center gap-4 border-b p-5 sm:p-6',
         isPremium ? 'border-white/10 bg-gradient-to-r from-rose-950/70 via-red-950/40 to-black/20' : dark ? 'border-slate-700 bg-gradient-to-r from-slate-900 to-slate-950' : 'border-slate-100 bg-gradient-to-r from-teal-50 to-white',
       )}>
-        <div className={cn('grid size-14 shrink-0 place-items-center rounded-2xl text-sm font-black text-white shadow-lg', isPremium ? 'bg-gradient-to-br from-yellow-400 to-amber-700 shadow-yellow-500/20' : 'bg-gradient-to-br from-teal-600 to-cyan-500 shadow-teal-600/20')}>
-          {initials}
-        </div>
+        <ProfileAvatar
+          profile={profile}
+          fallbackText={initials}
+          sizeClass="size-14 rounded-2xl"
+          className={cn('text-sm font-black shadow-lg', isPremium ? 'shadow-yellow-500/20' : 'shadow-teal-600/20')}
+        />
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-center gap-2">
             <div className="min-w-0 flex-1">
@@ -202,6 +206,7 @@ export default function UserProfileModal({
               isPremium={isPremium}
               winterStudy={winterStudy}
               winterChampionUnlocked={winterChampionUnlocked}
+              showcaseUnlocked
               showHeader
             />
           </TabsContent>

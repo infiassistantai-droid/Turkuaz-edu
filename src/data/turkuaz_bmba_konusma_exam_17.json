@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Moda ve Giyim",
+      "questions": [
+        "Günlük hayatınızda nasıl giyinmeyi tercih edersiniz? (Spor, klasik, rahat vb.)",
+        "Kıyafet alırken modayı (trendleri) takip eder misiniz, yoksa kendi tarzınızı mı yaratırsınız?",
+        "Sizce bir insanın giyim tarzı, onun karakteri veya sosyal statüsü hakkında bilgi verir mi?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Unutulmaz Bir Başarı",
+      "prompt": "Hayatınızda elde ettiğiniz, sizin için çok önemli ve unutulmaz olan bir başarıyı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu başarının ne olduğu (eğitim, spor, iş, sanat vb.) ve ne zaman gerçekleştiği.",
+        "Bu hedefe ulaşmak için ne kadar süre ve nasıl çalıştığınız (hazırlık süreci).",
+        "Başarılı olduğunuzu anladığınız o ilk an neler hissettiğiniz.",
+        "Bu başarının daha sonraki hayatınıza ve özgüveninize nasıl etki ettiği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Hızlı Moda (Fast Fashion) ve Sürdürülebilirlik",
+      "questions": [
+        "Günümüzde küresel markaların sürekli yeni koleksiyonlar çıkararak insanları 'Hızlı Moda' (Fast Fashion) tüketimine zorlamasını nasıl değerlendiriyorsunuz? Bu durumun doğaya zararları nelerdir?",
+        "Toplumun aşırı tüketime dayalı bu tekstil çılgınlığından kurtulup 'Yavaş Moda'ya (az ama kaliteli kıyafet almaya) geçmesi sizce mümkün müdür? Hangi adımlar atılmalıdır?"
+      ]
+    }
+  }
+]

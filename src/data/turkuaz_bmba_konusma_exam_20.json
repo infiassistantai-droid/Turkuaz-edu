@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Meslekler ve Gelecek Planları",
+      "questions": [
+        "Gelecek beş yıl içinde hayatınızda (kariyer veya eğitim olarak) neleri başarmayı hedefliyorsunuz?",
+        "Sizce bir meslekte başarılı olmak için zeka mı daha önemlidir, yoksa iletişim becerisi (sosyal zeka) mi?",
+        "Yurt dışında yaşama ve çalışma fırsatınız olsaydı, bunu değerlendirir miydiniz? Neden?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Değiştirmek İstediğiniz Bir Kural",
+      "prompt": "Ülkenizde veya dünyada var olan bir yasayı, kuralı veya toplumsal bir alışkanlığı değiştirme gücünüz olsaydı, neyi değiştirirdiniz? (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Değiştirmek istediğiniz bu kuralın veya alışkanlığın ne olduğu.",
+        "Bu kuralın şu anki haliyle topluma veya size nasıl zarar verdiği.",
+        "Bu kuralın yerine nasıl bir sistem (veya yeni bir yasa) getireceğiniz.",
+        "Yapacağınız bu değişikliğin dünyayı nasıl daha iyi bir yer yapacağı."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Geleceğin Eğitim Sistemi",
+      "questions": [
+        "Sizce geleneksel okul sistemi (sıralarda oturup öğretmeni dinlemek) günümüz Z kuşağının ihtiyaçlarını karşılıyor mu? Eğitimin gelecekte tamamen dijital (online) veya yapay zeka destekli olmasını destekler misiniz?",
+        "Not sisteminin (sınav puanlarının) bir öğrencinin gerçek potansiyelini, zekasını ve karakterini ölçmede adil bir yöntem olduğuna inanıyor musunuz? Sınavsız bir eğitim modeli mümkün müdür?"
+      ]
+    }
+  }
+]

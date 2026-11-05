@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Medya ve Haberler",
+      "questions": [
+        "Dünyadaki veya ülkenizdeki haberleri genellikle nereden takip edersiniz (TV, internet, gazete)?",
+        "İlginizi en çok çeken haber türleri hangileridir (spor, siyaset, teknoloji vb.)? Neden?",
+        "Sosyal medyada paylaşılan her habere inanır mısınız? Doğruluğunu nasıl kontrol edersiniz?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Etkilendiğiniz Bir Film veya Kitap",
+      "prompt": "Sizi derinden etkileyen, hayat bakış açınızı değiştiren bir kitabı veya filmi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Kitabın/Filmin adı, türü ve ana konusu.",
+        "En çok hangi karakterden veya olaydan etkilendiğiniz.",
+        "Bu eserin size ne öğrettiği veya düşüncelerinizi nasıl değiştirdiği.",
+        "Bu eseri başkalarına neden tavsiye edeceğiniz."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Sanat ve Sansür",
+      "questions": [
+        "Sizce sinema, edebiyat veya müzik gibi sanat dalları toplumu eğitmekle mi görevlidir, yoksa sadece özgürce hikaye anlatmakla mı?",
+        "Devletlerin, toplum ahlakını veya siyasi düzeni korumak amacıyla sanat eserlerine (filmlere, kitaplara) 'sansür' uygulamasını doğru buluyor musunuz? Sanat tamamen sınırsız mı olmalıdır?"
+      ]
+    }
+  }
+]
