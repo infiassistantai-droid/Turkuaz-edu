@@ -3,6 +3,7 @@ import { ChevronDown, Settings, Trash2, LogOut, Target, Zap, AlertTriangle, Chec
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
 import { useI18n } from '../lib/i18n.jsx'
+import ProfileAvatar from './ProfileAvatar'
 
 function MenuItem({ icon: Icon, label, onClick, danger, isPremium }) {
   return (
@@ -68,9 +69,7 @@ export default function ProfileMenu({ profile, stats, level = 1, open, onOpenCha
         aria-expanded={open}
         className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 py-1 pl-1 pr-2.5 transition-all active:scale-95 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/80"
       >
-        <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-500 text-xs font-bold text-white ring-1 ring-white/20">
-          {initials}
-        </span>
+        <ProfileAvatar profile={profile} fallbackText={initials} sizeClass="size-8" className="ring-1 ring-white/20" />
         <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
           Lvl {level}
         </span>
@@ -92,9 +91,7 @@ export default function ProfileMenu({ profile, stats, level = 1, open, onOpenCha
           {/* profile header */}
           <div className={cn('flex items-center gap-3 p-4 text-white', isPremium ? 'bg-gradient-to-br from-rose-950 via-red-900 to-rose-950' : 'bg-gradient-to-br from-teal-600 to-cyan-500')}>
             <div className="relative shrink-0">
-              <div className="relative grid size-11 place-items-center rounded-full bg-white/20 font-display text-sm font-extrabold ring-1 ring-white/30">
-                {initials}
-              </div>
+              <ProfileAvatar profile={profile} fallbackText={initials} sizeClass="size-11" className="font-display text-sm font-extrabold ring-1 ring-white/30" />
               <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-teal-600 bg-emerald-400" aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">

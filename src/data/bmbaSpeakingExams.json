@@ -1,0 +1,685 @@
+{
+  "version": 1,
+  "exams": [
+    {
+      "exam_number": 1,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Hobiler ve Boş Zaman",
+        "questions": [
+          "Bize kısaca kendinizden ve en sevdiğiniz hobilerinizden bahseder misiniz?",
+          "Genellikle hafta sonlarınızı nasıl geçirirsiniz? Evde dinlenmeyi mi yoksa dışarı çıkmayı mı tercih edersiniz?",
+          "Eğer yeni bir hobi edinmek (öğrenmek) isteseydiniz, bu ne olurdu ve neden?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Unutulmaz Bir Seyehat",
+        "prompt": "Hayatınızda yaptığınız en unutulmaz yolculuğu veya tatili anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu yolculuğu nereye, ne zaman ve kiminle yaptığınız.",
+          "Orada neler yaptığınız ve hangi yerleri gezdiğiniz.",
+          "Yolculuk sırasında karşılaştığınız ilginç veya komik bir olay.",
+          "Bu seyahati sizin için 'unutulmaz' kılan asıl şeyin ne olduğu."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Turizm ve Kültürel Etkileşim",
+        "questions": [
+          "Turizmin hızla gelişmesinin bir ülkenin yerel kültürü ve doğası üzerinde olumlu mu yoksa olumsuz mu etkileri olduğunu düşünüyorsunuz? Nedenleriyle açıklayınız.",
+          "Gelecekte sanal gerçeklik (VR) teknolojilerinin çok gelişmesiyle, 'sanal turizmin' (insanların evden çıkmadan dünyayı gezmesinin) fiziksel seyahatin yerini tamamen alabileceğine inanıyor musunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 2,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Eğitim ve Kariyer",
+        "questions": [
+          "Şu an okuduğunuz bölümü (veya yaptığınız işi) neden seçtiğinizi anlatır mısınız?",
+          "İş veya okul hayatınızda sizi en çok motive eden şey nedir?",
+          "Çocukken hayalinizdeki meslek neydi? Şimdiki hedeflerinizle karşılaştırdığınızda neler değişti?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Teknoloji ve Günlük Hayat",
+        "prompt": "Akıllı telefonların ve teknolojinin günlük hayatımızı, alışkanlıklarımızı nasıl değiştirdiğini anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Gün içinde teknolojiyi en çok hangi amaçlarla (iletişim, eğitim, eğlence vb.) kullandığınız.",
+          "Teknolojinin hayatınıza sağladığı en büyük kolaylıklar.",
+          "Teknolojinin veya sosyal medyanın insan sağlığına/psikolojisine olumsuz etkileri.",
+          "Teknoloji olmadan bir hafta geçirmeniz gerekseydi nasıl hissederdiniz?"
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Yapay Zeka ve Gelecek",
+        "questions": [
+          "Son yıllarda hızla gelişen yapay zeka teknolojilerinin (örneğin robotların), gelecekte insanların işlerini elinden alıp devasa bir işsizliğe yol açacağını mı, yoksa yeni iş alanları yaratacağını mı düşünüyorsunuz?",
+          "Bazı sosyologlar, teknolojinin insanları birbirine bağlamak yerine 'asosyal' ve yalnız bireylere dönüştürdüğünü savunuyor. Bu görüşe katılıyor musunuz? Toplumsal ilişkilerimiz bu durumdan nasıl etkileniyor?"
+        ]
+      }
+    },
+    {
+      "exam_number": 3,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Alışveriş ve Tüketim Alışkanlıkları",
+        "questions": [
+          "Alışveriş yapmayı sever misiniz? Genellikle ne tür şeyler satın alırsınız?",
+          "İnternetten mi (online) alışveriş yapmayı tercih edersiniz, yoksa mağazaya gidip görerek mi? Neden?",
+          "Alışveriş yaparken fiyatına mı daha çok dikkat edersiniz, yoksa kalitesine veya markasına mı?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Önemli Bir Hediye",
+        "prompt": "Hayatınızda aldığınız veya birine verdiğiniz en önemli/anlamlı hediyeyi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu hediyenin ne olduğu ve kime verildiği (veya kimden alındığı).",
+          "Hangi özel günde veya hangi nedenle verildiği.",
+          "Hediyeyi verirken (veya alırken) neler hissettiğiniz.",
+          "Bu hediyeyi diğerlerinden farklı ve 'anlamlı' kılan asıl sebebin ne olduğu."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Tüketim Çılgınlığı ve Reklamlar",
+        "questions": [
+          "Günümüzde insanların 'tüketim çılgınlığı' yaşadığına katılıyor musunuz? İnsanlar neden ihtiyaçları olmayan şeyleri satın alma eğilimindedir?",
+          "Reklamların, ünlülerin ve sosyal medyanın (Influencer'ların) alışveriş alışkanlıklarımızı manipüle ettiğini (yönlendirdiğini) düşünüyor musunuz? Bu durumdan korunmak için ne yapılabilir?"
+        ]
+      }
+    },
+    {
+      "exam_number": 4,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Ev ve Yaşam Alanı",
+        "questions": [
+          "Şu an nerede (nasıl bir evde veya mahallede) yaşıyorsunuz? Bize biraz anlatır mısınız?",
+          "Büyük ve kalabalık bir şehirde mi yaşamayı tercih edersiniz, yoksa sessiz sakin bir kasabada veya köyde mi? Neden?",
+          "Evinizde en çok zaman geçirdiğiniz ve en sevdiğiniz oda hangisidir? Orada neler yaparsınız?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "İdeal Ev ve Gelecek Hayali",
+        "prompt": "Gelecekte yaşamak istediğiniz 'ideal evi' hayal edip anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Evin nerede (hangi ülkede, şehirde veya coğrafyada) bulunmasını istediğiniz.",
+          "Evin dışarıdan nasıl görüneceği ve içinin tasarımı (büyük/küçük, modern/klasik, bahçeli vb.).",
+          "Evin içinde mutlaka olmasını istediğiniz özel bir alan (kütüphane, spor odası, havuz vb.).",
+          "Neden özellikle böyle bir evde yaşamanın sizi mutlu edeceğini düşündüğünüz."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Şehirleşme ve Konut Krizleri",
+        "questions": [
+          "Büyük şehirlerde artan nüfus, yüksek kiralar ve betonlaşma (yeşil alanların azalması) gibi sorunlar hakkında ne düşünüyorsunuz? Bu şehirleşme krizine nasıl bir çözüm bulunabilir?",
+          "Pandemi sonrasında bazı insanlar apartman dairelerinden vazgeçip doğayla iç içe olan, küçük ve bağımsız 'Tiny House' (Küçük Ev) modeline geçmeye başladı. Sizce bu sadece geçici bir moda mıdır, yoksa geleceğin sürdürülebilir yaşam tarzı mı olacaktır?"
+        ]
+      }
+    },
+    {
+      "exam_number": 5,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Yemek ve Mutfak Kültürü",
+        "questions": [
+          "En sevdiğiniz yemek nedir ve onu neden seviyorsunuz?",
+          "Genellikle evde mi yemek yersiniz, yoksa dışarıda (restoranda) mı? Neden?",
+          "Kendiniz yemek pişirmeyi sever misiniz? En iyi yaptığınız yemek hangisidir?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Sağlıklı Yaşam ve Beslenme",
+        "prompt": "Günümüzde insanların beslenme ve sağlıklı yaşam alışkanlıkları hakkında konuşunuz. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Kendi beslenme alışkanlıklarınızın (sağlıklı veya sağlıksız) nasıl olduğu.",
+          "Günümüz toplumunda 'fast-food' tüketiminin neden bu kadar arttığı.",
+          "Sağlıklı bir yaşam için beslenme dışında (spor, uyku vb.) nelerin önemli olduğu.",
+          "İnsanların sağlıklı yaşama daha fazla dikkat etmesi için neler yapılabileceği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Küresel Gıda Krizi ve GDO",
+        "questions": [
+          "Artan dünya nüfusunu doyurmak için Genetiği Değiştirilmiş Organizmalar (GDO) içeren gıdaların üretilmesi sizce bir zorunluluk mudur, yoksa insan sağlığı ve doğa için büyük bir tehdit midir?",
+          "Bazı ülkelerde 'şeker ve abur cubur vergisi' uygulanmaya başlandı. Devletin, halkın sağlığını korumak adına sağlıksız gıdalara yüksek vergi koymasını (müdahale etmesini) doğru buluyor musunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 6,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Ulaşım ve Trafik",
+        "questions": [
+          "Günlük hayatınızda (işe veya okula giderken) en çok hangi ulaşım aracını kullanırsınız?",
+          "Yaşadığınız şehirde trafik büyük bir sorun mu? Sizce bu sorun nasıl çözülebilir?",
+          "Uzun bir yolculuğa çıkacağınız zaman uçağı mı, treni mi yoksa otobüsü mü tercih edersiniz? Neden?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "İdeal Şehir Ulaşımı",
+        "prompt": "Yaşadığınız şehirde (veya hayalinizdeki bir şehirde) ideal ulaşım sisteminin nasıl olması gerektiğini anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Şehirdeki mevcut ulaşım sorunlarının neler olduğu.",
+          "Toplu taşıma (metro, otobüs vb.) sisteminde nelerin geliştirilmesi gerektiği.",
+          "Bisiklet kullanımı veya yürüyüş yollarının artırılmasının önemi.",
+          "İnsanları özel araç kullanmak yerine toplu taşımaya teşvik etmek için neler yapılabileceği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Otonom (Sürücüsüz) Araçlar ve Gelecek",
+        "questions": [
+          "Gelecekte trafiğin tamamen yapay zeka tarafından yönetilen sürücüsüz (otonom) araçlardan oluşacağını hayal edin. Bu durum kazaları sıfıra indirir mi, yoksa teknolojinin çökmesi ihtimali daha büyük bir felakete mi yol açar?",
+          "Trafiği ve hava kirliliğini azaltmak için büyük şehirlerin merkezine (şehir içine) özel araçların girmesinin tamamen yasaklanması fikrine katılıyor musunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 7,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Arkadaşlar ve Sosyal Hayat",
+        "questions": [
+          "En yakın arkadaşınızı nasıl tanımlarsınız? Onun hangi özelliklerini seviyorsunuz?",
+          "Arkadaşlarınızla buluştuğunuzda genellikle neler yaparsınız?",
+          "Yeni insanlarla tanışmak sizin için kolay mıdır, yoksa zaman mı alır? Neden?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Zor Bir Karar",
+        "prompt": "Hayatınızda vermek zorunda kaldığınız en zor kararı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Kararın ne olduğu ve ne zaman verilmesi gerektiği.",
+          "Seçeneklerinizin neler olduğu ve sizi neden zorladığı.",
+          "Karar verme sürecinde kimden veya nelerden yardım aldığınız.",
+          "Geriye dönüp baktığınızda bu kararın doğru olup olmadığı hakkındaki düşünceniz."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Kuşak Çatışması ve Değişen Değerler",
+        "questions": [
+          "Günümüzde gençler ile ebeveynleri (veya büyükanne/büyükbabaları) arasındaki 'kuşak çatışmasının' en temel sebepleri sizce nelerdir?",
+          "Modern çağda saygı, sadakat ve aile bağları gibi geleneksel değerlerin giderek zayıfladığını düşünüyor musunuz? Toplum bu hızlı değişime nasıl ayak uydurmalıdır?"
+        ]
+      }
+    },
+    {
+      "exam_number": 8,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Medya ve Haberler",
+        "questions": [
+          "Dünyadaki veya ülkenizdeki haberleri genellikle nereden takip edersiniz (TV, internet, gazete)?",
+          "İlginizi en çok çeken haber türleri hangileridir (spor, siyaset, teknoloji vb.)? Neden?",
+          "Sosyal medyada paylaşılan her habere inanır mısınız? Doğruluğunu nasıl kontrol edersiniz?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Etkilendiğiniz Bir Film veya Kitap",
+        "prompt": "Sizi derinden etkileyen, hayat bakış açınızı değiştiren bir kitabı veya filmi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Kitabın/Filmin adı, türü ve ana konusu.",
+          "En çok hangi karakterden veya olaydan etkilendiğiniz.",
+          "Bu eserin size ne öğrettiği veya düşüncelerinizi nasıl değiştirdiği.",
+          "Bu eseri başkalarına neden tavsiye edeceğiniz."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Sanat ve Sansür",
+        "questions": [
+          "Sizce sinema, edebiyat veya müzik gibi sanat dalları toplumu eğitmekle mi görevlidir, yoksa sadece özgürce hikaye anlatmakla mı?",
+          "Devletlerin, toplum ahlakını veya siyasi düzeni korumak amacıyla sanat eserlerine (filmlere, kitaplara) 'sansür' uygulamasını doğru buluyor musunuz? Sanat tamamen sınırsız mı olmalıdır?"
+        ]
+      }
+    },
+    {
+      "exam_number": 9,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "İklim ve Doğa",
+        "questions": [
+          "En sevdiğiniz mevsim hangisidir? Neden bu mevsimi seviyorsunuz?",
+          "Yaşadığınız şehrin (veya ülkenin) iklimi nasıldır? Bu iklimin günlük hayatınıza etkisi nedir?",
+          "Doğada zaman geçirmekten hoşlanır mısınız? (Kamp yapmak, yürüyüş vb.)"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Çevre Kirliliği ve Kişisel Önlemler",
+        "prompt": "Gözlemlediğiniz çevre kirliliği sorunlarını ve bireysel olarak alabildiğiniz (veya almayı düşündüğünüz) önlemleri anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Çevrenizde en çok dikkatinizi çeken kirlilik türü (hava, su, gürültü, çöp vb.).",
+          "Bu kirliliğin insan sağlığına ve doğaya olan etkileri.",
+          "Geri dönüşüm, enerji tasarrufu veya plastik kullanımı konusunda bireysel olarak neler yaptığınız.",
+          "Çevreyi korumak için başka ne gibi küçük alışkanlıkların (önlemlerin) faydalı olabileceği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "İklim Krizi ve Küresel Sorumluluk",
+        "questions": [
+          "Küresel iklim krizinin (küresel ısınmanın) asıl sorumlusu sizce kimdir? Sıradan vatandaşlar mı, yoksa dev sanayi kuruluşları ve hükümetler mi?",
+          "Karbon ayak izini azaltmak için devletlerin benzinli araçları veya et tüketimini yasaklamak (veya aşırı vergi koymak) gibi radikal kararlar alması sizce doğru bir yaklaşım mıdır?"
+        ]
+      }
+    },
+    {
+      "exam_number": 10,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Sanat ve Müzik",
+        "questions": [
+          "Hangi müzik türlerini dinlemekten hoşlanırsınız? Favori bir şarkıcınız veya grubunuz var mı?",
+          "Bir müzik aleti (enstrüman) çalıyor musunuz veya çalmayı ister miydiniz? Neden?",
+          "Müze veya sanat galerisi gezmeyi sever misiniz?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Unutulmaz Bir Konser veya Etkinlik",
+        "prompt": "Hayatınızda katıldığınız ve sizi çok etkileyen bir konseri, tiyatro oyununu veya kültürel etkinliği anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Etkinliğin ne olduğu, ne zaman ve nerede yapıldığı.",
+          "Bu etkinliğe kiminle gittiğiniz ve atmosferin nasıl olduğu.",
+          "O gün hissettiğiniz duygular ve etkinliğin en unutulmaz anı.",
+          "Böyle kültürel etkinliklere katılmanın insan psikolojisine etkileri hakkındaki düşünceniz."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Sanatın Toplumsal Rolü ve Desteklenmesi",
+        "questions": [
+          "Toplumun kültürel seviyesini yükseltmek için devletin sanatı (tiyatro, sinema, resim) maddi olarak desteklemesi şart mıdır? Sanat tamamen özel sektöre mi bırakılmalıdır?",
+          "Bazı kişiler klasik sanat eserlerinin (örneğin Mozart'ın müziklerinin veya Da Vinci'nin tablolarının) modern dijital sanattan çok daha değerli olduğunu savunur. Sanatta 'klasik' ve 'modern' ayrımı hakkında ne düşünüyorsunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 11,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Spor ve Fiziksel Aktivite",
+        "questions": [
+          "Düzenli olarak spor yapar mısınız? Hangi spor dallarıyla ilgileniyorsunuz?",
+          "Sizce insanların sağlıklı kalmak için mutlaka spor salonuna gitmesi şart mıdır? Neden?",
+          "Televizyonda spor müsabakalarını (futbol, basketbol vb.) izlemeyi sever misiniz? Hangi takımı tutuyorsunuz?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Tarihteki Önemli Bir Olay",
+        "prompt": "Ülkenizin veya dünyanın tarihinde gerçekleşmiş ve sizi çok etkileyen bir olayı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu tarihi olayın ne olduğu ve ne zaman gerçekleştiği.",
+          "Olayın temel sebepleri ve nasıl geliştiği.",
+          "Sizi kişisel olarak neden bu kadar çok etkilediği.",
+          "Bu olayın bugünün dünyasını veya toplumunu nasıl şekillendirdiği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Profesyonel Spor ve Aşırı Ticarileşme",
+        "questions": [
+          "Günümüzde profesyonel futbolcu veya basketbolcuların astronomik (çok yüksek) maaşlar almasını adil buluyor musunuz? Bir doktor veya öğretmenden yüzlerce kat fazla kazanmaları toplumsal adaleti zedeler mi?",
+          "Profesyonel sporun (örneğin Olimpiyatların veya Dünya Kupası'nın) artık bir spordan ziyade, devasa bir 'ticari sektöre' ve reklam şovuna dönüştüğünü düşünüyor musunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 12,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Tatil ve Turizm",
+        "questions": [
+          "Tatillerinizi genellikle nerede geçirmeyi seversiniz (deniz kenarı, dağ evi, tarihi şehirler)? Neden?",
+          "Tatile yalnız çıkmayı mı, yoksa aileniz veya arkadaşlarınızla çıkmayı mı tercih edersiniz?",
+          "Şimdiye kadar gittiğiniz yerler arasında en çok beğendiğiniz şehir/ülke hangisiydi?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "İdeal Bir Toplum",
+        "prompt": "Yaşamak istediğiniz 'ideal ve kusursuz toplumu' hayal edip anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu toplumda adaletin, eğitimin ve sağlık hizmetlerinin nasıl işleyeceği.",
+          "İnsanlar arasındaki sosyal ilişkilerin (saygı, yardımlaşma) nasıl olacağı.",
+          "Çevreye ve doğaya karşı nasıl bir tutum sergileneceği.",
+          "Günümüz toplumlarında eksik olan ama sizin hayalinizdeki toplumda mutlaka bulunacak o 'temel değerin' ne olduğu."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Turizmin Karanlık Yüzü: Overtourism",
+        "questions": [
+          "Venedik veya Barselona gibi tarihi şehirlerin aşırı turist akınına (overtourism) uğraması ve yerli halkın bu durumdan şikayetçi olması hakkında ne düşünüyorsunuz? Turist sayısına sınır getirilmesi demokratik midir?",
+          "Sizce modern turizm, insanların gerçekten yeni kültürler öğrenmesini mi sağlıyor, yoksa sadece sosyal medyada fotoğraf paylaşmak için yapılan yüzeysel (sığ) bir tüketim alışkanlığına mı dönüştü?"
+        ]
+      }
+    },
+    {
+      "exam_number": 13,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Kitaplar ve Okuma Alışkanlıkları",
+        "questions": [
+          "Kitap okumayı sever misiniz? Genellikle hangi tür kitaplar okumayı tercih edersiniz?",
+          "Fiziksel kitap okumayı mı yoksa e-kitap (veya sesli kitap) dinlemeyi mi tercih edersiniz? Neden?",
+          "Okuduğunuz ve sizi en çok etkileyen son kitap hangisiydi?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Gelecekteki Bir İcat Hayali",
+        "prompt": "Henüz icat edilmemiş ama gelecekte olmasını çok istediğiniz, hayatınızı veya dünyayı değiştirecek bir icadı hayal edip anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu icadın ne olduğu ve temel işlevinin ne olacağı.",
+          "Bu icadın insanların hayatındaki hangi büyük sorunu çözeceği.",
+          "Bu icadın potansiyel tehlikelerinin (veya kötüye kullanımının) ne olabileceği.",
+          "Eğer bu icada sahip olsaydınız ilk olarak ne yapacağınız."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Bilim Kurgu Gerçek mi Oluyor?",
+        "questions": [
+          "Geçmişte bilim kurgu filmlerinde gördüğümüz (yapay zeka, akıllı evler, uzay seyahati) birçok teknolojinin bugün gerçek olması sizi korkutuyor mu, yoksa heyecanlandırıyor mu?",
+          "Teknolojinin çok hızlı gelişmesiyle insanın 'doğal yeteneklerinin' (ezberleme, hesaplama, yön bulma) giderek köreldiğini düşünüyor musunuz? Bu durum insan evrimini nasıl etkileyecek?"
+        ]
+      }
+    },
+    {
+      "exam_number": 14,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Gelenekler ve Bayramlar",
+        "questions": [
+          "Ülkenizdeki en önemli ulusal veya dini bayram hangisidir? Bu bayramda genellikle neler yapılır?",
+          "Sizce gelenekleri korumak neden önemlidir? Ailenizden öğrendiğiniz ve devam ettirdiğiniz bir gelenek var mı?",
+          "Bayramlarda ailenizle vakit geçirmeyi mi, yoksa arkadaşlarınızla tatil yapmayı mı tercih edersiniz?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Büyük Bir Hata ve Alınan Ders",
+        "prompt": "Hayatınızda yaptığınız büyük bir hatayı (veya yanlış bir seçimi) ve bu olaydan ne öğrendiğinizi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu hatanın ne zaman ve neyle ilgili olduğu (okul, iş, ilişkiler vb.).",
+          "O dönemde neden böyle bir karar aldığınız (sizi neyin yanılttığı).",
+          "Bu hatanın hayatınızdaki kısa ve uzun vadeli sonuçları.",
+          "Geriye dönüp baktığınızda bu olayın sizi nasıl daha olgun bir insan yaptığı (aldığınız ders)."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Başarısızlık ve Toplumsal Baskı",
+        "questions": [
+          "Modern toplumda 'başarısızlığın' bir utanç kaynağı (tabu) olarak görülmesi hakkında ne düşünüyorsunuz? Çocuklara hata yapma hakkı neden verilmiyor?",
+          "Sosyal medyanın, insanları sürekli 'kusursuz ve başarılı' görünmeye zorlayarak gençlerde başarısızlık korkusunu (anksiyeteyi) artırdığına katılıyor musunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 15,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Alışveriş ve İndirimler",
+        "questions": [
+          "Alışveriş yaparken indirim dönemlerini (örneğin Efsane Cuma / Black Friday) takip eder misiniz?",
+          "Kıyafet alırken marka olmasına önem verir misiniz, yoksa sadece beğendiğiniz için mi alırsınız?",
+          "İkinci el (kullanılmış) eşya veya kıyafet satın alır mısınız? Neden?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Pişman Olunan Bir Alışveriş",
+        "prompt": "Hayatınızda satın aldığınız ancak sonradan çok pişman olduğunuz (veya hiç kullanmadığınız) bir eşyayı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu eşyanın ne olduğu ve ne zaman satın alındığı.",
+          "Satın alırken sizi neyin motive ettiği (reklamlar, indirim, tavsiye vb.).",
+          "Bu ürünü neden kullanmadığınız veya neden pişman olduğunuz.",
+          "Bu olaydan sonra alışveriş alışkanlıklarınızda nelerin değiştiği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Reklam Psikolojisi ve Minimalizm",
+        "questions": [
+          "Büyük markaların 'İhtiyacın var' hissini yaratmak için kullandığı psikolojik reklam taktikleri hakkında ne düşünüyorsunuz? Modern insan neden sürekli tüketmeye açtır?",
+          "Günümüzde yaygınlaşan 'Minimalizm' (Sade Yaşam) akımının, kapitalist tüketim toplumuna karşı güçlü bir çözüm (isyan) olabileceğine inanıyor musunuz?"
+        ]
+      }
+    },
+    {
+      "exam_number": 16,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Dil Öğrenimi ve Kültür",
+        "questions": [
+          "Yabancı bir dil (örneğin Türkçe veya İngilizce) öğrenirken en çok hangi konuda zorlanıyorsunuz (konuşma, dinleme, gramer)?",
+          "Sizce bir dili öğrenmenin en iyi yolu nedir? (Kurs, kitaplar, o ülkeye gitmek vb.)",
+          "Yabancı bir dil bilmek hayatınızda size ne gibi avantajlar sağladı?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Farklı Bir Kültürde Yaşamak",
+        "prompt": "Yabancı bir ülkede (veya tamamen farklı bir kültürde) yaşama deneyiminizi veya yaşamak istediğiniz ülkeyi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Hangi ülkede yaşadığınız (veya yaşamak istediğiniz).",
+          "O kültürde sizi en çok şaşırtan, zorlayan veya hayran bırakan şeyin ne olduğu.",
+          "Yemek, insan ilişkileri ve kurallar açısından kendi ülkenizle arasındaki farklar.",
+          "Bu farklı kültürde yaşamanın dünya görüşünüze (karakterinize) kattığı olumlu şeyler."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Küresel Dil ve Kültürel Asimilasyon",
+        "questions": [
+          "İngilizcenin günümüzde mutlak bir 'küresel dil' (Lingua Franca) haline gelmesinin diğer yerel dilleri ve kültürleri yok etme tehlikesi taşıdığına katılıyor musunuz?",
+          "Göçmenlerin gittikleri yeni ülkede kendi kültürlerini korumaları mı, yoksa tamamen o ülkenin kültürüne entegre (asimile) olmaları mı daha doğrudur? Sınır nerede çizilmelidir?"
+        ]
+      }
+    },
+    {
+      "exam_number": 17,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Moda ve Giyim",
+        "questions": [
+          "Günlük hayatınızda nasıl giyinmeyi tercih edersiniz? (Spor, klasik, rahat vb.)",
+          "Kıyafet alırken modayı (trendleri) takip eder misiniz, yoksa kendi tarzınızı mı yaratırsınız?",
+          "Sizce bir insanın giyim tarzı, onun karakteri veya sosyal statüsü hakkında bilgi verir mi?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Unutulmaz Bir Başarı",
+        "prompt": "Hayatınızda elde ettiğiniz, sizin için çok önemli ve unutulmaz olan bir başarıyı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu başarının ne olduğu (eğitim, spor, iş, sanat vb.) ve ne zaman gerçekleştiği.",
+          "Bu hedefe ulaşmak için ne kadar süre ve nasıl çalıştığınız (hazırlık süreci).",
+          "Başarılı olduğunuzu anladığınız o ilk an neler hissettiğiniz.",
+          "Bu başarının daha sonraki hayatınıza ve özgüveninize nasıl etki ettiği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Hızlı Moda (Fast Fashion) ve Sürdürülebilirlik",
+        "questions": [
+          "Günümüzde küresel markaların sürekli yeni koleksiyonlar çıkararak insanları 'Hızlı Moda' (Fast Fashion) tüketimine zorlamasını nasıl değerlendiriyorsunuz? Bu durumun doğaya zararları nelerdir?",
+          "Toplumun aşırı tüketime dayalı bu tekstil çılgınlığından kurtulup 'Yavaş Moda'ya (az ama kaliteli kıyafet almaya) geçmesi sizce mümkün müdür? Hangi adımlar atılmalıdır?"
+        ]
+      }
+    },
+    {
+      "exam_number": 18,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Para ve Tasarruf",
+        "questions": [
+          "Para biriktirmekte (tasarruf yapmakta) iyi misinizdir, yoksa kazandığınızı hemen harcar mısınız?",
+          "Elinize büyük bir miktarda para (ikramiye vb.) geçseydi, bu parayla yapacağınız ilk üç şey ne olurdu?",
+          "Sizce okullarda öğrencilere erken yaşta 'finansal okuryazarlık' (para yönetimi) dersi verilmeli midir?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "İlham Veren Bir Kişi",
+        "prompt": "Hayatınızda size en çok ilham veren, örnek aldığınız kişiyi (bu kişi aileden biri, ünlü bir lider veya tarihi bir karakter olabilir) anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu kişinin kim olduğu ve ne iş yaptığı (veya tarihteki rolü).",
+          "Bu kişiyi diğer insanlardan ayıran en belirgin fiziksel veya karakteristik özelliklerinin neler olduğu.",
+          "Onun hayatındaki hangi başarının veya zorluğun sizi bu kadar etkilediği.",
+          "Bu kişiden kendi hayatınız için hangi önemli dersleri (veya ilhamı) aldığınız."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Liderlik ve Güç",
+        "questions": [
+          "Gerçek bir liderde bulunması gereken en önemli üç özellik sizce nedir? Liderlik doğuştan gelen bir yetenek midir, yoksa sonradan mı öğrenilir?",
+          "Tarih boyunca 'Güç yozlaştırır, mutlak güç mutlaka yozlaştırır' sözü sıkça söylenmiştir. Çok fazla güce (veya zenginliğe) sahip olan insanların ahlaki olarak bozulması (yozlaşması) sizce kaçınılmaz bir insan doğası mıdır?"
+        ]
+      }
+    },
+    {
+      "exam_number": 19,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Hayvanlar ve Doğa",
+        "questions": [
+          "Evcil bir hayvanınız var mı? Eğer yoksa gelecekte hangi hayvanı beslemek isterdiniz?",
+          "Sizce insanların evde hayvan beslemesi onlara ne gibi sorumluluklar yükler?",
+          "Doğadaki vahşi hayvanları (aslan, fil vb.) hayvanat bahçesinde görmeyi mi yoksa belgesellerde izlemeyi mi tercih edersiniz? Neden?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Unutulmaz Bir Doğa Olayı veya Felaket",
+        "prompt": "Hayatınızda bizzat yaşadığınız veya haberlerde görüp sizi derinden etkileyen bir doğa olayını (deprem, sel, fırtına veya çok güzel bir doğa manzarası) anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Bu doğa olayının ne olduğu, nerede ve ne zaman yaşandığı.",
+          "Olay anında (veya haberi aldığınızda) neler hissettiğiniz.",
+          "Bu olayın insanlar, çevre veya sizin üzerinizdeki etkileri.",
+          "İnsanların bu tür doğa olaylarına (felaketlere) karşı nasıl daha hazırlıklı olabileceği."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Hayvan Hakları ve Etik",
+        "questions": [
+          "Kozmetik ve tıp sektöründe yeni ürünlerin hayvanlar üzerinde test edilmesini (deney hayvanları kullanılmasını) etik buluyor musunuz? Bilimsel ilerleme için hayvanların feda edilmesi zorunlu mudur?",
+          "Sokak hayvanları sorununun çözümü için bazı ülkelerde uygulanan 'uyutma' (ötanazi) politikası hakkında ne düşünüyorsunuz? Devletler hem insan güvenliğini hem de hayvan haklarını nasıl dengelemelidir?"
+        ]
+      }
+    },
+    {
+      "exam_number": 20,
+      "part_1": {
+        "level": "A1-B1",
+        "category": "Isınma ve Günlük Sorular (Warm-up)",
+        "topic": "Meslekler ve Gelecek Planları",
+        "questions": [
+          "Gelecek beş yıl içinde hayatınızda (kariyer veya eğitim olarak) neleri başarmayı hedefliyorsunuz?",
+          "Sizce bir meslekte başarılı olmak için zeka mı daha önemlidir, yoksa iletişim becerisi (sosyal zeka) mi?",
+          "Yurt dışında yaşama ve çalışma fırsatınız olsaydı, bunu değerlendirir miydiniz? Neden?"
+        ]
+      },
+      "part_2": {
+        "level": "B1-B2",
+        "category": "Monolog (Konu Anlatımı)",
+        "topic": "Değiştirmek İstediğiniz Bir Kural",
+        "prompt": "Ülkenizde veya dünyada var olan bir yasayı, kuralı veya toplumsal bir alışkanlığı değiştirme gücünüz olsaydı, neyi değiştirirdiniz? (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+        "key_points": [
+          "Değiştirmek istediğiniz bu kuralın veya alışkanlığın ne olduğu.",
+          "Bu kuralın şu anki haliyle topluma veya size nasıl zarar verdiği.",
+          "Bu kuralın yerine nasıl bir sistem (veya yeni bir yasa) getireceğiniz.",
+          "Yapacağınız bu değişikliğin dünyayı nasıl daha iyi bir yer yapacağı."
+        ]
+      },
+      "part_3": {
+        "level": "C1",
+        "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+        "topic": "Geleceğin Eğitim Sistemi",
+        "questions": [
+          "Sizce geleneksel okul sistemi (sıralarda oturup öğretmeni dinlemek) günümüz Z kuşağının ihtiyaçlarını karşılıyor mu? Eğitimin gelecekte tamamen dijital (online) veya yapay zeka destekli olmasını destekler misiniz?",
+          "Not sisteminin (sınav puanlarının) bir öğrencinin gerçek potansiyelini, zekasını ve karakterini ölçmede adil bir yöntem olduğuna inanıyor musunuz? Sınavsız bir eğitim modeli mümkün müdür?"
+        ]
+      }
+    }
+  ]
+}

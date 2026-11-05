@@ -1,6 +1,6 @@
 [
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Havalimanı ve Tren İstasyonu Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, Türk Hava Yolları'nın TK 2134 sayılı Ankara uçağı yolcularının dikkatine! Uçağımıza biniş işlemleri 104 numaralı kapıdan başlamıştır. Lütfen kimlik ve biniş kartlarınızı hazır bulundurunuz. (Anons 2) Değerli yolcularımız, İstanbul-Eskişehir yönüne gidecek olan Yüksek Hızlı Trenimiz 10 dakika gecikmeli olarak 3. perona yaklaşmaktadır. Güvenliğiniz için lütfen sarı çizgiyi geçmeyiniz. (Anons 3) Terminal binası içerisinde kaybolan 5 yaşlarında, üzerinde kırmızı mont bulunan Ali ismindeki erkek çocuğu, danışma masasında ailesini beklemektedir.",
@@ -81,7 +81,7 @@
     "audio_url": "/audio/01_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Yeni Bir Hayata Başlamak",
     "audio_script": "Merhaba, ben Ozan. 5 yıl öncesine kadar İstanbul'da büyük bir bankada yönetici asistanı olarak çalışıyordum. Maaşım çok iyiydi, harika bir arabam vardı ama her sabah o trafiğe girmek, beton binalar arasında güneş ışığı görmeden 10 saat çalışmak beni içten içe tüketiyordu. Bir gün aniden bir karar verdim. Ailemin 'Sen delirdin mi?' demesine aldırmadan istifamı verdim ve tüm birikimimle Ege'de, deniz kenarında küçük bir sahil kasabasına taşındım. Burada küçük bir kitap-kafe açtım. Sabahları erken kalkıp kendi ellerimle kek ve kurabiye pişiriyorum, sonra gelen müşterilere kahve eşliğinde kitap tavsiyeleri veriyorum. Gelirim eski maaşımın yarısı bile değil ama inanın bana, akşamları denizin sesini dinleyerek uyumanın verdiği o huzuru dünyadaki hiçbir paraya değişmem. Asıl zenginlik, zamanına sahip olabilmektir.",
@@ -162,7 +162,7 @@
     "audio_url": "/audio/02_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Sosyal Medya Kullanımı",
     "audio_script": "A) Ceren: Sosyal medya benim en büyük haber kaynağım. Dünyada olup bitenleri saniyeler içinde öğreniyorum. Ancak insanların sadece mutlu anlarını paylaşması, bende sanki herkes mükemmel bir hayat yaşıyormuş hissi yaratıyor ve bu bazen canımı sıkıyor.\nB) Murat: Ben bir dijital pazarlama uzmanıyım. Sosyal medya olmasaydı şu an işsizdim. Şirketlerin ürünlerini binlerce kişiye aynı anda ulaştırabiliyorum. Benim için sosyal medya tamamen bir iş ve para kazanma aracı.\nC) Hakan: Uygulamalara girdiğim an saatlerin nasıl geçtiğini anlamıyorum. 5 dakika bakıp çıkacağım diyorum ama bir bakmışım iki saat geçmiş. Maalesef bu durum ders çalışmamı ve uyku düzenimi mahvediyor. Çok ciddi bir bağımlılık.\nD) Selin: Ben sosyal medyayı sadece uzaktaki akrabalarım ve lise arkadaşlarımla iletişimde kalmak için kullanıyorum. Tanımadığım hiç kimseyi eklemem ve kendi fotoğraflarımı da asla açık profillerde paylaşmam. Güvenlik benim için her şeyden önemli.",
@@ -243,7 +243,7 @@
     "audio_url": "/audio/03_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Uyku ve Başarı İlişkisi",
     "audio_script": "Sunucu: Değerli dinleyenler, bugün stüdyomuzda Nöroloji Uzmanı Dr. Ahmet Yılmaz var. Ahmet Bey, günümüzde başarılı olmak için 'az uyumak ve çok çalışmak' gerektiği gibi bir inanış var. Günde 4 saat uyuyarak çok başarılı olan CEO'lardan bahsediliyor. Buna katılıyor musunuz?\nDr. Yılmaz: Kesinlikle katılmıyorum. Bu, modern çağın en tehlikeli yanılgılarından biridir. İnsan beyni bir makine değildir. Uyku, gün içinde beynimizde biriken toksinlerin (zararlı maddelerin) temizlendiği ve yeni öğrenilen bilgilerin kalıcı hafızaya aktarıldığı tek zamandır. Günde 4 saat uyuyan bir insan, kısa vadede işlerini yetiştirse de, uzun vadede yaratıcılığını, problem çözme yeteneğini ve duygusal zekasını kaybeder.\nSunucu: Yani az uyuyan biri aslında kendine zarar mı veriyor?\nDr. Yılmaz: Kesinlikle. Kronik uykusuzluk çeken kişilerin karar verme mekanizmaları sarhoş bir insanınkiyle hemen hemen aynı seviyeye iner. Ayrıca Alzheimer gibi hafıza hastalıklarının en büyük tetikleyicilerinden biri de kalitesiz uykudur. Yetişkin bir birey verimli çalışmak istiyorsa, 24 saatlik döngüde en az 7 buçuk saat kesintisiz karanlıkta uyumalıdır. O 4 saat uyuyan CEO'lar muhtemelen başarılarını az uyumalarına değil, başka faktörlere borçlular; ve eğer 8 saat uyusalardı çok daha vizyoner olabilirlerdi.",
@@ -399,7 +399,7 @@
     "audio_url": "/audio/05_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Mağaza ve Otel Duyuruları",
     "audio_script": "(Anons 1) Değerli Mavi Alışveriş Merkezi ziyaretçilerimiz. Merkezimiz 15 dakika sonra kapanacaktır. Lütfen alışverişlerinizi tamamlayarak kışlık giyim bölümündeki kasalarımıza yöneliniz. Bizi tercih ettiğiniz için teşekkür ederiz. (Anons 2) Sayın otel misafirlerimiz, sabah kahvaltısı servisimiz zemin kattaki restoranımızda başlamıştır ve saat 10:30'a kadar devam edecektir. Kahvaltı salonuna deniz kıyafetleri (mayo) ile girilmemesi önemle rica olunur. (Anons 3) Lütfen dikkat! Binamızda gerçekleştirilen yangın tatbikatı nedeniyle asansörler geçici olarak devre dışı bırakılmıştır. Lütfen panik yapmadan acil çıkış merdivenlerini kullanınız.",
@@ -480,7 +480,7 @@
     "audio_url": "/audio/06_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Dijital Göçebelik (Digital Nomad)",
     "audio_script": "Çoğu insan her sabah alarm sesiyle uyanıp aynı ofise gitmeyi normal bir hayat sanıyor. Ben ise 'dijital göçebe' olmayı seçtim. Mesleğim grafik tasarımcılık. İşim için sadece bir dizüstü bilgisayara ve güçlü bir internet bağlantısına ihtiyacım var. Geçen yılı Tayland'da, ondan önceki yılı ise Kolombiya'da geçirdim. Şu an ise Türkiye'nin güneyinde, Kaş'tayım. Gündüzleri denize giriyor, yeni kültürler keşfediyor, akşamları ise bilgisayarımı açıp Avrupa'daki müşterilerim için tasarımlar yapıyorum. Elbette bu hayatın zorlukları da var. Bazen yalnızlık çekiyorsunuz, bazen saat farkı yüzünden gece saat 3'te toplantı yapmak zorunda kalıyorsunuz. Sabit bir geliriniz olmadığı için de maddi kaygılar yaşayabiliyorsunuz. Ama dünyayı bir ofis gibi kullanmak ve sırt çantamla sınırları aşmak bana inanılmaz bir özgürlük hissi veriyor.",
@@ -561,7 +561,7 @@
     "audio_url": "/audio/07_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Yapay Zeka Korkusu",
     "audio_script": "A) Serdar: Ben bir yazılımcıyım ve yapay zekanın (AI) işlerimizi elimizden alacağına inanmıyorum. Aksine, yapay zeka bizim angarya (sıkıcı ve tekrarlayan) kod yazma süreçlerimizi hızlandırıyor. O bir düşman değil, kod yazarken bana hatalarımı gösteren mükemmel bir asistan.\nB) Aylin: Bir çevirmen olarak çok endişeliyim. Eskiden sayfalarca metni çevirmek günler alırdı, şimdi yapay zeka aynı işi saniyeler içinde, üstelik oldukça doğal bir dille yapıyor. Birkaç yıl içinde bizim mesleğimize hiç ihtiyaç kalmayacağından korkuyorum.\nC) Kemal: Ben yapay zekanın insani değerleri yok edeceğini düşünüyorum. Filmlerde gördüğümüz o robotların dünyayı ele geçirmesi senaryosu bence o kadar da hayal değil. Eğer bu sistemlere sınır konulmazsa, insanlığın sonunu kendi ellerimizle hazırlamış olacağız.\nD) Elif: Ben bir doktorum. Yapay zeka tıpta harikalar yaratıyor! Radyoloji sonuçlarını ve MR görüntülerini incelerken bir insanın göremeyeceği milimetrik tümörleri anında tespit ediyor. Yapay zeka benim yerime geçemez ama hastalarımın hayatını kurtarmamda bana çok büyük güç veriyor.",
@@ -642,7 +642,7 @@
     "audio_url": "/audio/08_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Z Kuşağı ve İş Hayatı",
     "audio_script": "Sunucu: Bugün stüdyomuzda İnsan Kaynakları Uzmanı Merve Hanım var. Merve Hanım, şirketler sürekli Z kuşağından (1997 sonrası doğanlardan) şikayet ediyor. Onların tembel, sadakatsiz ve çabuk sıkılan gençler olduğu söyleniyor. Gerçekten durum böyle mi?\nMerve Hanım: Aslında mesele tembellik değil, değerlerin uyuşmaması. Önceki kuşaklar (X ve Y), şirkete bağlılığı bir erdem olarak görürdü. Yöneticileri ne derse sorgulamadan yapar, aynı şirkette 20 yıl çalışıp emekli olmayı hedeflerlerdi. Z kuşağı ise dijital dünyanın ortasına doğdu. Onlar otoriteye boyun eğmek istemiyor; bir işin 'neden' yapıldığını anlamak istiyorlar.\nSunucu: Peki şirketlerden ne bekliyorlar?\nMerve Hanım: Anlam ve saygı bekliyorlar. Eğer yöneticisi ona değer vermiyorsa, çalışma saatleri esnek değilse ve ofis ortamı toksik (zehirli) ise, yüksek maaş teklif edilse bile o işi hemen bırakıyorlar. Şirketler onlara 'sadakatsiz' diyor ama Z kuşağı aslında sadece kendi ruh sağlığına sadık. Şirketlerin eski katı kurallarını bırakıp, bu gençlerin hızına ve teknolojik pratikliğine ayak uydurması gerekiyor. Yoksa gelecekte çalıştıracak yetenekli insan bulamayacaklar.",
@@ -798,7 +798,7 @@
     "audio_url": "/audio/10_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Müze ve Sinema Anonsları",
     "audio_script": "(Anons 1) Değerli sanatseverler, İstanbul Modern Sanat Müzesi'ndeki 'Yüz Yıllık Portreler' isimli resim sergimiz 3. kattaki özel salonda ziyarete açılmıştır. Sergi alanına yiyecek ve içecekle girilmesi yasaktır. (Anons 2) Sayın sinema misafirlerimiz, 'Yıldızlara Yolculuk' adlı filmimizin gösterimi 5 numaralı salonda 10 dakika sonra başlayacaktır. Lütfen biletlerinizde yazan koltuk numaralarına oturunuz ve cep telefonlarınızı sessize alınız. (Anons 3) Lütfen dikkat! Müze mağazamızdan alışveriş yapan ziyaretçilerimize özel olarak tasarlanmış bez çantalarımız, bugün için %50 indirimli olarak satılmaktadır. Kampanyamız stoklarla sınırlıdır.",
@@ -879,7 +879,7 @@
     "audio_url": "/audio/11_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Doğaya Dönüş: Organik Tarım",
     "audio_script": "Benim adım Zeynep. Aslında bir bilgisayar mühendisiyim. 10 yıl boyunca büyük şehirlerde plazalarda çalıştım ama içimde hep bir boşluk vardı. Sonunda radikal bir karar aldım ve Karadeniz'in yeşil köylerinden birinde eski bir taş ev satın aldım. Amacım sadece şehirden kaçmak değil, aynı zamanda tamamen temiz gıdalarla beslenmekti. Şu an bahçemde hiçbir kimyasal gübre veya zehirli böcek ilacı kullanmadan organik domates, biber ve salatalık yetiştiriyorum. İlk başlarda köy halkı 'Böyle tarım yapılmaz, ürünlerin hepsi çürür' diyerek bana güldü. Haklılardı, ilk yıl mahsulümün yarısını böcekler yedi. Ama pes etmedim. Doğal gübrelemeyi ve zararlı böcekleri yiyen faydalı böcekleri kullanmayı öğrendim. Şimdi ürettiğim o mis kokulu domatesleri internet üzerinden büyük şehirlerdeki müşterilerime satıyorum. Ellerim her gün çamur içinde kalıyor, çok yoruluyorum ama akşam masaya oturduğumda o doğal lezzeti tatmak her şeye değiyor.",
@@ -960,7 +960,7 @@
     "audio_url": "/audio/12_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Üniversite Öğrencilerinin Gelecek Kaygıları",
     "audio_script": "A) Emre: Uluslararası ilişkiler son sınıf öğrencisiyim. Benim en büyük korkum mezun olduktan sonra işsiz kalmak. Türkiye'de binlerce üniversite mezunu iş bulamıyor. Bu yüzden gecemi gündüzüme katıp ikinci bir yabancı dil (Çince) öğreniyorum. Rakiplerimden bir adım önde olmam lazım.\nB) Aylin: Tıp fakültesinde okuyorum ve işsizlik diye bir korkum yok. Ancak benim endişem 'tükenmişlik'. Doktor abilerimi, ablalarımı hastanelerde görüyorum; günde 36 saat nöbet tutuyorlar ve sürekli stres altındalar. Gençliğimi hastane koridorlarında tüketmek istemiyorum.\nC) Burak: Ben bilgisayar mühendisliği okuyorum. Gelecek benim için harika görünüyor ama tek derdim 'yapay zeka'. Biz daha mezun olmadan teknoloji o kadar hızlı değişiyor ki, okulda öğrendiğimiz kodlama dilleri hemen eskiyor. Sürekli kendimi güncellemek zorundayım, yoksa yapay zeka işimi elimden alacak.\nD) Zeynep: Grafik tasarım bölümündeyim. Benim kaygım tamamen ekonomik bağımsızlık. Ailemden hala harçlık almak gururuma dokunuyor. Mezun olur olmaz kendi ofisimi açmak istiyorum ama bunun için çok büyük bir sermayeye (paraya) ihtiyacım var ve o para bende yok.",
@@ -1041,7 +1041,7 @@
     "audio_url": "/audio/13_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Minimalizm: Az Aslında Çok mudur?",
     "audio_script": "Sunucu: Günaydın sayın dinleyiciler. Son yıllarda 'Minimalizm' adı verilen bir akım hızla yayılıyor. Bugün stüdyomuzda bu konuyu konuşmak üzere Sosyolog Dr. Selim Demir var. Selim Bey, minimalizm sadece az eşyayla yaşamak mıdır?\nDr. Demir: Merhaba. Kesinlikle hayır. Çoğu insan minimalizmi sadece evdeki kullanmadığı kıyafetleri çöpe atmak veya küçük bir evde yaşamak zannediyor. Ancak bu, minimalizmin sadece fiziksel boyutudur. Asıl minimalizm, zihinsel ve ruhsal bir arınmadır. Bize sürekli 'daha fazlasını alırsan daha mutlu olursun' diyen tüketim toplumuna karşı bir isyandır.\nSunucu: Peki zihinsel minimalizm tam olarak nasıl oluyor?\nDr. Demir: Zihinsel minimalizm, hayatımızdaki 'gereksiz fazlalıkları' hayatımızdan çıkarmaktır. Bu fazlalık bazen enerjimizi sömüren toksik bir arkadaş, bazen sürekli bizi strese sokan dijital bildirimler, bazen de sırf başkalarına iyi görünmek için katıldığımız anlamsız etkinliklerdir. İnsanlar sahip oldukları eşyalar çoğaldıkça, aslında o eşyaların kölesi olurlar. Daha çok eşyayı korumak, temizlemek ve yenilemek için daha çok çalışmak zorunda kalırız. Minimalizm, hayatımızdan gereksiz detayları çıkararak asıl önemli olana (ailemize, tutkularımıza ve huzurumuza) zaman ve yer açma sanatıdır.",
@@ -1197,7 +1197,7 @@
     "audio_url": "/audio/15_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Üniversite ve Kütüphane Duyuruları",
     "audio_script": "(Anons 1) Değerli öğrencilerimiz, yarın saat 14:00'te Merkez Kampüs Konferans Salonu'nda düzenlenecek olan 'Yapay Zeka Kariyer Günleri' seminerine katılım ücretsizdir. Katılımcıların öğrenci kimliklerini yanlarında bulundurmaları gerekmektedir. (Anons 2) Sayın kütüphane kullanıcılarımız, kütüphanemiz akşam saat 20:00'de kapanacaktır. Lütfen ödünç aldığınız kitapları çıkıştaki görevli masasına teslim ediniz veya internet üzerinden süresini uzatınız. Kütüphane içerisinde cep telefonuyla konuşmak yasaktır. (Anons 3) Fakültemiz yemekhanesinde bugün öğle yemeği servisi su borularındaki bir arıza nedeniyle yapılamayacaktır. Öğrencilerimiz ana kampüsteki büyük yemekhaneyi kullanabilirler.",
@@ -1278,7 +1278,7 @@
     "audio_url": "/audio/16_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Sosyal Medya Detoksu",
     "audio_script": "Herkese merhaba, ben Selin. Son altı aydır hayatımda verdiğim en iyi kararı sizinle paylaşmak istiyorum: Sosyal medya detoksu! Eskiden sabah gözümü açar açmaz ilk işim telefonumu elime alıp Instagram'a girmekti. Başkalarının 'mükemmel' tatillerini, kusursuz fotoğraflarını gördükçe kendi hayatımın ne kadar sıkıcı ve yetersiz olduğunu düşünüyordum. Sürekli telefonuma gelen bildirimler yüzünden üniversite sınavlarıma hiç odaklanamıyordum. Bir gün, ekranda geçirdiğim günlük sürenin 6 saati bulduğunu görünce dehşete düştüm ve o an bütün uygulamaları sildim. İlk iki hafta benim için korkunçtu; sürekli bir şeyleri kaçırıyorum (FOMO) hissine kapıldım. Ancak üçüncü haftadan sonra zihnimdeki o sis perdesi kalktı. Yıllardır kapağını açmadığım kitapları okumaya, ailemle göz teması kurarak sohbet etmeye başladım. Şimdi telefonumu sadece arama yapmak ve müzik dinlemek için kullanıyorum. Sanal dünyayı kapatınca, gerçek dünyadaki renkleri yeniden görmeye başladım.",
@@ -1359,7 +1359,7 @@
     "audio_url": "/audio/17_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Farklı Tatil ve Seyahat Anlayışları",
     "audio_script": "A) Can: Benim için tatil demek macera ve adrenalin demektir. Beş yıldızlı otellerin havuz kenarında yatmak bana işkence gibi gelir. Ben sırt çantamı alıp Nepal'deki dağlara tırmanmayı, ormanda kamp kurmayı ve vahşi doğayla mücadele etmeyi seviyorum.\nB) Zeynep: Ben tamamen kültür ve tarih aşığıyım. Gittiğim şehrin müzelerini, eski kalelerini ve sanat galerilerini gezmeden o şehri görmüş sayılmam. Turist rehberi eşliğinde antik Roma veya Osmanlı tarihi hakkında bilgiler dinlemek beni çok heyecanlandırır.\nC) Ali: Benim tatilden tek beklentim konfor ve rahatlıktır. Bütün yıl işte yeterince yoruluyorum zaten. Bana 'Her şey dahil' bir tatil köyü verin, sabahları açık büfeden kahvaltımı alayım, sonra akşama kadar deniz kenarında şezlongda yatıp kitap okuyayım. Yürümek veya gezmek istemiyorum.\nD) Elif: Benim için seyahat etmek, o yörenin (bölgenin) yemeklerini keşfetmek demektir. Ben bir şehre gittiğimde tarihi eserlere değil, en iyi sokak lezzetlerine veya meşhur yerel restoranlara giderim. Yeni baharatlar, farklı soslar ve geleneksel yemekleri tatmak benim tatil anlayışım.",
@@ -1440,7 +1440,7 @@
     "audio_url": "/audio/18_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Gıda İsrafı ve Çözüm Yolları",
     "audio_script": "Sunucu: Hoş geldiniz Gıda Mühendisi Ayşe Hanım. Birleşmiş Milletler raporuna göre dünyada her yıl üretilen gıdaların üçte biri çöpe gidiyor, oysa diğer yanda milyonlarca insan açlık çekiyor. Bu kadar büyük bir israf neden yaşanıyor?\nAyşe Hanım: Hoş bulduk. Bu israfın iki boyutu var. Gelişmemiş ülkelerde israf, tarladan markete (lojistik) giden yolda uygun soğutma sistemleri olmadığı için ürünlerin çürümesiyle yaşanır. Ancak bizim gibi gelişmiş ülkelerde israfın asıl sorumlusu 'tüketici alışkanlıkları'dır. Süpermarketlerde sırf şekli biraz bozuk (çarpık) olduğu için mükemmel derecede sağlıklı olan meyveleri almıyoruz. Ayrıca marketlerin '1 alana 1 bedava' kampanyaları bizi ihtiyacımızdan fazlasını almaya zorluyor. Evde dolapta unuttuğumuz o ürünler bozulup çöpe gidiyor.\nSunucu: Peki birey olarak evimizde bu durumu nasıl düzeltebiliriz?\nAyşe Hanım: Öncelikle alışverişe asla aç karnına ve 'alışveriş listesi' yapmadan çıkmamalıyız. İkincisi, ürünlerin üzerindeki SKT (Son Kullanma Tarihi) ile TETT (Tavsiye Edilen Tüketim Tarihi) farkını iyi bilmeliyiz. Bir makarnanın TETT'si geçse bile kokusunda veya tadında bozulma yoksa rahatlıkla tüketilebilir, hemen çöpe atmak büyük bir hatadır. Ve en önemlisi, artan yemekleri dökmek yerine dondurucuda saklamayı (veya kompost yapmayı) bir yaşam kültürü haline getirmeliyiz.",
@@ -1596,7 +1596,7 @@
     "audio_url": "/audio/20_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Tiyatro, Metro ve Market Anonsları",
     "audio_script": "(Anons 1) Sayın seyirciler, 'Bir Yaz Gecesi Rüyası' adlı tiyatro oyunumuz 5 dakika içinde başlayacaktır. Oyun süresince fotoğraf çekmek ve video kaydı almak kesinlikle yasaktır. Lütfen yerlerinizi alınız. (Anons 2) Değerli yolcularımız, teknik bir arıza nedeniyle Yenikapı-Hacıosman metro hattındaki seferlerimizde 15 dakikalık gecikmeler yaşanmaktadır. Anlayışınız için teşekkür ederiz. (Anons 3) Sayın müşterilerimiz, manav reyonumuzdaki taze sebze ve meyvelerde bugün akşam 20:00'ye kadar geçerli %30 indirim fırsatını kaçırmayınız. Kasa sırasını beklerken lütfen sosyal mesafeye dikkat ediniz.",
@@ -1677,7 +1677,7 @@
     "audio_url": "/audio/21_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Yabancı Bir Ülkede Yaşamak",
     "audio_script": "Merhaba, ben Ali. 3 yıl önce üniversite eğitimi için Türkiye'den Almanya'ya, Berlin'e taşındım. İlk geldiğim aylar benim için kabus gibiydi. Almanca bilmiyordum ve İngilizce ile her şeyi halledebileceğimi sanıyordum ama markette veya devlet dairelerinde çok zorlandım. Yemek kültürüne alışmak da ayrı bir dertti; bizim o sıcak çorbalarımızı ve zengin kahvaltılarımızı çok özlüyordum. Ancak zamanla pes etmemem gerektiğini anladım. Hızlandırılmış bir dil kursuna yazıldım ve kendime Alman arkadaşlar edindim. Dil bariyerini aştıktan sonra Berlin'in aslında ne kadar düzenli, yeşil ve sanat dolu bir şehir olduğunu fark ettim. Ulaşım o kadar rahat ki, arabaya hiç ihtiyaç duymuyorsunuz. Yabancı bir ülkede yaşamak, insanı başlangıçta yalnızlaştırsa da, uzun vadede kendi ayakları üzerinde durmayı öğreten inanılmaz bir olgunlaşma sürecidir. Şimdi iki kültürü de tanıyan bir dünya vatandaşı gibi hissediyorum.",
@@ -1758,7 +1758,7 @@
     "audio_url": "/audio/22_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Spor ve Egzersiz Alışkanlıkları",
     "audio_script": "A) Emre: Ben masa başında çalışan biriyim ve bel ağrılarından çok çekiyorum. Bu yüzden benim spor anlayışım tamamen esneme ve rahatlama üzerine kurulu. Haftada üç gün Pilates ve Yoga yapıyorum. Ağırlık kaldırmak veya ter içinde kalmak bana göre değil, ben sadece duruşumu (postürümü) düzeltmek istiyorum.\nB) Zeynep: Benim için spor demek rekabet demektir! Bireysel yapılan sıkıcı sporları hiç sevmem. Ben voleybol ve tenis oynamayı tercih ediyorum. Karşımda yenebileceğim bir rakip veya omuz omuza mücadele edeceğim bir takım olmalı. O heyecan olmadan spordan keyif alamam.\nC) Hakan: Spor salonlarının o kalabalık ve havasız ortamından nefret ediyorum. Benim sporum tamamen doğayla iç içe olmalı. Hafta sonları dağ bisikletimi alır, ormanlık patikalarda kilometrelerce pedal çeviririm. Temiz hava ciğerlerime doldukça kendimi yenilenmiş hissediyorum.\nD) Elif: Benim fazla vaktim yok, bu yüzden sporda amacım kısa sürede maksimum yağ yakmaktır. Yüksek yoğunluklu aralıklı antrenman (HIIT) ve CrossFit favorim. Sadece 30 dakikada nabzımı en tepeye çıkarıp, kan ter içinde kalarak vücudumun sınırlarını zorlamayı seviyorum.",
@@ -1839,7 +1839,7 @@
     "audio_url": "/audio/23_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Girişimcilik ve Başarısızlık",
     "audio_script": "Sunucu: Değerli dinleyenler, bugünkü konuğumuz ünlü teknoloji girişimcisi Sinan Aksoy. Sinan Bey, herkes sizin şu anki milyon dolarlık başarılarınızı konuşuyor ama siz sık sık 'başarısızlıklarımdan çok şey öğrendim' diyorsunuz. Başarısızlık gerçekten bir adım mıdır?\nSinan Bey: Merhaba. Evet, kesinlikle! Toplum bize başarısızlığın utanılacak bir son olduğunu öğretiyor. Oysa Silikon Vadisi'nde 'Fail Fast' yani 'Hızlı Başarısız Ol' diye bir kültür vardır. Ben ilk yazılım şirketimi 24 yaşında kurdum ve 2 yıl içinde tamamen battım; elimdeki tüm parayı kaybettim. Eğer o şirketi batırmasaydım, piyasanın ne istediğini, nakit akışını nasıl yöneteceğimi ve doğru ekibi nasıl kuracağımı asla öğrenemezdim.\nSunucu: Yani gençler risk almaktan korkmamalı mı?\nSinan Bey: Korku çok insani bir duygudur, mesele korkuya rağmen o adımı atabilmektir. Risk almayan bir insan, ömrü boyunca başkalarının kurduğu hayallerin bir parçası (çalışanı) olmak zorundadır. Ancak risk almak demek, gözü kapalı uçurumdan atlamak değildir; 'hesaplanmış risk' almaktan bahsediyorum. Başarısız olduğunuzda B planınız varsa, o başarısızlık sadece sizin için ödenmiş bir okul ücretidir. Denemeyen biri zaten %100 başarısız olmuştur.",
@@ -1995,7 +1995,7 @@
     "audio_url": "/audio/25_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Fuar ve Stadyum Anonsları",
     "audio_script": "(Anons 1) Sayın fuar ziyaretçileri, 5. holdeki 'Geleceğin Otomobilleri' tanıtım sunumu birazdan başlayacaktır. Sunum sırasında ziyaretçilerimizin araçların içine binmesi ve kapılarını açması güvenlik nedeniyle yasaktır. (Anons 2) Değerli taraftarlarımız, stadyumumuzun A ve B kapılarında yoğunluk yaşanmaktadır. Hızlı geçiş için lütfen C ve D kapılarına yöneliniz. Stadyum içine meşale, lazer veya yabancı madde sokmak kesinlikle yasaktır. (Anons 3) Dikkat! Otoparkta 34 AB 1234 plakalı kırmızı renkli aracın camı açık unutulmuştur. Araç sahibinin en kısa sürede otoparka gitmesi rica olunur.",
@@ -2076,7 +2076,7 @@
     "audio_url": "/audio/26_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Karavan Hayatı (Van Life)",
     "audio_script": "Merhaba, ben Cem. Son iki yılımı dört tekerlek üzerinde, 15 metrekarelik bir karavanda yaşayarak geçirdim. Birçok kişi bana 'Nasıl sığıyorsun o küçücük yere?' diye soruyor. Aslında cevap çok basit: Gerçekten neye ihtiyacım olduğunu öğrendim. Karavan hayatı (Van Life) insana tüketim çılgınlığından uzaklaşmayı öğretiyor. Dolabımda sadece 10 parça kıyafetim var. Elektriğimi güneş panellerinden, suyumu ise gittiğim köylerdeki çeşmelerden sağlıyorum. Her sabah farklı bir manzaraya; bazen bir ormana, bazen denize karşı uyanıyorum. Elbette zorlukları çok. Kışın ısınmak ciddi bir dert, bazen internet bulamadığım için dünyadan kopuyorum. Veya aracım arıza yaptığında evim aynı zamanda tamircide kalmış oluyor. Ancak yıldızların altında, doğanın o eşsiz sessizliğinde içtiğim bir bardak çay, apartman dairesinde yaşadığım o lüks ama stresli hayattan yüz kat daha değerli.",
@@ -2157,7 +2157,7 @@
     "audio_url": "/audio/27_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Çevre Bilinci ve Tüketim",
     "audio_script": "A) Ayşe: Çevreyi korumak için benim en büyük kuralım 'sıfır atık' (zero waste) yaşamaktır. Plastik poşet veya tek kullanımlık plastik bardak asla kullanmam. Market alışverişine kendi bez torbalarımla giderim. Mutfak atıklarımı da çöpe atmak yerine bitkilerim için kompost (doğal gübre) yapıyorum.\nB) Burak: Ben modanın dünyaya verdiği zararın farkındayım. Bu yüzden 'hızlı moda' markalarından ucuz tişörtler almak yerine, ikinci el kıyafetler satın alıyorum. Hem çok daha ucuz hem de benzersiz (vintage) parçalar bulabiliyorum. Bir kıyafet eskiyince onu atmam, mutlaka yama yapar veya temizlik bezi olarak kullanırım.\nC) Selin: Ben bir su savaşçısıyım! Dünyadaki tatlı su kaynaklarının tükendiğini biliyorum. Diş fırçalarken veya bulaşık yıkarken suyu asla açık bırakmam. Ayrıca su ayak izimi düşürmek için haftada sadece bir gün et tüketiyorum, çünkü et endüstrisi inanılmaz miktarda su harcıyor.\nD) Ozan: Benim doğaya katkım tamamen ulaşım ve enerji üzerine. İki yıl önce benzinli arabamı satıp elektrikli bir araba aldım. Kısa mesafelerde ise sadece elektrikli scooter kullanıyorum. Evimde tüm ampulleri enerji tasarruflu olanlarla değiştirdim ve güneş enerjisi panelleri kurdum.",
@@ -2238,7 +2238,7 @@
     "audio_url": "/audio/28_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Yapay Zeka ve Eğitim Sisteminin Geleceği",
     "audio_script": "Sunucu: Sayın dinleyiciler, eğitimde dijital devrimi konuşmak üzere Eğitim Bilimci Prof. Dr. Kerem Yılmaz bizimle. Hocam, öğrenciler artık ödevlerini ve hatta makalelerini ChatGPT gibi yapay zeka araçlarına yazdırıyorlar. Bu durum okulların sonunu mu getirecek?\nProf. Dr. Yılmaz: Hayır, okulların değil ama geleneksel 'ezberci' eğitim sisteminin sonunu getirecek. Yıllarca öğrencilerden sadece bilgiyi ezberlemelerini ve sınav kağıdına geri kusmalarını istedik. Şimdi bir makine bunu saniyeler içinde ve kusursuz yapıyor. Dolayısıyla öğrenciye 'Şu tarihi olayı yaz' demek artık anlamsız. Eğitimciler olarak yapay zekayı yasaklamak yerine, onu bir araç olarak entegre etmeliyiz.\nSunucu: Peki nasıl bir ölçme yöntemi (sınav) kullanılmalı o zaman?\nProf. Dr. Yılmaz: Artık öğrencilerin bilgiyi ne kadar bildiğini değil, yapay zekanın ürettiği bilgiyi ne kadar 'sorgulayabildiğini', analiz edebildiğini ve doğrulayabildiğini ölçmeliyiz. Buna 'Eleştirel Düşünme' diyoruz. Geleceğin okulları, öğrencilere yapay zekaya nasıl doğru sorular (prompt) soracaklarını ve o makineden çıkan cevaptaki mantık hatalarını nasıl bulacaklarını öğreten yerler olmalıdır. Bilgiyi üreten değil, bilgiyi yorumlayan ve ahlaki (etik) süzgeçten geçiren insan değer kazanacaktır.",
@@ -2394,7 +2394,7 @@
     "audio_url": "/audio/30_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Radyo Anonsları: Trafik ve Hava Durumu",
     "audio_script": "(Anons 1) Sayın dinleyiciler, İstanbul trafik rehberiyle karşınızdayız. Fatih Sultan Mehmet Köprüsü'nde meydana gelen zincirleme trafik kazası nedeniyle Avrupa'dan Anadolu yakasına geçişler durmuştur. Sürücülerin Avrasya Tüneli'ni kullanmaları tavsiye edilir. (Anons 2) Değerli vatandaşlar, Meteoroloji Genel Müdürlüğü'nden alınan son bilgilere göre, yarın öğle saatlerinden itibaren Ankara ve çevresinde şiddetli kar yağışı beklenmektedir. Lütfen kış lastiği olmayan araçlarla yola çıkmayınız. (Anons 3) Sayın veliler, yoğun kar yağışı ve buzlanma riski sebebiyle Eskişehir il genelindeki tüm ilk ve orta dereceli okullar yarın (Perşembe günü) bir gün süreyle tatil edilmiştir.",
@@ -2475,7 +2475,7 @@
     "audio_url": "/audio/31_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Şekeri Hayatımdan Çıkardım",
     "audio_script": "Merhaba, ismim Burcu. Altı ay öncesine kadar tam bir tatlı bağımlısıydım. Sabahları kahvemi bol şekerli içer, öğle yemeklerinden sonra mutlaka bir dilim pasta yer, akşamları televizyon karşısında çikolata yemeden duramazdım. Ancak sürekli kendimi yorgun hissediyordum ve cildimde sürekli sivilceler çıkıyordu. Doktorum kan tahlillerime bakıp insülin direncim olduğunu söyleyince hayatımı değiştirmeye karar verdim. İşlenmiş şekeri hayatımdan tamamen çıkardım. İlk on gün benim için bir kabus gibiydi; başım çatlıyor, ellerim titriyor ve sürekli tatlı krizleri yaşıyordum. Beynim bana 'Sadece bir parça çikolata ye' diye yalvarıyordu. Ama pes etmedim. Tatlı ihtiyacımı sadece elma ve tarçın gibi doğal meyvelerle karşıladım. Bir ayın sonunda o inanılmaz değişim başladı. Sabahları alarm çalmadan enerjik bir şekilde uyanmaya başladım, cildim pürüzsüzleşti ve tam 6 kilo verdim. En güzeli de artık yiyeceklerin gerçek tadını (örneğin kahvenin kendi acı aromasını) alabiliyorum. Şeker bir gıda değil, tamamen yasal bir zehirdir.",
@@ -2556,7 +2556,7 @@
     "audio_url": "/audio/32_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Farklı Mesleklerin Görünmeyen Zorlukları",
     "audio_script": "A) Hakan (Aşçı): Televizyondaki yemek programlarına bakıp şefliği çok havalı bir iş sanıyorlar. Oysa biz günde 12 saat, 40 derece sıcağın altında, ellerimizde kesik ve yanıklarla çalışıyoruz. Hafta sonu, bayram veya yılbaşı tatilimiz yoktur. Herkes eğlenirken biz mutfakta ter dökeriz.\nB) Elif (Öğretmen): İnsanlar bizim sadece yarım gün çalışıp yazın da üç ay tatil yaptığımızı düşünür ve mesleğimizi çok kolay bulurlar. Ancak 40 kişilik bir sınıftaki her bir çocuğun psikolojisiyle ilgilenmek, onların ailevi sorunlarını yüklenmek ve eve gelince gece yarılarına kadar sınav kağıdı okumak zihinsel olarak insanı tüketir.\nC) Murat (Polis Memuru): Bizim meslekte 'zaman' mefhumu yoktur. Gecenin bir yarısı telefon çalar ve ailenizi yatakta bırakıp tehlikenin içine koşarsınız. Fiziksel tehlikeden ziyade, her gün insanların en kötü yüzüyle (suçla, şiddetle, kavgayla) karşılaşmak insanın ruhunu karartır. İnsanlara olan güveninizi kaybedersiniz.\nD) Zeynep (Yazılım Mühendisi): Herkes ofiste rahat koltuklarda kahve içip para kazandığımızı sanıyor. Oysa saatlerce bilgisayar ekranına bakmaktan boyun fıtığı oluyoruz. Üstelik yazdığınız binlerce satırlık kodda tek bir virgül bile eksik olsa tüm sistem çöküyor. Mükemmelliyetçi baskı ve 'deadline' (teslim tarihi) stresi bizi uyutmaz.",
@@ -2637,7 +2637,7 @@
     "audio_url": "/audio/33_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Siber Güvenlik ve Dijital Ayak İzi",
     "audio_script": "Sunucu: Dijital dünyadaki ayak izlerimizi konuşmak üzere Siber Güvenlik Uzmanı Caner Bey stüdyomuzda. Caner Bey, internette bedava kullandığımız uygulamalar (sosyal medya, haritalar, oyunlar) gerçekten bedava mı?\nCaner Bey: Eğer bir ürüne para ödemiyorsanız, ürün sizsiniz demektir! Bu, Silikon Vadisi'nin altın kuralıdır. Biz ücretsiz zannettiğimiz uygulamalara girerken aslında çok değerli bir para birimi ödüyoruz: Kişisel verilerimiz. Nereye gittiğimiz, kiminle konuştuğumuz, ne satın almak istediğimiz ve hatta kalp atış hızımız bile devasa sunuculara kaydediliyor. Buna 'Dijital Ayak İzi' diyoruz. \nSunucu: Peki bu şirketler benim verilerimi ne yapıyor? Gizlice beni mi izliyorlar?\nCaner Bey: Hayır, onlar tek tek sizinle ilgilenmezler. Onlar bu verileri işleyip ('Big Data' analizi yapıp) sizin psikolojik profilinizi çıkarırlar. Sonra da bu profili reklam veren şirketlere veya siyasi kampanyalara satarlar. Siz 'Sadece bir kedi videosu beğendim' sanırsınız ama arka plandaki algoritma, sizin o videoya bakarken ne kadar durakladığınızı ölçerek depresyonda olup olmadığınızı tahmin edebilir. Kötü niyetli hackerlar ise bu ayak izlerini kullanarak banka şifrelerinizi çalmaktan çok daha ötesini, dijital kimliğinizi (kimlik hırsızlığı) kopyalamayı hedeflemektedir. Kısacası, internette sildiğinizi sandığınız hiçbir şey aslında silinmez.",
@@ -2793,7 +2793,7 @@
     "audio_url": "/audio/35_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Hastane, Okul ve AVM Anonsları",
     "audio_script": "(Anons 1) Sayın veliler, okulumuzun Bahar Şenliği kermesi okul bahçesinde başlamıştır. Kermesten elde edilecek tüm gelir, okul kütüphanesine yeni kitaplar alınması için kullanılacaktır. Lütfen çocuklarınızın yanından ayrılmayınız. (Anons 2) Değerli hastalarımız, Dahiliye Polikliniği'nde görevli Doktor Ayşe Yılmaz'ın acil bir ameliyata girmesi nedeniyle öğleden sonraki tüm randevuları iptal edilmiştir. Randevu değişikliği için sekreterliğe başvurunuz. (Anons 3) Sayın müşterilerimiz, mağazamızda unutulan 'Siyah renkli bir kadın cüzdanı' güvenlik birimine teslim edilmiştir. Cüzdanını kaybeden müşterimizin, kimliği ile birlikte giriş kattaki güvenlik danışmasına gelmesi rica olunur.",
@@ -2874,7 +2874,7 @@
     "audio_url": "/audio/36_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Erasmus Deneyimi - İtalya",
     "audio_script": "Herkese merhaba, adım Can. Üniversitede okurken 'Erasmus' öğrenci değişim programıyla altı aylığına İtalya'nın Roma şehrine gittim. Gitmeden önce herkes bana İtalyanların çok sıcakkanlı olduğunu söylemişti, gerçekten de öyleydi. Ancak İngilizce bilme oranları o kadar düşüktü ki, onlarla iletişim kurabilmek için ellerimi kollarımı (vücut dilimi) çok fazla kullanmak zorunda kaldım. Üniversitedeki eğitim sistemi Türkiye'den çok farklıydı. Bizde sınavlar genellikle yazılı yapılırken, orada hocalarla yüz yüze yapılan 'sözlü' mülakatlar vardı. Bu beni ilk başlarda çok strese soktu. Ancak en çok etkilendiğim şey yemek kültürüydü. Pizzaları ve makarnaları harika ama akşam yemeklerini bizim gibi 19:00'da değil, gece 21:00'den sonra yiyorlar ve yemek bir karın doyurma değil, üç saat süren bir sosyalleşme ritüeli. Bu altı ay bana sadece akademik bir tecrübe değil, dünyanın farklı renklerine açık olmayı, tolerans göstermeyi öğretti. Her öğrencinin hayatında en az bir kez bu yurtdışı deneyimini yaşaması gerektiğine inanıyorum.",
@@ -2955,7 +2955,7 @@
     "audio_url": "/audio/37_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Film Tercihleri ve Sinema Zevkleri",
     "audio_script": "A) Yusuf: Ben gerçekliğin sınırlarını zorlayan şeyleri severim. Benim için sinema, uzay gemileri, zaman yolculuğu, yapay zeka ve farklı gezegenlerde geçen 'Bilim Kurgu' demektir. Gelecekte dünyamızın nasıl olabileceğine dair üretilen o zekice teorileri izlemek zihnimi açıyor.\nB) Seda: Ben ekranda sahte oyuncular veya abartılı senaryolar görmek istemiyorum. Benim tercihim her zaman 'Belgesel'lerdir. Doğa, tarih veya suç üzerine yapılmış gerçek olayları inceleyen yapımlar bana, okumaya üşendiğim kitapların bilgisini hap gibi veriyor.\nC) Kerem: Ben sinemaya gittiğimde kalp atışlarımın hızlanmasını ve koltuğa çivilenmeyi isterim. Bu yüzden 'Korku ve Gerilim' filmlerinin hastasıyım. Karanlık bir ev, açıklanamayan doğaüstü olaylar ve o aniden yükselen müzik bana inanılmaz bir adrenalin yaşatıyor.\nD) Ayşe: Günlük hayat zaten yeterince stresli ve zor, sinemada neden kendimi daha fazla gereyim ki? Ben sıcak, insanı gülümseten 'Romantik Komedi' filmlerini tercih ediyorum. Sonu her zaman mutlu biten, basit ama eğlenceli aşk hikayeleri benim ruhumu dinlendiriyor.",
@@ -3036,7 +3036,7 @@
     "audio_url": "/audio/38_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Geleceğin Meslekleri Neler Olacak?",
     "audio_script": "Sunucu: Değerli dinleyiciler, bugünkü konuğumuz Fütürist (Gelecek Bilimci) Cemal Bey. Cemal Bey, yapay zeka ve robotların hızla gelişmesiyle herkes 'Acaba işsiz mi kalacağım?' diye korkuyor. Gerçekten de 20 yıl sonra mesleklerin çoğu yok mu olacak?\nCemal Bey: Merhaba. Hayır, meslekler yok olmayacak, sadece şekil değiştirecek. Tarih boyunca teknoloji daima bazı işleri yok ederken yeni iş kolları yaratmıştır. Örneğin otonom (sürücüsüz) araçlar yaygınlaştığında şoförlük mesleği büyük yara alacak; marketlerde kasiyerleri zaten artık görmüyoruz. Muhasebe ve veri giriş elemanları (sadece hesap yapanlar) tamamen yapay zekaya yenik düşecek.\nSunucu: Peki hangi meslekler parlayacak veya yeni çıkacak?\nCemal Bey: İnsan olmanın getirdiği o eşsiz özellikleri; yani empatiyi, yaratıcılığı ve karmaşık problem çözmeyi gerektiren işler daha da değerlenecek. Psikologlar, sanatçılar, hasta bakıcılar ve öğretmenler her zaman var olacak. Yeni çıkacak mesleklere gelirsek; 'Robot Psikoloğu' (insanlarla çalışan robotların uyumunu sağlayan kişi), 'Yapay Zeka Etik Uzmanı' (makinelerin ahlaki kararlarını denetleyen kişi) veya 'İklim Değişikliği Mühendisi' (bozulan doğayı onaran kişi) gibi şu an okullarda bölümü dahi olmayan yeni unvanlar duyacağız. Gençlere tavsiyem, tek bir mesleği ezberlemek yerine uyum sağlama (adaptasyon) yeteneklerini geliştirmeleridir.",
@@ -3192,7 +3192,7 @@
     "audio_url": "/audio/40_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Üniversite ve Kütüphane Duyuruları",
     "audio_script": "(Anons 1) Değerli öğrencilerimiz, yarın saat 14:00'te Merkez Kampüs Konferans Salonu'nda düzenlenecek olan 'Yapay Zeka Kariyer Günleri' seminerine katılım ücretsizdir. Katılımcıların öğrenci kimliklerini yanlarında bulundurmaları gerekmektedir. (Anons 2) Sayın kütüphane kullanıcılarımız, kütüphanemiz akşam saat 20:00'de kapanacaktır. Lütfen ödünç aldığınız kitapları çıkıştaki görevli masasına teslim ediniz veya internet üzerinden süresini uzatınız. Kütüphane içerisinde cep telefonuyla konuşmak yasaktır. (Anons 3) Fakültemiz yemekhanesinde bugün öğle yemeği servisi su borularındaki bir arıza nedeniyle yapılamayacaktır. Öğrencilerimiz ana kampüsteki büyük yemekhaneyi kullanabilirler.",
@@ -3273,7 +3273,7 @@
     "audio_url": "/audio/41_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Sosyal Medya Detoksu",
     "audio_script": "Herkese merhaba, ben Selin. Son altı aydır hayatımda verdiğim en iyi kararı sizinle paylaşmak istiyorum: Sosyal medya detoksu! Eskiden sabah gözümü açar açmaz ilk işim telefonumu elime alıp Instagram'a girmekti. Başkalarının 'mükemmel' tatillerini, kusursuz fotoğraflarını gördükçe kendi hayatımın ne kadar sıkıcı ve yetersiz olduğunu düşünüyordum. Sürekli telefonuma gelen bildirimler yüzünden üniversite sınavlarıma hiç odaklanamıyordum. Bir gün, ekranda geçirdiğim günlük sürenin 6 saati bulduğunu görünce dehşete düştüm ve o an bütün uygulamaları sildim. İlk iki hafta benim için korkunçtu; sürekli bir şeyleri kaçırıyorum (FOMO) hissine kapıldım. Ancak üçüncü haftadan sonra zihnimdeki o sis perdesi kalktı. Yıllardır kapağını açmadığım kitapları okumaya, ailemle göz teması kurarak sohbet etmeye başladım. Şimdi telefonumu sadece arama yapmak ve müzik dinlemek için kullanıyorum. Sanal dünyayı kapatınca, gerçek dünyadaki renkleri yeniden görmeye başladım.",
@@ -3354,7 +3354,7 @@
     "audio_url": "/audio/42_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Farklı Tatil ve Seyahat Anlayışları",
     "audio_script": "A) Can: Benim için tatil demek macera ve adrenalin demektir. Beş yıldızlı otellerin havuz kenarında yatmak bana işkence gibi gelir. Ben sırt çantamı alıp Nepal'deki dağlara tırmanmayı, ormanda kamp kurmayı ve vahşi doğayla mücadele etmeyi seviyorum.\nB) Zeynep: Ben tamamen kültür ve tarih aşığıyım. Gittiğim şehrin müzelerini, eski kalelerini ve sanat galerilerini gezmeden o şehri görmüş sayılmam. Turist rehberi eşliğinde antik Roma veya Osmanlı tarihi hakkında bilgiler dinlemek beni çok heyecanlandırır.\nC) Ali: Benim tatilden tek beklentim konfor ve rahatlıktır. Bütün yıl işte yeterince yoruluyorum zaten. Bana 'Her şey dahil' bir tatil köyü verin, sabahları açık büfeden kahvaltımı alayım, sonra akşama kadar deniz kenarında şezlongda yatıp kitap okuyayım. Yürümek veya gezmek istemiyorum.\nD) Elif: Benim için seyahat etmek, o yörenin (bölgenin) yemeklerini keşfetmek demektir. Ben bir şehre gittiğimde tarihi eserlere değil, en iyi sokak lezzetlerine veya meşhur yerel restoranlara giderim. Yeni baharatlar, farklı soslar ve geleneksel yemekleri tatmak benim tatil anlayışım.",
@@ -3435,7 +3435,7 @@
     "audio_url": "/audio/43_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Gıda İsrafı ve Çözüm Yolları",
     "audio_script": "Sunucu: Hoş geldiniz Gıda Mühendisi Ayşe Hanım. Birleşmiş Milletler raporuna göre dünyada her yıl üretilen gıdaların üçte biri çöpe gidiyor, oysa diğer yanda milyonlarca insan açlık çekiyor. Bu kadar büyük bir israf neden yaşanıyor?\nAyşe Hanım: Hoş bulduk. Bu israfın iki boyutu var. Gelişmemiş ülkelerde israf, tarladan markete (lojistik) giden yolda uygun soğutma sistemleri olmadığı için ürünlerin çürümesiyle yaşanır. Ancak bizim gibi gelişmiş ülkelerde israfın asıl sorumlusu 'tüketici alışkanlıkları'dır. Süpermarketlerde sırf şekli biraz bozuk (çarpık) olduğu için mükemmel derecede sağlıklı olan meyveleri almıyoruz. Ayrıca marketlerin '1 alana 1 bedava' kampanyaları bizi ihtiyacımızdan fazlasını almaya zorluyor. Evde dolapta unuttuğumuz o ürünler bozulup çöpe gidiyor.\nSunucu: Peki birey olarak evimizde bu durumu nasıl düzeltebiliriz?\nAyşe Hanım: Öncelikle alışverişe asla aç karnına ve 'alışveriş listesi' yapmadan çıkmamalıyız. İkincisi, ürünlerin üzerindeki SKT (Son Kullanma Tarihi) ile TETT (Tavsiye Edilen Tüketim Tarihi) farkını iyi bilmeliyiz. Bir makarnanın TETT'si geçse bile kokusunda veya tadında bozulma yoksa rahatlıkla tüketilebilir, hemen çöpe atmak büyük bir hatadır. Ve en önemlisi, artan yemekleri dökmek yerine dondurucuda saklamayı (veya kompost yapmayı) bir yaşam kültürü haline getirmeliyiz.",
@@ -3591,7 +3591,7 @@
     "audio_url": "/audio/45_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Mağaza ve Otel Duyuruları",
     "audio_script": "(Anons 1) Değerli Mavi Alışveriş Merkezi ziyaretçilerimiz. Merkezimiz 15 dakika sonra kapanacaktır. Lütfen alışverişlerinizi tamamlayarak kışlık giyim bölümündeki kasalarımıza yöneliniz. Bizi tercih ettiğiniz için teşekkür ederiz. (Anons 2) Sayın otel misafirlerimiz, sabah kahvaltısı servisimiz zemin kattaki restoranımızda başlamıştır ve saat 10:30'a kadar devam edecektir. Kahvaltı salonuna deniz kıyafetleri (mayo) ile girilmemesi önemle rica olunur. (Anons 3) Lütfen dikkat! Binamızda gerçekleştirilen yangın tatbikatı nedeniyle asansörler geçici olarak devre dışı bırakılmıştır. Lütfen panik yapmadan acil çıkış merdivenlerini kullanınız.",
@@ -3672,7 +3672,7 @@
     "audio_url": "/audio/46_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Dijital Göçebelik (Digital Nomad)",
     "audio_script": "Çoğu insan her sabah alarm sesiyle uyanıp aynı ofise gitmeyi normal bir hayat sanıyor. Ben ise 'dijital göçebe' olmayı seçtim. Mesleğim grafik tasarımcılık. İşim için sadece bir dizüstü bilgisayara ve güçlü bir internet bağlantısına ihtiyacım var. Geçen yılı Tayland'da, ondan önceki yılı ise Kolombiya'da geçirdim. Şu an ise Türkiye'nin güneyinde, Kaş'tayım. Gündüzleri denize giriyor, yeni kültürler keşfediyor, akşamları ise bilgisayarımı açıp Avrupa'daki müşterilerim için tasarımlar yapıyorum. Elbette bu hayatın zorlukları da var. Bazen yalnızlık çekiyorsunuz, bazen saat farkı yüzünden gece saat 3'te toplantı yapmak zorunda kalıyorsunuz. Sabit bir geliriniz olmadığı için de maddi kaygılar yaşayabiliyorsunuz. Ama dünyayı bir ofis gibi kullanmak ve sırt çantamla sınırları aşmak bana inanılmaz bir özgürlük hissi veriyor.",
@@ -3753,7 +3753,7 @@
     "audio_url": "/audio/47_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Yapay Zeka Korkusu",
     "audio_script": "A) Serdar: Ben bir yazılımcıyım ve yapay zekanın (AI) işlerimizi elimizden alacağına inanmıyorum. Aksine, yapay zeka bizim angarya (sıkıcı ve tekrarlayan) kod yazma süreçlerimizi hızlandırıyor. O bir düşman değil, kod yazarken bana hatalarımı gösteren mükemmel bir asistan.\nB) Aylin: Bir çevirmen olarak çok endişeliyim. Eskiden sayfalarca metni çevirmek günler alırdı, şimdi yapay zeka aynı işi saniyeler içinde, üstelik oldukça doğal bir dille yapıyor. Birkaç yıl içinde bizim mesleğimize hiç ihtiyaç kalmayacağından korkuyorum.\nC) Kemal: Ben yapay zekanın insani değerleri yok edeceğini düşünüyorum. Filmlerde gördüğümüz o robotların dünyayı ele geçirmesi senaryosu bence o kadar da hayal değil. Eğer bu sistemlere sınır konulmazsa, insanlığın sonunu kendi ellerimizle hazırlamış olacağız.\nD) Elif: Ben bir doktorum. Yapay zeka tıpta harikalar yaratıyor! Radyoloji sonuçlarını ve MR görüntülerini incelerken bir insanın göremeyeceği milimetrik tümörleri anında tespit ediyor. Yapay zeka benim yerime geçemez ama hastalarımın hayatını kurtarmamda bana çok büyük güç veriyor.",
@@ -3834,7 +3834,7 @@
     "audio_url": "/audio/48_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Z Kuşağı ve İş Hayatı",
     "audio_script": "Sunucu: Bugün stüdyomuzda İnsan Kaynakları Uzmanı Merve Hanım var. Merve Hanım, şirketler sürekli Z kuşağından (1997 sonrası doğanlardan) şikayet ediyor. Onların tembel, sadakatsiz ve çabuk sıkılan gençler olduğu söyleniyor. Gerçekten durum böyle mi?\nMerve Hanım: Aslında mesele tembellik değil, değerlerin uyuşmaması. Önceki kuşaklar (X ve Y), şirkete bağlılığı bir erdem olarak görürdü. Yöneticileri ne derse sorgulamadan yapar, aynı şirkette 20 yıl çalışıp emekli olmayı hedeflerlerdi. Z kuşağı ise dijital dünyanın ortasına doğdu. Onlar otoriteye boyun eğmek istemiyor; bir işin 'neden' yapıldığını anlamak istiyorlar.\nSunucu: Peki şirketlerden ne bekliyorlar?\nMerve Hanım: Anlam ve saygı bekliyorlar. Eğer yöneticisi ona değer vermiyorsa, çalışma saatleri esnek değilse ve ofis ortamı toksik (zehirli) ise, yüksek maaş teklif edilse bile o işi hemen bırakıyorlar. Şirketler onlara 'sadakatsiz' diyor ama Z kuşağı aslında sadece kendi ruh sağlığına sadık. Şirketlerin eski katı kurallarını bırakıp, bu gençlerin hızına ve teknolojik pratikliğine ayak uydurması gerekiyor. Yoksa gelecekte çalıştıracak yetenekli insan bulamayacaklar.",
@@ -3990,7 +3990,7 @@
     "audio_url": "/audio/50_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Tren, AVM ve Tiyatro Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, saat 15:30'da kalkacak olan Ankara-Konya Yüksek Hızlı Treni'nin peron numarası değişmiştir. Trenimiz 2 numaralı peron yerine 4 numaralı perondan hareket edecektir. (Anons 2) Sayın müşterilerimiz, alışveriş merkezimizin ikinci katında bulunan oyuncak mağazasında, mavi sırt çantalı 6 yaşlarında bir kız çocuğu bulunmuştur. Ailesinin zemin kattaki güvenlik noktasına gelmesi rica olunur. (Anons 3) Değerli seyirciler, 'Hamlet' adlı tiyatro oyunumuz birazdan başlayacaktır. Oyun süresince cep telefonlarınızı kapalı tutmanızı ve salona yiyecek-içecekle girmemenizi önemle rica ederiz.",
@@ -4071,7 +4071,7 @@
     "audio_url": "/audio/51_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Köy Okulunda Öğretmenlik",
     "audio_script": "Benim adım Ahmet. İstanbul'da doğup büyüdüm. Üniversiteden mezun olunca ilk görev yerim olarak Doğu Anadolu'da, kışın yollarının kardan kapandığı küçük bir köye atandım. Şehir hayatına o kadar alışkındım ki, ilk geldiğimde buradaki sessizlik ve imkansızlıklar beni çok korkutmuştu. Okulun sobasını yakmayı bile bilmiyordum. Ancak köy halkı o kadar misafirperverdi ki, beni evlatları gibi bağırlarına bastılar. Her sabah kapımda taze süt, sıcak ekmek buluyordum. Çocukların gözlerindeki o okuma hevesi, bana tüm yorgunluğumu unutturdu. Birçoğu daha önce hiç sinemaya gitmemişti. Sınıfımıza bir projeksiyon cihazı aldırıp onlara hafta sonları belgeseller ve filmler izletmeye başladım. Şehirdeki öğrencilerde gördüğüm o teknoloji bağımlılığı ve bıkkınlık bu çocuklarda yoktu. Üç yılımı bu köyde geçirdim. Şehre döndüğümde cebim boştu belki, ama kalbim dünyanın en büyük servetiyle, o çocukların sevgisiyle doluydu.",
@@ -4152,7 +4152,7 @@
     "audio_url": "/audio/52_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Yaşam Alanı Tercihleri: Şehir mi Köy mü?",
     "audio_script": "A) Ceren: Benim için hayat büyük şehirde yaşanır. Festivaller, sinemalar, gece hayatı ve sürekli yeni insanlarla tanışma fırsatı... Kalabalık beni yormuyor, aksine bana enerji veriyor. Sessiz bir köyde yaşarsam bir hafta içinde sıkıntıdan patlarım.\nB) Murat: Şehirlerin beton ormanlarından çok yoruldum. Temiz hava, kuş sesleri ve toprağa dokunmak istiyorum. Hedefim kısa süre içinde küçük bir kasabaya yerleşip kendi organik sebzelerimi yetiştirmek ve sabahları horoz sesiyle uyanmak.\nC) Hakan: Ben ne tamamen köy hayatını ne de karmaşık şehir merkezini seviyorum. Benim tercihim şehir dışındaki sakin banliyöler (siteler). Hem şehir merkezindeki işime arabayla yarım saatte ulaşabiliyorum, hem de akşamları sessiz ve bahçeli evimde huzur buluyorum.\nD) Selin: Benim için yaşanacak tek bir yer yok! Ben göçebe (gezgin) ruhluyum. Bir yere bağlanmaktan nefret ederim. Birkaç ay İstanbul'da, sonra Bali'de, ardından Avrupa'da bir şehirde yaşamak bana göre. Sabit bir adresim olması düşüncesi beni boğuyor.",
@@ -4233,7 +4233,7 @@
     "audio_url": "/audio/53_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Dijital Çağda Siber Zorbalık",
     "audio_script": "Sunucu: Değerli dinleyenler, bugün Psikolog Dr. Emre Aydın ile çağımızın en büyük sorunlarından biri olan 'Siber Zorbalık' konusunu konuşacağız. Hocam, siber zorbalık nedir ve fiziksel zorbalıktan farkı nedir?\nDr. Emre: Siber zorbalık, sosyal medya, mesajlaşma uygulamaları veya oyun platformları üzerinden bir kişiye kasıtlı olarak hakaret etme, aşağılama, tehdit etme veya özel fotoğraflarını izinsiz paylaşma eylemidir. Fiziksel zorbalıktan çok daha tehlikelidir çünkü okulda zorbalığa uğrayan bir çocuk evine geldiğinde güvendedir. Ancak siber zorbalıkta mekan sınırı yoktur; zorba, mağdurun cebindeki telefon aracılığıyla 7 gün 24 saat ona ulaşabilir ve saldırabilir. Üstelik internette 'anonimlik' (kimliğini gizleme) zırhı olduğu için, zorbalar gerçek hayatta asla söyleyemeyecekleri kadar acımasız olabiliyorlar.\nSunucu: Peki aileler çocuklarının siber zorbalığa uğradığını nasıl anlarlar?\nDr. Emre: Çocuk birdenbire içine kapanıyorsa, telefonu eline aldığında aşırı stresli ve gergin görünüyorsa veya ekranı ailesinden saklamaya çalışıyorsa bu güçlü bir işarettir. Aileler çocuklarının internetini tamamen kesmek yerine, onlarla yargılamadan konuşmalı ve durumu okuldaki rehber öğretmenlerle veya gerekirse siber suçlarla mücadele polisleriyle paylaşmalıdır.",
@@ -4389,7 +4389,7 @@
     "audio_url": "/audio/55_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Havalimanı, Müze ve Trafik Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, İstanbul'dan Londra'ya gidecek olan uçuşumuz olumsuz hava koşulları nedeniyle 2 saat ertelenmiştir. Bekleme süresince yolcularımıza 102 numaralı kapıda ücretsiz içecek ikramı yapılacaktır. (Anons 2) Değerli ziyaretçilerimiz, Arkeoloji Müzemiz 20 dakika sonra kapanacaktır. Lütfen müzeyi gezmeyi tamamlayarak çıkış kapılarına yöneliniz. Müze mağazamızdan satın aldığınız ürünleri çıkışta paketletebilirsiniz. (Anons 3) Sayın sürücüler, Ankara-Eskişehir otoyolunun 40. kilometresinde meydana gelen bir araç yangını sebebiyle yol trafiğe kapatılmıştır. Sürücülerin alternatif olarak eski devlet yolunu kullanmaları tavsiye edilmektedir.",
@@ -4470,7 +4470,7 @@
     "audio_url": "/audio/56_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Korece Öğrenme Serüveni",
     "audio_script": "Benim adım Zeynep. Bundan üç yıl önce, pandemi döneminde evde sıkılırken rastgele bir Kore dizisi izlemeye başladım. Dizideki karakterlerin duygularını ifade ediş biçimi ve dilin melodisi beni çok etkiledi. Daha önce hiç Asya dillerine ilgim yoktu ama o gün 'Ben bu dili öğreneceğim' dedim. İnternetten ücretsiz videolar izleyerek Kore alfabesi olan Hangul'u sadece iki günde öğrendim. Alfabe çok mantıklı ve basitti. Ardından telefonuma dil öğrenme uygulamaları indirdim ve her gün yarım saat kelime ezberledim. Gramer yapısı Türkçeye çok benziyordu, ikisi de sondan eklemeli diller olduğu için cümle kurmakta hiç zorlanmadım. Elbette konuşma pratiği yapmak en zoruydur. Sosyal medya üzerinden Seul'de yaşayan bir mektup arkadaşı (penpal) buldum ve onunla haftada iki gün görüntülü konuşarak pratik yapmaya başladım. Şu an dizileri altyazısız izleyebiliyorum ve en büyük hayalim seneye Güney Kore'ye gidip Seul sokaklarında kaybolmak.",
@@ -4551,7 +4551,7 @@
     "audio_url": "/audio/57_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Mutfak ve Beslenme Tercihleri",
     "audio_script": "A) Serdar: Ben hızlı ve tempolu yaşayan biriyim. Yemek pişirmekle saatlerimi harcayamam. Dışarıdan hamburger, pizza veya tavuk kızartması söylemek benim için en pratik yol. Bol kalorili ve soslu yiyecekleri çok seviyorum. Sağlıklı olup olmaması pek umrumda değil.\nB) Elif: Benim için en güzel yemek, annemin mutfağından çıkan ev yemekleridir. Kuru fasulye, pilav, zeytinyağlı sarmalar ve çorbalar... Dışarıda yemek yediğimde asla evdeki o sıcak ve taze lezzeti bulamıyorum. Geleneksel Türk mutfağı benim vazgeçilmezim.\nC) Canan: Benim vücuduma giren her şey tamamen temiz ve sağlıklı olmalı. Şeker, un ve işlenmiş gıdalardan uzak duruyorum. Genellikle kinoa, avokado salatası, ızgara somon ve detoks suları (smoothie) ile besleniyorum. Yemek benim için sadece bir enerji (yakıt) kaynağıdır.\nD) Murat: Benim mutfak anlayışım tamamen dünya mutfaklarını keşfetmek üzerine kurulu! Her hafta sonu farklı bir ülkenin restoranına giderim. Japonların sushisi, Meksikalıların acılı tacoları veya Hindistan'ın bol baharatlı körisi (curry) bana dünyayı gezmiş hissi veriyor. Yeni tatlar denemekten hiç korkmam.",
@@ -4632,7 +4632,7 @@
     "audio_url": "/audio/58_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Su Krizi ve Geleceğimiz",
     "audio_script": "Sunucu: Değerli dinleyiciler, bugün İklim Bilimci Prof. Dr. Hasan Yılmaz ile yaklaşan küresel su krizini konuşacağız. Hocam, dünyanın %70'i sularla kaplıyken nasıl oluyor da susuzluk (kuraklık) tehlikesi yaşıyoruz?\nProf. Dr. Yılmaz: Çok güzel bir soru. Evet, dünyanın %70'i su ama bu suyun %97'si okyanuslardaki tuzlu sudur ve içilemez. Kalan %3'lük tatlı suyun da büyük bir kısmı buzullarda donmuş haldedir veya yerin çok altındadır. İnsanoğlunun kolayca ulaşabileceği göl ve nehir suları, dünyadaki toplam suyun sadece %1'inden bile azdır. Nüfus hızla artıyor, endüstri ve özellikle tarım sektörü bu %1'lik suyu acımasızca tüketiyor.\nSunucu: Tüketimin en çok hangi alanda olduğunu söyleyebiliriz?\nProf. Dr. Yılmaz: Herkes evde diş fırçalarken suyu kapatmanın dünyayı kurtaracağını sanıyor. Bu güzel bir alışkanlıktır ama asıl su canavarı tarım ve tekstil sektörüdür. Örneğin bir kilo dana eti üretmek için hayvanın yediği yemler dahil yaklaşık 15.000 litre tatlı su harcanır. Veya giydiğiniz bir pamuklu pantolon için 10.000 litre su tüketilir. Yani asıl su ayak izimiz, yediğimiz gıdaların ve aldığımız kıyafetlerin arkasında gizlidir. Çözüm; vahşi tarım sulamasından damlama sulamaya geçmek ve bireysel olarak aşırı tüketimden vazgeçmektir.",
@@ -4788,7 +4788,7 @@
     "audio_url": "/audio/60_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Otogar, Hastane ve Market Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, saat 10:15'te hareket etmesi planlanan İzmir otobüsümüz, yoğun kar yağışı nedeniyle 20 dakika rötarlı (gecikmeli) olarak kalkacaktır. Bekleme salonumuzda yolcularımıza çay ikramımız vardır. (Anons 2) Acil duyuru! Hastanemizin acil servisinde yatan bir hastamız için acilen '0 Rh Negatif' kana ihtiyaç vardır. Kan vermek isteyen vatandaşlarımızın 2. kattaki Kan Merkezi'ne başvurmaları rica olunur. (Anons 3) Sayın müşterilerimiz, manav reyonumuzdaki kırmızı elmalarda sadece 1 saat için %50 indirim başlamıştır. Kampanyalı ürünlerimiz kişi başı 3 kilo ile sınırlıdır.",
@@ -4869,7 +4869,7 @@
     "audio_url": "/audio/61_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Afrika'da Gönüllü Öğretmenlik",
     "audio_script": "Benim adım Murat. 30 yaşında bir İngilizce öğretmeniyim. İki yıl önce hayatımın en büyük kararını alıp, gönüllü bir proje kapsamında Afrika'nın yoksul bir ülkesi olan Uganda'ya gittim. Amacım çocuklara sadece İngilizce öğretmek değil, aynı zamanda onlara umut olmaktı. Gittiğim köyde ne elektrik ne de temiz su vardı. İnsanlar su bulabilmek için her gün kilometrelerce yürümek zorundaydı. Derslerimizi ağaç gölgelerinde, eski kara tahtalarla yapıyorduk. Ama çocukların gözündeki o saf öğrenme aşkı, hayatımda gördüğüm en güzel şeydi. Orada sadece öğretmenlik yapmadım; köylülerle birlikte su kuyusu kazdık, küçük bir kütüphane inşa ettik. İki yılın sonunda Türkiye'ye, evime döndüğümde musluğu her açtığımda akan temiz suyu görünce ağladım. Uganda bana elimizdeki küçük şeylerin aslında ne kadar büyük birer mucize olduğunu ve mutluluğun eşyalarda değil, başkalarına yardım etmekte saklı olduğunu öğretti.",
@@ -4950,7 +4950,7 @@
     "audio_url": "/audio/62_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Evcil Hayvan Tercihleri",
     "audio_script": "A) Aylin: Ben tam bir bağımsızlık aşığıyım, bu yüzden kedileri çok seviyorum. Onların sürekli ilgi beklememesi, kendi kendilerini temizlemeleri ve evde yalnız kalabilmeleri yoğun iş hayatıma çok uygun. Akşam dizimde mırıldanmaları bana yetiyor.\nB) Serdar: Benim için evcil hayvan demek sadakat ve dostluk demektir. Bu yüzden köpeklerden vazgeçemem. Her sabah onunla yürüyüşe çıkmak beni de aktif ve zinde tutuyor. Kapıdan girdiğimde beni kuyruğunu sallayarak karşılaması bütün stresimi alıyor.\nC) Zeynep: Ben çok titiz biriyim, evde kıl veya tüy dökülmesine asla dayanamam. Benim huzur kaynağım büyük bir akvaryumdur. Rengarenk balıkların suyun içindeki o sessiz, sakin yüzüşlerini izlemek benim için en büyük meditasyon. Üstelik hiç ses yapmıyorlar.\nD) Hakan: Benim evim her zaman cıvıl cıvıl olmalı. Yalnızlıktan nefret ederim. Bu yüzden kafeste beslediğim muhabbet kuşlarım var. Sabahları onların o neşeli ötüşleriyle uyanmak ve omuzuma konup benimle oyun oynamaları evime neşe katıyor.",
@@ -5031,7 +5031,7 @@
     "audio_url": "/audio/63_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Uzaktan Çalışmanın (Remote Work) Psikolojik Etkileri",
     "audio_script": "Sunucu: Pandemiyle birlikte hayatımıza giren ve kalıcı hale gelen 'Uzaktan Çalışma' modelini Psikolog Ayşe Hanım'la konuşacağız. Ayşe Hanım, evden çalışmak insanlar için harika bir konfor değil mi?\nAyşe Hanım: İlk bakışta öyle görünüyor. Sabah trafik stresi yok, yol masrafı yok. Ancak madalyonun diğer yüzünde çok ciddi psikolojik sorunlar yatıyor. Evden çalışan bireylerin en büyük problemi 'sınırların kalkmasıdır'. Eskiden ofis kapısından çıktığınızda iş biterdi. Şimdi ise yatak odası, mutfak ve ofis aynı yer olduğu için insanlar ne zaman çalışmayı bırakıp ne zaman dinleneceğini bilemiyorlar. Bilgisayar hep açık, gece 11'de bile e-posta cevaplıyorlar.\nSunucu: Bu durum ne gibi sonuçlar doğuruyor?\nAyşe Hanım: Gizli bir 'Tükenmişlik Sendromu' ve 'İzolasyon' (yalnızlık) yaratıyor. İş arkadaşlarıyla içilen o beş dakikalık kahveler, sohbetler aslında insanın sosyal deşarj (rahatlama) alanlarıydı. Ekrana bakarak sosyalleşmek insan doğasına aykırıdır.\nSunucu: Çözüm nedir peki?\nAyşe Hanım: Sınırları yeniden çizmek zorundayız. Evin içinde sadece çalışmak için ayrılmış küçük bir köşe veya masa olmalı. Ve en önemlisi, mesai saati bittiğinde o bilgisayar tamamen kapatılmalı ve işle ilgili bildirimler sessize alınmalıdır. Disiplin, uzaktan çalışmada özgürlüğün tek anahtarıdır.",
@@ -5187,7 +5187,7 @@
     "audio_url": "/audio/65_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Havalimanı, Fuar ve Stadyum Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, teknik bir arıza nedeniyle 4 numaralı bagaj bandı çalışmamaktadır. Paris uçağı ile gelen yolcularımızın bagajlarını 6 numaralı banttan almaları rica olunur. (Anons 2) Değerli teknoloji fuarı ziyaretçileri, fuarımız 30 dakika sonra sona erecektir. Ana sahnede gerçekleştirilecek olan 'Büyük Hediye Çekilişi'ne katılmak için lütfen numaralı biletlerinizi hazırlayarak ana salona geçiniz. (Anons 3) Sayın taraftarlar, maçımız sona ermiştir. Stadyum çıkışında yoğun trafik yaşanmaması için özel araçları yerine metro ve otobüs gibi toplu taşıma araçlarını kullanmanız tavsiye edilir. Lütfen çıkış kapılarında acele etmeyiniz.",
@@ -5268,7 +5268,7 @@
     "audio_url": "/audio/66_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Sıfır Atık (Zero Waste) Yaşamı",
     "audio_script": "Benim adım Zeynep. İki yıl öncesine kadar her hafta evimden koca bir poşet plastik çöp çıkarırdım. Bir gün internette izlediğim deniz kirliliği belgeseli beni derinden etkiledi ve 'Sıfır Atık' (Zero Waste) yaşamına geçmeye karar verdim. Amacım doğaya bıraktığım çöp miktarını en aza indirmekti. İlk olarak market alışverişimi değiştirdim. Artık naylon poşet asla almıyorum, kendi bez çantalarımı taşıyorum. Bakliyatları ve temizlik malzemelerini plastik ambalajlarda almak yerine, evden götürdüğüm cam kavanozlara doldurarak (açık ürün satan yerlerden) alıyorum. Tek kullanımlık kahve bardakları yerine her zaman çelik termosumu kullanıyorum. Başlangıçta bu kurallara uymak çok zor ve yorucu geldi, insanlar bana uzaylı gibi bakıyordu. Ancak zamanla bu bir alışkanlığa dönüştü. İki yılın sonunda artık evimden ayda sadece küçük bir poşet çöp çıkıyor. Bu yaşam tarzı sadece doğayı korumakla kalmadı, aynı zamanda gereksiz alışveriş yapmamı engelleyerek ciddi para tasarrufu sağladı.",
@@ -5349,7 +5349,7 @@
     "audio_url": "/audio/67_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Kahve Kültürü ve Tercihleri",
     "audio_script": "A) Hakan: Ben sadelikten yanayım. Sabah uyanır uyanmaz güne başlamak için bana sert, sade ve sütsüz bir 'Filtre Kahve' yeterlidir. Aroması güçlü olsun ama içinde kesinlikle şeker veya şurup olmasın. Benim amacım kahvenin gerçek tadını almak ve ayılmak.\nB) Aylin: Ben gelenekselciyim. Özellikle akşam yemeklerinden sonra ailemle sohbet ederken bol köpüklü, yanında lokumla servis edilen 'Türk Kahvesi' içmek benim vazgeçilmezimdir. Telvesiyle (tortusuyla) pişen tek kahve olması ona ayrı bir karakter katıyor. Sonunda fal kapatmak da işin eğlencesi.\nC) Murat: Ben tempolu yaşıyorum ve beklemeyi sevmiyorum. Öğlen yorgunluğunu atmak için İtalyan usulü küçük bir fincanda çok sert bir 'Espresso' içerim. Bir yudumda biten ama beni anında canlandıran bu yoğun lezzet tam benim enerjime uygun.\nD) Elif: Ben kahveyi sert (acı) haliyle hiç sevmem. Özellikle yaz aylarında, içinde bolca buz, krema, karamel şurubu ve süt bulunan 'Frappe' (Soğuk Kahve) türlerini tercih ederim. Benim için kahve, aslında tatlı ve serinletici bir tatlı içeceği gibi olmalıdır.",
@@ -5430,7 +5430,7 @@
     "audio_url": "/audio/68_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Dijital Ebeveynlik ve Ekran Bağımlılığı",
     "audio_script": "Sunucu: Bugün Pedagog (Çocuk Eğitim Uzmanı) Ali Bey ile çocuklardaki ekran bağımlılığını konuşacağız. Ali Bey, restoranlarda veya evde bebeklerin, küçük çocukların ellerinde sürekli tablet görüyoruz. Aileler ekranı bir 'susturucu' (emzik) olarak mı kullanıyor?\nAli Bey: Evet, maalesef modern çağın en büyük tehlikelerinden biri bu: Dijital Emzik. Anne babalar çocuk ağlamasın, yemek yesin veya kendilerini rahat bıraksın diye çocuğun eline telefonu veriyorlar. Oysa 0-3 yaş arasındaki çocukların beyin gelişimi için fiziksel dünyaya dokunmaları, motor becerilerini geliştirmeleri gerekir. Saatlerce hızlı değişen parlak videolara (örneğin YouTube Kids) maruz kalan bir çocuğun beyni, yüksek dopamine alışır. Sonuç olarak gerçek dünya (okul, kitaplar, oyuncaklar) ona çok yavaş ve 'sıkıcı' gelmeye başlar. Bu da Dikkat Eksikliği ve Hiperaktivite Bozukluğuna (DEHB) yol açar.\nSunucu: Peki çözüm tüm ekranları yasaklamak mıdır?\nAli Bey: Tamamen yasaklamak (sıfır ekran) günümüz dünyasında gerçekçi değildir. Çözüm 'Süreli ve Kontrollü' kullanımdır. Çocuk 3 yaşından sonra günde maksimum 45 dakika ekran görebilir, ama asıl kural şudur: Çocuğu ekranla yalnız bırakmayın. İzlediği şeyi onunla beraber izleyin, üzerine konuşun ve onu edilgen bir izleyici olmaktan çıkarıp aktif bir katılımcı yapın. Dijital ebeveynlik yasaklamak değil, rehberlik etmektir.",
@@ -5586,7 +5586,7 @@
     "audio_url": "/audio/70_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Havalimanı, Tiyatro ve Metro Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, 14:30'da kalkacak olan TK 1234 sayılı Paris uçuşumuzun biniş işlemleri 105 numaralı kapıdan başlamıştır. Lütfen kimlik ve biniş kartlarınızı hazır bulundurunuz. (Anons 2) Değerli seyirciler, 'Romeo ve Juliet' adlı tiyatro oyunumuz 5 dakika içinde başlayacaktır. Oyun süresince fotoğraf çekmek ve video kaydı almak kesinlikle yasaktır. Lütfen yerlerinizi alınız. (Anons 3) Sayın yolcularımız, teknik bir arıza nedeniyle Yenikapı-Hacıosman metro hattındaki seferlerimizde 15 dakikalık gecikmeler yaşanmaktadır. Anlayışınız için teşekkür ederiz.",
@@ -5667,7 +5667,7 @@
     "audio_url": "/audio/71_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Minimalist Yaşam Tarzı",
     "audio_script": "Benim adım Cemre. Bundan üç yıl önce, odamdaki eşyaların beni boğduğunu hissetmeye başladım. Dolabım giymediğim kıyafetlerle doluydu, raflarımda okumadığım kitaplar vardı ama ben hala 'hiçbir şeyim yok' diyerek sürekli yeni şeyler alıyordum. Bir gün bir belgesel izledim ve minimalist yaşam tarzıyla tanıştım. Amacım daha az şeye sahip olmak, böylece daha çok şeye yer (zaman ve enerji) açmaktı. İlk olarak dolabımdaki kıyafetlerin yarısını bağışladım. Sadece gerçekten ihtiyacım olan ve beni mutlu eden şeyleri sakladım. İnsanlar 'Bu kadar az eşyayla nasıl yaşıyorsun?' diye soruyor. Aslında, eşyalarım azaldıkça hayatımın daha düzenli, huzurlu ve ucuz olduğunu gördüm. Artık sabahları ne giyeceğim diye düşünmüyorum, çünkü dolabımda sadece sevdiğim ve birbiriyle uyumlu kıyafetlerim var. Minimalizm, bana sahip olduklarımın kölesi olmamayı öğretti.",
@@ -5748,7 +5748,7 @@
     "audio_url": "/audio/72_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Kariyer Tercihleri ve Çalışma Ortamı",
     "audio_script": "A) Emre: Ben tamamen 'Kurumsal Hayat' (Corporate) insanıyım. Kuralları belli olan, sabah 9 akşam 5 çalışacağım ve maaşımın her ayın birinde tıkır tıkır yatacağı bir iş arıyorum. Takım elbisemi giyip o plazaya gitmek bana güven veriyor.\nB) Aylin: Ben bir ofise kapanıp kalamam. Benim için iş, yeni yerler görmek ve yeni insanlarla tanışmak demektir. Bu yüzden turizm sektörünü seçtim. Sürekli seyahat etmek, farklı kültürleri deneyimlemek beni canlı tutuyor.\nC) Burak: Ben risk almayı ve kendi işimin patronu olmayı seviyorum. 'Girişimcilik' benim kanımda var. Bir şirkette maaşlı çalışmak yerine, kendi fikirlerimi hayata geçireceğim, bazen batıp bazen çıkacağım (iflas edip büyüyeceğim) heyecanlı bir hayatı tercih ederim.\nD) Zeynep: Benim için önemli olan şey topluma ve doğaya fayda sağlamaktır. Sadece para kazanmak için hiçbir iş yapmam. Bu yüzden Sivil Toplum Kuruluşlarında (STK) çalışıyorum. Yaptığım işin dünyayı daha iyi bir yer haline getirmesi benim tek motivasyonum.",
@@ -5829,7 +5829,7 @@
     "audio_url": "/audio/73_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Dijital Bağımlılık ve FOMO Etkisi",
     "audio_script": "Sunucu: Değerli dinleyenler, bugün Psikolog Dr. Emre Aydın ile 'FOMO' (Gelişmeleri Kaçırma Korkusu) konusunu konuşacağız. Hocam, FOMO tam olarak nedir ve neden çağımızın hastalığı olarak görülüyor?\nDr. Emre: FOMO, özellikle sosyal medya kullanımının artmasıyla ortaya çıkan 'Fear of Missing Out' kelimelerinin kısaltmasıdır. Bireyin, başkalarının çok daha ilginç ve eğlenceli deneyimler yaşadığını düşünerek, bu gelişmeleri (veya fırsatları) kaçırıyormuş gibi hissetmesidir. İnsanlar, arkadaşlarının tatil fotoğraflarına veya gittikleri lüks restoranlara bakarken 'Ben neden oradayım, hayatım çok sıkıcı' diye düşünürler. Bu sürekli kıyaslama hali, kişide derin bir kaygı ve yetersizlik hissi yaratır.\nSunucu: Peki bu durumun fiziksel veya psikolojik zararları nelerdir?\nDr. Emre: FOMO yaşayan bireyler, telefonlarından (bildirimlerden) bir an bile uzaklaşamazlar. Bu durum uyku bozukluklarına, odaklanma (konsantrasyon) eksikliğine ve en nihayetinde sosyal izolasyona yol açar. Gerçek hayattaki anı (şu anı) yaşayamazlar, çünkü zihinleri her zaman sosyal medyada paylaşılan o 'sahte ve mükemmel' hayatlardadır. Çözüm, 'JOMO' (Joy of Missing Out) yani 'Kaçırmanın Keyfi'ni yaşamak, zaman zaman dijital dünyadan tamamen kopup (detoks yapıp) kendine vakit ayırmaktır.",
@@ -5985,7 +5985,7 @@
     "audio_url": "/audio/75_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Vapur, Hayvanat Bahçesi ve Kütüphane Anonsları",
     "audio_script": "(Anons 1) Değerli yolcularımız, Marmara Denizi'nde etkili olan şiddetli lodos (fırtına) nedeniyle Kadıköy-Beşiktaş vapur seferleri geçici olarak iptal edilmiştir. Yolcularımızın Marmaray'ı kullanmaları tavsiye edilir. (Anons 2) Sayın ziyaretçilerimiz, hayvanat bahçemizdeki hayvanların sağlığı ve özel diyetleri için onlara dışarıdan yiyecek vermek kesinlikle yasaktır. Kurallara uymayanlar parktan çıkarılacaktır. (Anons 3) Değerli okurlar, kütüphanemiz 15 dakika sonra saat 21:00'de kapanacaktır. Lütfen ödünç almak istediğiniz kitaplarla birlikte giriş katındaki kayıt masasına geliniz. İyi akşamlar dileriz.",
@@ -6066,7 +6066,7 @@
     "audio_url": "/audio/76_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Bir Köpek Sahiplenmek",
     "audio_script": "Benim adım Emre. Pandemi döneminde evde tek başıma çok yalnız kaldım ve bir barınağa giderek 'Max' adında küçük bir köpek sahiplendim. O gün hayatımın bu kadar değişeceğini hiç tahmin etmemiştim. Eskiden hafta sonları öğlene kadar uyuyan tembel biriydim. Ama Max sayesinde her sabah saat 7'de kalkıp parka gitmek zorunda kaldım. Başta bu zorunluluk beni çok zorladı, yalan söylemeyeyim, ilk haftalarda onu barınağa geri vermeyi bile düşündüm. Ama sabahları parkta yürürken diğer köpek sahipleriyle tanıştım, sosyalleştim ve o yürüyüşler sayesinde 8 kilo verdim. Akşamları bilgisayar başında yorgun argın çalışırken ayaklarımın dibine kıvrılıp uyuması bana inanılmaz bir huzur veriyor. Karşılıksız sevginin ne demek olduğunu ondan öğrendim. O sadece bir evcil hayvan değil, hayatımı düzene sokan en yakın dostum oldu. Herkese tavsiyem; hayvan satın almayın, barınaklardan sahiplenin.",
@@ -6147,7 +6147,7 @@
     "audio_url": "/audio/77_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Zaman Yönetimi ve Çalışma Tarzları",
     "audio_script": "A) Ayşe: Ben tam bir sabah insanıyım (erkenci kuş). Güneş doğmadan saat 5'te uyanırım. Beynimin en taze olduğu o ilk sessiz saatlerde en zor işlerimi hallederim. Öğleden sonra ise enerjim tamamen biter, bu yüzden sadece maillere cevap veririm.\nB) Burak: Benim beynim gece yarısından sonra çalışmaya başlıyor. Herkes uyurken, etrafta hiçbir ses veya telefon bildirimi yokken o karanlık ortamda muazzam odaklanıyorum. Sabaha karşı uyuyup, öğlen 1'de kalkmak benim yaşam tarzım.\nC) Selin: Ben bir 'son dakikacı'yım. Bir projenin teslim tarihine (deadline) daha 10 gün varsa asla çalışamam, sürekli oyalanırım. Ama son 24 saat kaldığında içimdeki panik ve adrenalinle bilgisayar başına geçer, yemeden içmeden o işi mükemmel bir şekilde bitiririm.\nD) Can: Ben aynı anda birçok işi yapmadan (multitasking) duramam. Sadece tek bir projeye odaklanmak beni çok sıkıyor. Bir yanda rapor yazarken, diğer ekranda video izler ve aynı anda telefonda iş görüşmesi yaparım. Dikkati dağınık görünsem de benim verimliliğim bu kaostan besleniyor.",
@@ -6228,7 +6228,7 @@
     "audio_url": "/audio/78_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "İklim Krizinin Psikolojik Etkisi: Eko-Anksiyete",
     "audio_script": "Sunucu: Bugün stüdyomuzda Klinik Psikolog Dr. Zeynep Hanım var. Zeynep Hanım, son günlerde gençlerde 'Eko-Anksiyete' (İklim Kaygısı) adı verilen yeni bir rahatsızlık türü gözlemleniyor. Bize bundan bahseder misiniz?\nDr. Zeynep: Merhaba. Eko-anksiyete, gezegenimizin iklim krizleri yüzünden yok olacağına dair hissedilen derin, kronik bir çaresizlik ve korku durumudur. Haberlerde sürekli yanan ormanları, eriyen buzulları ve kuruyan gölleri gören gençler, geleceğin tamamen karanlık olduğuna inanıyor. Kliniğime gelen pek çok üniversite öğrencisi 'Dünya yok olacakken neden ders çalışayım ki?' veya 'Bu kadar kötü bir dünyaya çocuk getirmek büyük bir haksızlık' diyor. Geleceğe dair umutlarını kaybetmiş durumdalar.\nSunucu: Peki bu çaresizlik hissiyle nasıl başa çıkabilirler? Sadece haber izlemeyi bırakmak çözüm mü?\nDr. Zeynep: Sadece haberleri kapatmak bir kaçıştır, çözüm değil. Kaygıyı azaltmanın en etkili yolu 'eyleme geçmek'tir. Ben gençlere pasif birer izleyici olmak yerine, doğa derneklerine katılmalarını, ağaç dikme kampanyalarında yer almalarını veya sıfır atık projelerinde gönüllü olmalarını tavsiye ediyorum. Bir problemi çözmek için diğer insanlarla omuz omuza çalıştığınızı (kolektif eylem içinde olduğunuzu) hissettiğiniz an, beyninizdeki o 'kıyamet' korkusu yerini umuda ve iyileşmeye bırakır.",
@@ -6384,7 +6384,7 @@
     "audio_url": "/audio/80_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Uçak, Market ve Stadyum Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, teknik bir nedenden dolayı 10:45 Berlin uçuşumuzun biniş kapısı değişmiştir. Biniş işlemleri 212 numaralı kapı yerine 218 numaralı kapıdan yapılacaktır. (Anons 2) Değerli müşterilerimiz, marketimizin süt ve süt ürünleri reyonunda sadece bugün saat 15:00'e kadar tüm peynir çeşitlerinde 'Bir alana bir bedava' kampanyası başlamıştır. Lütfen acele ediniz. (Anons 3) Sayın taraftarlar, güvenlik güçlerinin uyarısı nedeniyle stadyum çıkışında C kapısı kapalı tutulacaktır. Lütfen izdiham (yığılma) yaratmamak için çıkışlarınızı A, B ve D kapılarından yavaşça yapınız. Kişisel eşyalarınızı koltuklarda unutmayınız.",
@@ -6465,7 +6465,7 @@
     "audio_url": "/audio/81_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Hobiden Mesleğe: Fotoğrafçılık Serüveni",
     "audio_script": "Benim adım Murat. Hayatımın ilk on yılında sıradan bir bankacı olarak çalıştım. Bütün gün sayılar, krediler ve ekranlarla boğuşuyordum. Ruhumun daraldığını hissettiğim o dönemde, kendime ikinci el bir fotoğraf makinesi aldım. Başlangıçta sadece hafta sonları şehirden uzaklaşıp dağların, göllerin ve vahşi hayvanların fotoğraflarını çekiyordum. Bu benim için bir kaçış noktasıydı (hobiydi). Çektiğim fotoğrafları Instagram'da paylaşmaya başladım. Asla ünlü olma gibi bir derdim yoktu ama fotoğraflarım o kadar çok paylaşıldı ki, bir anda binlerce takipçim oldu. Bir gün dünyaca ünlü bir doğa dergisinden e-posta aldım. Bana Afrika'daki bir belgesel çekimi için iş teklif ediyorlardı! O gece hiç uyumadım ve ertesi sabah bankaya gidip istifa dilekçemi verdim. Şimdi dünyanın dört bir yanını geziyor, tutkumu iş olarak yapıyorum. Eğer bir şeyi gerçekten severek yaparsanız, hayat bir gün size kapılarını mutlaka açıyor.",
@@ -6546,7 +6546,7 @@
     "audio_url": "/audio/82_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Sosyalleşme ve Arkadaşlık Anlayışları",
     "audio_script": "A) Ali: Ben kalabalık ortamları, gürültülü kulüpleri veya kalabalık ev partilerini hiç sevmem. Enerjimi iç dünyamdan alırım. Yüzlerce tanıdığım yerine, her sırrımı paylaşabildiğim sadece iki tane çok yakın (gerçek) dostum vardır. Onlarla sessiz bir kahvecide saatlerce derin konular konuşmak bana yetiyor.\nB) Ayşe: Ben tam bir 'dışa dönük' karakterim! Sessiz ortamlarda enerjim çekilir. Hafta sonu evde oturmak bana göre değil. Sürekli kalabalık partilere katılmak, her gün yepyeni insanlarla tanışmak ve herkesin birbiriyle güldüğü o coşkulu kalabalıklar içinde olmak beni şarj ediyor.\nC) Kerem: Modern dünyada benim arkadaşlıklarım tamamen 'dijital'. Gerçek hayatta biriyle buluşmak, giyinip dışarı çıkmak bana çok yorucu (zahmetli) geliyor. Ben arkadaşlarımla online savaş oyunlarında veya Discord sunucularında sohbet ederek sosyalleşiyorum. Yüzlerini hiç görmediğim ama bana en yakın olan sanal dostlarım var.\nD) Elif: Ben duygusal bağlardan çok hedeflere odaklanırım. Benim için sosyalleşmek tamamen kariyer için bir araçtır (Networking). İş dünyasındaki önemli kişilerle, sektördeki uzmanlarla fuarlarda veya seminerlerde tanışıp bağ kurmayı tercih ederim. Amacım dost edinmek değil, gelecekteki fırsatlar için güçlü bir çevre kurmaktır.",
@@ -6627,7 +6627,7 @@
     "audio_url": "/audio/83_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Uzay Çöpleri ve Kessler Sendromu",
     "audio_script": "Sunucu: Bugün stüdyomuzda Uzay Mühendisi Cenk Bey ile atmosferimizin hemen dışındaki büyük bir tehlikeyi, 'Uzay Çöplerini' konuşacağız. Cenk Bey, uzay çöpü nedir ve neden bu kadar tehlikeli?\nCenk Bey: İnsanoğlu 1957'de Sputnik uydusunu fırlattığından beri yörüngeye binlerce roket ve uydu gönderdi. Ömrü biten (bozulan) bu uydular ve roket parçaları dünyaya geri dönmüyor, yörüngede saniyede 8 kilometre (mermiden 10 kat daha hızlı) hızla dönmeye devam ediyorlar. Şu an tepemizde milyonlarca parça 'uzay çöpü' var. Boyutu sadece bir fıstık kadar olan bir boya parçası bile, o inanılmaz hızı nedeniyle çalışan bir uydunun camını delip geçebilir.\nSunucu: Peki bu çöpler temizlenmezse ne olur?\nCenk Bey: İşte o zaman NASA bilim insanı Donald Kessler'in ortaya attığı 'Kessler Sendromu' devreye girer. Eğer bu çöplerden ikisi çarpışırsa, binlerce yeni şarapnel parçası oluşur. Bu parçalar diğer uydulara çarparak zincirleme bir reaksiyon başlatır. Kısa süre içinde Dünya'nın etrafı geçilemez bir çöp bulutuyla kaplanır. Sonuç olarak GPS, internet ve televizyon yayınları tamamen çöker. Dahası, uzay yolculuğu (roket fırlatmak) yüzlerce yıl boyunca imkansız hale gelir. Çözüm için şu an devasa mıknatıslara veya ağlara sahip 'uzay çöpçüsü' robotlar tasarlanıyor.",
@@ -6783,7 +6783,7 @@
     "audio_url": "/audio/85_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Otel, Havalimanı ve Tiyatro Anonsları",
     "audio_script": "(Anons 1) Değerli otel misafirlerimiz, sabah kahvaltısı servisimiz sona ermiştir. Açık havuzumuz genel temizlik nedeniyle saat 14:00'e kadar kullanıma kapalı olacaktır. (Anons 2) Sayın yolcularımız, terminal binası 2. numaralı kapıda kırmızı renkli bir valiz bulunmuştur. Valizini kaybeden yolcumuzun zemin kattaki Kayıp Eşya Ofisi'ne kimliğiyle başvurması rica olunur. (Anons 3) Sayın seyirciler, oyunumuzun ikinci perdesi 5 dakika içinde başlayacaktır. Lütfen yerlerinizi alınız ve cep telefonlarınızın tamamen kapalı olduğundan emin olunuz.",
@@ -6864,7 +6864,7 @@
     "audio_url": "/audio/86_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Maraton Koşucusu Olmak",
     "audio_script": "Adım Can. 40 yaşına kadar hayatında hiç spor yapmamış, merdiven çıkarken bile nefes nefese kalan biriydim. Bir gün doktorum kalp krizine çok yakın olduğumu ve hemen kilo vermem gerektiğini söylediğinde dünyam başıma yıkıldı. O gün eski bir spor ayakkabı giyip parka çıktım. İlk gün sadece 1 kilometre koşabildim, o da yürü-koş şeklindeydi. Her yerim ağrıyordu ve pes etmek istedim. Ama inat ettim. Her gün mesafeyi biraz daha artırdım. Koşarken kulaklığımla motive edici müzikler dinliyor, adımlarıma odaklanıyordum. Altı ay sonra vücudumun sınırları aştığını hissettim. Geçen pazar hayatımın en büyük hayalini gerçekleştirdim: İstanbul Avrasya Maratonu'nda 42 kilometre koştum ve madalyamı aldım. İnsan bedeni gerçekten mucizevi bir makine. Sadece ona inanmanız ve pes etmemeniz gerekiyor. Hayatta hiçbir şey için geç değildir.",
@@ -6945,7 +6945,7 @@
     "audio_url": "/audio/87_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Ev Dekorasyonu ve Yaşam Alanı",
     "audio_script": "A) Ayşe: Benim için ev demek nefes almak demektir. Kalabalık, çok eşyalı ve koyu renkli odalar ruhumu daraltır. Evimdeki mobilyalar çok azdır, her yer bembeyazdır. Masanın üstünde bile fazladan bir bardak durmasını istemem. Minimalist ve ferah bir ortam beni dinlendiriyor.\nB) Burak: Ben yeni ve parlak mobilyalardan nefret ederim. Benim evim geçmişin izlerini taşımalıdır. Hafta sonları antikacıları gezip eski radyolar, el dokuması eski halılar ve ahşap eşyalar alırım. Eşyaların bir yaşanmışlığı ve hikayesi olması gerektiğine inanıyorum.\nC) Selin: Doğadan kopuk bir hayat düşünemiyorum. Evimin her köşesi, salonum, mutfağım ve hatta banyom bile çeşit çeşit saksı bitkileriyle (botanik) doludur. Şehrin ortasında yaşasam da evimin içi küçük bir orman gibidir. Onları sulamak ve yapraklarıyla ilgilenmek en büyük terapimdir.\nD) Emre: Ben tam bir teknoloji tutkunuyum. Benim evimde fiziksel bir şeye dokunmanıza gerek yoktur. Işıklar, perdeler, televizyon ve kahve makinesi tamamen akıllı sistemlere bağlıdır. Kapıdan girdiğim an sesli komutla her şeyi kontrol ederim. Evim bana gelecekte yaşadığımı hissettiriyor.",
@@ -7026,7 +7026,7 @@
     "audio_url": "/audio/88_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Uzay Turizmi ve Mars Kolonisi",
     "audio_script": "Sunucu: Değerli dinleyiciler, bugünkü konuğumuz Astrofizikçi Dr. Hakan Çelik. Hakan Bey, son zamanlarda sivil insanların uzaya turistik seyahatler yaptığını görüyoruz. Uzay turizmi sadece milyarderlerin eğlencesi mi kalacak?\nDr. Hakan: Başlangıçta evet. Ancak bunu havacılık tarihine benzetebiliriz. İlk ticari uçaklar icat edildiğinde sadece çok zenginler uçabiliyordu, bugün ise herkes uçağa biniyor. Uzay turizmi de roketlerin yeniden kullanılabilir hale gelmesiyle ucuzlayacaktır. Asıl büyük hedef ise Mars'ta bir insan kolonisi kurmaktır.\nSunucu: Peki Mars'ta yaşamak gerçekten mümkün mü?\nDr. Hakan: Teknolojik olarak evet. Ancak aşmamız gereken asıl engel teknoloji değil, insan biyolojisi ve psikolojisidir. Mars yolculuğu aylar sürüyor. Mikro yerçekimi (ağırlıksız ortam) insan vücudunda hızlı bir kemik erimesine ve kas kaybına yol açar. Ayrıca dar bir gemide aylarca Dünya'dan milyonlarca kilometre uzakta kalmak, astronotlarda ciddi bir psikolojik izolasyon (yalnızlık ve depresyon) sorunu yaratır. Bu yüzden uzay turistleri ve kolonistler, yola çıkmadan önce aylarca süren ağır bir fiziksel ve zihinsel eğitimden geçmek zorundadır. Uzayda kolonileşme yavaş ama insanlığın geleceği için kaçınılmaz bir zorunluluktur.",
@@ -7182,7 +7182,7 @@
     "audio_url": "/audio/90_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Tren, Vapur ve Hastane Anonsları",
     "audio_script": "(Anons 1) Sayın yolcularımız, Ankara yönüne gidecek olan Doğu Ekspresi trenimiz 3. perona giriş yapmıştır. Yolcularımızın biletleriyle birlikte vagon numaralarını kontrol ederek binmeleri rica olunur. (Anons 2) Değerli yolcularımız, Boğaz'da etkili olan yoğun sis nedeniyle tüm vapur seferlerimiz ikinci bir duyuruya kadar iptal edilmiştir. Anlayışınız için teşekkür ederiz. (Anons 3) Acil Kan Anonsu! Hastanemizin kalp damar cerrahisi bölümünde yatan bir hasta için acilen 'AB Pozitif' kana ihtiyaç vardır. Kan vermek isteyenlerin zemin kattaki kan merkezine başvurmaları önemle rica olunur.",
@@ -7263,7 +7263,7 @@
     "audio_url": "/audio/91_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "İlk İş Günü Heyecanı",
     "audio_script": "Adım Elif. Üniversiteden yeni mezun olmuştum ve aylarca süren iş aramalarından sonra nihayet büyük bir reklam ajansında işe kabul edilmiştim. İlk iş günümde kalbim yerinden çıkacak gibi atıyordu. Çok şık giyinmiştim ama ofisteki herkesin kot pantolon ve tişörtle (çok rahat) çalıştığını görünce biraz utandım. En kötüsü öğle arasında oldu. Patronumuza kahve götürürken ayağım halıya takıldı ve bütün kahveyi onun beyaz gömleğine döktüm. O an 'Kesin kovuldum' diye düşündüm ve ağlamak üzereydim. Ancak patronum gülmeye başladı ve 'Merak etme, benim ilk günümde ben de fotokopi makinesini bozmuştum' dedi. Bu beni inanılmaz rahatlattı. O gün ofisteki herkesin aslında ne kadar sıcakkanlı olduğunu anladım. Şimdi o ajansta Sanat Yönetmeni olarak çalışıyorum ve ofise gelen yeni mezunlar heyecanlanıp hata yaptığında, onlara hep kendi hikayemi anlatıyorum.",
@@ -7344,7 +7344,7 @@
     "audio_url": "/audio/92_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Alışveriş Alışkanlıkları ve Tüketici Profilleri",
     "audio_script": "A) Mert: Alışveriş benim için bir statü meselesidir. Giydiğim kıyafetin veya taktığım saatin mutlaka ünlü ve pahalı bir marka olması gerekir. İndirim çadırlarına veya ucuzluk pazarlarına asla gitmem. Kalite ve prestij için ne gerekiyorsa o parayı öderim.\nB) Zeynep: Ben çevre bilincine sahip bir tüketiciyim. Fabrikaların dünyayı kirletmesini istemediğim için 'sürdürülebilir' modayı destekliyorum. Kıyafetlerimin çoğunu 'İkinci El' (Vintage) dükkanlarından alırım. Başkasının eskisi, benim için yepyeni bir hikayedir ve çok da ekonomiktir.\nC) Hakan: Benim mağazaları gezmek için ne vaktim var ne de sabrım. Ben tam bir internet bağımlısıyım. Giyeceğim ayakkabıdan, evdeki tuvalet kağıdına kadar her şeyi mobil uygulamalardan sipariş ederim. Kapıma kadar gelmesi benim için dünyanın en büyük lüksü.\nD) Aylin: Ben tam bir 'Minimalist' tüketiciyim. İndirim var diye veya canım sıkıldı diye asla alışveriş yapmam. Gardırobumda az ama öz eşya vardır. Sadece bir eşyam tamamen bozulduğunda veya bittiğinde, yani 'tam bir ihtiyaç anında' yenisini alırım.",
@@ -7425,7 +7425,7 @@
     "audio_url": "/audio/93_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Genetik Kopyalama: Dolly ve Klonlama Etiği",
     "audio_script": "Sunucu: Genetik bilimi dendiğinde akla gelen en büyük olay, 1996 yılında kopyalanan 'Dolly' adlı koyundur. Biyolog Dr. Sinan Bey, Dolly neden bilim dünyası için bu kadar önemliydi?\nDr. Sinan: Dolly'nin önemi, onun 'yetişkin bir hücreden' klonlanan ilk memeli hayvan olmasıydı. O güne kadar bir canlının sadece embriyodan kopyalanabileceği düşünülüyordu. Dolly, bir hücrenin genetik saatinin geri sarılabileceğini kanıtladı.\nSunucu: Ancak Dolly çok erken yaşta hastalanıp öldü değil mi?\nDr. Sinan: Evet, çünkü Dolly fiziksel olarak bebek doğsa da, genetik (DNA) olarak kopyalandığı koyunla aynı yaştaydı. Yani hücreleri 'yaşlı' doğmuştu ve bu da onda ciddi eklem hastalıklarına neden oldu. Günümüzde bazı şirketler, insanların ölen kedi ve köpeklerini on binlerce dolar karşılığında klonluyor (kopyalıyor). Ancak insanlar büyük bir hayal kırıklığı yaşıyor; çünkü klonlanan hayvan fiziksel olarak ölen evcil hayvana benzese de, farklı bir ortamda büyüdüğü için huyu (karakteri) tamamen farklı bir hayvan oluyor. İnsan klonlaması ise ciddi ahlaki ve hukuki sorunlar yaratacağı için uluslararası yasalarla kesin olarak yasaklanmıştır. Klonlama teknolojisinin asıl amacı canlıları kopyalamak değil, 'terapötik klonlama' dediğimiz yöntemle hastanın kendi hücresinden yedek organ üretip hastalıkları tedavi etmektir.",
@@ -7581,7 +7581,7 @@
     "audio_url": "/audio/95_C1_Akademik.mp3"
   },
   {
-    "level": "A2",
+    "level": "A1",
     "category": "Kısa Duyurular",
     "title": "Kütüphane, Fuar ve Otopark Anonsları",
     "audio_script": "(Anons 1) Sayın ziyaretçilerimiz, kütüphanemiz kapanış saatine 10 dakika kalmıştır. Lütfen okuduğunuz kitapları raflara dizmeyiniz, masaların üzerinde bırakınız. (Anons 2) Değerli kitapseverler, 3. Kitap Fuarımıza hoş geldiniz. Ünlü yazar Ahmet Ümit'in imza günü saat 14:00'te B Salonu'nda başlayacaktır. İmza sırası için biletlerinizi danışmadan almayı unutmayınız. (Anons 3) Lütfen dikkat! Otoparkımızın B blok 2. katında bulunan 06 ABC 99 plakalı beyaz aracın farları açık unutulmuştur. Aracın aküsünün bitmemesi için sahibinin acilen otoparka gitmesi rica olunur.",
@@ -7662,7 +7662,7 @@
     "audio_url": "/audio/96_A2_Kisa_Duyurular.mp3"
   },
   {
-    "level": "B1",
+    "level": "A2",
     "category": "Monolog",
     "title": "Japonca Öğrenmek",
     "audio_script": "Benim adım Zeynep. Pandemi döneminde evde vakit geçirirken izlediğim animeler (Japon çizgi filmleri) hayatımı değiştirdi. Karakterlerin duygusal konuşmaları ve dilin melodisi o kadar hoşuma gitti ki, Japonca öğrenmeye karar verdim. Başlangıçta alfabe beni çok korkuttu; çünkü Japoncada Hiragana, Katakana ve Kanji olmak üzere üç farklı yazı sistemi var. Binlerce Kanji karakterini öğrenmek imkansız gibi görünüyordu. Ancak her gün 5 yeni karakteri defterime çizerek ve görsel hafızamı kullanarak bu zorluğu aştım. Dil bilgisi (gramer) konusunda ise çok şanslıydım. Çünkü Türkçe ile Japoncanın cümle yapısı tamamen aynı; ikisi de özne, nesne ve yüklem sırasıyla diziliyor. Bu sayede cümle kurmayı çok hızlı öğrendim. Dil pratiği yapmak için şehrimdeki Japon restoranlarına gidip oradaki turistlerle sohbet etmeye çalıştım. Bazen komik hatalar yapsam da onların gülümseyerek bana yardım etmesi özgüvenimi artırdı. Şu an en büyük hayalim Tokyo'da bir üniversitede yüksek lisans yapmak.",
@@ -7743,7 +7743,7 @@
     "audio_url": "/audio/97_B1_Monolog.mp3"
   },
   {
-    "level": "B2",
+    "level": "B1",
     "category": "Eşleştirme",
     "title": "Müzik Aleti Çalma ve Hobiler",
     "audio_script": "A) Emre: Benim çaldığım müzik aleti tamamen sosyalleşmek ve eğlenmek üzerine kurulu. Yazın sahil kenarında veya ormanda kamp ateşi etrafında arkadaşlarımla toplanıp sevdiğimiz şarkıları bağıra bağıra söylemek için 'Gitar' çalıyorum. Taşıması kolay ve insanları hemen bir araya getiriyor.\nB) Ayşe: Benim için müzik disiplin, yalnızlık ve kusursuzluk demek. Klasik müziğin o ağırbaşlı ruhunu hissetmek için 'Piyano' çalıyorum. Tuşların çıkardığı o net sesler ve iki elimi aynı anda farklı ritimlerde kullanabilmek zihnimin sınırlarını zorluyor.\nC) Burak: Günlük hayatımda çok stresli bir işim var ve içimdeki öfkeyi atmam gerekiyor. Bu yüzden ses yalıtımlı odamda 'Bateri' (Davul) çalıyorum. Fiziksel olarak çok yorucu olsa da, o gürültülü ve enerjik ritimlere vurmak bana terapi gibi geliyor. Kaslarım yoruldukça zihnim dinleniyor.\nD) Selin: Ben müziği ruhun en hüzünlü ve derin dili olarak görüyorum. Perdesiz (tuşsuz) bir alet olan 'Keman'ı çalmak yıllar süren bir sabır gerektiriyor. Doğru sesi bulmak çok zor ama o ağlayan ince sesi duyduğumda bütün çabalarıma değdiğini hissediyorum.",
@@ -7824,7 +7824,7 @@
     "audio_url": "/audio/98_B2_Eslestirme.mp3"
   },
   {
-    "level": "C1",
+    "level": "B2",
     "category": "Röportaj",
     "title": "Biyolojik Saatimiz: Sirkadiyen Ritim",
     "audio_script": "Sunucu: Bugün Biyolog Doktor Cenk Bey ile vücudumuzun içindeki görünmez saati, yani 'Sirkadiyen Ritmi' konuşacağız. Cenk Bey, sirkadiyen ritim tam olarak nedir?\nDr. Cenk: Merhaba. Sirkadiyen ritim, vücudumuzun 24 saatlik uyku-uyanıklık, vücut ısısı ve hormon salgılama döngüsüdür. Binlerce yıl boyunca atalarımız güneş doğduğunda uyanıp, battığında uyudular. Beynimiz bu doğal ışık döngüsüne göre programlanmıştır. Karanlık çöktüğünde beynimiz 'Melatonin' adı verilen uyku hormonunu salgılar. Ancak günümüzde gece yarılarına kadar baktığımız telefon ve tablet ekranlarından yayılan 'mavi ışık', beyni kandırarak hala gündüz olduğunu zannettirir ve melatonin salgısını durdurur. Bu da kronik uykusuzluğa neden olur.\nSunucu: Gece vardiyasında çalışanların sağlığı bu yüzden mi bozuluyor?\nDr. Cenk: Kesinlikle. Gece çalışmak ve gündüz uyumak insanın biyolojik saatine tamamen aykırıdır. Araştırmalar, gece çalışanlarda kalp hastalıkları, obezite ve diyabet riskinin normal insanlara göre iki kat daha fazla olduğunu gösteriyor. Üstelik gece geç saatlerde yemek yemek de çok tehlikelidir. Çünkü gece vakti sindirim sistemimiz yavaşlar; vücut kendini yenilemeye ve onarmaya odaklanır. O saatte yenen yemek, doğrudan yağ olarak depolanır. Doğaya (biyolojik saatimize) karşı gelirsek, vücudumuz bunun cezasını hastalıklarla keser.",

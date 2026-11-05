@@ -1,0 +1,31 @@
+[
+  {
+    "level": "A2-B1",
+    "category": "Kısa Metin Yazma (E-posta/Mektup)",
+    "title": "Tatilde Bir Arkadaşa E-posta",
+    "prompt": "Geçen hafta ailenizle birlikte Antalya'da bir yaz tatili yaptınız. Yabancı bir arkadaşınıza (Anna'ya) bu tatili anlatan kısa bir e-posta yazınız. (E-postanız en az 80, en fazla 100 kelime olmalıdır.)",
+    "word_count": "80-100",
+    "key_points": [
+      "Tatilin nerede ve kiminle yapıldığı.",
+      "Hava durumunun ve otelin nasıl olduğu.",
+      "Tatilde neler yapıldığı (örneğin; yüzmek, gezmek, yemek yemek).",
+      "Arkadaşa selam ve kapanış cümlesi."
+    ],
+    "model_answer": "Sevgili Anna,\n\nNasılsın? Umarım iyisindir. Ben çok iyiyim çünkü geçen hafta ailemle birlikte Antalya'da harika bir yaz tatili yaptık. Antalya gerçekten çok güzel bir şehir. Hava her gün çok sıcak ve güneşliydi. \n\nKaldığımız otel denize çok yakındı. Gündüzleri bol bol denizde yüzdük ve sahilde güneşlendik. Akşamları ise şehir merkezine gidip tarihi yerleri gezdik ve lezzetli Türk yemekleri yedik. Özellikle kebap ve baklavaya bayıldım.\n\nSeni çok özledim. Umarım bir gün seninle de böyle güzel bir tatil yaparız. \n\nKendine çok iyi bak, görüşmek üzere.\n\nSevgiler,\n[Adınız]"
+  },
+  {
+    "level": "B2-C1",
+    "category": "Kompozisyon / Fikir Yazısı",
+    "title": "Sosyal Medya: Bizi Yalnızlaştırıyor mu, Sosyalleştiriyor mu?",
+    "prompt": "Günümüzde sosyal medya kullanımı hayatımızın vazgeçilmez bir parçası haline gelmiştir. Bazı insanlar sosyal medyanın insanları daha çok sosyalleştirdiğini savunurken, bazıları ise insanları gerçek dünyadan koparıp yalnızlaştırdığını iddia etmektedir. Siz bu konuda ne düşünüyorsunuz? Düşüncelerinizi nedenleri ve örnekleriyle birlikte anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+    "word_count": "200-250",
+    "key_points": [
+      "Sosyal medyanın günümüzdeki yeri hakkında genel bir giriş.",
+      "Sosyal medyanın insanları nasıl sosyalleştirdiğine veya yalnızlaştırdığına dair net bir fikir (tez).",
+      "Kendi düşüncenizi destekleyen güçlü argümanlar ve günlük hayattan örnekler (örneğin; kafelerde telefonla oynayan insanlar, uzak akrabalarla iletişim vb.).",
+      "Konuyu toparlayan ve genel bir öneri/mesaj sunan bir sonuç paragrafı.",
+      "Gelişmiş gramer yapıları (Bağlaçlar, zarf-fiiller) kullanımı."
+    ],
+    "model_answer": "Günümüzde sosyal medya, milyarlarca insanın günlük yaşamının vazgeçilmez bir parçası haline gelmiştir. Akıllı telefonların yaygınlaşmasıyla birlikte insanlar zamanlarının büyük bir kısmını sanal dünyada geçirmektedir. Bazı kişiler bu platformların dünyayı küçülttüğünü ve insanları birbirine bağladığını savunsa da, ben sosyal medyanın insanları gerçek dünyadan kopararak derin bir yalnızlığa sürüklediğine inanıyorum.\n\nİlk olarak, sosyal medya yüz yüze iletişimin kalitesini düşürmüştür. Eskiden aile veya arkadaş toplantılarında samimi sohbetler edilirken, bugün bir kafeye gittiğimizde aynı masada oturan ancak birbirinin yüzüne bakmak yerine telefon ekranına kilitlenmiş insanları sıkça görüyoruz. İnsanlar fiziksel olarak aynı ortamda bulunsalar da zihinsel olarak bambaşka yerlerdeler. Bu durum, yüzeysel ilişkilerin artmasına ve gerçek bağların zayıflamasına neden olmaktadır.\n\nİkinci olarak, sosyal medyadaki 'kusursuz hayat' yanılgısı insanları psikolojik olarak izole etmektedir. İnsanlar genellikle sadece mutlu oldukları, gezdikleri veya güzel göründükleri anları paylaşırlar. Bu sahte gerçeklik, diğer kullanıcıların kendi hayatlarını yetersiz bulmasına ve kendilerini dışlanmış hissetmelerine yol açar. Sonuç olarak, binlerce sanal takipçisi olan bir birey, gerçek hayatta dertleşecek bir dost bulamadığı için kendini yalnız hissedebilir.\n\nSonuç olarak, sosyal medya uzak mesafelerdeki insanlarla iletişim kurmayı kolaylaştırsa da, kontrolsüz kullanıldığında gerçek hayattaki sosyal becerilerimizi köreltmektedir. Sosyal medyanın esiri olmak yerine, onu sadece bir araç olarak kullanmalı ve gerçek hayattaki yüz yüze ilişkilerimize daha fazla yatırım yapmalıyız."
+  }
+]

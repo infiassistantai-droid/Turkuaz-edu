@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "exams": [
+    {
+      "id": "bmba-yazma-1-1",
+      "exam_number": 1,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (E-posta/Mektup)",
+      "title": "Tatilde Bir Arkadaşa E-posta",
+      "prompt": "Geçen hafta ailenizle birlikte Antalya'da bir yaz tatili yaptınız. Yabancı bir arkadaşınıza (Anna'ya) bu tatili anlatan kısa bir e-posta yazınız. (E-postanız en az 80, en fazla 100 kelime olmalıdır.)",
+      "word_count": "80-100",
+      "key_points": [
+        "Tatilin nerede ve kiminle yapıldığı.",
+        "Hava durumunun ve otelin nasıl olduğu.",
+        "Tatilde neler yapıldığı (örneğin; yüzmek, gezmek, yemek yemek).",
+        "Arkadaşa selam ve kapanış cümlesi."
+      ],
+      "model_answer": "Sevgili Anna,\n\nNasılsın? Umarım iyisindir. Ben çok iyiyim çünkü geçen hafta ailemle birlikte Antalya'da harika bir yaz tatili yaptık. Antalya gerçekten çok güzel bir şehir. Hava her gün çok sıcak ve güneşliydi. \n\nKaldığımız otel denize çok yakındı. Gündüzleri bol bol denizde yüzdük ve sahilde güneşlendik. Akşamları ise şehir merkezine gidip tarihi yerleri gezdik ve lezzetli Türk yemekleri yedik. Özellikle kebap ve baklavaya bayıldım.\n\nSeni çok özledim. Umarım bir gün seninle de böyle güzel bir tatil yaparız. \n\nKendine çok iyi bak, görüşmek üzere.\n\nSevgiler,\n[Adınız]"
+    },
+    {
+      "id": "bmba-yazma-1-2",
+      "exam_number": 1,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Sosyal Medya: Bizi Yalnızlaştırıyor mu, Sosyalleştiriyor mu?",
+      "prompt": "Günümüzde sosyal medya kullanımı hayatımızın vazgeçilmez bir parçası haline gelmiştir. Bazı insanlar sosyal medyanın insanları daha çok sosyalleştirdiğini savunurken, bazıları ise insanları gerçek dünyadan koparıp yalnızlaştırdığını iddia etmektedir. Siz bu konuda ne düşünüyorsunuz? Düşüncelerinizi nedenleri ve örnekleriyle birlikte anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Sosyal medyanın günümüzdeki yeri hakkında genel bir giriş.",
+        "Sosyal medyanın insanları nasıl sosyalleştirdiğine veya yalnızlaştırdığına dair net bir fikir (tez).",
+        "Kendi düşüncenizi destekleyen güçlü argümanlar ve günlük hayattan örnekler (örneğin; kafelerde telefonla oynayan insanlar, uzak akrabalarla iletişim vb.).",
+        "Konuyu toparlayan ve genel bir öneri/mesaj sunan bir sonuç paragrafı.",
+        "Gelişmiş gramer yapıları (Bağlaçlar, zarf-fiiller) kullanımı."
+      ],
+      "model_answer": "Günümüzde sosyal medya, milyarlarca insanın günlük yaşamının vazgeçilmez bir parçası haline gelmiştir. Akıllı telefonların yaygınlaşmasıyla birlikte insanlar zamanlarının büyük bir kısmını sanal dünyada geçirmektedir. Bazı kişiler bu platformların dünyayı küçülttüğünü ve insanları birbirine bağladığını savunsa da, ben sosyal medyanın insanları gerçek dünyadan kopararak derin bir yalnızlığa sürüklediğine inanıyorum.\n\nİlk olarak, sosyal medya yüz yüze iletişimin kalitesini düşürmüştür. Eskiden aile veya arkadaş toplantılarında samimi sohbetler edilirken, bugün bir kafeye gittiğimizde aynı masada oturan ancak birbirinin yüzüne bakmak yerine telefon ekranına kilitlenmiş insanları sıkça görüyoruz. İnsanlar fiziksel olarak aynı ortamda bulunsalar da zihinsel olarak bambaşka yerlerdeler. Bu durum, yüzeysel ilişkilerin artmasına ve gerçek bağların zayıflamasına neden olmaktadır.\n\nİkinci olarak, sosyal medyadaki 'kusursuz hayat' yanılgısı insanları psikolojik olarak izole etmektedir. İnsanlar genellikle sadece mutlu oldukları, gezdikleri veya güzel göründükleri anları paylaşırlar. Bu sahte gerçeklik, diğer kullanıcıların kendi hayatlarını yetersiz bulmasına ve kendilerini dışlanmış hissetmelerine yol açar. Sonuç olarak, binlerce sanal takipçisi olan bir birey, gerçek hayatta dertleşecek bir dost bulamadığı için kendini yalnız hissedebilir.\n\nSonuç olarak, sosyal medya uzak mesafelerdeki insanlarla iletişim kurmayı kolaylaştırsa da, kontrolsüz kullanıldığında gerçek hayattaki sosyal becerilerimizi köreltmektedir. Sosyal medyanın esiri olmak yerine, onu sadece bir araç olarak kullanmalı ve gerçek hayattaki yüz yüze ilişkilerimize daha fazla yatırım yapmalıyız."
+    },
+    {
+      "id": "bmba-yazma-2-1",
+      "exam_number": 2,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Dilekçe/İstek)",
+      "title": "Üniversite Yönetimine Dilekçe",
+      "prompt": "Üniversitenizin kütüphanesi akşamları çok erken (saat 18:00'de) kapanmaktadır ve bu durum ders çalışmanızı zorlaştırmaktadır. Kütüphane müdürlüğüne, kapanış saatinin uzatılmasını rica eden resmi bir dilekçe (kısa mektup) yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Kime yazıldığı (hitap kısmı).",
+        "Öğrenci bilgisi ve yaşanan temel sorun (kütüphanenin erken kapanması).",
+        "Kapanış saatinin uzatılması talebi.",
+        "Saygı ve teşekkür belirten resmi bir kapanış."
+      ],
+      "model_answer": "Kütüphane Müdürlüğüne,\n\nBen üniversitenizin Bilgisayar Mühendisliği bölümü 2. sınıf öğrencisiyim. Kütüphanemiz hafta içi her gün saat 18:00'de kapanmaktadır. Derslerimiz genellikle saat 17:00'de bittiği için kütüphanede ders çalışmak veya araştırma yapmak için yeterli vaktimiz kalmamaktadır. Sınav dönemlerinde bu durum bizi daha çok zorlamaktadır.\n\nÖğrencilerin daha verimli çalışabilmesi için kütüphanenin kapanış saatinin en azından saat 21:00'e kadar uzatılmasını saygılarımla arz (rica) ederim.\n\nGereğini bilgilerinize sunarım.\n\nSaygılarımla,\n[Adınız Soyadınız]\n[Öğrenci Numaranız]"
+    },
+    {
+      "id": "bmba-yazma-2-2",
+      "exam_number": 2,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Yapay Zeka ve Geleceğin Meslekleri",
+      "prompt": "Son yıllarda hızla gelişen yapay zeka teknolojileri (örneğin robotlar ve akıllı yazılımlar), birçok sektörde insan gücünün yerini almaya başlamıştır. Sizce yapay zeka gelecekte insanlık için büyük bir tehdit oluşturup işsizliği artıracak mı, yoksa yeni iş alanları yaratarak insanlığa fayda mı sağlayacak? Konuyla ilgili kendi görüşünüzü nedenleri ve örnekleriyle açıklayan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Yapay zekanın günümüzdeki yükselişi hakkında giriş.",
+        "Yapay zekanın meslekler üzerindeki etkisi hakkında net bir taraf (tehdit veya fayda) seçme.",
+        "Seçilen tarafı destekleyen mantıklı argümanlar ve örnekler (Örneğin; bazı mesleklerin yok olması, ancak yeni teknolojik mesleklerin doğması).",
+        "İnsanların bu teknolojik dönüşüme nasıl ayak uydurması gerektiğine dair tavsiye niteliğinde bir sonuç."
+      ],
+      "model_answer": "Son yıllarda yapay zeka (YZ) ve robotik teknolojiler, hayal edemeyeceğimiz bir hızla gelişerek üretimden sağlığa, eğitimden sanata kadar birçok alanda hayatımıza girmiştir. Bu hızlı teknolojik dönüşüm, doğal olarak insanların aklına 'Gelecekte makineler yüzünden işsiz mi kalacağız?' sorusunu getirmektedir. Her ne kadar yapay zekanın bazı geleneksel meslekleri ortadan kaldıracağı doğru olsa da, ben bu teknolojinin uzun vadede insanlığa büyük faydalar sağlayacağına ve yepyeni iş alanları yaratacağına inanıyorum.\n\nBirçok kişi yapay zekayı bir tehdit olarak görse de, tarihsel sürece baktığımızda her teknolojik devrimin kendi yeni mesleklerini doğurduğunu görürüz. Örneğin, matbaanın icadı el yazması kitap kopyalayanların işini elinden almıştır ancak yazarlık, editörlük ve yayıncılık gibi çok daha geniş iş alanları yaratmıştır. Benzer şekilde, yapay zeka da muhasebe, veri girişi veya şoförlük gibi tekrarlayan ve sıkıcı işleri insanların elinden alacaktır. Ancak bu durum, 'YZ Etik Uzmanı', 'Veri Analisti' veya 'Robot Sistemleri Mühendisi' gibi günümüzde henüz tam olarak hayal bile edemediğimiz yeni meslek dallarının ortaya çıkmasını sağlayacaktır.\n\nBununla birlikte, yapay zekanın hiçbir zaman kopyalayamayacağı özellikler vardır: İnsan empati gücü, yaratıcılık ve duygusal zeka. Bu nedenle gelecekte, makinelerden daha iyi ezber yapanlar değil, makineleri yönetebilen ve onlarla uyum içinde çalışabilen insanlar değer kazanacaktır. \n\nSonuç olarak, yapay zeka bir düşman değil, insanlığın gelişimine hizmet eden güçlü bir araçtır. Geleceğin iş dünyasında başarılı olmak isteyen bireylerin teknolojiden korkmak yerine, kendilerini bu yeni çağa adapte etmeleri ve yaratıcı becerilerini geliştirmeleri gerekmektedir."
+    },
+    {
+      "id": "bmba-yazma-3-1",
+      "exam_number": 3,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (İlan / Kayıp Eşya)",
+      "title": "Kayıp Eşya İlanı Yazma",
+      "prompt": "Üniversitenizin kafeteryasında dün öğleden sonra mavi renkli, içinde önemli notlarınızın bulunduğu bir defteri (veya çantayı) kaybettiniz. Bunu bulmak için okulun panosuna asmak üzere kısa bir kayıp eşya ilanı yazınız. İlanınızda eşyayı bulan kişinin size nasıl ulaşacağını belirtiniz. (Metniniz en az 50, en fazla 80 kelime olmalıdır.)",
+      "word_count": "50-80",
+      "key_points": [
+        "İlanın başlığı (Kayıp Aranıyor vb.).",
+        "Eşyanın ne olduğu, rengi ve nerede kaybedildiği.",
+        "İçinde ne olduğu (neden önemli olduğu).",
+        "İletişim bilgisi (telefon veya bölüm/sınıf numarası)."
+      ],
+      "model_answer": "KAYIP DEFTER ARANIYOR!\n\nArkadaşlar merhaba, dün (Çarşamba) saat 14:00 civarında okul kafeteryasında mavi renkli, deri kapaklı bir defter kaybettim. Defterin içinde dönem sonu sınavlarım için hazırladığım çok önemli ders notlarım ve ödevlerim bulunmaktadır.\n\nSınavlarım yaklaştığı için bu notlara acil ihtiyacım var. Bulan kişiye küçük bir ödül vereceğim. Görenlerin veya bulanların aşağıdaki telefon numarasına mesaj atmasını veya beni Mimarlık Fakültesi 2. sınıf amfisinde bulmasını rica ederim.\n\nİletişim: 0555 123 45 67\nTeşekkürler, Ali."
+    },
+    {
+      "id": "bmba-yazma-3-2",
+      "exam_number": 3,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Uzaktan Çalışma (Remote Work) Geleneksel Ofislerin Yerini Alabilir mi?",
+      "prompt": "Pandemi sonrasında 'uzaktan çalışma' (evden çalışma) modeli dünya genelinde kalıcı hale gelmeye başlamıştır. Bazı uzmanlar bu durumun şirketler ve çalışanlar için büyük bir özgürlük ve tasarruf olduğunu savunurken, diğerleri ofis kültürünün bitmesinin insanları yalnızlaştırıp verimi düşüreceğini iddia etmektedir. Sizce uzaktan çalışma modeli geleneksel ofislerin yerini tamamen almalı mıdır? Düşüncelerinizi nedenleri ve örnekleriyle birlikte anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Uzaktan çalışma modelinin günümüz iş dünyasındaki yeri hakkında bir giriş.",
+        "Uzaktan çalışmanın avantajları (trafik stresi olmaması, esneklik, maliyet düşüşü).",
+        "Uzaktan çalışmanın dezavantajları (sosyal izolasyon, ev-iş sınırlarının kaybolması, iletişim kopukluğu).",
+        "Kendi görüşünüzü (örneğin Hibrit modeli) destekleyen argümanlar ve sonuç paragrafı.",
+        "İleri düzey bağlaçlar ve akademik ifadeler kullanılması."
+      ],
+      "model_answer": "Son yıllarda dijitalleşmenin hızlanması ve pandeminin etkisiyle, iş dünyasında 'uzaktan çalışma' (remote work) modeli devrim niteliğinde bir popülerlik kazanmıştır. Birçok şirket ofisleri tamamen kapatıp dijital ortama taşınırken, bu durumun gelecekte geleneksel çalışma sistemini tamamen bitirip bitirmeyeceği büyük bir tartışma konusu haline gelmiştir. Ben, uzaktan çalışmanın büyük avantajları olsa da, geleneksel ofis ortamının yerini tamamen almaması gerektiğine inanıyorum.\n\nUzaktan çalışmanın çalışanlara sağladığı en büyük fayda şüphesiz esneklik ve zaman tasarrufudur. Özellikle büyük şehirlerde yaşayan çalışanlar, her gün trafikte harcadıkları saatleri ailelerine veya hobilerine ayırabilmektedir. Ayrıca şirketler de kira, elektrik ve yol masraflarından kurtularak ciddi bir tasarruf sağlamaktadır. Bu durum ilk bakışta her iki taraf için de oldukça kârlı görünmektedir.\n\nAncak madalyonun diğer yüzüne baktığımızda ciddi psikolojik ve yapısal sorunlar görürüz. İnsan sosyal bir varlıktır ve ofisler sadece bilgisayar başında oturulan yerler değil; fikir alışverişinin yapıldığı, takım ruhunun güçlendiği sosyal alanlardır. Uzaktan çalışan birçok birey, iş ve özel hayat arasındaki sınırın kaybolması nedeniyle tükenmişlik (burnout) sendromu ve yalnızlık (izolasyon) yaşamaktadır. Kamera karşısında yapılan toplantılar, yüz yüze iletişimin o sıcak ve samimi enerjisini asla veremez.\n\nSonuç olarak, uzaktan çalışma modeli bize büyük bir özgürlük sunsa da, insanın sosyalleşme ihtiyacını karşılayamaz. Geleceğin iş modeli, ofisleri tamamen kapatmak yerine, haftanın belirli günleri ofiste belirli günleri evde çalışmaya imkan tanıyan 'hibrit' (karma) bir model olmalıdır. Böylece hem esneklik sağlanır hem de kurum kültürü yaşatılmış olur."
+    },
+    {
+      "id": "bmba-yazma-4-1",
+      "exam_number": 4,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Talep)",
+      "title": "İş Başvurusu veya Bilgi Talebi E-postası",
+      "prompt": "İnternette gördüğünüz bir dil okulunun (veya yaz kampının) programına katılmak istiyorsunuz. Kurumun yetkilisine, kursun tarihleri, fiyatı ve konaklama imkanları hakkında bilgi almak için resmi (kibar) bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Kuruma hitap (Sayın Yetkili vb.).",
+        "E-postanın yazılma amacı (ilanı nerede gördüğü).",
+        "Sorulacak üç temel soru (tarihler, fiyat, konaklama).",
+        "Resmi kapanış ve saygı ifadesi."
+      ],
+      "model_answer": "Sayın Yetkili,\n\nİnternet sitenizde yayınlamış olduğunuz 'Yaz Dönemi Yoğun Türkçe Dil Kursu' ilanınızı gördüm ve bu programa katılmayı çok istiyorum.\n\nKayıt yaptırmadan önce sizden bazı konularda bilgi almak istiyorum. Kursun tam başlangıç ve bitiş tarihleri nelerdir? Programın toplam ücreti ne kadardır? Ayrıca yabancı öğrenciler için okulunuzun sağladığı herhangi bir yurt veya konaklama imkanı var mıdır?\n\nSorularımı en kısa sürede yanıtlarsanız çok sevinirim.\n\nİlginiz için şimdiden teşekkür ederim.\n\nSaygılarımla,\nMaria Rossi"
+    },
+    {
+      "id": "bmba-yazma-4-2",
+      "exam_number": 4,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Hızlı Moda (Fast Fashion) ve Tüketim Çılgınlığı",
+      "prompt": "Günümüzde küresel markalar her hafta yeni bir koleksiyon üreterek kıyafetleri çok ucuza satmaktadır. 'Hızlı moda' denilen bu akım, tüketicilere ucuza giyinme fırsatı sunsa da doğaya büyük zararlar vermektedir. Sizce bireyler modayı takip etmek adına sürekli yeni kıyafetler satın almaya devam mı etmeli, yoksa daha az ama kaliteli ürünler alıp doğayı korumayı mı seçmelidir? Bu tüketim kültürünü çevre ve ekonomi açısından ele alan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Hızlı moda (fast fashion) kavramının açıklanması ve yaygınlığı.",
+        "Bu akımın doğaya ve çevreye (su tüketimi, tekstil atıkları) verdiği zararlar.",
+        "Tüketicilerin psikolojisi (sürekli yeni bir şeyler alma isteği, tüketim çılgınlığı).",
+        "Yavaş modaya (slow fashion / kaliteli ve uzun ömürlü tüketim) geçiş önerisi.",
+        "Zengin kelime dağarcığı ve akademik bir üslup."
+      ],
+      "model_answer": "Günümüzde 'Hızlı Moda' (Fast Fashion) adı verilen sistem, alışveriş alışkanlıklarımızı ve tekstil sektörünü baştan sona değiştirmiştir. Dev markaların her hafta mağazalara yeni, şık ve çok ucuz kıyafetler getirmesi, insanların dolaplarını hızla doldurmasını sağlamaktadır. İlk bakışta herkesin modayı ucuza takip edebilmesi demokratik ve harika bir durum gibi görünse de, perde arkasında doğaya karşı işlenen büyük bir çevre felaketi yatmaktadır.\n\nBu çılgınlığın en büyük faturası çevreye kesilmektedir. Üretilen milyonlarca ton ucuz kıyafetin kalitesi o kadar düşüktür ki, sadece birkaç ay giyildikten sonra yıpranarak devasa çöplüklere atılmaktadır. Tekstil sektörü, bugün petrol endüstrisinden sonra dünyayı en çok kirleten ikinci sektördür. Basit bir pamuklu tişört üretmek için binlerce litre temiz su harcanmakta ve kullanılan sentetik boyalar denizleri zehirlemektedir. Doğal kaynaklarımız 'kullan-at' mantığıyla acımasızca tüketilmektedir.\n\nÖte yandan bu durum psikolojik bir tüketim bağımlılığı (çılgınlık) da yaratmaktadır. Sosyal medyanın baskısıyla sürekli yeni kıyafetler giyme ihtiyacı hisseden bireyler, aslında ihtiyaçları olmayan şeylere paralarını harcamaktadır. \n\nSonuç olarak, ucuz ve kalitesiz yüzlerce kıyafet almak yerine, 'Yavaş Moda' (Slow Fashion) felsefesini benimsemeliyiz. Daha dayanıklı, sürdürülebilir, geri dönüştürülebilen ve adil şartlarda üretilmiş az sayıda kaliteli kıyafet alarak hem kişisel ekonomimizi hem de gezegenimizi kurtarabiliriz. Doğanın bize sunduğu kaynaklar sınırsız değildir ve asıl şıklık, doğaya saygı duymaktan geçer."
+    },
+    {
+      "id": "bmba-yazma-5-1",
+      "exam_number": 5,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/İptal)",
+      "title": "Otel Rezervasyonu İptal E-postası",
+      "prompt": "Gelecek hafta sonu için bir otelde iki gece kalmak üzere rezervasyon yaptırmıştınız. Ancak beklenmedik bir sağlık sorunu nedeniyle seyahatinizi iptal etmek zorundasınız. Otel yönetimine rezervasyonunuzu iptal etmek ve para iadesi (veya tarih değişikliği) talep etmek için kısa, resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Otel yönetimine resmi hitap.",
+        "Rezervasyon detayları (tarih, isim veya rezervasyon numarası).",
+        "İptal etme nedeni (kısaca sağlık sorunu olduğu).",
+        "Para iadesi veya ileri bir tarihe erteleme talebi."
+      ],
+      "model_answer": "Sayın Otel Yönetimi,\n\nBen Ali Yılmaz. 15-17 Mayıs tarihleri arasında otelinizde iki gece konaklamak için #123456 numaralı rezervasyonu yaptırmıştım. \n\nAncak beklenmedik ve acil bir sağlık sorunu yaşadığım için maalesef bu seyahatimi iptal etmek zorundayım. Bu nedenle rezervasyonumun iptal edilmesini ve ödemiş olduğum ücretin kredi kartıma iade edilmesini (veya rezervasyonumun önümüzdeki aya ertelenmesini) rica ediyorum.\n\nKonuyla ilgili geri dönüşünüzü bekliyorum. Anlayışınız için teşekkür ederim.\n\nSaygılarımla,\nAli Yılmaz"
+    },
+    {
+      "id": "bmba-yazma-5-2",
+      "exam_number": 5,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Başarı Tesadüf müdür yoksa Çok Çalışmanın Sonucu mudur?",
+      "prompt": "Toplumda bazı insanlar başarılı olan kişilerin sadece şanslı olduklarını (doğru zamanda doğru yerde bulunduklarını) iddia ederken, diğerleri başarının tamamen çok çalışmaya, disipline ve fedakarlıklara bağlı olduğunu savunur. Sizce başarıda şansın rolü mü daha büyüktür yoksa azim ve çalışmanın mı? Bu konudaki düşüncelerinizi nedenleri ve örnekleriyle birlikte anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Başarı kavramının tanımı ve tartışmanın (şans vs çalışma) sunulması.",
+        "Şans faktörünün hayattaki yeri (doğulan aile, tesadüfler vb.).",
+        "Çok çalışmanın, disiplinin ve pes etmemenin önemi.",
+        "İki kavram arasındaki dengeyi anlatan yazarın kendi net tezi ve gerçek hayattan (veya tarihten) örnekler.",
+        "Gelişmiş bağlaçlar ve zengin kelime dağarcığı."
+      ],
+      "model_answer": "Başarı, tarih boyunca insanların ulaşmak için çabaladığı, ancak kaynağı her zaman tartışma konusu olan karmaşık bir kavramdır. Kimi insanlar, büyük başarılara imza atanların sadece 'şanslı' olduklarına, doğru zamanda doğru yerde doğduklarına inanırlar. Oysa ben, şansın hayatta sadece küçük bir kapı aralayabileceğine, ancak asıl başarının tamamen disiplin, çok çalışma ve pes etmeme (azim) ile elde edildiğine inanıyorum.\n\nElbette hayatta şans faktörünü tamamen yok sayamayız. Zengin ve eğitimli bir ailede doğmak veya güçlü bir çevreye sahip olmak, kişinin hayata birkaç adım önde başlamasını sağlar. Ancak bu avantajlar, çalışmadan ve çaba göstermeden kalıcı bir başarıya dönüşemez. Şans bize sadece bir fırsat sunar; o fırsatı değerlendirecek olan şey bizim bilgi birikimimiz, emeğimiz ve yeteneğimizdir.\n\nÖte yandan, tarihe adını yazdıran büyük bilim insanları, sporcular veya sanatçılar başarılarını tesadüflere değil, yıllar süren uykusuz gecelere ve bitmek bilmeyen denemelere borçludurlar. Örneğin, Thomas Edison ampulü bulmadan önce binlerce kez başarısız olmuştur. Eğer başarısını şansa bıraksaydı, ilk hatasında pes etmesi gerekirdi. Oysa o, her başarısızlığı bir öğrenme fırsatı (tecrübe) olarak görmüş ve çok çalışarak hedefine ulaşmıştır.\n\nSonuç olarak, şans rüzgarı bazen arkamızdan esse de, yelkenleri doğru yöne çevirecek olan şey bizim azmimiz ve disiplinimizdir. Sadece şansa güvenenler ilk fırtınada yıkılırken; çalışan, emek veren ve vazgeçmeyen insanlar kendi şanslarını kendileri yaratırlar."
+    },
+    {
+      "id": "bmba-yazma-6-1",
+      "exam_number": 6,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Tavsiye/Mektup)",
+      "title": "Türkiye'ye Gelecek Arkadaşa Tavsiyeler",
+      "prompt": "Yabancı bir arkadaşınız (Mark), gelecek ay Türkiye'yi ziyaret edecek ve sizden (Türkiye'de yaşayan biri olarak) ne yemesi, nereleri gezmesi ve nelere dikkat etmesi gerektiği konusunda tavsiyeler istiyor. Arkadaşınıza kısa bir e-posta yazarak ona tavsiyelerde bulununuz. (Metniniz en az 80, en fazla 110 kelime olmalıdır.)",
+      "word_count": "80-110",
+      "key_points": [
+        "Arkadaşı selamlama ve gelişine sevinme.",
+        "Gezilecek yer tavsiyeleri (Şehir veya tarihi mekanlar).",
+        "Yenilmesi gereken Türk yemeklerinden örnekler.",
+        "Türkiye'deki hava durumu veya dikkat etmesi gereken küçük bir detay.",
+        "Kapanış ve vedalaşma."
+      ],
+      "model_answer": "Merhaba Mark,\n\nGelecek ay Türkiye'ye geleceğini duyunca gerçekten çok sevindim! Burası senin için harika bir deneyim olacak.\n\nÖncelikle İstanbul'a gelirsen Ayasofya'yı, Kapalıçarşı'yı ve Boğaz'ı mutlaka gezmelisin. Oradaki manzara büyüleyicidir. Yemek konusunda ise kesinlikle İskender Kebap yemeli ve Türk kahvesinin tadına bakmalısın; eminim çok seveceksin!\n\nŞu sıralar havalar biraz sıcak, bu yüzden yanında ince kıyafetler ve güneş gözlüğü getirmeyi unutma. Ayrıca Kapalıçarşı'da alışveriş yaparken satıcılarla mutlaka pazarlık yapmalısın, bu bizim kültürümüzün bir parçasıdır.\n\nBuraya geldiğinde mutlaka görüşelim, sana şehri gezdirmek isterim.\n\nŞimdiden iyi yolculuklar!\nSevgiler,\n[Adınız]"
+    },
+    {
+      "id": "bmba-yazma-6-2",
+      "exam_number": 6,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Üniversite Eğitimi Gerekli mi?",
+      "prompt": "Günümüzde Bill Gates, Mark Zuckerberg gibi üniversiteyi bırakan (veya okumayan) kişilerin dünyanın en zengin ve başarılı insanları olması, 'Başarılı olmak için üniversite okumak şart mıdır?' sorusunu gündeme getirmiştir. Sizce internetin ve bilginin bu kadar ulaşılabilir olduğu bir çağda, kariyer yapmak için üniversite diploması hala gerekli midir, yoksa yetenek ve pratik tecrübe daha mı önemlidir? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Üniversite eğitiminin klasik önemi hakkında giriş ve tartışmanın sunulması.",
+        "İnternet çağı, yetenek ve pratik tecrübenin (diplomasız başarının) avantajları.",
+        "Üniversitenin sadece bilgi değil, vizyon, çevre (network) ve sosyal beceri kazandırdığına dair argümanlar.",
+        "İki görüşü karşılaştıran dengeli bir sonuç ve yazarın kendi tezi.",
+        "Akademik geçiş kelimelerinin kullanılması."
+      ],
+      "model_answer": "Geleneksel olarak, iyi bir kariyerin ve saygın bir hayatın tek anahtarının üniversite diploması olduğuna inanılırdı. Ancak günümüzde internetin bilgiye ulaşmayı saniyeler içine sığdırması ve bazı teknoloji milyarderlerinin üniversite eğitimini yarıda bırakarak zirveye ulaşması, 'Üniversite eğitimi gerçekten gerekli mi?' tartışmasını alevlendirmiştir. Bence, sadece mesleki bilgi edinmek için üniversite şart olmasa da, bir bireyin vizyon kazanması ve sosyal olarak gelişmesi için üniversite eğitimi hala son derece gereklidir.\n\nİnternet çağında olduğumuz inkar edilemez bir gerçektir. Bugün bir kişi, yazılım dillerini, grafik tasarımı veya dijital pazarlamayı evinde oturarak online kurslardan öğrenebilir ve üniversite mezunu birinden çok daha yetenekli olabilir. Şirketler artık adayların diplomasından ziyade, onların ne üretebildiğine (portfolyosuna) ve problem çözme yeteneklerine bakmaktadır. Bu açıdan pratik tecrübe ve yetenek, kağıt üzerindeki bir diplomadan çok daha değerlidir.\n\nBununla birlikte, üniversiteyi sadece 'bilgi ezberlenen bir bina' olarak görmek büyük bir haksızlıktır. Üniversiteler, gençlere farklı kültürlerden insanlarla tanışma, tartışma kültürü edinme ve en önemlisi iş dünyası için güçlü bir çevre (network) kurma fırsatı sunar. Ayrıca tıp, hukuk veya mühendislik gibi insan hayatını doğrudan etkileyen hayati mesleklerde pratik eğitim ve diploma kesinlikle bir zorunluluktur.\n\nSonuç olarak, dünyadaki istisnai birkaç milyarderin okulu bırakması, eğitimin gereksiz olduğunu kanıtlamaz. Üniversite diploması artık başarıyı tek başına garanti etmese de, bireyin analitik düşünme yeteneğini ve sosyal zekasını geliştirerek onu hayata hazırlayan paha biçilmez bir deneyimdir."
+    },
+    {
+      "id": "bmba-yazma-7-1",
+      "exam_number": 7,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Davet E-postası)",
+      "title": "Mezuniyet Partisine Davet",
+      "prompt": "Gelecek hafta üniversiteden mezun oluyorsunuz ve evinizin bahçesinde küçük bir kutlama partisi düzenliyorsunuz. Türk arkadaşınız Can'ı bu partiye davet etmek için samimi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Arkadaşa selam verme ve hal hatır sorma.",
+        "E-postanın amacı (mezuniyet partisine davet).",
+        "Partinin yeri, tarihi ve saati hakkında bilgi.",
+        "Gelip gelemeyeceğini sorma ve kapanış."
+      ],
+      "model_answer": "Merhaba Can,\n\nNasılsın? Umarım her şey yolundadır.\n\nSana harika bir haberim var! Gelecek hafta nihayet üniversiteden mezun oluyorum. Bu mutlu günümü kutlamak için 15 Haziran Cumartesi akşamı saat 19:00'da bizim evin bahçesinde küçük bir mezuniyet partisi düzenliyorum.\n\nPartide müzik, harika yemekler ve ortak arkadaşlarımız olacak. Seni de aramızda görmeyi çok isterim. Lütfen gelip gelemeyeceğini bana en geç Perşembe gününe kadar haber ver.\n\nGörüşmek üzere, kendine çok iyi bak!\n\nSevgiler,\n[Adınız]"
+    },
+    {
+      "id": "bmba-yazma-7-2",
+      "exam_number": 7,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Sosyal Medya Fenomenliği (Influencer) Gerçek Bir Meslek midir?",
+      "prompt": "Günümüzde milyonlarca genç; doktor, mühendis veya öğretmen olmak yerine 'YouTuber' veya 'Influencer' olmayı hedeflemektedir. Sizce sosyal medya fenomenliği gerçek ve sürdürülebilir bir meslek midir? Bu durumun gençlerin kariyer planları ve toplum üzerindeki etkileri nelerdir? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Sosyal medya fenomenliği (Influencer) kavramının yükselişi hakkında giriş.",
+        "Bu işin bir 'meslek' olup olmadığına dair yazarın net görüşü (tez).",
+        "Geleneksel mesleklerle kıyaslama, dijital içerik üreticiliğinin zorlukları ve gelir modeli.",
+        "Gençler üzerindeki psikolojik ve sosyolojik etkisi (kolay yoldan para kazanma algısı).",
+        "Gelişmiş bağlaçlar ve akademik üslup kullanımı ile sonuç."
+      ],
+      "model_answer": "Son on yılda dijital dünyanın hızla büyümesiyle birlikte, 'Influencer' veya 'YouTuber' olmak gençler arasında en popüler kariyer hedeflerinden biri haline gelmiştir. Geleneksel mesleklerin yerini alan bu yeni akım, beraberinde 'Sosyal medya fenomenliği gerçek bir meslek midir?' tartışmasını da getirmiştir. Bence, içerik üreticiliği ciddi bir emek ve strateji gerektiren modern bir meslek olsa da, gençlere 'kolay yoldan zengin olma' yanılgısını aşıladığı için tehlikeli bir boyutu da vardır.\n\nÖncelikle, başarılı bir sosyal medya fenomeni olmanın sadece kamera karşısına geçip konuşmaktan ibaret olmadığını kabul etmeliyiz. Arka planda pazar araştırması, video kurgusu, marka işbirlikleri ve kitle psikolojisini yönetme gibi ciddi bir mesai yatmaktadır. Bu yönüyle dijital içerik üreticiliği; reklamcılık ve pazarlama sektörünün modern bir dalı, yani gerçek bir meslektir.\n\nAncak madalyonun diğer yüzünde, bu parıltılı dünyanın gençler üzerinde yarattığı yanılsama bulunmaktadır. Milyonlarca genç, ekranda gördükleri lüks hayatlara özenerek okulu bırakmayı veya geleneksel ve topluma faydalı meslekleri (doktorluk, mühendislik gibi) değersiz görmeyi seçebilmektedir. Üstelik sosyal medya algoritmaları sürekli değiştiği için bu meslek çoğu kişi için sürdürülebilir ve garantili bir gelir modeli değildir.\n\nSonuç olarak, dijital içerik üreticiliği çağımızın kabul edilmesi gereken saygın iş kollarından biridir. Ancak eğitim sistemimiz ve aileler, gençlere bu işin dışarıdan göründüğü kadar kolay olmadığını anlatmalı ve onları sadece sanal beğeniler üzerine değil, kalıcı bilgi ve yetenekler üzerine bir gelecek kurmaya teşvik etmelidir."
+    },
+    {
+      "id": "bmba-yazma-8-1",
+      "exam_number": 8,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Şikayet E-postası)",
+      "title": "Arızalı Ürün Şikayeti",
+      "prompt": "Geçen hafta internet üzerinden tanınmış bir teknoloji mağazasından yeni bir cep telefonu satın aldınız. Ancak kargo geldiğinde telefonun ekranının kırık olduğunu (veya cihazın açılmadığını) fark ettiniz. Müşteri hizmetlerine durumu anlatan, sipariş numaranızı belirten ve ürünün değiştirilmesini (veya para iadesini) talep eden resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Müşteri hizmetlerine resmi hitap.",
+        "Sorunun ne olduğu ve ne zaman gerçekleştiği.",
+        "Sipariş veya fatura numarası bilgisi.",
+        "Çözüm talebi (değişim veya iade) ve resmi kapanış."
+      ],
+      "model_answer": "Sayın Müşteri Hizmetleri,\n\nGeçen hafta (10 Ekim tarihinde) web siteniz üzerinden #TR987654 sipariş numarasıyla bir cep telefonu satın aldım.\n\nAncak bugün kargo paketini açtığımda telefonun ekranının kırık olduğunu ve cihazın hiçbir şekilde açılmadığını fark ettim. Kargo görevlisi eşliğinde hasar tespit tutanağı da hazırlattım. Ürünün kusurlu olması nedeniyle, arızalı cihazın yenisiyle değiştirilmesini veya ödediğim ücretin kartıma iade edilmesini talep ediyorum.\n\nKonuyla ilgili en kısa sürede geri dönüşünüzü rica ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-8-2",
+      "exam_number": 8,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Uzay Araştırmaları mı, Dünyanın Sorunları mı?",
+      "prompt": "Milyarlarca doların uzay araştırmalarına ve Mars'ta yaşam (koloni) kurma projelerine harcandığı günümüzde, bazı insanlar bu devasa bütçenin dünyadaki açlık, temiz su sıkıntısı ve iklim krizi gibi acil sorunları çözmek için kullanılması gerektiğini savunmaktadır. Siz bu konuda ne düşünüyorsunuz? Uzay araştırmalarına yapılan bu büyük yatırımlar gerekli midir, yoksa israf mıdır? Düşüncelerinizi argümanlarla açıklayınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Uzay araştırmalarına harcanan bütçe ve dünyadaki sorunlar (açlık, iklim krizi) arasındaki zıtlığın sunulması.",
+        "Uzay araştırmalarının sadece bir 'gösteriş' olmadığına, dünyaya sağladığı teknolojik katkılara (GPS, tıp, internet vb.) dair argümanlar.",
+        "İnsanlığın uzun vadedeki hayatta kalma stratejisi (Mars kolonisi).",
+        "Dünyadaki sorunların çözümünün uzay bütçesini kesmekle değil, adil gelir dağılımıyla çözülebileceği fikri (veya tam tersi).",
+        "Akademik bir dille yazılmış sonuç paragrafı."
+      ],
+      "model_answer": "Günümüzde hükümetlerin ve özel şirketlerin uzay araştırmalarına, özellikle de Mars'ta bir koloni kurma hayaline milyarlarca dolar harcaması, büyük bir küresel tartışmayı beraberinde getirmektedir. Dünyada milyonlarca insan açlık, yoksulluk ve temiz su bulamama gibi temel krizlerle boğuşurken, gözümüzü yıldızlara dikmek bir israf mıdır? Bence, uzay araştırmalarına ayrılan bütçe bir lüks veya israf değil, insanlığın teknolojik gelişimi ve uzun vadede hayatta kalması için zorunlu bir yatırımdır.\n\nUzay karşıtı görüşü savunanlar, bu parayla dünyadaki yoksulluğun bitirilebileceğini iddia ederler. Ancak dünyadaki açlığın temel sebebi parasızlık veya kaynak eksikliği değil, adaletsiz gelir dağılımı ve savaşlardır. Uzay bütçesini tamamen kesip dağıtsak bile bu politik sorunlar çözülmeden açlık bitmeyecektir.\n\nÖte yandan, uzay araştırmaları sadece başka gezegenlere gitmekten ibaret değildir. Bugün hayatımızı kurtaran ve kolaylaştıran birçok teknoloji (MR cihazları, GPS sistemleri, uydular, güneş panelleri ve su arıtma teknolojileri) aslında uzay görevleri için icat edilmiş, daha sonra Dünya'ya uyarlanmıştır. Yani uzaya harcanan her dolar, bize teknoloji ve sağlık olarak geri dönmektedir. Ayrıca iklim krizi gibi dünyayı tehdit eden yok oluş senaryoları göz önüne alındığında, insanlığın tek bir gezegene sıkışıp kalmaması, türümüzün devamlılığı için en büyük 'B planı'dır.\n\nSonuç olarak, dünyadaki sorunları çözmek için elbette çabalamalıyız; ancak bunu yaparken ufkumuzu daraltmamalıyız. Uzay araştırmaları, israf değil, hem bugünkü teknolojik konforumuzu sağlayan hem de yarınki varlığımızı garanti altına alan bir aydınlanma yolculuğudur."
+    },
+    {
+      "id": "bmba-yazma-9-1",
+      "exam_number": 9,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Bilgi Talebi)",
+      "title": "İş İlanı İçin Bilgi Talebi",
+      "prompt": "İnternette, büyük bir teknoloji şirketinin 'Yarı Zamanlı (Part-time) Müşteri Temsilcisi' ilanı verdiğini gördünüz. İlana başvurmak istiyorsunuz ancak çalışma saatleri ve ofisin konumu hakkında bilgi verilmemiş. Şirketin İnsan Kaynakları departmanına bu eksik bilgileri soran resmi ve kısa bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "İnsan Kaynakları departmanına resmi hitap.",
+        "Hangi pozisyon için yazıldığı (Yarı Zamanlı Müşteri Temsilcisi).",
+        "Sorulan temel sorular (çalışma saatleri ve ofis konumu).",
+        "Resmi kapanış ve saygı ifadesi."
+      ],
+      "model_answer": "Sayın İnsan Kaynakları Yetkilisi,\n\nİnternet sitenizde yayınlamış olduğunuz 'Yarı Zamanlı Müşteri Temsilcisi' ilanınızı büyük bir ilgiyle inceledim ve bu pozisyona başvurmak istiyorum.\n\nAncak ilanda çalışma şartlarıyla ilgili bazı detayları göremedim. Yarı zamanlı çalışma saatlerinin hangi günleri ve saat aralıklarını kapsadığını öğrenebilir miyim? Ayrıca ofisinizin tam olarak hangi semtte (konumda) bulunduğunu bildirirseniz çok sevinirim.\n\nSorularıma vereceğiniz yanıtlar için şimdiden teşekkür ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-9-2",
+      "exam_number": 9,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Nakit Paranın Sonu: Tamamen Dijital Bir Ekonomi Mümkün mü?",
+      "prompt": "Günümüzde kredi kartları, mobil ödemeler ve kripto paraların yaygınlaşmasıyla birlikte nakit para kullanımı hızla azalmaktadır. Bazı ekonomistler gelecekte nakit paranın tamamen ortadan kalkacağını ve 'Nakitsiz Toplum' (Cashless Society) modeline geçileceğini öngörmektedir. Sizce nakit paranın tamamen kaldırılması toplum için faydalı (örneğin suç oranını düşürür) mı olur, yoksa zararlı (örneğin gizlilik ihlali ve teknolojik bağımlılık) mı olur? Düşüncelerinizi nedenleri ve örnekleriyle açıklayan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Nakitsiz toplum (dijital ekonomi) kavramının açıklanması ve giriş.",
+        "Dijital paranın avantajları (hız, hijyen, kara para aklamayı/vergi kaçırmayı önleme).",
+        "Nakit paranın kalkmasının yaratacağı dezavantajlar (mahremiyet/gizlilik kaybı, siber saldırı riski, yaşlıların uyum sorunu).",
+        "Yazarın net tezi (faydalı veya zararlı olduğu yönünde) ve değerlendirmesi.",
+        "Gelişmiş sözcük dağarcığı ve akademik bağlaç kullanımı."
+      ],
+      "model_answer": "Son yıllarda kredi kartlarının, temassız ödemelerin ve mobil bankacılığın hızla yaygınlaşması, nakit paranın günlük hayatımızdaki rolünü ciddi şekilde azaltmıştır. Birçok ekonomist, yakın gelecekte nakit paranın tamamen ortadan kalkacağını ve 'Nakitsiz Toplum' (Cashless Society) modeline geçileceğini öngörmektedir. Nakitsiz bir sistemin güvenlik ve pratiklik açısından büyük avantajları olsa da, kişisel gizliliği (mahremiyeti) tamamen yok edeceği için bu durumun tehlikeli bir boyutu olduğuna inanıyorum.\n\nDijital bir ekonomiye geçmenin en büyük faydası şüphesiz ki suç oranlarının düşmesidir. Nakit paranın olmaması; banka soygunlarını, rüşveti, vergi kaçakçılığını ve kara para aklamayı neredeyse imkansız hale getirir. Her işlemin dijital bir iz bırakması, devletlerin ekonomiyi daha şeffaf bir şekilde yönetmesini sağlar. Ayrıca temassız ödemeler, alışverişlerde büyük bir hız ve hijyen avantajı sunmaktadır.\n\nAncak madalyonun diğer yüzünde ciddi sorunlar yatmaktadır. Nakit paranın tamamen kalkması demek, bir insanın gün içinde nerede kahve içtiğinden hangi kitabı aldığına kadar tüm harcamalarının şirketler veya devletler tarafından izlenebilmesi demektir. Bu durum, bireylerin mahremiyetini tamamen ortadan kaldıran bir 'dijital gözetim' (Big Brother) toplumu yaratır. Ayrıca tüm sistemin teknolojiye bağlı olması, olası bir siber saldırıda veya elektrik kesintisinde ekonominin anında çökmesi (felç olması) riskini taşır.\n\nSonuç olarak, dijital ödemeler hayatımızı kolaylaştıran modern bir araçtır ancak nakit paranın tamamen ortadan kaldırılması bireysel özgürlüklerimizi tehdit etmektedir. İdeal olan, tamamen nakitsiz bir sisteme zorlanmak yerine, vatandaşlara hem dijital hem de nakit ödeme seçeneğinin her zaman özgürce sunulmasıdır."
+    },
+    {
+      "id": "bmba-yazma-10-1",
+      "exam_number": 10,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/İtiraz)",
+      "title": "Hatalı Fatura İtiraz E-postası",
+      "prompt": "Ev internetiniz için size her ay düzenli olarak 200 TL fatura gelmektedir. Ancak bu ayki faturanızın 850 TL olduğunu gördünüz. İnternet sağlayıcı şirketin müşteri hizmetlerine, bu yüksek faturaya itiraz eden ve faturanın incelenip düzeltilmesini talep eden resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Kuruma (İnternet Şirketine) resmi hitap.",
+        "Abone numarasının belirtilmesi.",
+        "Normal fatura tutarı ile gelen yüksek fatura tutarının karşılaştırılması.",
+        "Faturanın incelenmesi ve düzeltilmesi talebi."
+      ],
+      "model_answer": "Sayın Müşteri Hizmetleri Yetkilisi,\n\nBen kurumunuzun #98765432 numaralı ev interneti abonesiyim. Her ay düzenli olarak kullandığım internet paketimin sabit ücreti 200 TL'dir.\n\nAncak bu ay (Kasım ayı) tarafıma gönderilen faturanın 850 TL olduğunu gördüm. Paketimde herhangi bir değişiklik yapmamama veya kotamı aşmamama rağmen bu kadar yüksek bir tutar gelmesini anlayamıyorum. Ortada sistemsel bir hata olduğunu düşünüyorum.\n\nLütfen son faturamın detaylı olarak incelenmesini ve bu hatanın düzeltilerek tarafıma bilgi verilmesini rica ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-10-2",
+      "exam_number": 10,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Hayvanat Bahçeleri Koruma Alanı mıdır, Hapishane midir?",
+      "prompt": "Hayvanat bahçelerinin varlığı uzun yıllardır tartışma konusudur. Bazı insanlar, hayvanat bahçelerinin nesli tükenmekte olan hayvanları koruduğunu ve çocuklara doğa sevgisi aşıladığını (eğitici olduğunu) savunur. Hayvan hakları savunucuları ise, vahşi hayvanların beton kafeslerde doğal ortamlarından uzak tutulmasının onlara yapılan büyük bir eziyet ve hapishane cezası olduğunu iddia eder. Sizce hayvanat bahçeleri kapatılmalı mıdır yoksa geliştirilerek devam mı etmelidir? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Hayvanat bahçeleriyle ilgili tartışmanın genel olarak sunulması.",
+        "Savunucuların argümanları (nesli tükenenleri koruma, eğitim, bilimsel araştırma).",
+        "Karşıt görüşün argümanları (doğal yaşamdan koparma, psikolojik eziyet, beton kafesler).",
+        "Yazarın net tezi (kapatılmalı veya farklı bir formata dönüştürülmeli).",
+        "Güçlü sonuç cümlesi ve gelişmiş gramer (bağlaç) kullanımı."
+      ],
+      "model_answer": "Hayvanat bahçeleri, çocukluğumuzda hepimizin büyük bir heyecanla ziyaret ettiği mekanlar olsa da, günümüzde hayvan hakları bilincinin artmasıyla birlikte ciddi bir etik tartışmanın merkezine yerleşmiştir. Bazı kesimler bu tesislerin hayvanları koruduğunu ve eğitime katkı sağladığını iddia etse de, vahşi hayvanların insanların eğlencesi için dar kafeslere hapsedilmesinin çağdışı bir eziyet (hapishane) olduğuna inanıyorum.\n\nHayvanat bahçelerini savunanların en büyük argümanı, bu yerlerin nesli tükenmekte olan türleri koruma altına almasıdır. Ancak istatistiklere bakıldığında, sergilenen hayvanların çok büyük bir kısmının nesli tehlike altında olmayan türlerden seçildiği görülmektedir. Ayrıca 'çocuklara doğa sevgisi aşılamak' bahanesi de oldukça zayıftır. Bir aslanı beton bir duvarın arkasında, depresif ve hareketsiz bir şekilde yatarken görmek, çocuklara doğa sevgisini değil, insanoğlunun doğaya hükmetme (onu esir alma) kibrini öğretir.\n\nVahşi hayvanların biyolojik olarak kilometrelerce koşmaya, avlanmaya ve sürüler halinde yaşamaya ihtiyacı vardır. Onları küçük kafeslere veya cam fanuslara hapsetmek, onlarda 'zoochosis' adı verilen ağır psikolojik hastalıklara ve strese neden olmaktadır. Hiçbir hayvan, sırf insanlar hafta sonu fotoğraf çeksin diye doğal yaşamından koparılmayı hak etmez.\n\nSonuç olarak, eğlence odaklı geleneksel hayvanat bahçeleri tamamen kapatılmalıdır. Eğer amaç gerçekten hayvanları korumaksa, bunun çözümü hayvanları şehir merkezindeki kafeslere hapsetmek değil, onları doğal ortamlarında koruyan geniş ve serbest 'Milli Parklar' (Safari alanları) inşa etmektir. Hayvanları sevmek, onları kafeste izlemek değil; onları ait oldukları doğada özgür bırakmaktır."
+    },
+    {
+      "id": "bmba-yazma-11-1",
+      "exam_number": 11,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Talep)",
+      "title": "Burs Başvurusu Bilgi Talebi",
+      "prompt": "İnternette, başarılı öğrencilere eğitim bursu veren bir vakfın ilanını gördünüz. Bu bursa başvurmak istiyorsunuz ancak gerekli belgelerin neler olduğu ve son başvuru tarihinin ne zaman olduğu belirtilmemiş. Vakfın yetkilisine bu eksik bilgileri soran resmi ve kibar bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Vakıf yetkilisine resmi hitap.",
+        "E-postanın yazılış amacı (ilanı nerede gördüğü ve başvurmak istediği).",
+        "Sorulan temel sorular (gerekli belgeler ve son başvuru tarihi).",
+        "Resmi kapanış ve saygı ifadesi."
+      ],
+      "model_answer": "Sayın Vakıf Yetkilisi,\n\nİnternet sitenizde yayınlamış olduğunuz '2025 Yılı Eğitim Bursu' ilanınızı gördüm ve bu bursa başvurmak istiyorum.\n\nAncak ilanda başvuru süreciyle ilgili bazı detayları göremedim. Başvuru yapabilmem için hazırlamam gereken belgeler tam olarak nelerdir? Ayrıca, başvuruların son teslim tarihi (son gün) hangi gündür?\n\nBu eksik bilgileri benimle paylaşırsanız çok sevinirim.\n\nİlginiz ve yardımınız için şimdiden teşekkür ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-11-2",
+      "exam_number": 11,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Başarının Anahtarı: Yetenek mi, Yoksa Disiplin mi?",
+      "prompt": "Toplumda bazı insanlar başarılı olmak için doğuştan gelen üstün bir yeteneğe (zeka, yetenek, fiziksel özellik) sahip olmanın şart olduğunu savunurken, diğerleri başarıya giden tek yolun yıllar süren sıkı disiplin ve sürekli pratik (çalışma) olduğunu iddia eder. Sizce hangisi daha önemlidir? Sadece yetenekli olmak başarı için yeterli midir? Düşüncelerinizi argümanlarla açıklayan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Yetenek ve disiplin kavramlarının tanımlanması ve tartışmanın sunulması.",
+        "Doğuştan gelen yeteneğin sağladığı avantajlar (hızlı öğrenme, yatkınlık).",
+        "Disiplinin ve düzenli çalışmanın (pratik yapmanın) üstünlüğü üzerine argümanlar.",
+        "Yazarın net tezi (yeteneğin disiplinsiz hiçbir işe yaramayacağı veya ikisinin uyumu).",
+        "Akademik geçişler ve zengin bir anlatım (örn. Mozart, Edison vb. örnekler)."
+      ],
+      "model_answer": "Başarı, tarih boyunca insanların sırrını çözmeye çalıştığı bir kavramdır. Kimi insanlar, büyük başarılara ulaşan kişilerin sadece doğuştan gelen özel bir yeteneğe sahip olduklarına inanırlar. Oysa ben, doğuştan gelen yeteneğin sadece bir başlangıç noktası (kıvılcım) olduğuna; asıl kalıcı başarının tamamen disiplin, sabır ve bitmek bilmeyen tekrarlarla elde edildiğine inanıyorum.\n\nElbette, yetenek hayatımızda yadsınamaz bir gerçektir. Müziğe, matematiğe veya spora karşı doğal bir yatkınlığı olan (yetenekli) kişiler, bir konuyu diğer insanlara göre çok daha hızlı öğrenir ve kavrarlar. Ancak bu avantaj, düzenli bir çalışmayla beslenmediği sürece kısa sürede sönmeye mahkumdur. Sadece yeteneğine güvenen ve çalışmayı bırakan birçok parlak genç, disiplinli çalışan daha 'yeteneksiz' rakiplerinin gerisinde kalmaktadır.\n\nÖte yandan, disiplin, kişinin yetenekli olmadığı konularda bile uzmanlaşmasını sağlayan mucizevi bir güçtür. Ünlü basketbolcu Michael Jordan veya müzisyen Beethoven, sadece doğal yetenekleriyle değil, herkesten daha fazla ter dökerek (çalışarak) efsane olmuşlardır. Bir işi bin kere tekrar etmek, doğuştan gelen en parlak zekadan bile daha güçlü bir kas hafızası ve ustalık yaratır.\n\nSonuç olarak, yetenek insana kapıyı aralasa da, o yolda sonuna kadar yürümeyi sağlayan şey disiplin ve emektir. Disiplinsiz bir yetenek, toprağa ekilip hiç sulanmayan değerli bir tohum gibidir; asla yeşermez. Tarih, çok yetenekli tembellerle değil, inatçı ve çalışkan insanlarla doludur."
+    },
+    {
+      "id": "bmba-yazma-12-1",
+      "exam_number": 12,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Şikayet)",
+      "title": "Geciken Kargo Şikayeti",
+      "prompt": "İnternetten bir kışlık mont sipariş ettiniz ve kargonun 3 gün içinde teslim edileceği söylendi. Ancak 10 gün geçmesine rağmen ürün hala elinize ulaşmadı. Kargo şirketinin müşteri hizmetlerine, kargonuzun nerede olduğunu soran ve sorunun çözülmesini (veya iade) talep eden kısa, resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Müşteri hizmetlerine resmi hitap.",
+        "Kargo takip numarası ve sipariş edilen ürün bilgisi.",
+        "Yaşanan sorun (10 gün geçmesi ve hala teslim edilmemesi).",
+        "Kargonun acilen teslim edilmesi veya para iadesi talebi."
+      ],
+      "model_answer": "Sayın Müşteri Hizmetleri Yetkilisi,\n\nBen 5 Kasım tarihinde #AB12345 kargo takip numarasıyla bir kışlık mont siparişi verdim. Siparişim sırasında ürünün en fazla 3 iş günü içinde teslim edileceği belirtilmişti.\n\nAncak bugün 15 Kasım, yani siparişimin üzerinden 10 gün geçmesine rağmen ürünüm hala elime ulaşmadı ve sistemde hareket görmüyor. Havalar soğuduğu için bu ürüne acilen ihtiyacım var.\n\nLütfen kargomun nerede olduğunu araştırıp bana bilgi verin. Eğer teslimat yapılamayacaksa ödediğim ücretin acilen iade edilmesini talep ediyorum.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-12-2",
+      "exam_number": 12,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Gençlerin Köyden Kente (Şehre) Göçü: Geri Dönüş Mümkün mü?",
+      "prompt": "Gelişmekte olan birçok ülkede gençler, eğitim ve daha iyi iş fırsatları bulmak amacıyla kırsal bölgeleri (köyleri) terk edip büyük şehirlere göç etmektedir. Bu durum köylerde tarımın bitmesine, şehirlerde ise aşırı nüfus ve işsizlik sorunlarına yol açmaktadır. Sizce gençleri köylerine (veya kasabalarına) geri dönmeye teşvik etmek mümkün müdür? Devlete ve gençlere bu konuda ne gibi görevler düşmektedir? Düşüncelerinizi nedenleri ve örnekleriyle açıklayan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Köyden kente göç probleminin günümüzdeki genel durumu hakkında giriş.",
+        "Gençlerin köyleri neden terk ettiği (sosyal imkan eksikliği, modern iş beklentisi, teknoloji).",
+        "Şehirlerdeki krizler (trafik, pahalılık) ve tarımın çökmesi gibi göçün olumsuz sonuçları.",
+        "Gençleri geri döndürmek için yapılabilecekler (teknolojik tarım desteği, internet/altyapı yatırımları, teşvikler).",
+        "Kendi argümanlarıyla yazılmış güçlü bir sonuç paragrafı."
+      ],
+      "model_answer": "Günümüzde tüm dünyada olduğu gibi ülkemizde de, milyonlarca genç eğitim almak, sosyalleşmek ve masa başı prestijli işler bulmak umuduyla doğdukları kırsal bölgeleri (köyleri) terk edip büyük şehirlere göç etmektedir. Bu durum, bir yandan köylerde tarım ve hayvancılığın bitmesine neden olurken, diğer yandan şehirlerde trafik, yüksek kiralar ve işsizlik gibi devasa krizlere yol açmaktadır. Bence, gençleri kırsal bölgelere (köylerine) geri döndürmek imkansız değildir; ancak bunun için devletin ciddi teknolojik yatırımlar ve teşvikler yapması gerekmektedir.\n\nÖncelikle, gençlerin köylerini terk etmesinin en büyük nedeni 'tarım işçiliğinin' yorucu ve itibarsız (prestijsiz) görülmesidir. İnternet çağında yaşayan bir genci, ilkel yöntemlerle toprağı kazmaya ikna edemezsiniz. Bu sorunu çözmenin yolu 'Modern ve Teknolojik Tarım'dır. Devlet gençlere bedava arsa veya faizsiz teknoloji kredisi (drone ile ilaçlama, akıllı sulama sistemleri) sağlarsa, tarım 'modern ve çok para kazandıran' bir iş modeli haline gelecektir.\n\nİkinci olarak, kırsal bölgelerdeki en büyük eksiklik 'sosyal imkansızlıklar' ve altyapı eksikliğidir. Bir köyde yüksek hızlı internet, modern bir sağlık ocağı veya kafeler (sosyalleşme alanları) yoksa, bir genci orada tutmak imkansızdır. Kırsal bölgelerin altyapısı güçlendirildiğinde, şehirdeki beton yığınlarından, stresten ve pahalılıktan bıkan gençler doğal yaşama geri dönmeyi bir ayrıcalık olarak göreceklerdir.\n\nSonuç olarak, gençlerin tersine göç etmesi (köye dönmesi) sadece bir hayal değildir. Eğer devletler kırsal alanları çağın teknolojisi ve altyapısıyla donatır, tarımı havalı bir girişimcilik modeline dönüştürürse, gençler geleceği şehirlerin gökdelenlerinde değil, toprağın bereketinde arayacaktır."
+    },
+    {
+      "id": "bmba-yazma-13-1",
+      "exam_number": 13,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Talep)",
+      "title": "Kütüphane Üyeliği ve Kitap Uzatma Talebi",
+      "prompt": "Üniversite kütüphanesinden aldığınız üç kitabı sınavların yoğunluğu nedeniyle zamanında iade edemediniz. Kütüphane yönetimine e-posta göndererek özür dileyen, süre uzatımı talep eden ve ceza durumunu soran kısa bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Kütüphane yönetimine resmi hitap.",
+        "Kitapların gecikme nedeni (sınav yoğunluğu).",
+        "Süre uzatımı (ödünç süresini uzatma) talebi.",
+        "Varsa ceza durumu hakkında soru ve resmi kapanış."
+      ],
+      "model_answer": "Sayın Kütüphane Yönetimi,\n\nBen üniversitenizin #12345 numaralı kütüphane üyesiyim. Üzerimde kayıtlı bulunan üç adet kitabı final sınavlarımın yoğunluğu nedeniyle maalesef zamanında iade edemedim.\n\nYaşanan bu gecikme için içtenlikle özür dilerim. Kitapların iade süresini mümkünse bir hafta daha uzatmak istiyorum. Eğer bu gecikmeden dolayı herhangi bir para cezası oluştuysa, kütüphaneye geldiğimde ödemeye hazırım.\n\nAnlayışınız ve desteğiniz için şimdiden çok teşekkür ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-13-2",
+      "exam_number": 13,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Geleneksel Medya mı, Sosyal Medya mı?",
+      "prompt": "Günümüzde haber kaynakları büyük bir değişim geçirmiştir. Genç nesil haberleri televizyon ve gazeteler gibi geleneksel medyadan değil, tamamen sosyal medya platformlarından (Twitter/X, Instagram, TikTok vb.) takip etmektedir. Sizce sosyal medya haber alma konusunda geleneksel medyanın yerini tamamen almalı mıdır? Sosyal medyanın avantajları ve güvenilirlik sorunları nelerdir? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Haber alma alışkanlıklarının değişimi ve sosyal medyanın yükselişi hakkında giriş.",
+        "Sosyal medyanın avantajları (hız, anındalık, çeşitlilik, sansürsüzlük).",
+        "Sosyal medyanın dezavantajları (dezenformasyon, yalan haber, teyit edilmemiş bilgiler).",
+        "Geleneksel medyanın doğruluk süzgeci ve editoryal denetiminin önemi.",
+        "İki medyanın dengeli bir sentezini savunan güçlü bir sonuç paragrafı."
+      ],
+      "model_answer": "İletişim teknolojilerinin gelişmesiyle birlikte haber alma alışkanlıklarımız kökten değişmiştir. Eskiden sabahları gazete okuyan veya akşamları ana haber bültenlerini bekleyen toplum, bugün dünyadaki gelişmeleri anında sosyal medya platformlarından takip etmektedir. Genç neslin geleneksel medyayı neredeyse tamamen terk etmesi, 'Sosyal medya haber kaynaklarında geleneksel medyanın yerini tamamen almalı mı?' sorusunu akıllara getirmektedir. Bence sosyal medya hız ve erişilebilirlik açısından harika bir araç olsa da, güvenilirlik sorunları nedeniyle geleneksel medyanın yerini tamamen almamalıdır.\n\nSosyal medyanın en büyük avantajı hız ve sansürsüz olmasıdır. Dünyanın herhangi bir yerinde yaşanan bir olay, geleneksel kanalların bürokratik engellerine takılmadan saniyeler içinde milyonlara ulaşabilir. Ayrıca sıradan vatandaşlar da olay yerinden doğrudan görüntü paylaşarak haber akışına katkı sağlayabilmektedir. Bu durum haberciliği demokratikleştirmiştir.\n\nAncak madalyonun diğer yüzünde çok büyük tehlikeler yatmaktadır. Sosyal medyada en büyük sorun 'dezenformasyon' yani yalan haberdir. Teyit edilmemiş, tık almak için uydurulmuş asılsız haberler saniyeler içinde yayılabilmekte ve toplumsal panik yaratabilmektedir. Geleneksel medya kuruluşları ise haberleri yayınlamadan önce bir editoryal süzgeçten geçirmek, kaynakları doğrulamak ve etik kurallara uymak zorundadır. Bu da geleneksel medyaya bir güvenilirlik kazandırmaktadır.\n\nSonuç olarak, sosyal medya habercilikte hız kazandırsa da tek başına güvenli bir bilgi kaynağı olamaz. İdeal olan, sosyal medyanın hızından faydalanırken, haberin doğruluğunu geleneksel medyanın süzgecinden ve teyit mekanizmalarından geçirerek teyit etmektir."
+    },
+    {
+      "id": "bmba-yazma-14-1",
+      "exam_number": 14,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Davet)",
+      "title": "Üniversite Kulübü Toplantı Duyurusu",
+      "prompt": "Üniversitenizde kurduğunuz 'Kitap Kulübü'nün ilk tanışma toplantısını bu hafta Cuma günü saat 16:00'da konferans salonunda yapacaksınız. Kulüp üyelerine toplantının yerini, saatini bildiren ve yeni kitap önerileri getirmelerini isteyen kısa bir e-posta (veya duyuru metni) yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Kulüp üyelerine samimi veya yarı resmi hitap.",
+        "Toplantının amacı (İlk tanışma toplantısı).",
+        "Yer, tarih ve saat bilgisi (Cuma, 16:00, konferans salonu).",
+        "Üyelerden beklenti (yeni kitap önerileri getirmeleri) ve kapanış."
+      ],
+      "model_answer": "Değerli Kitap Kulübü Üyeleri,\n\nUzun süredir beklediğimiz an geldi! Kulübümüzün yeni dönemeki ilk tanışma toplantısını gerçekleştirmek üzere bir araya geliyoruz.\n\nToplantımız bu hafta Cuma günü saat 16:00'da Merkez Kampüs Konferans Salonu'nda yapılacaktır. Bu ilk buluşmada hem birbirimizi tanıyacak hem de bu ay birlikte okuyacağımız kitabı oylayarak belirleyeceğiz. Bu yüzden toplantıya gelirken okumak istediğiniz en az bir kitap önerisiyle gelmenizi rica ederim.\n\nKitap dolu keyifli bir dönem geçirmek dileğiyle, hepinizi toplantımıza bekliyoruz!\n\nSevgi ve saygılarımla,\n[Adınız Soyadınız]\nKulüp Başkanı"
+    },
+    {
+      "id": "bmba-yazma-14-2",
+      "exam_number": 14,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Yapay Zeka ve Sanat: Makineler Sanatçı Olabilir mi?",
+      "prompt": "Son yıllarda Midjourney, DALL-E ve ChatGPT gibi yapay zeka araçları saniyeler içinde muazzam tablolar çizmekte, şiirler yazmakta ve şarkılar bestelemektedir. Hatta bazı yapay zeka eserleri sanat yarışmalarında ödüller kazanmaktadır. Sizce yapay zeka tarafından üretilen eserler gerçekten 'sanat' kabul edilebilir mi? Bir makine insan duygularını ve yaratıcılığını taklit edebilir mi, yoksa sanat sadece insana ait benzersiz bir yetenek midir? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Yapay zekanın sanat alanındaki (resim, müzik, edebiyat) yükselişi hakkında giriş.",
+        "Yapay zeka sanatının savunucularının argümanları (estetik değer, teknik kusursuzluk, yaratıcı komutlar).",
+        "Sanatın gerçek tanımı ve insan ruhuyla (acı, aşk, ölüm, deneyim) bağı üzerine argümanlar.",
+        "Yapay zekanın bir 'araç' (fırça gibi) olduğu, ancak sanatçının insan olduğu tezi.",
+        "Akademik ve felsefi bir üslupla yazılmış sonuç paragrafı."
+      ],
+      "model_answer": "Tarih boyunca sanat, insan ruhunun en derin çığlığı, acılarının, sevinçlerinin ve yaratıcılığının aynası olarak kabul edilmiştir. Ancak günümüzde yapay zeka algoritmaları saniyeler içinde göz alıcı tablolar çizmekte, klasik müzik eserleri bestelemekte ve şiirler yazabilmektedir. Bu durum 'Yapay zeka tarafından üretilen eserler sanat sayılabilir mi?' sorusunu felsefi ve etik bir tartışma haline getirmiştir. Bence, yapay zeka eserleri estetik açıdan kusursuz görünse de, arkasında yaşanmışlık ve bilinç olmadığı için asla gerçek bir 'sanat' olarak kabul edilemez.\n\nÖncelikle, yapay zekanın yaptığı şey gerçek bir yaratıcılık değil, insanlık tarihinden kalan milyarlarca verinin matematiksel olarak 'taklit' edilmesidir. Algoritmalar bir gün batımının veya kırık bir kalbin ne anlama geldiğini biyolojik veya ruhsal olarak hissedemezler; sadece pikselleri veya kelimeleri istatistiksel olasılıklara göre dizebilirler. Oysa sanat, sanatçının çektiği acıyı, hissettiği yalnızlığı veya hayata duyduğu hayranlığı tuvale ya da kağıda dökmesiyle anlam kazanır.\n\nBununla birlikte, yapay zekayı tamamen reddetmek de doğru değildir. Yapay zeka, tıpkı fotoğraf makinesinin icadında olduğu gibi, sanatçıların ellerinde güçlü bir 'araç' olarak kullanılabilir. Nasıl ki fotoğraf makinesi resim sanatını bitirmediyse, yapay zeka da insan sanatını bitiremeyecektir; sadece sanatın formunu değiştirecektir.\n\nSonuç olarak, bir tablonun veya şarkının sadece güzel görünmesi onu sanat yapmaya yetmez. Sanatı değerli kılan, onu üreten insanın ruhu, niyetidir. Makineler sadece harika birer kopyacı olabilirler, ancak asla bir insan gibi 'sanatçı' olamazlar."
+    },
+    {
+      "id": "bmba-yazma-15-1",
+      "exam_number": 15,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Uyarı/Şikayet Notu)",
+      "title": "Komşuya Gürültü Şikayeti Notu",
+      "prompt": "Bir apartmanda yaşıyorsunuz. Üst kat komşunuz son zamanlarda gece geç saatlere kadar çok yüksek sesle müzik dinlemektedir. Sabahları erken kalktığınız için bu durumdan rahatsızsınız. Komşunuzun kapısına bırakmak üzere nazik ama kararlı bir uyarı notu yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Komşuya nazik bir hitap.",
+        "Sorunun ne olduğu (gece geç saatte yüksek sesli müzik).",
+        "Bu durumdan neden etkilendiğiniz (sabah erken kalkma zorunluluğu).",
+        "Çözüm önerisi (sesi kısması veya kulaklık kullanması) ve kibar kapanış."
+      ],
+      "model_answer": "Sayın Üst Kat Komşum,\n\nBen 4 numaralı dairede oturan komşunuzum. Öncelikle size iyi günler dilerim.\n\nSon birkaç haftadır gece geç saatlerde (özellikle gece yarısından sonra) dairenizden çok yüksek sesli müzik ve televizyon sesi gelmektedir. Sabahları çok erken kalkıp işe gitmek zorunda olduğum için bu gürültü yüzünden uyumakta gerçekten çok zorlanıyorum. \n\nLütfen gece saat 23:00'ten sonra daha sessiz olabilir veya müzik dinlerken kulaklık kullanabilir misiniz? Anlayışınız ve hassasiyetiniz için şimdiden çok teşekkür ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-15-2",
+      "exam_number": 15,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Küreselleşme (Globalleşme) Yerel Kültürleri Yok Ediyor mu?",
+      "prompt": "Günümüzde küreselleşme sayesinde dünyanın bir ucundaki ürüne, filme veya yemeğe anında ulaşabiliyoruz. Ancak bazı sosyologlar, küreselleşmenin dünyayı 'tek tip' bir hale getirdiğini, yerel dilleri, gelenekleri ve mutfakları yok ettiğini savunmaktadır. Sizce küreselleşme kültürleri birleştirip zenginleştiriyor mu, yoksa yerel kültürleri yok edip dünyayı sıradanlaştırıyor mu? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Küreselleşme kavramının tanımı ve günlük hayattaki yansımaları.",
+        "Küreselleşmenin faydaları (bilgiye, sanata ve farklı kültürlere kolay erişim).",
+        "Küreselleşmenin zararları (tek tipleşme, yerel esnafın ve yerel mutfakların dev zincirlere yenilmesi).",
+        "Yazarın net tezi ve kültürel yozlaşmaya karşı çözüm önerisi.",
+        "Zengin bağlaçlar ve akademik geçiş ifadelerinin kullanımı."
+      ],
+      "model_answer": "İletişim ve ulaşım teknolojilerinin gelişmesiyle birlikte dünyamız sınırların kalktığı devasa bir 'küresel köye' dönüşmüştür. Küreselleşme adı verilen bu süreç sayesinde dünyanın herhangi bir yerindeki bilgiye, teknolojiye veya sanata anında ulaşabilmekteyiz. Ancak bu hızlı entegrasyonun, yerel kültürleri, dilleri ve gelenekleri yok ederek dünyayı 'tek tip' ve renksiz bir hale getirdiğine inanıyorum.\n\nKüreselleşmenin en yıkıcı etkisi tüketim alışkanlıklarında görülmektedir. Bugün Tokyo'dan İstanbul'a, New York'tan Paris'e kadar dünyanın her büyük şehrinde aynı Amerikan fast-food zincirlerini, aynı kahve dükkanlarını ve aynı kıyafet markalarını görüyoruz. Genç nesiller kendi zengin yerel mutfaklarını veya geleneksel el sanatlarını öğrenmek yerine, küresel medyanın onlara dayattığı popüler kültürü tüketmeyi tercih etmektedir. Bu durum, yerel esnafın iflas etmesine ve binlerce yıllık kültürel mirasın unutulmasına yol açmaktadır.\n\nElbette küreselleşmenin tamamen kötü olduğunu söylemek haksızlık olur. Farklı milletlerin birbirini tanıması, ırkçılığın azalmasına ve küresel bir hoşgörü ortamının doğmasına katkı sağlamaktadır. Ancak bu entegrasyon, güçlü ülkelerin kültürlerinin zayıf ülkeleri yutması (kültürel emperyalizm) şeklinde olmamalıdır.\n\nSonuç olarak, küreselleşme ekonomik ve teknolojik bir zorunluluk olsa da, kültürel bir yozlaşmaya dönüşmemelidir. Toplumlar, küresel dünyanın bir parçası olurken aynı zamanda kendi ana dillerini, tarihlerini ve mutfaklarını korumak için bilinçli bir çaba göstermelidir. Aksi takdirde, dünyanın her yerinin birbirinin kopyası olduğu, son derece sıkıcı ve ruhsuz bir gelecekle karşı karşıya kalırız."
+    },
+    {
+      "id": "bmba-yazma-16-1",
+      "exam_number": 16,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Başvuru)",
+      "title": "Staj Başvurusu E-postası",
+      "prompt": "Uluslararası bir turizm şirketinin web sitesinde 'Yaz Dönemi Turizm Stajyeri' ilanı gördünüz. Bu pozisyona başvurmak için şirketin İnsan Kaynakları bölümüne kendinizi kısaca tanıtan, yabancı dil becerilerinizden bahseden ve özgeçmişinizi (CV) eke koyduğunuzu belirten resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "İnsan Kaynaklarına resmi hitap.",
+        "Hangi ilan için yazıldığı ve öğrenim durumu.",
+        "Neden uygun olduğu (yabancı dil veya iletişim becerisi).",
+        "Özgeçmişin (CV) e-postaya eklendiğinin belirtilmesi ve kapanış."
+      ],
+      "model_answer": "Sayın İnsan Kaynakları Yetkilisi,\n\nŞirketinizin web sitesinde yayınlanan 'Yaz Dönemi Turizm Stajyeri' ilanınızı büyük bir ilgiyle okudum ve bu pozisyona başvurmak istiyorum.\n\nBen Ankara Üniversitesi Turizm Rehberliği bölümü 3. sınıf öğrencisiyim. İleri seviyede İngilizce ve orta seviyede Rusça biliyorum. Yaz tatilinde şirketiniz gibi uluslararası ve saygın bir kurumda staj yaparak sektörde pratik tecrübe edinmek en büyük kariyer hedefimdir. \n\nEğitim geçmişimi içeren detaylı özgeçmişimi (CV) bu e-postanın ekinde bulabilirsiniz. Başvurumun olumlu değerlendirilmesini umuyor, iyi çalışmalar diliyorum.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-16-2",
+      "exam_number": 16,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Genetik Mühendisliği ve 'Tasarım Bebekler' Etiği",
+      "prompt": "Günümüzde genetik mühendisliği (CRISPR teknolojisi vb.) sayesinde hastalıklı genleri değiştirmek mümkün hale gelmiştir. Ancak bu teknolojinin gelecekte ebeveynlere bebeklerinin göz rengini, zeka seviyesini veya boyunu seçme ('Tasarım Bebekler' / Designer Babies) imkanı sunması beklenmektedir. Sizce genetik müdahale insanlık için devasa bir tıbbi mucize midir, yoksa doğanın dengesini bozacak tehlikeli bir etik ihlal midir? Düşüncelerinizi nedenleri ve olası sonuçlarıyla anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Genetik mühendisliğinin günümüzdeki konumu ve tartışmanın tanıtılması.",
+        "Tıbbi faydalar (Kalıtsal ve ölümcül hastalıkların anne karnında tedavi edilmesi).",
+        "Etik tehlikeler (Estetik veya zeka için genetik müdahale, doğaya aykırılık).",
+        "Sosyolojik risk (Sadece zenginlerin genetiği değiştirilmiş kusursuz bebeklere sahip olmasıyla oluşacak sınıf ayrımı).",
+        "Yazarın net tezi ve yasal düzenleme çağrısı içeren sonuç."
+      ],
+      "model_answer": "Son yıllarda genetik mühendisliği alanındaki devrim niteliğindeki gelişmeler (örneğin CRISPR teknolojisi), tıp dünyasında yeni bir çağ başlatmıştır. Bu teknoloji sayesinde ölümcül genetik hastalıkların anne karnında tedavi edilebilmesi insanlık için büyük bir mucizedir. Ancak teknolojinin, ebeveynlere bebeklerinin göz rengini, boyunu ve hatta zeka seviyesini laboratuvarda seçme imkanı sunacak ('Tasarım Bebekler') boyuta gelmesi, insanlığın geleceği için son derece tehlikeli ve etik dışı bir durumdur.\n\nGenetik teknolojisinin tıp alanında kullanılmasına kimse karşı çıkamaz. Kanser, kalp hastalıkları veya Down sendromu gibi kalıtsal rahatsızlıkların DNA'dan silinmesi, milyonlarca insanın acı çekmesini engelleyecektir. Bu noktada bilim, insan yaşamını korumak gibi kutsal bir görev üstlenmektedir. \n\nAncak genetik müdahale, hastalık tedavisinin ötesine geçip estetik veya zihinsel bir 'siparişe' dönüştüğünde doğanın kusursuz dengesi bozulur. İnsanların marketten ürün seçer gibi bebeklerinin fiziksel özelliklerini belirlemesi, insan hayatını bir 'tüketim nesnesi' haline getirir. Daha da korkutucu olanı, bu pahalı teknolojiye sadece zenginlerin ulaşabilecek olmasıdır. Gelecekte genetik olarak kusursuzlaştırılmış, daha zeki ve sağlıklı zenginler ile bu imkana sahip olamayan normal insanlar arasında aşılması imkansız, biyolojik bir 'sınıf ayrımı' ortaya çıkacaktır.\n\nSonuç olarak, genetik mühendisliği elimizde tuttuğumuz çok güçlü bir ateştir. Bu ateş, sadece genetik hastalıkları iyileştirmek için kullanılmalı; insan doğasını değiştirecek estetik ve zihinsel müdahaleler uluslararası yasalarla kesin olarak yasaklanmalıdır. Aksi takdirde insanlık, kendi elleriyle yarattığı mükemmellik arzusunun kurbanı olacaktır."
+    },
+    {
+      "id": "bmba-yazma-17-1",
+      "exam_number": 17,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/İptal ve Özür)",
+      "title": "İş Görüşmesi İptal E-postası",
+      "prompt": "Hayalini kurduğunuz bir şirket sizi yarın sabah saat 10:00'da iş görüşmesine (mülakata) davet etti. Ancak gece aniden ateşlendiniz ve hastaneye gitmek zorunda kaldınız. İnsan Kaynakları müdürüne durumu açıklayan, özür dileyen ve görüşmeyi başka bir güne ertelemeyi talep eden resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "İnsan Kaynaklarına resmi hitap.",
+        "İptal edilecek olan görüşmenin tarihi ve saati.",
+        "Görüşmeye gidememe nedeni (ani rahatsızlık).",
+        "Görüşmeyi başka bir tarihe erteleme talebi ve özür."
+      ],
+      "model_answer": "Sayın İnsan Kaynakları Müdürü,\n\nÖncelikle beni yarın (12 Ekim) saat 10:00'da yapılacak olan iş görüşmesine davet ettiğiniz için çok teşekkür ederim.\n\nAncak dün gece aniden başlayan şiddetli bir rahatsızlık nedeniyle hastaneye gitmek zorunda kaldım. Doktorum birkaç gün dinlenmem gerektiğini belirtti. Bu beklenmedik sağlık sorunu yüzünden maalesef yarınki mülakata katılamayacağım.\n\nYaşanan bu durum için içtenlikle özür dilerim. Mülakatımızı önümüzdeki hafta sizin için uygun olan başka bir güne ertelememiz mümkün müdür?\n\nAnlayışınız için teşekkür eder, iyi çalışmalar dilerim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-17-2",
+      "exam_number": 17,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Nükleer Enerji: Temiz Bir Gelecek mi, Ölümcül Bir Tehdit mi?",
+      "prompt": "Küresel ısınma ve enerji kriziyle mücadele etmek için birçok ülke nükleer enerji santralleri inşa etmektedir. Nükleer enerji savunucuları, bunun fosil yakıtlara (kömür, petrol) göre çok daha temiz, ucuz ve verimli bir enerji kaynağı olduğunu iddia eder. Karşıt görüşlüler ise Çernobil ve Fukuşima felaketlerini hatırlatarak nükleer santrallerin insanlık ve doğa için saatli bir bomba olduğunu savunur. Sizce nükleer enerji kullanılmalı mıdır? Düşüncelerinizi nedenleri ve örnekleriyle açıklayan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Enerji krizi ve nükleer enerji tartışmasına genel giriş.",
+        "Nükleer enerjinin avantajları (karbon emisyonunun sıfır olması, yüksek verimlilik).",
+        "Nükleer enerjinin dezavantajları ve riskleri (radyasyon sızıntısı, nükleer atık sorunu, tarihi felaketler).",
+        "Yazarın net tezi (destekleme, tamamen reddetme veya şartlı destek).",
+        "Akademik bir dille yazılmış sonuç paragrafı."
+      ],
+      "model_answer": "Günümüzde küresel ısınmanın yarattığı yıkıcı etkiler ve artan enerji ihtiyacı, devletleri yeni enerji kaynakları aramaya itmiştir. Bu arayışta en çok tartışılan konu ise 'Nükleer Enerji' olmuştur. Birçok uzman nükleer enerjiyi dünyayı kurtaracak temiz bir çözüm olarak görürken, diğerleri onu insanlığın sonunu getirebilecek ölümcül bir tehdit olarak değerlendirmektedir. Bence, rüzgar ve güneş gibi tamamen yenilenebilir enerjiler yeterli seviyeye ulaşana kadar, çok sıkı denetimler altında nükleer enerji kullanmak bir zorunluluktur.\n\nNükleer enerjiyi savunanların en güçlü argümanı, bu santrallerin atmosfere sera gazı (karbon) salmamasıdır. Kömür ve petrol gibi fosil yakıtlar her yıl milyonlarca insanın zehirli hava solumasına ve dünyanın ısınmasına neden olmaktadır. Oysa küçük bir miktar uranyum ile bütün bir şehrin elektriği aylarca, doğayı kirletmeden ve çok ucuza üretilebilmektedir. \n\nÖte yandan, nükleer karşıtlarının endişeleri de oldukça haklıdır. 1986'daki Çernobil ve 2011'deki Fukuşima felaketleri, bir nükleer santralde işler ters gittiğinde sadece o ülkenin değil, tüm kıtanın radyasyonla zehirlenebileceğini kanıtlamıştır. Üstelik binlerce yıl boyunca zehrini koruyan nükleer atıkların nereye gömüleceği (nasıl imha edileceği) hala çözülememiş devasa bir sorundur.\n\nSonuç olarak, nükleer enerji kusursuz bir çözüm olmasa da, kömürün dünyayı boğduğu şu günlerde katlanılması gereken 'ehveni şer' (kötünün iyisi) bir seçenektir. İnsanlık nihai olarak güneş ve rüzgar enerjisine geçmelidir; ancak o güne kadar nükleer santraller, sıfır hata payı ve en üst düzey uluslararası güvenlik standartlarıyla çalıştırılmalıdır."
+    },
+    {
+      "id": "bmba-yazma-18-1",
+      "exam_number": 18,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Bilgi Talebi)",
+      "title": "Üniversite Yurt Müdürlüğüne E-posta",
+      "prompt": "Gelecek eğitim yılında üniversitenizin devlet yurdunda (kampüs içinde) kalmak istiyorsunuz. Yurt müdürlüğüne kısa bir e-posta yazarak yurda kayıt tarihini, aylık yurt ücretini ve odaların kaç kişilik olduğunu sorunuz. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Yurt müdürlüğüne resmi hitap.",
+        "E-postanın amacı (yurtta kalma isteği).",
+        "Sorulması gereken 3 temel soru (kayıt tarihi, ücret, oda kapasitesi).",
+        "Saygı ifadesi ile kapanış."
+      ],
+      "model_answer": "Sayın Yurt Müdürlüğü Yetkilisi,\n\nBen üniversitenizin İşletme bölümünü yeni kazanan bir öğrenciyim. Gelecek eğitim döneminde (Eylül ayından itibaren) kampüs içindeki yurdunuzda konaklamak istiyorum.\n\nKayıt işlemlerine başlamadan önce sizden bazı bilgileri öğrenmek istiyorum. Yurt kayıtları tam olarak hangi tarihler arasında yapılacaktır? Yurdun aylık ücreti ne kadardır? Ayrıca, odalarınız genellikle kaç kişiliktir (kaç yataklıdır)?\n\nBu konularda beni bilgilendirirseniz çok sevinirim. İyi çalışmalar dilerim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-18-2",
+      "exam_number": 18,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Evlilik Öncesi Flört ve Görücü Usulü: Hangisi Daha Başarılı?",
+      "prompt": "Günümüzde insanların eş seçimi konusunda iki farklı yaklaşım öne çıkmaktadır. Modern toplumlarda bireylerin uzun yıllar flört edip birbirlerini tanıyarak evlenmesi gerektiği savunulurken, geleneksel toplumlarda ailelerin aracılık ettiği (ve mantığa dayanan) 'görücü usulü' evliliklerin daha uzun ömürlü olduğu iddia edilmektedir. Sizce mutlu ve uzun ömürlü bir evlilik için uzun süreli flört mü gereklidir, yoksa mantık çerçevesinde yapılan geleneksel bir evlilik mi daha sağlıklıdır? Düşüncelerinizi nedenleri ve örnekleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Evlilik ve eş seçimi konusuna genel bir giriş.",
+        "Flört ederek evlenmenin (aşk evliliğinin) avantajları ve dezavantajları.",
+        "Görücü usulü evliliğin (mantık evliliğinin) avantajları ve dezavantajları.",
+        "Kişisel bir sentez (hangi yöntemin veya ikisinin birleşiminin daha başarılı olduğu).",
+        "Güçlü bir değerlendirme (sonuç) paragrafı."
+      ],
+      "model_answer": "Evlilik, insan hayatındaki en kritik kararlardan biridir ve eş seçimi tarih boyunca farklı kültürlerde farklı şekillerde yapılmıştır. Modern dünyada aşkı ve tutkuyu merkeze alan 'uzun süreli flört' yöntemi yaygınken, geleneksel toplumlarda ailenin onayını ve mantığı temel alan 'görücü usulü' evlilikler hala devam etmektedir. Bence, mutlu ve sürdürülebilir bir evlilik, sadece kör bir aşka veya tamamen katı bir mantığa dayandırılamaz; ikisinin dengeli bir birleşimi olmalıdır.\n\nUzun süreli flört dönemini savunanlar, çiftlerin evlenmeden önce birbirlerinin karakterlerini, zaaflarını ve hayata bakış açılarını derinlemesine tanıdığını belirtir. Aşk ve duygusal bağ ile kurulan bu evlilikler, teoride bireylere daha fazla özgürlük ve mutluluk sunar. Ancak pratikte, tutkunun zamanla azalması ve yüksek beklentilerin karşılanamaması, bu tür evliliklerin günümüzde rekor seviyede hızlı boşanmalarla sonuçlanmasına neden olmaktadır.\n\nÖte yandan, görücü usulü evlilikler genellikle iki ailenin kültürel ve ekonomik denkliğini temel alır. Bu sistemde aşktan ziyade saygı, fedakarlık ve ailelerin desteği ön plandadır. Bu yüzden geleneksel evlilikler fırtınalı sorunlar karşısında daha dayanıklı (uzun ömürlü) olabilir. Ancak sadece mantığa ve aile baskısına dayanan, eşlerin birbirine hiç duygu beslemediği bir evlilik, uzun sürse bile gerçek anlamda 'mutlu' bir evlilik sayılmaz.\n\nSonuç olarak, günümüz dünyasında en ideal olanı 'modern görücü usulü' diyebileceğimiz yöntemdir. Yani ailelerin veya güvenilir çevrelerin tanıştırdığı, kültürel olarak denk olan iki insanın, evlenmeden önce birbirlerini tanıyıp duygusal bir bağ kurmaları için yeterli zamanı buldukları dengeli bir süreçtir. Gerçek başarı, mantığın temel attığı, aşkın ise çatıyı kurduğu evliliklerdedir."
+    },
+    {
+      "id": "bmba-yazma-19-1",
+      "exam_number": 19,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Talep)",
+      "title": "Üniversite Öğrenci İşlerine Belge Talebi",
+      "prompt": "Yurt dışındaki bir yüksek lisans programına başvurmak için İngilizce hazırlanmış resmi bir öğrenci belgesine ve not dökümüne (transkript) ihtiyacınız var. Üniversitenizin Öğrenci İşleri Daire Başkanlığı'na, bu belgeleri talep eden resmi bir e-posta yazınız. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Öğrenci İşleri Daire Başkanlığı'na resmi hitap.",
+        "Öğrenci bilgileri (isim, bölüm, öğrenci no).",
+        "Hangi belgelerin istendiği (İngilizce öğrenci belgesi ve transkript).",
+        "Belgelerin istenme amacı (yurt dışı yüksek lisans başvurusu) ve kapanış."
+      ],
+      "model_answer": "Sayın Öğrenci İşleri Daire Başkanlığı Yetkilisi,\n\nBen üniversitenizin Uluslararası İlişkiler Bölümü son sınıf öğrencilerinden biriyim. Öğrenci numaram #123456'dır.\n\nYurt dışındaki bir üniversitenin yüksek lisans programına başvuruda bulunacağım. Bu başvuru süreci için acil olarak resmi ve İngilizce hazırlanmış bir öğrenci belgesine ve güncel not dökümüne (transkript) ihtiyacım bulunmaktadır. \n\nSöz konusu belgelerin hazırlanarak tarafıma dijital (e-posta) veya basılı olarak iletilmesini saygılarımla talep ediyorum.\n\nGereğini bilgilerinize arz ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-19-2",
+      "exam_number": 19,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Sanal Gerçeklik (VR): Yeni Bir Dünya mı, Derin Bir İzolasyon mu?",
+      "prompt": "Gelişen Sanal Gerçeklik (VR) teknolojileri ve Metaverse (Sanal Evren) kavramı, insanların evlerinden çıkmadan dünyanın öbür ucunu gezmesine, konserlere katılmasına ve sosyalleşmesine imkan tanımaktadır. Bazı teknoloji uzmanları bunun insanlığa sınırsız bir özgürlük getireceğini savunurken, bazı psikologlar insanları gerçeklikten tamamen kopararak derin bir izolasyona (yalnızlığa) sürükleyeceğini iddia etmektedir. Siz bu konuda ne düşünüyorsunuz? Metaverse (sanal evren) insanlığın geleceği için faydalı mıdır yoksa zararlı mıdır? Düşüncelerinizi nedenleriyle anlatan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Sanal Gerçeklik (VR) ve Metaverse kavramlarının günlük hayata girişi hakkında bilgi.",
+        "Teknolojinin sunduğu imkanlar (sınırsız seyahat, fiziksel engellerin ortadan kalkması).",
+        "Psikolojik ve sosyal tehlikeler (gerçek hayattan kaçış, fiziksel hareketsizlik, sosyal izolasyon).",
+        "Yazarın kendi tezi (teknolojinin dozunu ayarlama ve gerçek ile sanal arasındaki denge).",
+        "Zengin sözcük dağarcığı ve etkili bir sonuç cümlesi."
+      ],
+      "model_answer": "Son yıllarda Sanal Gerçeklik (VR) gözlüklerinin ve Metaverse adı verilen dijital evrenin hayatımıza girmesi, insanlığın teknolojiyle olan ilişkisini tamamen yeni bir boyuta taşımıştır. Bu teknolojiler sayesinde insanlar evlerindeki koltuklarından kalkmadan Paris sokaklarında gezebilmekte, Mars'a ayak basabilmekte veya sanal bir konserde sosyalleşebilmektedir. Ancak bu dijital cennetin insanlığa sınırsız bir özgürlük sunduğunu iddia edenlere katılmıyorum; bence bu durum, insanı yavaş yavaş gerçek hayattan koparan derin bir izolasyonun (yalnızlığın) habercisidir.\n\nElbette VR teknolojisinin eğitim ve tıp alanındaki faydaları tartışılamaz. Tıp öğrencileri sanal ameliyatlar yaparak pratik kazanabilir veya fiziksel engeli olan bireyler, sanal dünyada hiçbir kısıtlama hissetmeden dünyayı gezebilir. \n\nAncak bu teknolojinin günlük hayatta eğlence amaçlı kontrolsüz kullanımı çok tehlikelidir. Kendi fiziksel gerçekliğinde mutsuz olan, ekonomik veya sosyal sorunlar yaşayan bireyler, sorunlarıyla yüzleşmek ve gerçek hayatlarını iyileştirmek yerine bu sanal dünyaya kaçmayı tercih edeceklerdir. Avatarı (sanal karakteri) mükemmel görünen, zengin ve kusursuz bir hayata sahip olan kişi, VR gözlüğünü çıkardığında gerçek hayatın acımasızlığıyla yüzleşecek ve derin bir depresyona girecektir. Gerçek bir kucaklaşmanın veya rüzgarı hissetmenin yerini hiçbir pikselli ekran tutamaz.\n\nSonuç olarak, sanal evrenler (Metaverse) bize harika bir teknolojik araç sunsa da, gerçek yaşamın yerini almak için değil, sadece ona renk katmak için kullanılmalıdır. İnsanoğlu sanal bulutlarda uçarken ayaklarının bastığı gerçek toprağı unutmamalıdır."
+    },
+    {
+      "id": "bmba-yazma-20-1",
+      "exam_number": 20,
+      "task_number": 1,
+      "level": "A2-B1",
+      "category": "Kısa Metin Yazma (Resmi E-posta/Bilgi Talebi)",
+      "title": "Spor Salonuna Üyelik ve Bilgi E-postası",
+      "prompt": "Yeni açılan bir spor salonuna (fitness merkezi) üye olmak istiyorsunuz. Salonun yöneticisine kısa bir e-posta yazarak aylık üyelik ücretlerini, salonun çalışma saatlerini ve üyelere özel yüzme havuzu imkanı olup olmadığını sorunuz. (Metniniz en az 60, en fazla 90 kelime olmalıdır.)",
+      "word_count": "60-90",
+      "key_points": [
+        "Spor salonu yönetimine resmi hitap.",
+        "E-postanın yazılış amacı (üye olma isteği).",
+        "Sorulması gereken 3 temel soru (ücret, çalışma saatleri, havuz).",
+        "Kapanış ve saygı ifadesi."
+      ],
+      "model_answer": "Sayın Spor Salonu Yöneticisi,\n\nMahallemizde yeni açtığınız fitness merkezinizi gördüm ve düzenli spor yapmak için salonunuza üye olmak istiyorum.\n\nKayıt işlemlerine başlamadan önce tesisiniz hakkında bazı bilgileri öğrenmek istiyorum. Salonunuzun aylık ve yıllık üyelik ücretleri ne kadardır? Tesisiniz hafta içi ve hafta sonu hangi saatler arasında (çalışma saatleri) hizmet vermektedir? Ayrıca, üyelerinizin kullanabileceği bir yüzme havuzu imkanınız var mıdır?\n\nBu konularda beni bilgilendirirseniz çok memnun olurum.\n\nİlginiz için teşekkür eder, iyi çalışmalar dilerim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+    },
+    {
+      "id": "bmba-yazma-20-2",
+      "exam_number": 20,
+      "task_number": 2,
+      "level": "B2-C1",
+      "category": "Kompozisyon / Fikir Yazısı",
+      "title": "Mutluluk ve Zenginlik: Para Mutluluğu Satın Alabilir mi?",
+      "prompt": "İnsanlık tarihi boyunca sorulan en eski sorulardan biri şudur: 'Para mutluluğu satın alabilir mi?' Bazı insanlar, temel ihtiyaçları karşılayan bir gelirin ötesinde aşırı zenginliğin insana gerçek mutluluğu getirmediğini, aksine stres ve doyumsuzluk yarattığını savunur. Diğerleri ise paranın sağladığı özgürlük ve imkanların mutluluğun ta kendisi olduğunu iddia eder. Sizce paranın mutlulukla doğrudan bir ilişkisi var mıdır? Düşüncelerinizi nedenleri, sosyolojik veya psikolojik örnekleriyle açıklayan bir kompozisyon yazınız. (Metniniz 200-250 kelime arasında olmalıdır.)",
+      "word_count": "200-250",
+      "key_points": [
+        "Para ve mutluluk kavramları arasındaki ilişkinin felsefi ve toplumsal tanıtımı.",
+        "Paranın temel ihtiyaçları (barınma, sağlık, güvenlik) karşılamadaki kritik rolü.",
+        "Aşırı zenginliğin getirdiği doyumsuzluk (Hedonik adaptasyon) ve ruhsal yalnızlık.",
+        "Gerçek mutluluğun kaynağına dair yazarın kişisel ve dengeli tezi.",
+        "İleri düzey kelime dağarcığı ve sonuç bölümü."
+      ],
+      "model_answer": "Para ve mutluluk arasındaki ilişki, yüzyıllardır hem filozofların hem de sıradan insanların en çok tartıştığı konulardan biridir. 'Para mutluluğu satın alamaz' sözü genellikle zenginlerin yoksulları teselli etmek için uydurduğu romantik bir yalan olarak görülse de, durum aslında çok daha karmaşıktır. Bence para, mutluluğun temelini atmak (insani şartlarda yaşamak) için kesinlikle şarttır; ancak bir noktadan sonra biriken servet ruhsal bir boşluktan başka bir şey getirmez.\n\nÖncelikle, parasızlığın ve yoksulluğun mutluluk getiremeyeceği çok açıktır. Kirasını ödeyemeyen, çocuklarının sağlık ve eğitim masraflarını karşılayamayan bir insanın sadece 'sevgi' ile mutlu olması imkansızdır. Para, insana özgürlük, güvenlik ve sağlık hizmetlerine ulaşım imkanı sağlar. Bu anlamda para, mutsuzluğu (kaygıyı) ortadan kaldırma gücüne sahiptir.\n\nAncak psikolojide 'Hedonik Adaptasyon' (haz alışkanlığı) adı verilen bir kural vardır. İnsan beyni, elde ettiği lükse ve zenginliğe çok çabuk alışır. Hayalinizdeki o milyon dolarlık spor arabayı aldığınızda hissettiğiniz coşku sadece birkaç ay sürer. Bir süre sonra o araba sizin için sıradan bir tenekeye dönüşür ve daha iyisini istersiniz. Aşırı zenginlik, insanı bitmek bilmeyen bir tüketim yarışına sokar ve hayatın küçük detaylarındaki (bir dost sohbetindeki) samimi neşeyi yok eder.\n\nSonuç olarak, para mutluluğu doğrudan satın alan bir bilet değil, sadece mutluluğa giden yoldaki taşları temizleyen bir araçtır. Temel ihtiyaçlarımız karşılandıktan sonra gerçek mutluluk banka hesaplarımızda değil; ailemizle kurduğumuz bağlarda, sağlığımızda ve ürettiğimiz değerlerde saklıdır."
+    }
+  ]
+}

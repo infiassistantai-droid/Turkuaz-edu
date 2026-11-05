@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Sanat ve Müzik",
+      "questions": [
+        "Hangi müzik türlerini dinlemekten hoşlanırsınız? Favori bir şarkıcınız veya grubunuz var mı?",
+        "Bir müzik aleti (enstrüman) çalıyor musunuz veya çalmayı ister miydiniz? Neden?",
+        "Müze veya sanat galerisi gezmeyi sever misiniz?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Unutulmaz Bir Konser veya Etkinlik",
+      "prompt": "Hayatınızda katıldığınız ve sizi çok etkileyen bir konseri, tiyatro oyununu veya kültürel etkinliği anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Etkinliğin ne olduğu, ne zaman ve nerede yapıldığı.",
+        "Bu etkinliğe kiminle gittiğiniz ve atmosferin nasıl olduğu.",
+        "O gün hissettiğiniz duygular ve etkinliğin en unutulmaz anı.",
+        "Böyle kültürel etkinliklere katılmanın insan psikolojisine etkileri hakkındaki düşünceniz."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Sanatın Toplumsal Rolü ve Desteklenmesi",
+      "questions": [
+        "Toplumun kültürel seviyesini yükseltmek için devletin sanatı (tiyatro, sinema, resim) maddi olarak desteklemesi şart mıdır? Sanat tamamen özel sektöre mi bırakılmalıdır?",
+        "Bazı kişiler klasik sanat eserlerinin (örneğin Mozart'ın müziklerinin veya Da Vinci'nin tablolarının) modern dijital sanattan çok daha değerli olduğunu savunur. Sanatta 'klasik' ve 'modern' ayrımı hakkında ne düşünüyorsunuz?"
+      ]
+    }
+  }
+]

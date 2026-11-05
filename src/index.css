@@ -186,10 +186,40 @@ html {
 .mascot-wiggle { animation: mascotWiggle 1.8s ease-in-out infinite; }
 .mascot-focus { animation: mascotFocus 3.4s ease-in-out infinite; }
 .mascot-hint { animation: mascotHint 1.8s ease-in-out infinite; }
+.mascot-cat-traveler {
+  transform-style: preserve-3d;
+  perspective: 650px;
+  animation: mascotCatRoam 8s cubic-bezier(.44, 0, .56, 1) infinite;
+  will-change: transform;
+}
+.mascot-cat-traveler-bubble-open { animation-name: mascotCatRoamCompact; }
+.van-cat-button { transform-style: preserve-3d; }
+.mascot-art-3d {
+  transform: translateZ(14px) rotateY(-2deg);
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(.2,.75,.25,1);
+}
+.van-cat-button:hover .mascot-art-3d,
+.van-cat-button:focus-visible .mascot-art-3d {
+  transform: translateZ(24px) rotateY(8deg) rotateX(-2deg);
+}
+@keyframes mascotCatRoam {
+  0%, 100% { transform: perspective(650px) translate3d(0, 0, 0) rotateY(-5deg); }
+  25% { transform: perspective(650px) translate3d(-22px, -6px, 0) rotateY(9deg) rotateZ(-3deg); }
+  50% { transform: perspective(650px) translate3d(-5px, 1px, 6px) rotateY(-7deg) rotateZ(2deg); }
+  75% { transform: perspective(650px) translate3d(-18px, -4px, 0) rotateY(7deg) rotateZ(-2deg); }
+}
+@keyframes mascotCatRoamCompact {
+  0%, 100% { transform: perspective(650px) translate3d(0, 0, 0) rotateY(-4deg); }
+  25% { transform: perspective(650px) translate3d(-8px, -4px, 0) rotateY(6deg) rotateZ(-2deg); }
+  50% { transform: perspective(650px) translate3d(-2px, 0, 4px) rotateY(-5deg) rotateZ(1deg); }
+  75% { transform: perspective(650px) translate3d(-7px, -3px, 0) rotateY(5deg) rotateZ(-1deg); }
+}
 @media (prefers-reduced-motion: reduce) {
   .onboarding-step-enter,
   .animate-onboarding-progress,
   .mascot-bubble,
+  .mascot-cat-traveler,
   .mascot-breathe,
   .mascot-cheer,
   .mascot-wiggle,
@@ -197,6 +227,8 @@ html {
   .mascot-hint,
   .mascot-speed-cheer { animation-duration: 1ms; animation-iteration-count: 1; }
   .reading-audio-wave.is-playing span { animation-duration: 1ms; animation-iteration-count: 1; }
+  .mascot-cat-traveler { animation: none; }
+  .mascot-art-3d { transition: none; }
 }
 .animate-drawerin {
   animation: drawerIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;

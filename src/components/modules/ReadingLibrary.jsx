@@ -717,6 +717,7 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
     return (
       <OkumaModule
         completeLevel={completeLevel}
+        profile={profile}
         premium={premium}
         onPerfectScore={() => {
           onFlawlessQuiz?.()

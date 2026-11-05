@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Alışveriş ve İndirimler",
+      "questions": [
+        "Alışveriş yaparken indirim dönemlerini (örneğin Efsane Cuma / Black Friday) takip eder misiniz?",
+        "Kıyafet alırken marka olmasına önem verir misiniz, yoksa sadece beğendiğiniz için mi alırsınız?",
+        "İkinci el (kullanılmış) eşya veya kıyafet satın alır mısınız? Neden?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Pişman Olunan Bir Alışveriş",
+      "prompt": "Hayatınızda satın aldığınız ancak sonradan çok pişman olduğunuz (veya hiç kullanmadığınız) bir eşyayı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu eşyanın ne olduğu ve ne zaman satın alındığı.",
+        "Satın alırken sizi neyin motive ettiği (reklamlar, indirim, tavsiye vb.).",
+        "Bu ürünü neden kullanmadığınız veya neden pişman olduğunuz.",
+        "Bu olaydan sonra alışveriş alışkanlıklarınızda nelerin değiştiği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Reklam Psikolojisi ve Minimalizm",
+      "questions": [
+        "Büyük markaların 'İhtiyacın var' hissini yaratmak için kullandığı psikolojik reklam taktikleri hakkında ne düşünüyorsunuz? Modern insan neden sürekli tüketmeye açtır?",
+        "Günümüzde yaygınlaşan 'Minimalizm' (Sade Yaşam) akımının, kapitalist tüketim toplumuna karşı güçlü bir çözüm (isyan) olabileceğine inanıyor musunuz?"
+      ]
+    }
+  }
+]

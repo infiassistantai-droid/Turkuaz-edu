@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Spor ve Fiziksel Aktivite",
+      "questions": [
+        "Düzenli olarak spor yapar mısınız? Hangi spor dallarıyla ilgileniyorsunuz?",
+        "Sizce insanların sağlıklı kalmak için mutlaka spor salonuna gitmesi şart mıdır? Neden?",
+        "Televizyonda spor müsabakalarını (futbol, basketbol vb.) izlemeyi sever misiniz? Hangi takımı tutuyorsunuz?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Tarihteki Önemli Bir Olay",
+      "prompt": "Ülkenizin veya dünyanın tarihinde gerçekleşmiş ve sizi çok etkileyen bir olayı anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Bu tarihi olayın ne olduğu ve ne zaman gerçekleştiği.",
+        "Olayın temel sebepleri ve nasıl geliştiği.",
+        "Sizi kişisel olarak neden bu kadar çok etkilediği.",
+        "Bu olayın bugünün dünyasını veya toplumunu nasıl şekillendirdiği."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Profesyonel Spor ve Aşırı Ticarileşme",
+      "questions": [
+        "Günümüzde profesyonel futbolcu veya basketbolcuların astronomik (çok yüksek) maaşlar almasını adil buluyor musunuz? Bir doktor veya öğretmenden yüzlerce kat fazla kazanmaları toplumsal adaleti zedeler mi?",
+        "Profesyonel sporun (örneğin Olimpiyatların veya Dünya Kupası'nın) artık bir spordan ziyade, devasa bir 'ticari sektöre' ve reklam şovuna dönüştüğünü düşünüyor musunuz?"
+      ]
+    }
+  }
+]

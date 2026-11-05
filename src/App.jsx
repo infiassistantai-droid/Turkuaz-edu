@@ -45,7 +45,23 @@ import { useWinterUpdate } from './features/winter/WinterUpdateContext'
 import { getWinterStudyDayCount, normalizeWinterStudy, recordWinterStudyDay } from './features/winter/winterSeason'
 
 // Learner stats and skill results start empty and are persisted after real activity.
-const DEFAULT_STATS = { xp: 0, streak: 0, streakMilestones: [], winterStudy: { seasonId: null, days: [] }, completedQuizzes: 0, readingCompletedCount: 0, readingPerfectExamAchieved: false, listeningLessonsCompleted: 0, savedWordsCount: 0, flawlessQuizAchieved: false, speedBonusAchieved: false, trophyUnlocks: [], weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
+const DEFAULT_STATS = { xp: 0, streak: 0, streakMilestones: [], winterStudy: { seasonId: null, days: [] }, completedQuizzes: 0, readingCompletedCount: 0, readingPerfectExamAchieved: false, listeningLessonsCompleted: 0, moduleScores: {}, savedWordsCount: 0, flawlessQuizAchieved: false, speedBonusAchieved: false, trophyUnlocks: [], weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
+
+function mergeModuleScores(localScores, cloudScores) {
+  const merged = localScores && typeof localScores === 'object' && !Array.isArray(localScores) ? { ...localScores } : {}
+  if (!cloudScores || typeof cloudScores !== 'object' || Array.isArray(cloudScores)) return merged
+  for (const [testId, cloudRecord] of Object.entries(cloudScores)) {
+    if (!cloudRecord || typeof cloudRecord !== 'object' || Array.isArray(cloudRecord)) continue
+    const localRecord = merged[testId] && typeof merged[testId] === 'object' ? merged[testId] : {}
+    merged[testId] = {
+      ...localRecord,
+      ...cloudRecord,
+      best: Math.max(Number(localRecord.best ?? localRecord.bestScore) || 0, Number(cloudRecord.best ?? cloudRecord.bestScore) || 0),
+      attempts: Math.max(Number(localRecord.attempts) || 0, Number(cloudRecord.attempts) || 0),
+    }
+  }
+  return merged
+}
 const STREAK_MILESTONE_STORAGE_PREFIX = 'turkuaz-edu-streak-milestones-v1:'
 const TROPHY_UNLOCK_STORAGE_PREFIX = 'turkuaz-edu-trophy-unlocks-v1:'
 const DEFAULT_PROGRESS = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }
@@ -102,6 +118,16 @@ function getLearnerProfileFromAuth(user, targetLevel, hasExistingProgress = true
     onboardingCompleted: typeof metadata.onboarding_completed === 'boolean' ? metadata.onboarding_completed : forceOnboarding ? false : Boolean(hasExistingProgress),
     userId: user?.id,
   }
+}
+
+function preserveCachedProfileAvatar(profile, cachedProfile, matchesSession) {
+  if (!matchesSession || !cachedProfile) return profile
+  const avatarField = Object.prototype.hasOwnProperty.call(cachedProfile, 'avatarUrl')
+    ? 'avatarUrl'
+    : Object.prototype.hasOwnProperty.call(cachedProfile, 'avatar_url')
+      ? 'avatar_url'
+      : null
+  return avatarField ? { ...profile, avatarUrl: cachedProfile[avatarField] || null } : profile
 }
 
 function getDailyQuestProgress(stats, dateKey = localDateKey()) {
@@ -452,6 +478,7 @@ export default function App() {
         winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
         savedWordsCount: getSavedWordCount(),
         completedLessons: row?.completed_lessons || current.completedLessons || [],
+        moduleScores: mergeModuleScores(current.moduleScores, row?.module_scores),
         weeklyXp: row?.weekly_xp ?? current.weeklyXp ?? 0,
         weekStart: row?.week_start ?? current.weekStart ?? null,
         lastActivityDate: row?.last_activity_date || cloudStreak?.last_active_date || current.lastActivityDate || null,
@@ -462,7 +489,8 @@ export default function App() {
         skillsCompleted: row?.completed_lessons || current.skillsCompleted || [],
       }))
       const hasExistingProgress = progressLookupSucceeded ? Boolean(row || cloudProfile || cloudStreak) : true
-      setProfile(getLearnerProfileFromAuth(session.user, row?.target_level || metadata.target_level, hasExistingProgress, forceOnboarding, cloudProfile))
+      const learnerProfile = getLearnerProfileFromAuth(session.user, row?.target_level || metadata.target_level, hasExistingProgress, forceOnboarding, cloudProfile)
+      setProfile(preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession))
       setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures)
       setAuthLoading(false)
     }
@@ -574,7 +602,8 @@ export default function App() {
     if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
     const metadata = data.user.user_metadata || {}
     const forceOnboarding = hasPendingOnboarding(data.user.id)
-    const learner = getLearnerProfileFromAuth(data.user, row?.target_level || metadata.target_level, progressLookupSucceeded ? Boolean(row || cloudData?.profile || cloudData?.streak) : true, forceOnboarding, cloudData?.profile)
+    const learnerProfile = getLearnerProfileFromAuth(data.user, row?.target_level || metadata.target_level, progressLookupSucceeded ? Boolean(row || cloudData?.profile || cloudData?.streak) : true, forceOnboarding, cloudData?.profile)
+    const learner = preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession)
     setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures); setAuthLoading(false)
     const remoteAchievements = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
       .filter((record) => record && typeof record === 'object' && typeof record.trophy_id === 'string')
@@ -590,6 +619,7 @@ export default function App() {
       winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
       savedWordsCount: getSavedWordCount(),
       completedLessons: row?.completed_lessons || current.completedLessons || [],
+      moduleScores: mergeModuleScores(current.moduleScores, row?.module_scores),
       skillsCompleted: row?.completed_lessons || current.skillsCompleted || [],
       weeklyXp: row?.weekly_xp ?? current.weeklyXp ?? 0,
       weekStart: row?.week_start ?? current.weekStart ?? null,
@@ -996,8 +1026,8 @@ export default function App() {
   // ------------------------------ views --------------------------------
 
   const renderView = () => {
-    // The dashboard, daily plan, and Reading Library are currently available.
-    if (active !== 'home' && active !== 'plan' && active !== 'okuma' && active !== 'dinleme' && active !== 'lugat' && active !== 'writing-practice') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
+    // Keep only modules without an implementation behind the Coming Soon screen.
+    if (active !== 'home' && active !== 'plan' && active !== 'okuma' && active !== 'dinleme' && active !== 'lugat' && active !== 'writing-practice' && active !== 'yazma' && active !== 'konusma') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
 
     switch (active) {
       case 'home':
@@ -1014,12 +1044,35 @@ export default function App() {
         return <Dinleme
           key={profile?.userId || profile?.email || 'local'}
           profile={profile}
+          moduleScores={stats.moduleScores}
           isPremium={isPremium}
           dark={dark}
-          onLessonComplete={({ scorePct, xpAward, firstCompletion, completedCount }) => {
-            setStats((current) => current.listeningLessonsCompleted === completedCount ? current : { ...current, listeningLessonsCompleted: completedCount })
-            if (!firstCompletion) return
+          onLessonComplete={({ testId, scorePct, xpAward, firstCompletion, completedCount }) => {
             const saved = saveScore('dinleme', { best: scorePct, attempts: 1 })
+            const previousCloudRecord = stats.moduleScores?.[testId]
+            const alreadySyncedCompletion = Boolean(previousCloudRecord?.completedAt || Number(previousCloudRecord?.xpAwarded) > 0)
+            const shouldAwardProgress = firstCompletion && !alreadySyncedCompletion
+            const completedAt = previousCloudRecord?.completedAt || new Date().toISOString()
+            setStats((current) => {
+              const moduleScores = current.moduleScores && typeof current.moduleScores === 'object' ? current.moduleScores : {}
+              const previous = moduleScores[testId] || {}
+              return {
+                ...current,
+                listeningLessonsCompleted: completedCount,
+                moduleScores: {
+                  ...moduleScores,
+                  [testId]: {
+                    ...previous,
+                    best: Math.max(Number(previous.best) || 0, scorePct),
+                    attempts: (Number(previous.attempts) || 0) + 1,
+                    completedAt: previous.completedAt || completedAt,
+                    xpAwarded: Math.max(0, Number(previous.xpAwarded) || 0) + (shouldAwardProgress ? xpAward : 0),
+                    updatedAt: new Date().toISOString(),
+                  },
+                },
+              }
+            })
+            if (!shouldAwardProgress) return
             completeLevel('dinleme', saved.best, xpAward)
             recordListeningQuest()
           }}
@@ -1027,9 +1080,9 @@ export default function App() {
       case 'writing-practice':
         return <Yozish onEarnXp={addXp} onReturnToDashboard={() => navigate('home')} isPremium={isPremium} dark={dark} />
       case 'yazma':
-        return <YazmaModule completeLevel={(percent, award) => completeLevel('yazma', percent, award)} />
+        return <YazmaModule key={profile?.userId || profile?.email || 'local'} profileId={profile?.userId || profile?.email || 'local'} completeLevel={(percent, award) => completeLevel('yazma', percent, award)} />
       case 'konusma':
-        return <KonusmaModule onComplete={(xp = 35) => completeLevel('konusma', undefined, xp)} />
+        return <KonusmaModule key={profile?.userId || profile?.email || 'local'} profileId={profile?.userId || profile?.email || 'local'} onComplete={(xp = 35) => completeLevel('konusma', undefined, xp)} />
       case 'lugat':
         return <Kelimeler
           key={profile?.userId || profile?.email || 'local'}

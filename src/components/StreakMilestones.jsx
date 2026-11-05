@@ -6,7 +6,7 @@ import { getNextStreakMilestone, STREAK_MILESTONES } from '../lib/streakMileston
 import { useWinterUpdate } from '../features/winter/WinterUpdateContext'
 import { getWinterStudyDayCount, WINTER_CHAMPION_DAYS } from '../features/winter/winterSeason'
 
-export default function StreakMilestones({ currentStreak = 0, unlockedMilestones = [], isPremium = false, compact = false, showHeader = true, winterStudy = null, winterChampionUnlocked = false }) {
+export default function StreakMilestones({ currentStreak = 0, unlockedMilestones = [], isPremium = false, compact = false, showHeader = true, winterStudy = null, winterChampionUnlocked = false, showcaseUnlocked = false }) {
   const { language, t } = useI18n()
   const { featureEnabled: winterFeatureEnabled } = useWinterUpdate()
   const winterDays = getWinterStudyDayCount(winterStudy)
@@ -65,9 +65,16 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
         </header>
       )}
 
+      {showcaseUnlocked && (
+        <p className={cn('mx-3 mt-3 rounded-xl border px-3 py-2 text-[10px] font-semibold leading-relaxed sm:mx-4', isPremium ? 'border-amber-200/10 bg-amber-100/[.04] text-amber-100/75' : 'border-amber-100 bg-amber-50/70 text-amber-900/75 dark:border-amber-200/10 dark:bg-amber-300/[.04] dark:text-amber-100/70')}>
+          {t('streak.showcase.previewNote')}
+        </p>
+      )}
+
       <div className={cn('grid grid-cols-4 gap-2.5 p-3 sm:grid-cols-6 sm:gap-3 sm:p-4', compact && 'xl:grid-cols-12')}>
         {STREAK_MILESTONES.map((milestone) => {
           const unlocked = unlockedSet.has(milestone.days)
+          const visuallyUnlocked = unlocked || showcaseUnlocked
           const selected = selectedMilestone.days === milestone.days
           return (
             <button
@@ -75,18 +82,20 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
               type="button"
               onClick={() => setSelectedDays(milestone.days)}
               aria-pressed={selected}
-              aria-label={t('streak.badge.aria', {
+              aria-label={t(showcaseUnlocked ? 'streak.badge.showcaseAria' : 'streak.badge.aria', {
                 days: milestone.days.toLocaleString(language),
                 status: t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked'),
               })}
-              title={`${t('streak.milestone.title', { days: milestone.days.toLocaleString(language) })} · ${t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked')}`}
+              title={showcaseUnlocked
+                ? t('streak.badge.showcaseAria', { days: milestone.days.toLocaleString(language), status: t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked') })
+                : `${t('streak.milestone.title', { days: milestone.days.toLocaleString(language) })} · ${t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked')}`}
               className={cn(
                 'group relative flex min-w-0 flex-col items-center rounded-xl border p-1.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2',
                 isPremium
                   ? 'border-white/10 bg-white/[.035] hover:border-amber-200/30 hover:bg-white/[.07] focus-visible:ring-amber-200/50'
                   : 'border-slate-100 bg-slate-50/70 hover:border-amber-200 hover:bg-amber-50/40 focus-visible:ring-teal-500/40 dark:border-slate-700 dark:bg-slate-800/70 dark:hover:border-amber-200/30 dark:hover:bg-slate-800',
                 selected && (isPremium ? 'border-amber-200/45 bg-amber-300/[.08] shadow-[0_0_24px_rgba(250,204,21,.12)]' : 'border-amber-300 bg-amber-50/70 shadow-md shadow-amber-900/5 dark:bg-amber-300/10'),
-                unlocked && 'hover:-translate-y-0.5',
+                visuallyUnlocked && 'hover:-translate-y-0.5',
               )}
             >
               <span className="relative grid aspect-square w-full place-items-center">
@@ -97,30 +106,30 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
                   draggable="false"
                   className={cn(
                     'size-full object-contain transition-all duration-300',
-                    unlocked
+                    visuallyUnlocked
                       ? isPremium
                         ? 'drop-shadow-[0_0_15px_rgba(250,204,21,.35)] group-hover:drop-shadow-[0_0_22px_rgba(250,204,21,.58)]'
                         : 'drop-shadow-[0_4px_9px_rgba(120,78,10,.22)] group-hover:drop-shadow-[0_5px_16px_rgba(217,119,6,.4)]'
                       : 'grayscale opacity-40',
                   )}
                 />
-                {unlocked ? (
+                {visuallyUnlocked ? (
                   <span className={cn(
                     'absolute right-0 top-0 grid size-5 place-items-center rounded-full border shadow-md',
                     isPremium ? 'border-emerald-200/40 bg-emerald-300 text-emerald-950 shadow-emerald-500/25' : 'border-white bg-emerald-500 text-white shadow-emerald-900/20',
-                  )} aria-label={t('streak.status.unlocked')}>
+                  )} aria-hidden="true">
                     <Check className="size-3" aria-hidden="true" />
                   </span>
                 ) : (
-                  <span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full border border-white/20 bg-slate-950/80 text-white shadow-md" aria-label={t('streak.status.locked')}>
+                  <span className="absolute right-0 top-0 grid size-5 place-items-center rounded-full border border-white/20 bg-slate-950/80 text-white shadow-md" aria-hidden="true">
                     <Lock className="size-3" aria-hidden="true" />
                   </span>
                 )}
-                {selected && unlocked && (
+                {selected && visuallyUnlocked && (
                   <Sparkles className={cn('absolute left-0 top-0 size-4 animate-pulse', isPremium ? 'text-yellow-100' : 'text-amber-500')} aria-hidden="true" />
                 )}
               </span>
-              <span className={cn('mt-1 max-w-full truncate text-[10px] font-black tabular-nums sm:text-xs', unlocked ? isPremium ? 'text-amber-100' : 'text-amber-800 dark:text-amber-200' : isPremium ? 'text-white/45' : 'text-slate-500 dark:text-slate-400')}>
+              <span className={cn('mt-1 max-w-full truncate text-[10px] font-black tabular-nums sm:text-xs', visuallyUnlocked ? isPremium ? 'text-amber-100' : 'text-amber-800 dark:text-amber-200' : isPremium ? 'text-white/45' : 'text-slate-500 dark:text-slate-400')}>
                 {milestone.days.toLocaleString(language)} {t('streak.days')}
               </span>
             </button>

@@ -1,0 +1,35 @@
+[
+  {
+    "part_1": {
+      "level": "A1-B1",
+      "category": "Isınma ve Günlük Sorular (Warm-up)",
+      "topic": "Dil Öğrenimi ve Kültür",
+      "questions": [
+        "Yabancı bir dil (örneğin Türkçe veya İngilizce) öğrenirken en çok hangi konuda zorlanıyorsunuz (konuşma, dinleme, gramer)?",
+        "Sizce bir dili öğrenmenin en iyi yolu nedir? (Kurs, kitaplar, o ülkeye gitmek vb.)",
+        "Yabancı bir dil bilmek hayatınızda size ne gibi avantajlar sağladı?"
+      ]
+    },
+    "part_2": {
+      "level": "B1-B2",
+      "category": "Monolog (Konu Anlatımı)",
+      "topic": "Farklı Bir Kültürde Yaşamak",
+      "prompt": "Yabancı bir ülkede (veya tamamen farklı bir kültürde) yaşama deneyiminizi veya yaşamak istediğiniz ülkeyi anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
+      "key_points": [
+        "Hangi ülkede yaşadığınız (veya yaşamak istediğiniz).",
+        "O kültürde sizi en çok şaşırtan, zorlayan veya hayran bırakan şeyin ne olduğu.",
+        "Yemek, insan ilişkileri ve kurallar açısından kendi ülkenizle arasındaki farklar.",
+        "Bu farklı kültürde yaşamanın dünya görüşünüze (karakterinize) kattığı olumlu şeyler."
+      ]
+    },
+    "part_3": {
+      "level": "C1",
+      "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
+      "topic": "Küresel Dil ve Kültürel Asimilasyon",
+      "questions": [
+        "İngilizcenin günümüzde mutlak bir 'küresel dil' (Lingua Franca) haline gelmesinin diğer yerel dilleri ve kültürleri yok etme tehlikesi taşıdığına katılıyor musunuz?",
+        "Göçmenlerin gittikleri yeni ülkede kendi kültürlerini korumaları mı, yoksa tamamen o ülkenin kültürüne entegre (asimile) olmaları mı daha doğrudur? Sınır nerede çizilmelidir?"
+      ]
+    }
+  }
+]

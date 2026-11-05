@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
-import { Bell, Check, ChevronLeft, ChevronRight, GraduationCap, LoaderCircle, Lock, Mail, ShieldCheck, Sparkles, Target, User, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Bell, Camera, Check, ChevronLeft, ChevronRight, GraduationCap, LoaderCircle, Lock, Mail, ShieldCheck, Sparkles, Target, Trash2, User, X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 import { ONBOARDING_PENDING_KEY } from '../lib/storage'
 import { supabase } from '../lib/supabase'
+import ProfileAvatar from './ProfileAvatar'
 
 const LEVELS = [
   { id: 'B1', subtitleKey: 'auth.level.B1.name', descriptionKey: 'auth.level.B1.desc' },
@@ -58,6 +59,31 @@ function normalizeEmail(value) {
 function splitFullName(value) {
   const [name = '', ...surname] = value.trim().split(/\s+/u).filter(Boolean)
   return { name, surname: surname.join(' ') }
+}
+
+async function compressProfilePhoto(file) {
+  const objectUrl = URL.createObjectURL(file)
+  try {
+    const image = new Image()
+    image.src = objectUrl
+    await image.decode()
+    if (!image.naturalWidth || !image.naturalHeight || image.naturalWidth * image.naturalHeight > 40_000_000) {
+      throw new Error('Unsupported image dimensions')
+    }
+    const scale = Math.min(1, 320 / Math.max(image.naturalWidth, image.naturalHeight))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale))
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale))
+    const context = canvas.getContext('2d')
+    if (!context) throw new Error('Image processing is unavailable')
+    context.drawImage(image, 0, 0, canvas.width, canvas.height)
+    const webp = canvas.toDataURL('image/webp', 0.82)
+    const compressed = webp.startsWith('data:image/webp,') ? webp : canvas.toDataURL('image/jpeg', 0.82)
+    if (compressed.length > 550_000) throw new Error('Compressed photo is too large')
+    return compressed
+  } finally {
+    URL.revokeObjectURL(objectUrl)
+  }
 }
 
 function createSalt() {
@@ -169,6 +195,9 @@ export default function ProfileSetupModal({
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [reminderBusy, setReminderBusy] = useState(false)
+  const [photoBusy, setPhotoBusy] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatarUrl || profile?.avatar_url || '')
+  const photoInputRef = useRef(null)
   const isEdit = mode === 'edit'
   const premium = Boolean(isPremium)
 
@@ -183,11 +212,13 @@ export default function ProfileSetupModal({
       setFullName([profile.name, profile.surname].filter(Boolean).join(' '))
       setEmail(profile.email || '')
       setLevel(profile.targetLevel || '')
+      setAvatarUrl(profile.avatarUrl || profile.avatar_url || '')
     } else {
       setTab(mode === 'auth' && hasProfile ? 'login' : 'signup')
       setFullName(profile ? [profile.name, profile.surname].filter(Boolean).join(' ') : '')
       setEmail(profile?.email || '')
       setLevel(profile?.targetLevel || '')
+      setAvatarUrl(profile?.avatarUrl || profile?.avatar_url || '')
     }
   }, [open, mode, isEdit, hasProfile, profile])
 
@@ -199,6 +230,29 @@ export default function ProfileSetupModal({
     if (cleanName.length < 2) return t('auth.error.name')
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(normalized)) return t('auth.error.email')
     return ''
+  }
+
+  const handlePhotoSelect = async (event) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setError(t('profile.photo.invalidType'))
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError(t('profile.photo.tooLarge'))
+      return
+    }
+    setError('')
+    setPhotoBusy(true)
+    try {
+      setAvatarUrl(await compressProfilePhoto(file))
+    } catch {
+      setError(t('profile.photo.processingError'))
+    } finally {
+      setPhotoBusy(false)
+    }
   }
 
   const continueRegistration = (event) => {
@@ -239,6 +293,7 @@ export default function ProfileSetupModal({
       ...splitFullName(fullName),
       email: normalizeEmail(email),
       targetLevel: level,
+      avatarUrl: avatarUrl || null,
     })
   }
 
@@ -319,6 +374,30 @@ export default function ProfileSetupModal({
 
         {isEdit ? (
           <form onSubmit={saveProfileChanges} className="mt-6 space-y-6">
+            <section className={cn('flex flex-col gap-4 rounded-2xl border p-4 sm:flex-row sm:items-center', premium ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
+              <ProfileAvatar profile={{ ...profile, avatarUrl }} sizeClass="size-16 rounded-2xl" className="ring-2 ring-white/40 dark:ring-white/10" />
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-bold">{t('profile.photo.title')}</h3>
+                <p className={cn('mt-1 text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('profile.photo.savedLocally')}</p>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="sr-only"
+                  onChange={handlePhotoSelect}
+                  aria-label={t('profile.photo.title')}
+                />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()} className={cn('inline-flex min-h-9 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold disabled:cursor-wait disabled:opacity-60', secondaryButton)}>
+                    {photoBusy ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : <Camera className="size-3.5" aria-hidden="true" />}
+                    {t(avatarUrl ? 'profile.photo.replace' : 'profile.photo.upload')}
+                  </button>
+                  {avatarUrl && <button type="button" disabled={photoBusy} onClick={() => { setAvatarUrl(''); setError('') }} className={cn('inline-flex min-h-9 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold disabled:opacity-60', secondaryButton)}>
+                    <Trash2 className="size-3.5" aria-hidden="true" />{t('profile.photo.remove')}
+                  </button>}
+                </div>
+              </div>
+            </section>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field icon={User} label={t('auth.name')} value={fullName} onChange={setFullName} placeholder={t('auth.name.placeholder')} autoComplete="name" premium={premium} />
               <Field icon={Mail} label={t('auth.email')} type="email" value={email} onChange={setEmail} placeholder={t('auth.email.placeholder')} autoComplete="email" premium={premium} />
