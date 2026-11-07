@@ -66,7 +66,7 @@ function daysUntilExam() {
   return Math.max(0, Math.ceil((exam.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
 }
 
-export default function KunlikReja({ stats, progress, navigate, addXp, isPremium = false }) {
+export default function KunlikReja({ stats, navigate, addXp, isPremium = false }) {
   const { t, language } = useI18n()
   const today = new Date().toLocaleDateString('en-CA')
   const storageKey = `turkish-marathon-daily-plan-${today}`

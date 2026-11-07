@@ -16,7 +16,7 @@
       "part_2": {
         "level": "B1-B2",
         "category": "Monolog (Konu Anlatımı)",
-        "topic": "Unutulmaz Bir Seyehat",
+        "topic": "Unutulmaz Bir Seyahat",
         "prompt": "Hayatınızda yaptığınız en unutulmaz yolculuğu veya tatili anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
         "key_points": [
           "Bu yolculuğu nereye, ne zaman ve kiminle yaptığınız.",
@@ -64,7 +64,7 @@
         "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
         "topic": "Yapay Zeka ve Gelecek",
         "questions": [
-          "Son yıllarda hızla gelişen yapay zeka teknolojilerinin (örneğin robotların), gelecekte insanların işlerini elinden alıp devasa bir işsizliğe yol açacağını mı, yoksa yeni iş alanları yaratacağını mı düşünüyorsunuz?",
+          "Son yıllarda hızla gelişen yapay zekâ teknolojilerinin (örneğin robotların), gelecekte insanların işlerini elinden alıp devasa bir işsizliğe yol açacağını mı, yoksa yeni iş alanları yaratacağını mı düşünüyorsunuz?",
           "Bazı sosyologlar, teknolojinin insanları birbirine bağlamak yerine 'asosyal' ve yalnız bireylere dönüştürdüğünü savunuyor. Bu görüşe katılıyor musunuz? Toplumsal ilişkilerimiz bu durumdan nasıl etkileniyor?"
         ]
       }
@@ -200,7 +200,7 @@
         "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
         "topic": "Otonom (Sürücüsüz) Araçlar ve Gelecek",
         "questions": [
-          "Gelecekte trafiğin tamamen yapay zeka tarafından yönetilen sürücüsüz (otonom) araçlardan oluşacağını hayal edin. Bu durum kazaları sıfıra indirir mi, yoksa teknolojinin çökmesi ihtimali daha büyük bir felakete mi yol açar?",
+          "Gelecekte trafiğin tamamen yapay zekâ tarafından yönetilen sürücüsüz (otonom) araçlardan oluşacağını hayal edin. Bu durum kazaları sıfıra indirir mi, yoksa teknolojinin çökmesi ihtimali daha büyük bir felakete mi yol açar?",
           "Trafiği ve hava kirliliğini azaltmak için büyük şehirlerin merkezine (şehir içine) özel araçların girmesinin tamamen yasaklanması fikrine katılıyor musunuz?"
         ]
       }
@@ -268,7 +268,7 @@
         "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
         "topic": "Sanat ve Sansür",
         "questions": [
-          "Sizce sinema, edebiyat veya müzik gibi sanat dalları toplumu eğitmekle mi görevlidir, yoksa sadece özgürce hikaye anlatmakla mı?",
+          "Sizce sinema, edebiyat veya müzik gibi sanat dalları toplumu eğitmekle mi görevlidir, yoksa sadece özgürce hikâye anlatmakla mı?",
           "Devletlerin, toplum ahlakını veya siyasi düzeni korumak amacıyla sanat eserlerine (filmlere, kitaplara) 'sansür' uygulamasını doğru buluyor musunuz? Sanat tamamen sınırsız mı olmalıdır?"
         ]
       }
@@ -438,7 +438,7 @@
         "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
         "topic": "Bilim Kurgu Gerçek mi Oluyor?",
         "questions": [
-          "Geçmişte bilim kurgu filmlerinde gördüğümüz (yapay zeka, akıllı evler, uzay seyahati) birçok teknolojinin bugün gerçek olması sizi korkutuyor mu, yoksa heyecanlandırıyor mu?",
+          "Geçmişte bilim kurgu filmlerinde gördüğümüz (yapay zekâ, akıllı evler, uzay seyahati) birçok teknolojinin bugün gerçek olması sizi korkutuyor mu, yoksa heyecanlandırıyor mu?",
           "Teknolojinin çok hızlı gelişmesiyle insanın 'doğal yeteneklerinin' (ezberleme, hesaplama, yön bulma) giderek köreldiğini düşünüyor musunuz? Bu durum insan evrimini nasıl etkileyecek?"
         ]
       }
@@ -586,7 +586,7 @@
         "category": "Isınma ve Günlük Sorular (Warm-up)",
         "topic": "Para ve Tasarruf",
         "questions": [
-          "Para biriktirmekte (tasarruf yapmakta) iyi misinizdir, yoksa kazandığınızı hemen harcar mısınız?",
+          "Para biriktirmekte (tasarruf yapmakta) iyi misiniz, yoksa kazandığınızı hemen harcar mısınız?",
           "Elinize büyük bir miktarda para (ikramiye vb.) geçseydi, bu parayla yapacağınız ilk üç şey ne olurdu?",
           "Sizce okullarda öğrencilere erken yaşta 'finansal okuryazarlık' (para yönetimi) dersi verilmeli midir?"
         ]
@@ -655,7 +655,7 @@
         "topic": "Meslekler ve Gelecek Planları",
         "questions": [
           "Gelecek beş yıl içinde hayatınızda (kariyer veya eğitim olarak) neleri başarmayı hedefliyorsunuz?",
-          "Sizce bir meslekte başarılı olmak için zeka mı daha önemlidir, yoksa iletişim becerisi (sosyal zeka) mi?",
+          "Sizce bir meslekte başarılı olmak için zekâ mı daha önemlidir, yoksa iletişim becerisi (sosyal zekâ) mi?",
           "Yurt dışında yaşama ve çalışma fırsatınız olsaydı, bunu değerlendirir miydiniz? Neden?"
         ]
       },
@@ -676,8 +676,8 @@
         "category": "Karşılıklı Tartışma ve Fikir Beyanı (Discussion)",
         "topic": "Geleceğin Eğitim Sistemi",
         "questions": [
-          "Sizce geleneksel okul sistemi (sıralarda oturup öğretmeni dinlemek) günümüz Z kuşağının ihtiyaçlarını karşılıyor mu? Eğitimin gelecekte tamamen dijital (online) veya yapay zeka destekli olmasını destekler misiniz?",
-          "Not sisteminin (sınav puanlarının) bir öğrencinin gerçek potansiyelini, zekasını ve karakterini ölçmede adil bir yöntem olduğuna inanıyor musunuz? Sınavsız bir eğitim modeli mümkün müdür?"
+          "Sizce geleneksel okul sistemi (sıralarda oturup öğretmeni dinlemek) günümüz Z kuşağının ihtiyaçlarını karşılıyor mu? Eğitimin gelecekte tamamen dijital (online) veya yapay zekâ destekli olmasını destekler misiniz?",
+          "Not sisteminin (sınav puanlarının) bir öğrencinin gerçek potansiyelini, zekâsını ve karakterini ölçmede adil bir yöntem olduğuna inanıyor musunuz? Sınavsız bir eğitim modeli mümkün müdür?"
         ]
       }
     }

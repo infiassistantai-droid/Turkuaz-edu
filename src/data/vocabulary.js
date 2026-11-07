@@ -1,4 +1,4 @@
-import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON, VOCABULARY_STATE_KEY, VOCABULARY_XP_CLAIMED_KEY } from '../lib/storage'
+import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON, TURKUAZ_LUGAT_LEARNED_KEY, VOCABULARY_STATE_KEY, VOCABULARY_XP_CLAIMED_KEY } from '../lib/storage'
 
 // Sample words are a starter catalogue, not saved learner activity. A learner
 // adds them to their personal list explicitly before they count toward trophies.
@@ -28,6 +28,18 @@ function getTerm(item) {
 function makeId(term) {
   const slug = normalizeWordKey(term).replace(/[^\p{L}\p{N}]+/gu, '-')
   return `word-${slug || 'saved'}`
+}
+
+/** Persist learned catalogue entry IDs separately from the personal saved-word list. */
+export function loadTurkuazLearnedIds() {
+  const value = loadJSON(TURKUAZ_LUGAT_LEARNED_KEY, [])
+  return Array.isArray(value) ? [...new Set(value.map(String).filter(Boolean))] : []
+}
+
+export function saveTurkuazLearnedIds(ids) {
+  const normalized = [...new Set((Array.isArray(ids) ? ids : []).map(String).filter(Boolean))]
+  saveJSON(TURKUAZ_LUGAT_LEARNED_KEY, normalized)
+  return normalized
 }
 
 /** Load saved words from the shared legacy list and enrich with saved details. */

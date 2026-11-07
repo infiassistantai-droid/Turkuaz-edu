@@ -1,0 +1,199 @@
+{
+  "exam_id": "823b4927-46db-449b-9e67-c618f57f12c7",
+  "title": "Turkuaz-edu Full Mock Exam 1 (B2-C1)",
+  "description": "Tam Kapsamlı Türkçe Yeterlik Sınavı (Okuma, Dinleme, Yazma, Konuşma)",
+  "duration_minutes": 180,
+  "sections": {
+    "okuma": {
+      "title": "Okuma (Reading)",
+      "duration_minutes": 60,
+      "total_questions": 30,
+      "texts": [
+        {
+          "id": "R1",
+          "title": "Antik Roma'da Su Mühendisliği ve Şehirleşme",
+          "content": "Antik Roma medeniyeti, yalnızca askeri başarılarıyla değil, aynı zamanda mühendislik harikalarıyla da tarihe damga vurmuştur. Şehirleşmenin hızla arttığı bir dönemde Romalı mühendisler, yüzlerce kilometre uzaklıktaki temiz su kaynaklarını şehre taşımak için devasa su kemerleri (aquaductus) inşa ettiler. Bu kemerler sayesinde Roma, hamamları, çeşmeleri ve kanalizasyon sistemiyle çağının çok ötesinde bir hijyen standardına ulaştı. Kemerlerin inşasında kullanılan ve volkanik külden elde edilen özel Roma betonu, su altında bile sertleşebilme özelliğiyle binlerce yıl ayakta kalmayı başarmıştır. Ancak su sistemindeki kurşun boruların zamanla Roma halkında kurşun zehirlenmesine (saturnizm) yol açtığı ve imparatorluğun çöküşünde rol oynadığı iddiaları, günümüzde hâlâ tarihçiler arasında tartışılmaktadır.",
+          "questions": [
+            {
+              "q_id": "RQ1",
+              "type": "multiple_choice",
+              "question": "Metne göre Roma su kemerlerinin inşasında kullanılan betonun en dikkat çekici özelliği nedir?",
+              "options": [
+                "A) Kurşun zehirlenmesini tamamen önlemesi",
+                "B) Yalnızca volkanik dağların etrafında bulunması",
+                "C) Su altında dahi sertleşebilmesi ve dayanıklılığı",
+                "D) Antik Yunan'dan kopyalanan bir formül olması"
+              ],
+              "correct_answer": "C",
+              "explanation": "Metinde Roma betonunun 'su altında bile sertleşebilme özelliğiyle binlerce yıl ayakta kalmayı başarmıştır' ifadesi yer almaktadır."
+            },
+            {
+              "q_id": "RQ2",
+              "type": "true_false_not_given",
+              "question": "Tarihçiler, kurşun boruların Roma İmparatorluğu'nun kesin çöküş sebebi olduğu konusunda hemfikirdir.",
+              "options": [
+                "Doğru",
+                "Yanlış",
+                "Verilmemiş"
+              ],
+              "correct_answer": "Yanlış",
+              "explanation": "Metinde bu iddiaların 'hâlâ tarihçiler arasında tartışılmaktadır' olduğu belirtiliyor, yani kesin bir fikir birliği yoktur."
+            }
+          ]
+        },
+        {
+          "id": "R2",
+          "title": "Kripto Paralar: Ekonominin Geleceği mi, Küresel Bir Balon mu?",
+          "content": "Son on yılda finans dünyasını sarsan en büyük gelişmelerden biri şüphesiz kripto paralardır. Geleneksel bankacılık sisteminin hantallığına ve devletlerin para politikalarına bir tepki olarak doğan Bitcoin, merkeziyetsiz (DeFi) yapısıyla yatırımcılara cazip geldi. Destekleyenler, blokzincir (blockchain) teknolojisinin finansal işlemlerde şeffaflığı artıracağını ve uluslararası para transferlerini saniyeler içine indireceğini savunuyor. Öte yandan, eleştirmenler kripto paraların arkasında fiziksel bir değer olmamasını, aşırı enerji tüketimini ve fiyatların manipülasyona çok açık olmasını bir 'Lale Çılgınlığı'na (ekonomik balona) benzetiyor. Ayrıca devletler, vergi kaçakçılığı ve yasa dışı ticaret riskleri nedeniyle bu yeni ekosistemi düzenlemek için sert yasal adımlar atmaya hazırlanıyor.",
+          "questions": [
+            {
+              "q_id": "RQ3",
+              "type": "multiple_choice",
+              "question": "Eleştirmenlerin kripto paralara karşı çıkma nedenleri arasında aşağıdakilerden hangisi sayılmamıştır?",
+              "options": [
+                "A) Fiyatların kolayca manipüle edilebilmesi",
+                "B) Merkez bankaları tarafından üretilmemesi",
+                "C) Madencilik faaliyetlerinin yüksek enerji tüketmesi",
+                "D) Arkasında somut/fiziksel bir değer bulunmaması"
+              ],
+              "correct_answer": "B",
+              "explanation": "Metinde fiyat manipülasyonu, fiziksel değer eksikliği ve enerji tüketimi sayılmıştır, ancak merkez bankaları tarafından üretilmemesi spesifik bir eleştiri maddesi olarak geçmemiştir (bu sadece onun doğasıdır)."
+            },
+            {
+              "q_id": "RQ4",
+              "type": "true_false_not_given",
+              "question": "Devletler, kripto paraların yasa dışı faaliyetlerde kullanılmasını engellemek için yeni yasalar çıkarmayı planlamaktadır.",
+              "options": [
+                "Doğru",
+                "Yanlış",
+                "Verilmemiş"
+              ],
+              "correct_answer": "Doğru",
+              "explanation": "Metinde 'devletler, vergi kaçakçılığı ve yasa dışı ticaret riskleri nedeniyle bu yeni ekosistemi düzenlemek için sert yasal adımlar atmaya hazırlanıyor' denilmektedir."
+            }
+          ]
+        }
+      ]
+    },
+    "dinleme": {
+      "title": "Dinleme (Listening)",
+      "duration_minutes": 45,
+      "total_questions": 30,
+      "audios": [
+        {
+          "id": "L1",
+          "title": "Üniversite Kampüsünde Öğrenci İşleri ile Görüşme",
+          "transcript": "Öğrenci: Merhaba, ben Uluslararası İlişkiler 3. sınıf öğrencisiyim. Erasmus değişim programı için başvuru belgelerimi teslim etmeye gelmiştim.\nMemur: Merhaba. Başvurular dün saat 17:00'de sona erdi. Neden bu kadar geciktiniz?\nÖğrenci: İnanın elimde değildi, hastaneden sağlık raporunu ancak bu sabah alabildim. Sistemden online başvurumu yapmıştım, sadece fiziki evrakları teslim etmem gerekiyordu.\nMemur: Anlıyorum ama kurallar çok net. Fiziki evraklar olmadan sistem başvurunuzu onaylamaz. Ancak bölüm başkanınızdan bir 'Gecikme Mazeret Dilekçesi' alıp imzalattırırsanız, başvurunuzu kurula sunabiliriz. Öğleden sonraya kadar vaktiniz var.\nÖğrenci: Çok teşekkür ederim, hemen hocanın yanına gidiyorum.",
+          "questions": [
+            {
+              "q_id": "LQ1",
+              "type": "multiple_choice",
+              "question": "Öğrencinin belgelerini zamanında teslim edememesinin asıl sebebi nedir?",
+              "options": [
+                "A) Online başvuru sisteminin çökmesi",
+                "B) Sağlık raporunun hastaneden geç çıkması",
+                "C) Son başvuru tarihini yanlış hatırlaması",
+                "D) Bölüm başkanının dilekçeyi imzalamaması"
+              ],
+              "correct_answer": "B",
+              "explanation": "Öğrenci 'hastaneden sağlık raporunu ancak bu sabah alabildim' diyerek asıl mazeretini belirtiyor."
+            }
+          ]
+        },
+        {
+          "id": "L2",
+          "title": "Radyo Programı: İklim Krizinin Tarıma Etkisi",
+          "transcript": "Sunucu: Değerli dinleyiciler, bugünkü konuğumuz Ziraat Mühendisi Dr. Hakan Yılmaz. Hocam, küresel ısınma Anadolu'daki tarımı nasıl etkiliyor?\nHakan: Maalesef tablo hiç iç açıcı değil. Yağış rejimleri tamamen değişti. Eskiden Nisan ayında yağan bereketli yağmurlar artık Haziran ayında şiddetli dolulara dönüşüyor. Bu durum özellikle buğday ve arpa gibi tahıl ürünlerinde yüzde 30'a varan rekolte (verim) kaybına yol açtı. Eğer acilen damlama sulama sistemlerine geçmezsek ve kuraklığa dayanıklı yeni tohum türleri geliştirmezsek, önümüzdeki 10 yıl içinde gıda enflasyonu durdurulamaz bir boyuta ulaşacaktır.",
+          "questions": [
+            {
+              "q_id": "LQ2",
+              "type": "multiple_choice",
+              "question": "Dr. Hakan Yılmaz'a göre gelecekteki tarım krizini önlemek için alınması gereken acil önlemler nelerdir?",
+              "options": [
+                "A) Gübre kullanımını azaltmak ve seracılığı artırmak",
+                "B) Tarım alanlarını genişletmek ve barajlar inşa etmek",
+                "C) Damlama sulama sistemine geçmek ve dayanıklı tohumlar geliştirmek",
+                "D) Tahıl ekimini durdurup meyveciliğe yönelmek"
+              ],
+              "correct_answer": "C",
+              "explanation": "Dr. Hakan Yılmaz, 'acilen damlama sulama sistemlerine geçmezsek ve kuraklığa dayanıklı yeni tohum türleri geliştirmezsek' diyerek iki net çözüm sunmuştur."
+            }
+          ]
+        }
+      ]
+    },
+    "yazma": {
+      "title": "Yazma (Writing)",
+      "duration_minutes": 60,
+      "tasks": [
+        {
+          "id": "W1",
+          "level": "A2-B1",
+          "category": "Kısa Metin Yazma (Resmi E-posta/Şikayet)",
+          "title": "Arızalı Ürün İade E-postası",
+          "prompt": "Geçen hafta internet üzerinden tanınmış bir teknoloji mağazasından pahalı bir dizüstü bilgisayar (laptop) satın aldınız. Ancak bilgisayarı açtığınızda ekranında ölü pikseller olduğunu ve şarjının hemen bittiğini fark ettiniz. Müşteri hizmetlerine durumu açıklayan, ürünün iadesini veya yenisiyle değiştirilmesini talep eden resmi bir e-posta yazınız. (60-90 kelime)",
+          "key_points": [
+            "Mağazaya resmi hitap.",
+            "Ürünün ne zaman ve nereden alındığı (sipariş numarası detayı).",
+            "Üründeki spesifik arızalar (ölü piksel ve batarya sorunu).",
+            "Net bir talep (iade veya değişim)."
+          ],
+          "model_answer": "Sayın Müşteri Hizmetleri Yetkilisi,\n\nGeçen hafta (15 Kasım) web siteniz üzerinden #45892 sipariş numarasıyla bir dizüstü bilgisayar satın aldım. Ürün dün elime ulaştı.\n\nAncak cihazı çalıştırdığımda ekranın sağ köşesinde ölü pikseller bulunduğunu ve bataryasının tam dolu olmasına rağmen 20 dakika içinde kapandığını fark ettim. Cihaz açıkça kusurludur (arızalıdır).\n\nBu mağduriyetimin acilen giderilmesini ve bilgisayarın tamamen yeni ve hatasız bir ürünle değiştirilmesini, eğer bu mümkün değilse para iadesi yapılmasını talep ediyorum.\n\nGereğini bilgilerinize arz ederim.\n\nSaygılarımla,\n[Adınız Soyadınız]"
+        },
+        {
+          "id": "W2",
+          "level": "B2-C1",
+          "category": "Kompozisyon / Fikir Yazısı",
+          "title": "Sosyal Medyanın Gerçeklik Algısına Etkisi",
+          "prompt": "Günümüzde sosyal medya platformları (Instagram, TikTok vb.) insanların hayatlarının sadece 'en mükemmel' ve 'en mutlu' anlarını sergiledikleri bir vitrine dönüşmüştür. Bazı psikologlar bu durumun, özellikle gençlerde 'yetersizlik hissi' ve 'depresyon' yarattığını savunmaktadır. Sizce sosyal medya, insanların gerçeklik algısını ve mutluluğunu nasıl etkilemektedir? Düşüncelerinizi nedenleri ve sosyolojik örnekleriyle açıklayan bir kompozisyon yazınız. (200-250 kelime)",
+          "key_points": [
+            "Sosyal medyanın hayatımızdaki yeri hakkında genel bir giriş.",
+            "Sosyal medyada yaratılan 'kusursuz hayat' yanılsaması (illüzyonu).",
+            "Bu illüzyonun gençler ve yetişkinler üzerindeki psikolojik etkileri (kıyaslama hastalığı, yetersizlik hissi).",
+            "Kişisel çözüm önerisi ve etkili bir sonuç."
+          ],
+          "model_answer": "İçinde bulunduğumuz dijital çağda, sosyal medya platformları artık sadece iletişim kurduğumuz bir araç olmaktan çıkmış; kimliğimizi, başarılarımızı ve mutluluğumuzu başkalarına ispatlamaya çalıştığımız devasa bir sahneye dönüşmüştür. Bu sanal sahnede herkesin hayatı kusursuz görünse de, perdenin arkasında derin bir psikolojik kriz yatmaktadır. Bence sosyal medya, filtreler arkasına saklanmış 'sahte bir mükemmellik' yaratarak insanın gerçeklik algısını zehirlemektedir.\n\nÖncelikle, sosyal medyada paylaşılan içeriklerin büyük bir kısmı hayatın doğal akışını değil, özenle seçilmiş saniyeleri yansıtır. Hiç kimse ağlarken, başarısız olduğunda veya sıradan, sıkıcı bir gün geçirirken fotoğraf paylaşmaz. Lüks tatiller, pahalı kıyafetler ve daima gülen yüzler, ekranı kaydıran sıradan bir insanda kaçınılmaz olarak bir 'kıyaslama hastalığı' başlatır. Kendi hayatını, başkalarının filtrelenmiş yalanlarıyla kıyaslayan gençler, kendilerini değersiz ve başarısız hissetmeye başlarlar.\n\nBunun sosyolojik sonucu ise, toplumda giderek artan anksiyete ve yalnızlık duygusudur. İnsanlar, oldukları gibi sevilmeyeceklerinden korktukları için estetik operasyonlara yönelmekte veya sahip olmadıkları bir zenginliği taklit etmek için borçlanmaktadırlar. Gerçek dostlukların yerini, sadece onaylanma ihtiyacını karşılayan 'beğeni' (like) sayıları almıştır.\n\nSonuç olarak, sosyal medya modern insanın en parlak aynası gibi görünse de aslında onu en çok çirkinleştiren çarpık bir aynadır. Gerçek mutluluk ve huzur, sanal dünyadaki takipçilerimizin onayında değil, kendi kusurlarımızı kabul edip gerçek dünyada kurduğumuz derin bağlarda saklıdır."
+        }
+      ]
+    },
+    "konusma": {
+      "title": "Konuşma (Speaking)",
+      "duration_minutes": 15,
+      "tasks": [
+        {
+          "part_1": {
+            "level": "A1-B1",
+            "category": "Isınma ve Günlük Sorular",
+            "topic": "İletişim ve Dil",
+            "questions": [
+              "Arkadaşlarınızla iletişim kurarken en çok hangi yöntemi (arama, mesajlaşma, sosyal medya) kullanırsınız? Neden?",
+              "Yeni bir yabancı dil öğrenirken en çok hangi konuda (konuşma, gramer vb.) zorlanıyorsunuz?",
+              "Sizce teknolojinin (çeviri programlarının) gelişmesi, dil öğrenme ihtiyacını gelecekte tamamen ortadan kaldırır mı?"
+            ]
+          },
+          "part_2": {
+            "level": "B1-B2",
+            "category": "Monolog",
+            "topic": "Hayat Değiştiren Bir Tavsiye",
+            "prompt": "Hayatınızda bugüne kadar duyduğunuz ve hayatınızı (kararlarınızı) olumlu yönde etkileyen en önemli tavsiyeyi (nasihati) anlatınız. (1 dk düşünme, 2 dk konuşma)",
+            "key_points": [
+              "Bu tavsiyeyi kimin verdiği ve o anki yaşam koşullarınız.",
+              "Tavsiyenin tam olarak ne olduğu (söz veya düşünce).",
+              "Bu tavsiyeyi duyduktan sonra hayatınızda somut olarak neyi değiştirdiğiniz.",
+              "Şu anda birine tavsiye verecek olsanız, sizin cümlenizin ne olacağı."
+            ]
+          },
+          "part_3": {
+            "level": "C1",
+            "category": "Karşılıklı Tartışma",
+            "topic": "Bilgi Çağı ve Doğruluk",
+            "questions": [
+              "Günümüzde internet sayesinde bilgiye ulaşmak çok kolaylaştı, ancak 'Dezenformasyon' (Yalan haber) hızla yayılıyor. Sizce sosyal medyada haber okurken doğruyu yanlıştan ayırmak için bireyler ne yapmalıdır?",
+              "Bazı uzmanlar, bilgiye bu kadar hızlı ve çaba harcamadan ulaşmanın insanların hafızasını ve analitik düşünme yeteneğini zayıflattığını iddia ediyor. Bu görüşe katılıyor musunuz?"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

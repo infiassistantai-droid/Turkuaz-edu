@@ -8,7 +8,6 @@ import {
   Clock3,
   LockKeyhole,
   Mic,
-  MicOff,
   Play,
   RotateCcw,
   Send,

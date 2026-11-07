@@ -65,7 +65,7 @@ function getCefr(score) {
   return 'A2'
 }
 
-export default function MockExamSimulator({ profile, isPremium = false, onToast }) {
+export default function MockExamSimulator({ profile, isPremium = false, onToast, onExit }) {
   const { t, language } = useI18n()
   const [screen, setScreen] = useState('intro')
   const [secondsLeft, setSecondsLeft] = useState(EXAM_SECONDS)
@@ -175,7 +175,10 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast 
           { icon: Shield, title: t('examSimulator.certificate'), detail: t('examSimulator.certificateDetail') },
         ].map(({ icon: Icon, title, detail }) => <div key={title} className={`rounded-2xl border p-4 ${premium ? 'border-white/10 bg-white/[.04]' : 'border-slate-100 bg-slate-50'}`}><Icon className={`size-5 ${premium ? 'text-yellow-300' : 'text-teal-700'}`}/><p className="mt-3 text-sm font-extrabold">{title}</p><p className={`mt-1 text-xs ${muted}`}>{detail}</p></div>)}
       </div>
-      <button type="button" onClick={startExam} className={`mt-7 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 ${premium ? 'bg-gradient-to-r from-yellow-600 to-amber-500 shadow-[0_0_28px_rgba(234,179,8,.25)]' : 'bg-gradient-to-r from-teal-700 to-cyan-600 shadow-[0_8px_24px_rgba(13,148,136,.22)]'}`}><Sparkles className="size-4"/>{t('examSimulator.start')}</button>
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <button type="button" onClick={startExam} className={`inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 ${premium ? 'bg-gradient-to-r from-yellow-600 to-amber-500 shadow-[0_0_28px_rgba(234,179,8,.25)]' : 'bg-gradient-to-r from-teal-700 to-cyan-600 shadow-[0_8px_24px_rgba(13,148,136,.22)]'}`}><Sparkles className="size-4"/>{t('examSimulator.start')}</button>
+        {onExit && <button type="button" onClick={onExit} className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${premium ? 'border-white/15 bg-white/5 text-white/80 hover:bg-white/10' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}>{t('examsHub.back')}</button>}
+      </div>
     </div>
   </section>
 
@@ -245,6 +248,7 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast 
       <button type="button" onClick={startExam} className={`inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-extrabold transition ${premium ? 'border-white/15 bg-white/5 text-white hover:bg-white/10' : 'border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50'}`}><Sparkles className="size-4"/>{t('examSimulator.retry')}</button>
       <button type="button" onClick={downloadCertificate} className={`inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 ${premium ? 'bg-gradient-to-r from-yellow-600 to-amber-500 shadow-[0_0_28px_rgba(234,179,8,.28)]' : 'bg-gradient-to-r from-teal-700 to-cyan-600 shadow-[0_8px_25px_rgba(13,148,136,.25)]'}`}><Download className="size-4"/>{t('examSimulator.download')}</button>
       <button type="button" onClick={shareCertificate} className={`inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-extrabold transition ${premium ? 'border-white/15 bg-white/5 text-white hover:bg-white/10' : 'border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50'}`}><Share2 className="size-4"/>{t('examSimulator.share')}</button>
+      {onExit && <button type="button" onClick={onExit} className={`inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-extrabold transition ${premium ? 'border-white/15 bg-white/5 text-white hover:bg-white/10' : 'border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50'}`}>{t('examsHub.back')}</button>}
     </div>
   </section>
 }

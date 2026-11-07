@@ -88,7 +88,7 @@ export default function StreakMilestoneModal({ event, isPremium = false, dark = 
             </p>
           </div>
           <img
-            src="/images/mascot/success.png"
+            src="/images/mascot-roaming/kitten-wave.webp"
             alt={t('mascot.aria')}
             className={cn('mascot-cheer pointer-events-none absolute -right-2 -top-20 size-24 object-contain drop-shadow-[0_6px_14px_rgba(15,23,42,.32)] sm:-right-8 sm:-top-24 sm:size-32', isPremium && 'drop-shadow-[0_0_20px_rgba(34,211,238,.42)]')}
           />

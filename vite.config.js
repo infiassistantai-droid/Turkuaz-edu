@@ -67,6 +67,14 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       sourcemap: false,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('/node_modules/@supabase/')) return 'vendor-supabase'
+            if (/\/node_modules\/(react|react-dom|scheduler)\//u.test(id)) return 'vendor-react'
+          },
+        },
+      },
     },
   }
 })

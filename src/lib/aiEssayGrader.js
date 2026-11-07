@@ -21,27 +21,33 @@ export async function evaluateEssay(userText, taskPrompt, keyPoints, wordCountLi
   const headers = { 'Content-Type': 'application/json' }
 
   if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase.auth.getSession()
-    if (error) throw new EssayEvaluationClientError('UNAUTHORIZED')
-    const accessToken = data?.session?.access_token
-    if (accessToken) headers.Authorization = `Bearer ${accessToken}`
+    try {
+      const { data, error } = await supabase.auth.getSession()
+      if (error) throw error
+      const accessToken = data?.session?.access_token
+      if (accessToken) headers.Authorization = `Bearer ${accessToken}`
+    } catch {
+      throw new EssayEvaluationClientError('UNAUTHORIZED')
+    }
   }
 
   let response
+  let responseText
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null
+  const timeoutId = globalThis.setTimeout(() => controller?.abort(), 45_000)
   try {
     response = await fetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify({ userText, taskPrompt, keyPoints, wordCountLimits }),
+      ...(controller ? { signal: controller.signal } : {}),
     })
+    responseText = await response.text()
   } catch {
     throw new EssayEvaluationClientError('AI_SERVICE_UNAVAILABLE')
+  } finally {
+    globalThis.clearTimeout(timeoutId)
   }
-
-  const responseText = await response.text()
-  // Development-only diagnostics. Local Vite includes the raw model candidate on parse errors;
-  // production builds never log learner responses.
-  if (import.meta.env.DEV) console.log('RAW AI RESPONSE:', responseText)
 
   if (!response.ok) {
     let errorCode = response.status === 401 || response.status === 403 ? 'AI_AUTH_ERROR' : 'AI_SERVICE_ERROR'

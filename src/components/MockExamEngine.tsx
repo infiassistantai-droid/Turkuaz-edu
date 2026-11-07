@@ -1,47 +1,70 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, BookOpenText, Check, CheckCircle2, Clock3, FileText, Headphones, Mic, MicOff, Play, RotateCcw, Sparkles, Trophy, Volume2 } from 'lucide-react'
-import { MOCK_01, type MockPart, type MockQuestion, type MockSkillKey, type MockSpeakingPart, type MockWritingTask } from '../data/mockDatabase'
-import { gradeFullMock, gradeObjectiveSection, gradeSpeakingSection, gradeWritingSection, evaluateWritingTask, type MockSectionScore } from '../lib/mockExamScoring'
+import { ArrowRight, BookOpenText, Check, Clock3, FileText, Headphones, Mic, MicOff, Square, Volume2 } from 'lucide-react'
+import examSource from '../data/Turkuaz_BMBA_Full_Mock_Exam_1.json'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
-const SKILL_KEYS: MockSkillKey[] = ['dinleme', 'okuma', 'yazma', 'konusma']
-const SKILL_LABELS: Record<MockSkillKey, string> = { dinleme: 'skill.listening', okuma: 'skill.reading', yazma: 'skill.writing', konusma: 'skill.speaking' }
-const SKILL_ICONS = { dinleme: Headphones, okuma: BookOpenText, yazma: FileText, konusma: Mic }
-const INITIAL_TIMES = Object.fromEntries(SKILL_KEYS.map((key) => [key, MOCK_01.sections[key].durationMinutes * 60])) as Record<MockSkillKey, number>
-
-type ObjectiveStep = { type: 'objective'; id: string; question: MockQuestion; part: MockPart }
-type WritingStep = { type: 'writing'; id: string; task: MockWritingTask }
-type SpeakingStep = { type: 'speaking'; id: string; prompt: MockSpeakingPart }
-type ExamStep = ObjectiveStep | WritingStep | SpeakingStep
-type EngineResult = MockSectionScore & {
-  testType: 'mock-database'
-  examId: string
-  completedAt: string
-  timeUsedSeconds: number
-  breakdown?: Array<{ id: string; title: string; rawScore: number; maxRawScore: number }>
+type SectionId = 'okuma' | 'dinleme' | 'yazma' | 'konusma'
+type SourceQuestion = { q_id: string; type: string; question: string; options: string[] }
+type ReadingPassage = { id: string; title: string; content: string; questions: SourceQuestion[] }
+type ListeningItem = { id: string; title: string; transcript: string; questions: SourceQuestion[] }
+type WritingTask = { id: string; title: string; category?: string; prompt: string; key_points?: string[] }
+type SpeakingPart = { level?: string; category?: string; topic?: string; questions?: string[]; prompt?: string; key_points?: string[] }
+type ExamSource = {
+  exam_id: string
+  title: string
+  description: string
+  duration_minutes: number
+  sections: {
+    okuma: { title: string; duration_minutes: number; texts: ReadingPassage[] }
+    dinleme: { title: string; duration_minutes: number; audios: ListeningItem[] }
+    yazma: { title: string; duration_minutes: number; tasks: WritingTask[] }
+    konusma: { title: string; duration_minutes: number; tasks: Array<{ part_1: SpeakingPart; part_2: SpeakingPart; part_3: SpeakingPart }> }
+  }
 }
-type FullExamResult = ReturnType<typeof gradeFullMock> & { examId: string; completedAt: string; sectionResults: Partial<Record<MockSkillKey, EngineResult>> }
+type ExamAnswers = {
+  okuma: Record<string, string>
+  dinleme: Record<string, string>
+  yazma: Record<string, string>
+  konusma: { audioBlobs: Record<string, Blob> }
+}
+type ExamStep =
+  | { kind: 'reading'; id: string; passage: ReadingPassage }
+  | { kind: 'listening'; id: string; item: ListeningItem }
+  | { kind: 'writing'; id: string; task: WritingTask }
+  | { kind: 'speaking'; id: string; partNumber: number; part: SpeakingPart }
 
 type EngineProps = {
-  onSectionComplete?: (result: EngineResult) => void
-  onExamComplete?: (result: FullExamResult) => void
+  onExamComplete?: (answers: ExamAnswers) => void
   onExit?: () => void
 }
 
-function buildSteps(skill: MockSkillKey): ExamStep[] {
-  if (skill === 'dinleme' || skill === 'okuma') {
-    const section = MOCK_01.sections[skill]
-    return section.parts.flatMap((part) => part.questions.map((question) => ({ type: 'objective' as const, id: question.id, question, part })))
-  }
-  if (skill === 'yazma') return MOCK_01.sections.yazma.tasks.map((task) => ({ type: 'writing' as const, id: task.id, task }))
-  return MOCK_01.sections.konusma.parts.map((prompt) => ({ type: 'speaking' as const, id: prompt.id, prompt }))
+const EXAM = examSource as ExamSource
+const SECTION_ORDER: SectionId[] = ['okuma', 'dinleme', 'yazma', 'konusma']
+const SECTION_LABELS: Record<SectionId, string> = {
+  okuma: 'nav.reading',
+  dinleme: 'nav.listening',
+  yazma: 'nav.writing',
+  konusma: 'nav.speaking',
+}
+const SECTION_ICONS = { okuma: BookOpenText, dinleme: Headphones, yazma: FileText, konusma: Mic }
+
+function createEmptyAnswers(): ExamAnswers {
+  return { okuma: {}, dinleme: {}, yazma: {}, konusma: { audioBlobs: {} } }
 }
 
-function sectionItemCount(skill: MockSkillKey) {
-  if (skill === 'dinleme' || skill === 'okuma') return MOCK_01.sections[skill].totalQuestions
-  if (skill === 'yazma') return MOCK_01.sections.yazma.tasks.length
-  return MOCK_01.sections.konusma.parts.length
+function getSteps(section: SectionId): ExamStep[] {
+  if (section === 'okuma') return EXAM.sections.okuma.texts.map((passage) => ({ kind: 'reading', id: passage.id, passage }))
+  if (section === 'dinleme') return EXAM.sections.dinleme.audios.map((item) => ({ kind: 'listening', id: item.id, item }))
+  if (section === 'yazma') return EXAM.sections.yazma.tasks.map((task) => ({ kind: 'writing', id: task.id, task }))
+  const speakingParts = EXAM.sections.konusma.tasks[0]
+  return [speakingParts.part_1, speakingParts.part_2, speakingParts.part_3].map((part, index) => ({
+    kind: 'speaking', id: `part_${index + 1}`, partNumber: index + 1, part,
+  }))
+}
+
+function getSectionDuration(section: SectionId) {
+  return EXAM.sections[section].duration_minutes
 }
 
 function formatClock(seconds: number) {
@@ -49,275 +72,525 @@ function formatClock(seconds: number) {
   return `${String(Math.floor(safe / 60)).padStart(2, '0')}:${String(safe % 60).padStart(2, '0')}`
 }
 
-function speakTurkish(text: string) {
+function speakTurkish(text: string, onEnd: () => void, onError: () => void) {
   if (!text || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return false
   window.speechSynthesis.cancel()
   const utterance = new SpeechSynthesisUtterance(text)
   utterance.lang = 'tr-TR'
   utterance.rate = 0.92
+  utterance.onend = onEnd
+  utterance.onerror = onError
   window.speechSynthesis.speak(utterance)
   return true
 }
 
-function wordCount(text: string) {
-  return text.trim() ? text.trim().split(/\s+/u).filter(Boolean).length : 0
-}
-
-function ResultPill({ level }: { level: string }) {
-  const { t } = useI18n()
-  const tone = level === 'C1' ? 'border-emerald-300/40 bg-emerald-400/10 text-emerald-100' : level === 'B2' ? 'border-teal-300/40 bg-teal-400/10 text-teal-100' : level === 'B1' ? 'border-amber-300/50 bg-amber-400/10 text-amber-100' : 'border-slate-300/30 bg-white/10 text-white/80'
-  return <span className={cn('inline-flex rounded-full border px-3 py-1 text-xs font-extrabold', tone)}>{level === 'Below B1' ? t('level.belowB1') : level}</span>
-}
-
-function StimulusPane({ part, question }: { part: MockPart; question: MockQuestion }) {
-  const paragraphQuestion = question.prompt.match(/^Paragraf\s+[IVX]+:\s*(.+)$/u)?.[1]
+function SectionProgress({ activeIndex, submittedSections, t }: { activeIndex: number; submittedSections: SectionId[]; t: (key: string, values?: Record<string, string | number>) => string }) {
   return (
-    <section className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7">
-      <div className="mb-4 flex items-center gap-2 text-amber-700 dark:text-amber-200"><BookOpenText className="size-4"/><h2 className="text-sm font-bold">{part.contextTitle || part.title}</h2></div>
-      {part.planLocations && <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{part.planLocations.map((location, index) => <div key={location} className="flex items-center gap-2 rounded-xl border border-amber-200/50 bg-amber-50/70 p-2 text-xs text-slate-700 dark:border-amber-200/20 dark:bg-black/20 dark:text-slate-200"><span className="grid size-7 shrink-0 place-items-center rounded-lg bg-amber-200 font-extrabold text-amber-950">{String.fromCharCode(65 + index)}</span>{location.replace(/^[A-H]\.\s*/u, '')}</div>)}</div>}
-      {part.context && <p className="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">{part.context}</p>}
-      {!part.context && paragraphQuestion && <p className="text-sm leading-7 text-slate-700 dark:text-slate-200">{paragraphQuestion}</p>}
-      {!part.context && !paragraphQuestion && !part.planLocations && <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">{part.instructions}</p>}
-    </section>
+    <ol className="grid grid-cols-4 gap-2" aria-label={t('engine.sectionNavigation')}>
+      {SECTION_ORDER.map((section, index) => {
+        const Icon = SECTION_ICONS[section]
+        const isComplete = submittedSections.includes(section)
+        const isActive = index === activeIndex
+        return (
+          <li key={section} aria-current={isActive ? 'step' : undefined}>
+            <div className={cn(
+              'flex min-h-10 items-center justify-center gap-1.5 rounded-xl border px-1.5 text-center text-[10px] font-bold transition-colors sm:gap-2 sm:px-3 sm:text-xs',
+              isActive ? 'border-teal-400/70 bg-teal-500/15 text-teal-800 dark:text-teal-100' : isComplete ? 'border-emerald-300/50 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200' : 'border-slate-200/80 bg-white/65 text-slate-500 dark:border-slate-700/80 dark:bg-slate-900/55 dark:text-slate-400',
+            )}>
+              {isComplete ? <Check className="size-3.5 shrink-0" aria-hidden="true" /> : <Icon className="size-3.5 shrink-0" aria-hidden="true" />}
+              <span className="truncate">{t(SECTION_LABELS[section])}</span>
+              <span className="hidden text-[10px] opacity-70 sm:inline">{index + 1}/4</span>
+            </div>
+          </li>
+        )
+      })}
+    </ol>
   )
 }
 
-export default function MockExamEngine({ onSectionComplete, onExamComplete, onExit }: EngineProps) {
+function ObjectiveQuestions({ questions, answers, onSelect, t }: {
+  questions: SourceQuestion[]
+  answers: Record<string, string>
+  onSelect: (questionId: string, option: string) => void
+  t: (key: string, values?: Record<string, string | number>) => string
+}) {
+  return (
+    <div className="space-y-5">
+      {questions.map((question, index) => (
+        <fieldset key={question.q_id} className="rounded-2xl border border-slate-200/80 bg-white/65 p-4 dark:border-slate-700/80 dark:bg-slate-950/45 sm:p-5">
+          <legend className="sr-only">{t('fullExam.question', { number: index + 1 })}</legend>
+          <div className="mb-3 flex items-start gap-2.5">
+            <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-teal-100 text-xs font-extrabold text-teal-900 dark:bg-teal-300/15 dark:text-teal-100">{index + 1}</span>
+            <div>
+              <p className="mb-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-teal-700 dark:text-teal-300">{t('fullExam.question', { number: index + 1 })}</p>
+              <p className="text-sm font-semibold leading-6 text-slate-800 dark:text-slate-100">{question.question}</p>
+            </div>
+          </div>
+          <p className="mb-2 ml-9 text-xs text-slate-500 dark:text-slate-400">{t('fullExam.selectAnswer')}</p>
+          <div className="space-y-2 pl-0 sm:pl-9">
+            {question.options.map((option, optionIndex) => {
+              const selected = answers[question.q_id] === option
+              return (
+                <button
+                  key={`${question.q_id}-${optionIndex}`}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => onSelect(question.q_id, option)}
+                  className={cn(
+                    'flex w-full items-start gap-3 rounded-xl border px-3 py-3 text-left text-sm leading-5 transition-colors',
+                    selected ? 'border-teal-500 bg-teal-500/10 text-teal-950 ring-1 ring-teal-500/35 dark:border-teal-400 dark:bg-teal-400/10 dark:text-teal-50' : 'border-slate-200/80 bg-white/70 text-slate-700 hover:border-teal-400/60 hover:bg-teal-50/60 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:border-teal-500/60 dark:hover:bg-teal-950/35',
+                  )}
+                >
+                  <span className={cn('mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border', selected ? 'border-teal-600 bg-teal-600 text-white dark:border-teal-300 dark:bg-teal-300 dark:text-slate-950' : 'border-slate-400 dark:border-slate-500')}>
+                    {selected && <span className="size-1.5 rounded-full bg-current" />}
+                  </span>
+                  <span>{option}</span>
+                </button>
+              )
+            })}
+          </div>
+        </fieldset>
+      ))}
+    </div>
+  )
+}
+
+export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) {
   const { t } = useI18n()
-  const [view, setView] = useState<'intro' | 'exam' | 'results'>('intro')
-  const [activeSkill, setActiveSkill] = useState<MockSkillKey>('dinleme')
-  const [stepIndexes, setStepIndexes] = useState<Record<MockSkillKey, number>>({ dinleme: 0, okuma: 0, yazma: 0, konusma: 0 })
-  const [remaining, setRemaining] = useState<Record<MockSkillKey, number>>(INITIAL_TIMES)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [writingResponses, setWritingResponses] = useState<Record<string, string>>({})
-  const [speakingScores, setSpeakingScores] = useState<Record<string, number>>({})
-  const [speakingTouched, setSpeakingTouched] = useState<Record<string, boolean>>({})
-  const [speakingNotes, setSpeakingNotes] = useState<Record<string, string>>({})
-  const [prepSeconds, setPrepSeconds] = useState(60)
-  const [prepStarted, setPrepStarted] = useState(false)
-  const [showTranscript, setShowTranscript] = useState(false)
-  const [completed, setCompleted] = useState<Partial<Record<MockSkillKey, EngineResult>>>({})
-  const [fullResult, setFullResult] = useState<FullExamResult | null>(null)
-  const [recording, setRecording] = useState(false)
+  const stepsBySection = useMemo(() => Object.fromEntries(SECTION_ORDER.map((section) => [section, getSteps(section)])) as Record<SectionId, ExamStep[]>, [])
+  const [phase, setPhase] = useState<'intro' | 'exam' | 'submitted'>('intro')
+  const [sectionIndex, setSectionIndex] = useState(0)
+  const [stepIndex, setStepIndex] = useState(0)
+  const [submittedSections, setSubmittedSections] = useState<SectionId[]>([])
+  const [examAnswers, setExamAnswers] = useState<ExamAnswers>(createEmptyAnswers)
+  const [deadline, setDeadline] = useState<number | null>(null)
+  const [secondsRemaining, setSecondsRemaining] = useState(0)
+  const [isBusy, setIsBusy] = useState(false)
+  const [timeoutNotice, setTimeoutNotice] = useState(false)
+  const [audioFallback, setAudioFallback] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [recordingPart, setRecordingPart] = useState<string | null>(null)
   const [recordingError, setRecordingError] = useState('')
-  const [audioUrls, setAudioUrls] = useState<Record<string, string>>({})
-  const submittedSkillsRef = useRef(new Set<MockSkillKey>())
-  const fullSubmittedRef = useRef(false)
+  const [requestingMicrophone, setRequestingMicrophone] = useState(false)
+  const [audioPreviewUrls, setAudioPreviewUrls] = useState<Record<string, string>>({})
+
+  const answersRef = useRef(examAnswers)
+  const mountedRef = useRef(true)
   const recorderRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
-  const audioUrlsRef = useRef(audioUrls)
+  const currentSectionRef = useRef<SectionId>(SECTION_ORDER[sectionIndex])
+  const phaseRef = useRef(phase)
+  const transitionLockRef = useRef(false)
+  const finishLockRef = useRef(false)
+  const timeoutHandlerRef = useRef<() => void>(() => undefined)
+  const timeoutDeadlineRef = useRef<number | null>(null)
+  const previewUrlsRef = useRef(audioPreviewUrls)
+  const currentStepId = stepsBySection[SECTION_ORDER[sectionIndex]]?.[stepIndex]?.id
+  const currentStepIdRef = useRef<string | undefined>(currentStepId)
+  currentStepIdRef.current = currentStepId
 
-  const stepsBySkill = useMemo(() => Object.fromEntries(SKILL_KEYS.map((key) => [key, buildSteps(key)])) as Record<MockSkillKey, ExamStep[]>, [])
-  const currentSteps = stepsBySkill[activeSkill]
-  const currentIndex = stepIndexes[activeSkill]
-  const currentStep = currentSteps[currentIndex]
-  const currentTimeLimit = MOCK_01.sections[activeSkill].durationMinutes * 60
-  const timeUsed = currentTimeLimit - remaining[activeSkill]
-  const totalStepCount = SKILL_KEYS.reduce((sum, key) => sum + stepsBySkill[key].length, 0)
+  answersRef.current = examAnswers
+  currentSectionRef.current = SECTION_ORDER[sectionIndex]
+  phaseRef.current = phase
+  previewUrlsRef.current = audioPreviewUrls
 
-  useEffect(() => { audioUrlsRef.current = audioUrls }, [audioUrls])
-  useEffect(() => () => {
-    if (recorderRef.current?.state === 'recording') recorderRef.current.stop()
-    streamRef.current?.getTracks().forEach((track) => track.stop())
-    Object.values(audioUrlsRef.current).forEach((url) => URL.revokeObjectURL(url))
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      if (recorderRef.current?.state === 'recording') recorderRef.current.stop()
+      streamRef.current?.getTracks().forEach((track) => track.stop())
+      Object.values(previewUrlsRef.current).forEach((url) => URL.revokeObjectURL(url))
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+    }
   }, [])
 
-  useEffect(() => {
-    if (view !== 'exam' || completed[activeSkill]) return undefined
-    const timer = window.setInterval(() => setRemaining((times) => ({ ...times, [activeSkill]: Math.max(0, times[activeSkill] - 1) })), 1000)
-    return () => window.clearInterval(timer)
-  }, [view, activeSkill, completed[activeSkill]])
+  function updateAnswers(update: (current: ExamAnswers) => ExamAnswers) {
+    const next = update(answersRef.current)
+    answersRef.current = next
+    setExamAnswers(next)
+  }
 
-  useEffect(() => {
-    if (view === 'exam' && remaining[activeSkill] === 0 && !completed[activeSkill]) completeSection(activeSkill, true)
-  }, [view, activeSkill, remaining[activeSkill], completed[activeSkill]])
+  function completeExam() {
+    if (finishLockRef.current) return
+    finishLockRef.current = true
+    setPhase('submitted')
+    setDeadline(null)
+    onExamComplete?.(answersRef.current)
+  }
 
-  useEffect(() => {
-    if (view !== 'exam' || activeSkill !== 'konusma' || !prepStarted || prepSeconds <= 0 || currentStep?.type !== 'speaking' || currentStep.prompt.part !== 2) return undefined
-    const timer = window.setInterval(() => setPrepSeconds((seconds) => Math.max(0, seconds - 1)), 1000)
-    return () => window.clearInterval(timer)
-  }, [view, activeSkill, currentIndex, prepStarted, prepSeconds, currentStep])
+  async function stopActiveRecording() {
+    const recorder = recorderRef.current
+    if (!recorder || recorder.state !== 'recording') return
+    setRecordingPart(null)
+    await new Promise<void>((resolve) => {
+      recorder.addEventListener('stop', () => resolve(), { once: true })
+      try {
+        recorder.stop()
+      } catch {
+        resolve()
+      }
+    })
+  }
 
-  useEffect(() => {
-    if (recorderRef.current?.state === 'recording') {
-      recorderRef.current.stop()
-      setRecording(false)
+  async function submitSectionAndAdvance(section: SectionId, dueToTimeout: boolean) {
+    if (transitionLockRef.current || phaseRef.current !== 'exam' || currentSectionRef.current !== section) return
+    transitionLockRef.current = true
+    setIsBusy(true)
+    try {
+      await stopActiveRecording()
+      setSubmittedSections((existing) => existing.includes(section) ? existing : [...existing, section])
+      if (dueToTimeout) setTimeoutNotice(true)
+      const index = SECTION_ORDER.indexOf(section)
+      if (index === SECTION_ORDER.length - 1) {
+        completeExam()
+        return
+      }
+      const nextSection = SECTION_ORDER[index + 1]
+      const nextDeadline = Date.now() + getSectionDuration(nextSection) * 60_000
+      setSectionIndex(index + 1)
+      setStepIndex(0)
+      setDeadline(nextDeadline)
+      setSecondsRemaining(getSectionDuration(nextSection) * 60)
+      setAudioFallback(false)
+      setIsPlaying(false)
+    } finally {
+      transitionLockRef.current = false
+      setIsBusy(false)
     }
-    setShowTranscript(false)
+  }
+
+  timeoutHandlerRef.current = () => {
+    const section = SECTION_ORDER[sectionIndex]
+    void submitSectionAndAdvance(section, true)
+  }
+
+  useEffect(() => {
+    if (phase !== 'exam' || deadline === null) return undefined
+    const activeDeadline = deadline
+    let timeoutDispatched = false
+    const tick = () => {
+      const next = Math.max(0, Math.ceil((activeDeadline - Date.now()) / 1000))
+      setSecondsRemaining(next)
+      if (next === 0 && !timeoutDispatched && timeoutDeadlineRef.current !== activeDeadline && !transitionLockRef.current) {
+        timeoutDispatched = true
+        timeoutDeadlineRef.current = activeDeadline
+        timeoutHandlerRef.current()
+      }
+    }
+    tick()
+    const timer = window.setInterval(tick, 1000)
+    return () => window.clearInterval(timer)
+  }, [phase, deadline, sectionIndex])
+
+  useEffect(() => {
+    setAudioFallback(false)
+    setIsPlaying(false)
     setRecordingError('')
-    if (activeSkill === 'konusma' && currentStep?.type === 'speaking' && currentStep.prompt.part === 2) {
-      setPrepSeconds(60)
-      setPrepStarted(false)
-    }
-  }, [activeSkill, currentIndex])
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+  }, [sectionIndex, stepIndex])
 
   function startExam() {
-    submittedSkillsRef.current = new Set()
-    fullSubmittedRef.current = false
-    setView('exam')
-    setActiveSkill('dinleme')
-    setStepIndexes({ dinleme: 0, okuma: 0, yazma: 0, konusma: 0 })
-    setRemaining(INITIAL_TIMES)
-    setAnswers({})
-    setWritingResponses({})
-    setSpeakingScores({})
-    setSpeakingTouched({})
-    setSpeakingNotes({})
-    setCompleted({})
-    setFullResult(null)
+    if (recorderRef.current?.state === 'recording') void stopActiveRecording()
+    const freshAnswers = createEmptyAnswers()
+    answersRef.current = freshAnswers
+    setExamAnswers(freshAnswers)
+    setPhase('exam')
+    setSectionIndex(0)
+    setStepIndex(0)
+    setSubmittedSections([])
+    setTimeoutNotice(false)
+    setIsBusy(false)
+    transitionLockRef.current = false
+    finishLockRef.current = false
+    timeoutDeadlineRef.current = null
+    const firstDeadline = Date.now() + getSectionDuration(SECTION_ORDER[0]) * 60_000
+    setDeadline(firstDeadline)
+    setSecondsRemaining(getSectionDuration(SECTION_ORDER[0]) * 60)
   }
 
-  function completeSection(skill: MockSkillKey, timedOut = false) {
-    if (submittedSkillsRef.current.has(skill) || completed[skill]) return
-    submittedSkillsRef.current.add(skill)
-    let score: MockSectionScore
-    if (skill === 'dinleme' || skill === 'okuma') {
-      const section = MOCK_01.sections[skill]
-      const questions = section.parts.flatMap((part) => part.questions)
-      const titles = Object.fromEntries(section.parts.map((part) => [part.id, part.title]))
-      score = gradeObjectiveSection(skill, questions, answers, titles)
-    } else if (skill === 'yazma') {
-      score = gradeWritingSection(MOCK_01.sections.yazma.tasks, writingResponses)
-    } else {
-      score = gradeSpeakingSection(MOCK_01.sections.konusma.parts.map((part) => part.id), speakingScores)
+  async function continueExam() {
+    if (transitionLockRef.current || phaseRef.current !== 'exam') return
+    setTimeoutNotice(false)
+    const section = SECTION_ORDER[sectionIndex]
+    const steps = stepsBySection[section]
+    if (stepIndex === steps.length - 1) {
+      await submitSectionAndAdvance(section, false)
+      return
     }
-    const result: EngineResult = {
-      ...score,
-      testType: 'mock-database',
-      examId: MOCK_01.id,
-      completedAt: new Date().toISOString(),
-      timeUsedSeconds: timeUsed,
-      ...(timedOut ? { timedOut: true } : {}),
-    }
-    const next = { ...completed, [skill]: result }
-    setCompleted(next)
-    onSectionComplete?.(result)
-    if (SKILL_KEYS.every((key) => next[key]) && !fullSubmittedRef.current) {
-      fullSubmittedRef.current = true
-      const aggregate = gradeFullMock(next)
-      const finished: FullExamResult = { ...aggregate, examId: MOCK_01.id, completedAt: new Date().toISOString(), sectionResults: next }
-      setFullResult(finished)
-      setView('results')
-      onExamComplete?.(finished)
+    transitionLockRef.current = true
+    setIsBusy(true)
+    try {
+      await stopActiveRecording()
+      setStepIndex((current) => current + 1)
+    } finally {
+      transitionLockRef.current = false
+      setIsBusy(false)
     }
   }
 
-  function selectSkill(skill: MockSkillKey) {
-    if (recorderRef.current?.state === 'recording') {
-      recorderRef.current.stop()
-      setRecording(false)
+  async function finishExam() {
+    if (transitionLockRef.current || finishLockRef.current || phaseRef.current !== 'exam') return
+    transitionLockRef.current = true
+    setIsBusy(true)
+    try {
+      await stopActiveRecording()
+      setSubmittedSections((existing) => existing.includes('konusma') ? existing : [...existing, 'konusma'])
+      completeExam()
+    } finally {
+      transitionLockRef.current = false
+      setIsBusy(false)
     }
-    setActiveSkill(skill)
   }
 
-  function goToStep(index: number) {
-    const bounded = Math.max(0, Math.min(currentSteps.length - 1, index))
-    setStepIndexes((values) => ({ ...values, [activeSkill]: bounded }))
+  function selectObjectiveAnswer(section: 'okuma' | 'dinleme', questionId: string, option: string) {
+    updateAnswers((current) => ({ ...current, [section]: { ...current[section], [questionId]: option } }))
+  }
+
+  function updateWritingResponse(taskId: string, text: string) {
+    updateAnswers((current) => ({ ...current, yazma: { ...current.yazma, [taskId]: text } }))
   }
 
   async function toggleRecording(partId: string) {
     setRecordingError('')
     if (recorderRef.current?.state === 'recording') {
-      recorderRef.current.stop()
-      setRecording(false)
+      await stopActiveRecording()
       return
     }
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-      setRecordingError('Bu tarayıcıda ses kaydı desteklenmiyor; sözlü yanıtınızı kayıtsız olarak da değerlendirebilirsiniz.')
+      setRecordingError(t('fullExam.speak.unsupported'))
       return
     }
+    setRequestingMicrophone(true)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      if (!mountedRef.current || phaseRef.current !== 'exam' || currentSectionRef.current !== 'konusma' || currentStepIdRef.current !== partId) {
+        stream.getTracks().forEach((track) => track.stop())
+        return
+      }
       streamRef.current = stream
       const recorder = new MediaRecorder(stream)
       recorderRef.current = recorder
       audioChunksRef.current = []
-      recorder.addEventListener('dataavailable', (event) => { if (event.data.size) audioChunksRef.current.push(event.data) })
+      recorder.addEventListener('dataavailable', (event) => {
+        if (event.data.size > 0) audioChunksRef.current.push(event.data)
+      })
       recorder.addEventListener('stop', () => {
-        const url = URL.createObjectURL(new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' }))
-        setAudioUrls((previous) => {
-          if (previous[partId]) URL.revokeObjectURL(previous[partId])
-          return { ...previous, [partId]: url }
-        })
+        const blob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' })
+        if (mountedRef.current && blob.size > 0) {
+          updateAnswers((current) => ({ ...current, konusma: { ...current.konusma, audioBlobs: { ...current.konusma.audioBlobs, [partId]: blob } } }))
+          const url = URL.createObjectURL(blob)
+          setAudioPreviewUrls((existing) => {
+            if (existing[partId]) URL.revokeObjectURL(existing[partId])
+            return { ...existing, [partId]: url }
+          })
+        }
+        if (mountedRef.current) setRecordingPart(null)
         stream.getTracks().forEach((track) => track.stop())
         if (streamRef.current === stream) streamRef.current = null
       }, { once: true })
       recorder.start()
-      setRecording(true)
-    } catch {
-      setRecordingError('Mikrofona erişim izni verilmedi. Tarayıcı izinlerini kontrol edin.')
+      setRecordingPart(partId)
+    } catch (error) {
+      streamRef.current?.getTracks().forEach((track) => track.stop())
+      streamRef.current = null
+      recorderRef.current = null
+      const name = error instanceof DOMException ? error.name : ''
+      if (mountedRef.current) setRecordingError(name === 'NotAllowedError' || name === 'SecurityError' ? t('fullExam.speak.permission') : t('fullExam.speak.failed'))
+    } finally {
+      if (mountedRef.current) setRequestingMicrophone(false)
     }
   }
 
-  const progressCount = SKILL_KEYS.reduce((sum, skill) => {
-    if (completed[skill]) return sum + stepsBySkill[skill].length
-    return sum + stepsBySkill[skill].filter((step) => {
-      if (step.type === 'objective') return Boolean(answers[step.id])
-      if (step.type === 'writing') return Boolean(writingResponses[step.id]?.trim())
-      return Boolean(speakingTouched[step.id] || speakingNotes[step.id]?.trim() || audioUrls[step.id])
-    }).length
-  }, 0)
-  const globalProgress = totalStepCount ? Math.round((progressCount / totalStepCount) * 100) : 0
-  if (view === 'intro') {
+  function playListeningText(text: string) {
+    if (isPlaying && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+      setIsPlaying(false)
+      return
+    }
+    const started = speakTurkish(text, () => setIsPlaying(false), () => {
+      setIsPlaying(false)
+      setAudioFallback(true)
+    })
+    if (started) setIsPlaying(true)
+    else setAudioFallback(true)
+  }
+
+  const section = SECTION_ORDER[sectionIndex]
+  const sectionSteps = stepsBySection[section]
+  const currentStep = sectionSteps[stepIndex]
+  const isFinalSpeakingStep = section === 'konusma' && stepIndex === sectionSteps.length - 1
+  const sectionMinutes = getSectionDuration(section)
+  const timerUrgent = secondsRemaining <= 5 * 60
+  const answerCounts = useMemo(() => ({
+    okuma: Object.keys(examAnswers.okuma).length,
+    dinleme: Object.keys(examAnswers.dinleme).length,
+    yazma: Object.values(examAnswers.yazma).filter((text) => text.trim().length > 0).length,
+    konusma: Object.keys(examAnswers.konusma.audioBlobs).length,
+  }), [examAnswers])
+
+  if (phase === 'intro') {
     return (
-      <div className="mx-auto max-w-5xl space-y-5">
-        <section className="premium-hero relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9">
-          <div className="relative z-10 max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4"/> {t('mock.badge')} · {MOCK_01.levelRange}</div><h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">{MOCK_01.title}</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">{t('engine.description')}</p><div className="mt-5 flex flex-wrap gap-2">{SKILL_KEYS.map((key) => { const section = MOCK_01.sections[key]; const Icon = SKILL_ICONS[key]; const count = sectionItemCount(key); return <span key={key} className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-black/15 px-3 py-2 text-xs font-semibold"><Icon className="size-4 text-amber-200"/>{t(SKILL_LABELS[key])} · {count} · {t('common.minutes', { count: section.durationMinutes })}</span> })}</div><div className="mt-6 flex flex-wrap gap-3"><button type="button" onClick={startExam} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-teal-900 shadow-lg hover:bg-amber-50"><Play className="size-4"/>{t('engine.start')}</button>{onExit && <button type="button" onClick={onExit} className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-black/15 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10"><ArrowLeft className="size-4"/>{t('engine.return')}</button>}</div></div>
+      <main className="mx-auto w-full max-w-6xl px-4 pb-12 pt-5 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/85 p-6 shadow-xl shadow-slate-950/5 dark:border-slate-700/70 dark:bg-slate-900/75 sm:p-9 lg:p-12">
+          <div className="absolute -right-20 -top-24 size-72 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true" />
+          <div className="absolute -bottom-32 -left-10 size-72 rounded-full bg-cyan-500/10 blur-3xl" aria-hidden="true" />
+          <div className="relative">
+            <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">{t('fullExam.eyebrow')}</p>
+            <h1 className="max-w-3xl text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">{EXAM.title}</h1>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">{EXAM.description}</p>
+
+            <div className="mt-7 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,20rem)] xl:items-stretch">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {SECTION_ORDER.map((id, index) => {
+                  const Icon = SECTION_ICONS[id]
+                  return (
+                    <div key={id} className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 dark:border-slate-700/70 dark:bg-slate-950/45">
+                      <div className="mb-3 flex size-9 items-center justify-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-300/15 dark:text-teal-200"><Icon className="size-4" aria-hidden="true" /></div>
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{t(SECTION_LABELS[id])}</p>
+                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{t('fullExam.sectionDuration', { minutes: getSectionDuration(id) })}</p>
+                      <span className="mt-3 inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{index + 1} / 4</span>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-teal-300/40 bg-gradient-to-br from-teal-600/10 to-cyan-500/10 p-5 dark:border-teal-300/20 dark:from-teal-500/10 dark:to-cyan-400/10">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('fullExam.duration')}</p>
+                  <p className="mt-1 flex items-baseline gap-2 text-3xl font-black text-slate-950 dark:text-white"><Clock3 className="size-6 text-teal-700 dark:text-teal-300" />{EXAM.duration_minutes}<span className="text-sm font-bold text-slate-600 dark:text-slate-300">{t('fullExam.minutes')}</span></p>
+                  <p className="mt-3 text-xs leading-5 text-slate-600 dark:text-slate-300">{t('fullExam.startHint')}</p>
+                </div>
+                <button type="button" onClick={startExam} className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-teal-700/20 transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
+                  {t('fullExam.start')}<ArrowRight className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+            {onExit && <button type="button" onClick={onExit} className="mt-6 text-sm font-semibold text-slate-500 underline decoration-slate-400/50 underline-offset-4 hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-200">{t('fullExam.exit')}</button>}
+          </div>
         </section>
-        <p className="text-center text-xs text-slate-400">{t('engine.steps', { count: totalStepCount })}</p>
-      </div>
+      </main>
     )
   }
 
-  if (view === 'results' && fullResult) {
+  if (phase === 'submitted') {
     return (
-      <div className="mx-auto max-w-5xl space-y-5">
-        <section className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9"><div className="flex items-center gap-3"><span className="grid size-12 place-items-center rounded-2xl bg-white/15"><Trophy className="size-6"/></span><div><p className="text-sm text-white/75">{t('engine.completed')}</p><h1 className="text-2xl font-extrabold">{t('engine.overall')}</h1></div></div><div className="mt-6 flex flex-wrap items-end gap-4"><p className="text-5xl font-extrabold tabular-nums">{fullResult.overallScore}<span className="text-xl text-white/70"> / 75</span></p><ResultPill level={fullResult.level}/></div><p className="mt-3 text-sm text-white/80">{t('engine.resultSummary', { xp: fullResult.earnedXp })}</p></section>
-        <section className="grid gap-3 sm:grid-cols-2">{SKILL_KEYS.map((key) => { const Icon = SKILL_ICONS[key]; const result = fullResult.sectionResults[key]; return <article key={key} className="glass premium-glass rounded-2xl border border-slate-200 bg-white/85 p-5 dark:border-slate-800 dark:bg-slate-900/85"><div className="flex items-center gap-2"><Icon className="size-4 text-amber-600 dark:text-amber-200"/><h2 className="font-bold text-slate-900 dark:text-white">{t(SKILL_LABELS[key])}</h2></div><p className="mt-3 text-2xl font-extrabold text-slate-900 dark:text-white">{result?.scaledScore ?? 0}<span className="text-sm font-semibold text-slate-500"> / 75</span></p><div className="mt-2 flex items-center justify-between"><ResultPill level={result?.level ?? 'Below B1'}/><span className="text-xs text-slate-500 dark:text-slate-400">{t('mock.rawScore')}: {result?.rawScore ?? 0}/{result?.maxRawScore ?? 0}</span></div>{result?.breakdown && <ul className="mt-4 space-y-1 border-t border-slate-200 pt-3 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-300">{result.breakdown.slice(0, 6).map((part) => <li key={part.id} className="flex justify-between gap-2"><span>{part.title}</span><span className="font-bold tabular-nums">{part.rawScore}/{part.maxRawScore}</span></li>)}</ul>}</article> })}</section>
-        <div className="flex flex-wrap justify-between gap-3"><button type="button" onClick={() => onExit?.()} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><ArrowLeft className="size-4"/>{t('engine.close')}</button><button type="button" onClick={startExam} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white"><RotateCcw className="size-4"/>{t('engine.retry')}</button></div>
-      </div>
+      <main className="mx-auto w-full max-w-4xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+        <section className="rounded-[2rem] border border-emerald-300/40 bg-white/90 p-7 text-center shadow-xl shadow-emerald-950/5 dark:border-emerald-300/20 dark:bg-slate-900/80 sm:p-12">
+          <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-200"><Check className="size-8" aria-hidden="true" /></div>
+          <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">{t('fullExam.complete.answers')}</p>
+          <h1 className="mt-2 text-3xl font-black text-slate-950 dark:text-white">{t('fullExam.complete.title')}</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">{t('fullExam.complete.body')}</p>
+          <div className="mx-auto mt-7 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+            {SECTION_ORDER.map((id) => {
+              const Icon = SECTION_ICONS[id]
+              return <div key={id} className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-700 dark:bg-slate-950/50"><Icon className="mx-auto size-4 text-teal-700 dark:text-teal-300" aria-hidden="true" /><p className="mt-2 text-xs font-semibold text-slate-700 dark:text-slate-200">{t(SECTION_LABELS[id])}</p><p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{t('fullExam.complete.count', { count: answerCounts[id] })}</p></div>
+            })}
+          </div>
+          <p className="mx-auto mt-5 max-w-xl text-xs leading-5 text-slate-500 dark:text-slate-400">{t('fullExam.sessionNote')}</p>
+          {onExit && <button type="button" onClick={onExit} className="mt-7 rounded-xl bg-teal-700 px-5 py-3 text-sm font-bold text-white hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">{t('fullExam.exit')}</button>}
+        </section>
+      </main>
     )
   }
-
-  const currentDone = completed[activeSkill]
-  const steps = stepsBySkill[activeSkill]
-  const step = steps[stepIndexes[activeSkill]]
-  const currentQuestion = step?.type === 'objective' ? step.question : null
-  const currentPart = step?.type === 'objective' ? step.part : null
-  const audioText = currentQuestion?.audioText || currentPart?.audioText || currentPart?.media?.transcript || ''
-  const usedMatchingAnswers = currentPart?.questions.filter((question) => question.id !== currentQuestion?.id).map((question) => answers[question.id]).filter(Boolean) ?? []
-  const currentWriting = step?.type === 'writing' ? writingResponses[step.id] ?? '' : ''
-  const writingEstimate = step?.type === 'writing' ? evaluateWritingTask(currentWriting, step.task) : null
-  const currentSpeech = step?.type === 'speaking' ? step.prompt : null
 
   return (
-    <div className="mx-auto max-w-7xl space-y-4">
-      <header className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.15em] text-amber-700 dark:text-amber-200">{MOCK_01.id} · {t(SKILL_LABELS[activeSkill])}</p><h1 className="mt-1 text-xl font-extrabold text-slate-900 dark:text-white">{t(SKILL_LABELS[activeSkill])} · {steps.length ? stepIndexSafe(stepIndexes[activeSkill], steps.length) + 1 : 0}/{steps.length}</h1></div><div className={cn('inline-flex items-center gap-2 rounded-xl border px-4 py-2 font-mono text-sm font-bold tabular-nums', remaining[activeSkill] <= 300 ? 'border-rose-300 bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-200' : 'border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200')}><Clock3 className="size-4"/>{formatClock(remaining[activeSkill])}<span className="font-sans text-xs font-medium opacity-70">{t('common.secondsRemaining')}</span></div></header>
-      <section className="glass premium-glass rounded-2xl border border-slate-200 bg-white/85 p-3 dark:border-slate-800 dark:bg-slate-900/85"><div className="mb-2 flex items-center justify-between text-xs"><span className="font-bold text-slate-700 dark:text-slate-200">{t('engine.progressLine', { done: progressCount, total: totalStepCount })}</span><span className="font-extrabold text-amber-700 dark:text-amber-200">{globalProgress}%</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"><div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 transition-[width]" style={{ width: `${globalProgress}%` }}/></div></section>
-      <nav className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label={t('engine.sectionNavigation')}>{SKILL_KEYS.map((key) => { const Icon = SKILL_ICONS[key]; const done = completed[key]; const section = MOCK_01.sections[key]; const count = stepsBySkill[key].length; return <button key={key} type="button" onClick={() => selectSkill(key)} aria-current={activeSkill === key ? 'step' : undefined} className={cn('flex items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left transition', activeSkill === key ? 'border-amber-400 bg-amber-300/20 text-amber-950 dark:text-amber-100' : done ? 'border-emerald-400/50 bg-emerald-50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-200' : 'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300')}><span className="flex min-w-0 items-center gap-2"><Icon className="size-4 shrink-0"/><span className="truncate text-sm font-bold">{t(SKILL_LABELS[key])}</span></span><span className="flex items-center gap-1 text-[10px] font-bold">{done ? <CheckCircle2 className="size-4"/> : `${count} · ${section.durationMinutes}m`}</span></button> })}</nav>
-      {currentDone ? (
-        <section className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 to-cyan-600 p-6 text-white"><h2 className="text-xl font-extrabold">{t(SKILL_LABELS[activeSkill])} {t('engine.done')}</h2><p className="mt-2 text-sm text-white/80">{t('engine.scoreLine', { raw: currentDone.rawScore, max: currentDone.maxRawScore, scaled: currentDone.scaledScore, level: currentDone.level, xp: currentDone.earnedXp })}</p><button type="button" onClick={() => { const next = SKILL_KEYS.find((key) => !completed[key]); if (next) selectSkill(next) }} className="mt-4 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-teal-900">{t('engine.nextIncomplete')}</button></section>
-      ) : !step ? null : step.type === 'objective' ? (
-        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,.95fr)]">
-          <div className="space-y-3">{activeSkill === 'dinleme' && audioText && <section className="glass premium-glass rounded-2xl border border-slate-200 bg-white/85 p-4 dark:border-slate-800 dark:bg-slate-900/85"><div className="flex flex-wrap items-center gap-2"><button type="button" onClick={() => { if (!speakTurkish(audioText)) setRecordingError(t('mock.speechUnavailable')) }} className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-3 py-2 text-sm font-bold text-white"><Volume2 className="size-4"/>{t('mock.listen')}</button><button type="button" onClick={() => setShowTranscript((shown) => !shown)} className="rounded-lg border border-amber-300/50 px-3 py-2 text-sm font-semibold text-amber-800 dark:text-amber-100">{showTranscript ? t('mock.transcript.hide') : t('mock.transcript.show')}</button></div>{showTranscript && <p className="mt-3 whitespace-pre-line text-sm leading-6 text-slate-700 dark:text-slate-200">{audioText}</p>}{recordingError && <p role="status" className="mt-2 text-xs text-amber-700 dark:text-amber-200">{recordingError}</p>}</section>}{currentPart && <StimulusPane part={currentPart} question={currentQuestion!}/>}</div>
-          <section className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7"><div className="flex items-start justify-between gap-3"><span className="grid size-9 place-items-center rounded-xl bg-amber-100 text-sm font-extrabold text-amber-950 dark:bg-amber-300/15 dark:text-amber-100">{currentQuestion!.number}</span><span className="rounded-full border border-amber-300/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-700 dark:text-amber-200">{t(`mock.kind.${currentQuestion!.kind === 'matching' ? 'matching' : currentQuestion!.kind === 'boolean' ? 'boolean' : 'multiple'}`)}</span></div><p className="mt-4 text-sm text-slate-500 dark:text-slate-400">{currentPart?.instructions}</p><h2 className="mt-3 text-base font-bold leading-relaxed text-slate-900 dark:text-white">{currentQuestion!.prompt.startsWith('Paragraf ') ? 'Bu paragrafa en uygun başlık hangisidir?' : currentQuestion!.prompt}</h2>{currentQuestion!.kind === 'matching' ? <select aria-label={`Soru ${currentQuestion!.number} yanıtı`} value={answers[currentQuestion!.id] ?? ''} onChange={(event) => setAnswers((old) => ({ ...old, [currentQuestion!.id]: event.target.value }))} className="mt-5 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm font-semibold text-slate-900 outline-none focus:border-amber-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white"><option value="">{t('mock.selectAnswer')}</option>{currentQuestion!.options.map((option) => <option key={option.id} value={option.id} disabled={usedMatchingAnswers.includes(option.id)}>{option.label}</option>)}</select> : <div className="mt-5 space-y-2">{currentQuestion!.options.map((option) => <button key={option.id} type="button" onClick={() => setAnswers((old) => ({ ...old, [currentQuestion!.id]: option.id }))} className={cn('flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition', answers[currentQuestion!.id] === option.id ? 'border-amber-400 bg-amber-300/15 text-amber-900 dark:text-amber-100' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-amber-300 dark:border-slate-700 dark:bg-black/15 dark:text-slate-200')}><span className="grid size-7 shrink-0 place-items-center rounded-lg border border-current text-xs font-extrabold">{option.id}</span><span>{option.label.replace(/^[A-H]\.\s*/u, '').replace(/^[A-H] — /u, '')}</span></button>)}</div>}</section>
+    <main className="mx-auto w-full max-w-6xl px-4 pb-12 pt-3 sm:px-6 lg:px-8">
+      <div className="sticky top-[76px] z-30 mb-6 rounded-2xl border border-slate-200/80 bg-white/95 p-3 shadow-lg shadow-slate-950/10 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-950/95 sm:p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-300/15 dark:text-teal-200"><Clock3 className="size-4" aria-hidden="true" /></span>
+            <div className="min-w-0">
+              <p className="truncate text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">{t('fullExam.remaining')} · {t(SECTION_LABELS[section])}</p>
+              <p className={cn('font-mono text-xl font-black tabular-nums sm:text-2xl', timerUrgent ? 'text-rose-700 dark:text-rose-300' : 'text-slate-900 dark:text-white')} aria-label={`${formatClock(secondsRemaining)} ${t('fullExam.remaining')}`}>{formatClock(secondsRemaining)}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('fullExam.inProgress')}</p>
+            <p className="mt-1 text-xs font-semibold text-slate-700 dark:text-slate-200">{t('fullExam.sectionOf', { current: sectionIndex + 1, total: 4 })}</p>
+            <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{t('fullExam.stepOf', { current: stepIndex + 1, total: sectionSteps.length })} · {t('fullExam.sectionDuration', { minutes: sectionMinutes })}</p>
+          </div>
         </div>
-      ) : step.type === 'writing' ? (
-        <section className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7"><div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-extrabold text-slate-900 dark:text-white">{t('engine.taskHeading', { number: step.task.task })} · {step.task.task === 1 ? t('mock.writing.letter') : t('mock.writing.essay')}</h2><span className="rounded-full border border-amber-300/40 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-200">{t('engine.weightSummary', { percent: step.task.weightPercent, score: step.task.maxRaw })}</span></div><p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{step.task.prompt}</p><textarea value={currentWriting} onChange={(event) => setWritingResponses((old) => ({ ...old, [step.id]: event.target.value }))} rows={step.task.task === 1 ? 10 : 13} placeholder={t('engine.writePlaceholder')} className="mt-4 w-full resize-y rounded-2xl border border-slate-300 bg-white p-4 text-sm leading-6 text-slate-900 outline-none focus:border-amber-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white"/><div className="mt-2 flex justify-between text-xs"><span className="text-slate-500 dark:text-slate-400">{t('engine.suggestedWords', { min: step.task.minWords, max: step.task.maxWords })}</span><span className={cn('font-bold', wordCount(currentWriting) < step.task.minWords ? 'text-amber-600' : wordCount(currentWriting) > step.task.maxWords ? 'text-rose-600' : 'text-emerald-600')}>{t('engine.wordCount', { count: wordCount(currentWriting) })}</span></div>{writingEstimate && <div className="mt-4 rounded-xl border border-amber-300/30 bg-amber-50/70 p-3 text-xs text-slate-600 dark:bg-black/20 dark:text-slate-300"><span className="font-bold text-amber-800 dark:text-amber-200">{t('engine.autoEstimate')}: {writingEstimate.rawScore}/{writingEstimate.maxRawScore} {t('mock.rawScore')}.</span> {t('engine.estimateNote')}</div>}</section>
-      ) : (
-        <section className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7"><div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-extrabold text-slate-900 dark:text-white">{t('skill.speaking')} {step.prompt.part} · {step.prompt.title}</h2>{step.prompt.part === 2 && <span className="rounded-full border border-amber-300/40 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-200">{t('engine.prepOneMinute')}</span>}</div><p className="mt-4 whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">{step.prompt.prompt}</p>{step.prompt.part === 2 && <div className="mt-4 rounded-xl border border-amber-300/30 bg-amber-50/70 p-4 dark:bg-black/20"><p className="font-bold text-amber-800 dark:text-amber-200">{t('mock.speaking.prep', { time: formatClock(prepSeconds) })}</p><button type="button" onClick={() => setPrepStarted(true)} disabled={prepStarted || prepSeconds === 0} className="mt-2 rounded-lg bg-amber-500 px-3 py-2 text-sm font-bold text-amber-950 disabled:opacity-50">{prepStarted ? t('mock.speaking.prep.running') : prepSeconds === 0 ? t('mock.speaking.prep.done') : t('mock.speaking.prep.start')}</button></div>}<textarea value={speakingNotes[step.id] ?? ''} onChange={(event) => setSpeakingNotes((old) => ({ ...old, [step.id]: event.target.value }))} rows={3} placeholder={t('mock.speaking.notes')} className="mt-4 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"/><div className="mt-4 flex flex-wrap items-center gap-2"><button type="button" onClick={() => toggleRecording(step.id)} className={cn('inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white', recording ? 'bg-rose-600' : 'bg-teal-700')}>{recording ? <MicOff className="size-4"/> : <Mic className="size-4"/>}{recording ? t('engine.stopRecord') : t('engine.record')}</button>{audioUrls[step.id] && <audio controls src={audioUrls[step.id]} className="h-10 max-w-full"/>}{recordingError && <p role="status" className="text-xs text-amber-700 dark:text-amber-200">{recordingError}</p>}</div><div className="mt-6 rounded-2xl bg-slate-50 p-4 dark:bg-black/20"><div className="flex items-center justify-between gap-2"><label htmlFor={`self-score-${step.id}`} className="text-sm font-bold text-slate-800 dark:text-white">{t('engine.selfEvaluate')}</label><span className="font-mono font-extrabold text-amber-700 dark:text-amber-200">{speakingScores[step.id] ?? 0}/12</span></div><p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{step.prompt.evaluationCriteria.join(' · ')}</p><input id={`self-score-${step.id}`} type="range" min={0} max={12} step={1} value={speakingScores[step.id] ?? 0} onChange={(event) => { setSpeakingScores((old) => ({ ...old, [step.id]: Number(event.target.value) })); setSpeakingTouched((old) => ({ ...old, [step.id]: true })) }} className="mt-3 w-full accent-amber-500"/></div></section>
+        <SectionProgress activeIndex={sectionIndex} submittedSections={submittedSections} t={t} />
+      </div>
+
+      {timeoutNotice && <div role="status" className="mb-4 rounded-xl border border-amber-300/50 bg-amber-50/80 px-4 py-3 text-sm font-medium text-amber-950 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">{t('fullExam.timeout')}</div>}
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-teal-700 dark:text-teal-300">{t('fullExam.eyebrow')}</p>
+          <h1 className="mt-1 text-2xl font-black text-slate-950 dark:text-white sm:text-3xl">{t(SECTION_LABELS[section])}</h1>
+        </div>
+        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{EXAM.title}</p>
+      </div>
+
+      {currentStep?.kind === 'reading' && (
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+          <section className="rounded-3xl border border-slate-200/80 bg-white/85 p-5 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-7">
+            <div className="mb-4 flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-300/15 dark:text-teal-200"><BookOpenText className="size-5" aria-hidden="true" /></span><div><p className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">{t('fullExam.reading.passage', { number: stepIndex + 1 })}</p><h2 className="mt-1 text-lg font-extrabold leading-6 text-slate-900 dark:text-white">{currentStep.passage.title}</h2></div></div>
+            <p className="whitespace-pre-line text-sm leading-7 text-slate-700 dark:text-slate-200">{currentStep.passage.content}</p>
+          </section>
+          <ObjectiveQuestions questions={currentStep.passage.questions} answers={examAnswers.okuma} onSelect={(id, option) => selectObjectiveAnswer('okuma', id, option)} t={t} />
+        </div>
       )}
 
-      <section className="glass premium-glass rounded-2xl border border-slate-200/80 bg-white/85 p-4 dark:border-slate-800 dark:bg-slate-900/85"><div className="mb-3 flex flex-wrap items-center justify-between gap-2"><h2 className="text-sm font-bold text-slate-900 dark:text-white">{t('engine.stepsTitle')}</h2><span className="text-xs text-slate-500 dark:text-slate-400">{t('common.answered')} {Math.min(progressCount, totalStepCount)}/{totalStepCount}</span></div><div className="grid grid-cols-7 gap-2 sm:grid-cols-10 lg:grid-cols-12">{steps.map((item, index) => { const done = item.type === 'objective' ? Boolean(answers[item.id]) : item.type === 'writing' ? Boolean(writingResponses[item.id]?.trim()) : Boolean(speakingTouched[item.id] || speakingNotes[item.id]?.trim() || audioUrls[item.id]); return <button key={item.id} type="button" onClick={() => goToStep(index)} className={cn('h-9 rounded-lg border text-xs font-bold', currentIndex === index ? 'border-amber-400 bg-amber-400 text-amber-950' : done ? 'border-emerald-400 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200' : 'border-slate-200 text-slate-500 dark:border-slate-700 dark:text-slate-300')}>{index + 1}</button>})}</div><div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4 dark:border-slate-700"><div className="flex gap-2"><button type="button" onClick={() => goToStep(currentIndex - 1)} disabled={currentIndex === 0} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 disabled:opacity-40 dark:border-slate-700 dark:text-slate-200"><ArrowLeft className="size-4"/>{t('common.previous')}</button><button type="button" onClick={() => goToStep(currentIndex + 1)} disabled={currentIndex >= steps.length - 1} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 disabled:opacity-40 dark:border-slate-700 dark:text-slate-200">{t('common.next')}<ArrowRight className="size-4"/></button></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => completeSection(activeSkill)} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 px-4 py-2.5 text-sm font-extrabold text-amber-950"><Check className="size-4"/>{t('engine.completeSection')}</button></div></div></section>
+      {currentStep?.kind === 'listening' && (
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+          <section className="rounded-3xl border border-slate-200/80 bg-white/85 p-5 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-7">
+            <div className="mb-4 flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-cyan-100 text-cyan-900 dark:bg-cyan-300/15 dark:text-cyan-100"><Headphones className="size-5" aria-hidden="true" /></span><div><p className="text-[10px] font-bold uppercase tracking-wider text-cyan-800 dark:text-cyan-300">{t('fullExam.listening.audio', { number: stepIndex + 1 })}</p><h2 className="mt-1 text-lg font-extrabold leading-6 text-slate-900 dark:text-white">{currentStep.item.title}</h2></div></div>
+            <p className="mb-4 text-xs leading-5 text-slate-600 dark:text-slate-300">{t('fullExam.audio.info')}</p>
+            <button type="button" onClick={() => playListeningText(currentStep.item.transcript)} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-cyan-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
+              {isPlaying ? <Square className="size-4" aria-hidden="true" /> : <Volume2 className="size-4" aria-hidden="true" />}{isPlaying ? t('fullExam.audio.stop') : t(audioFallback ? 'fullExam.audio.replay' : 'fullExam.audio.play')}
+            </button>
+            {audioFallback && <div className="mt-4 rounded-xl border border-amber-300/50 bg-amber-50/80 p-3 text-xs leading-5 text-amber-950 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">{t('fullExam.audio.fallback')}</div>}
+            {audioFallback && <p className="mt-4 whitespace-pre-line rounded-xl border border-slate-200/80 bg-slate-50/75 p-4 text-sm leading-6 text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-200">{currentStep.item.transcript}</p>}
+          </section>
+          <ObjectiveQuestions questions={currentStep.item.questions} answers={examAnswers.dinleme} onSelect={(id, option) => selectObjectiveAnswer('dinleme', id, option)} t={t} />
+        </div>
+      )}
 
-      {recordingError && activeSkill !== 'konusma' && <p role="status" className="text-sm text-amber-700 dark:text-amber-200">{recordingError}</p>}
-      {currentDone && <p className="rounded-xl border border-emerald-300/40 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-200">{t('engine.sectionDone')}</p>}
-      <p className="text-center text-xs text-slate-400">{t('engine.scoringNote')}</p>
-    </div>
+      {currentStep?.kind === 'writing' && (
+        <section className="rounded-3xl border border-slate-200/80 bg-white/85 p-5 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-7">
+          <div className="mb-5 flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-violet-100 text-violet-900 dark:bg-violet-300/15 dark:text-violet-100"><FileText className="size-5" aria-hidden="true" /></span><div><p className="text-[10px] font-bold uppercase tracking-wider text-violet-800 dark:text-violet-300">{t('fullExam.writing.task', { number: stepIndex + 1 })} · {currentStep.task.category}</p><h2 className="mt-1 text-lg font-extrabold text-slate-900 dark:text-white">{currentStep.task.title}</h2></div></div>
+          <p className="whitespace-pre-line rounded-2xl border border-slate-200/80 bg-slate-50/75 p-4 text-sm leading-7 text-slate-700 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-200">{currentStep.task.prompt}</p>
+          {currentStep.task.key_points?.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{currentStep.task.key_points.map((point, index) => <li key={`${currentStep.id}-point-${index}`} className="flex items-start gap-2 rounded-xl border border-slate-200/70 bg-white/50 px-3 py-2 text-xs leading-5 text-slate-600 dark:border-slate-700/70 dark:bg-slate-950/35 dark:text-slate-300"><span className="mt-0.5 size-1.5 shrink-0 rounded-full bg-teal-500" />{point}</li>)}</ul> : null}
+          <label htmlFor={`writing-${currentStep.id}`} className="mb-2 mt-5 block text-sm font-bold text-slate-800 dark:text-slate-100">{t('fullExam.write.response')}</label>
+          <textarea id={`writing-${currentStep.id}`} value={examAnswers.yazma[currentStep.id] || ''} onChange={(event) => updateWritingResponse(currentStep.id, event.target.value)} rows={10} placeholder={t('fullExam.write.placeholder')} className="w-full resize-y rounded-2xl border border-slate-300 bg-white p-4 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 dark:border-slate-600 dark:bg-slate-950/75 dark:text-slate-100 dark:placeholder:text-slate-500" />
+        </section>
+      )}
+
+      {currentStep?.kind === 'speaking' && (
+        <section className="rounded-3xl border border-slate-200/80 bg-white/85 p-5 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-7">
+          <div className="mb-5 flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-rose-100 text-rose-900 dark:bg-rose-300/15 dark:text-rose-100"><Mic className="size-5" aria-hidden="true" /></span><div><p className="text-[10px] font-bold uppercase tracking-wider text-rose-800 dark:text-rose-300">{t('fullExam.speaking.part', { number: currentStep.partNumber })} · {currentStep.part.category}</p><h2 className="mt-1 text-lg font-extrabold text-slate-900 dark:text-white">{currentStep.part.topic}</h2></div></div>
+          {currentStep.part.prompt && <p className="whitespace-pre-line rounded-2xl border border-slate-200/80 bg-slate-50/75 p-4 text-sm leading-7 text-slate-700 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-200">{currentStep.part.prompt}</p>}
+          {currentStep.part.questions?.length ? <ol className="space-y-3">{currentStep.part.questions.map((prompt, index) => <li key={`${currentStep.id}-prompt-${index}`} className="flex gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/75 p-4 dark:border-slate-700 dark:bg-slate-950/50"><span className="grid size-7 shrink-0 place-items-center rounded-lg bg-rose-100 text-xs font-bold text-rose-900 dark:bg-rose-300/15 dark:text-rose-100">{index + 1}</span><p className="text-sm leading-6 text-slate-700 dark:text-slate-200">{prompt}</p></li>)}</ol> : null}
+          {currentStep.part.key_points?.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{currentStep.part.key_points.map((point, index) => <li key={`${currentStep.id}-key-${index}`} className="flex items-start gap-2 rounded-xl border border-slate-200/70 bg-white/50 px-3 py-2 text-xs leading-5 text-slate-600 dark:border-slate-700/70 dark:bg-slate-950/35 dark:text-slate-300"><span className="mt-0.5 size-1.5 shrink-0 rounded-full bg-rose-500" />{point}</li>)}</ul> : null}
+          <div className="mt-6 rounded-2xl border border-rose-200/70 bg-rose-50/65 p-4 dark:border-rose-300/20 dark:bg-rose-400/5">
+            <p className="text-xs leading-5 text-slate-600 dark:text-slate-300">{t('fullExam.speak.privacy')}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button type="button" disabled={requestingMicrophone || isBusy} onClick={() => void toggleRecording(currentStep.id)} className={cn('inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900', recordingPart === currentStep.id ? 'bg-rose-700 hover:bg-rose-600 focus:ring-rose-400' : 'bg-teal-700 hover:bg-teal-600 focus:ring-teal-400', (requestingMicrophone || isBusy) && 'cursor-wait opacity-60')}>
+                {recordingPart === currentStep.id ? <MicOff className="size-4" aria-hidden="true" /> : <Mic className="size-4" aria-hidden="true" />}{requestingMicrophone ? t('konusma.record.requesting') : recordingPart === currentStep.id ? t('fullExam.speak.stop') : t('fullExam.speak.record')}
+              </button>
+              {recordingPart === currentStep.id && <span className="inline-flex items-center gap-2 text-xs font-semibold text-rose-700 dark:text-rose-300"><span className="size-2 animate-pulse rounded-full bg-rose-500" />{t('fullExam.speak.recording')}</span>}
+              {examAnswers.konusma.audioBlobs[currentStep.id] && recordingPart !== currentStep.id && <span className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-300"><Check className="size-4" aria-hidden="true" />{t('fullExam.speak.recorded')}</span>}
+            </div>
+            {recordingError && <p role="alert" className="mt-3 text-xs font-medium text-rose-800 dark:text-rose-200">{recordingError}</p>}
+            {audioPreviewUrls[currentStep.id] && recordingPart !== currentStep.id && <audio className="mt-4 w-full" controls preload="metadata" src={audioPreviewUrls[currentStep.id]} aria-label={t('fullExam.speak.play')} />}
+          </div>
+        </section>
+      )}
+
+      <div className="mt-6 flex flex-col-reverse items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+        <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">{t('fullExam.sessionNote')}</p>
+        {isFinalSpeakingStep ? (
+          <button type="button" disabled={isBusy || Boolean(recordingPart)} onClick={() => void finishExam()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-700 to-orange-600 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-rose-900/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
+            {t('fullExam.finishOriginal')}<Check className="size-4" aria-hidden="true" />
+          </button>
+        ) : (
+          <button type="button" disabled={isBusy || Boolean(recordingPart)} onClick={() => void continueExam()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-teal-900/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
+            {stepIndex === sectionSteps.length - 1 ? t('fullExam.submitContinue') : t('fullExam.continue')}<ArrowRight className="size-4" aria-hidden="true" />
+          </button>
+        )}
+      </div>
+    </main>
   )
-}
-
-function stepIndexSafe(index: number, total: number) {
-  return Math.max(0, Math.min(index, total - 1))
 }

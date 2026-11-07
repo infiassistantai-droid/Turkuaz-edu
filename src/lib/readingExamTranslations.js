@@ -24,7 +24,7 @@ export const readingExamTranslations = {
     'reading.exam.result.percentage': 'Yakuniy natija: {percent}%',
     'reading.exam.result.correct': 'To‘g‘ri: {correct} / {total}',
     'reading.exam.result.incorrect': 'Noto‘g‘ri: {count}',
-    'reading.exam.result.perfect': 'A’lo! Okuma va 100% Test sovrinlari ochildi.',
+    'reading.exam.result.perfect': 'A’lo! “O‘qib tushunish” va 100% natija sovrinlari ochildi.',
     'reading.exam.result.retry': 'Qayta topshirish',
     'reading.exam.selectionRequired': 'Davom etish uchun bitta javobni tanlang.',
   },

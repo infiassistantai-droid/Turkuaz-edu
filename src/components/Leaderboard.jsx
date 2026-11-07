@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Crown, Medal, RefreshCw, Trophy } from 'lucide-react'
+import { Crown, Lock, Medal, RefreshCw, Trophy } from 'lucide-react'
 import { useI18n } from '../lib/i18n.jsx'
 import { fetchWeeklyLeaderboard, isSupabaseConfigured } from '../lib/supabase'
 
@@ -73,7 +73,7 @@ export default function Leaderboard({ userId, profile, stats, isPremium = false 
     ? 'border-yellow-500/20 bg-black/35 text-white backdrop-blur-xl'
     : 'border-slate-200 bg-white text-slate-900 shadow-sm'
 
-  return <section className="mx-auto max-w-4xl space-y-5">
+  return <section className="mx-auto max-w-4xl space-y-4">
     <header className={`rounded-3xl border p-5 sm:p-6 ${shell}`}>
       <div className="flex items-center gap-3">
         <span className={`grid size-12 place-items-center rounded-2xl ${isPremium ? 'bg-yellow-400/10 text-yellow-300' : 'bg-teal-50 text-teal-700'}`}><Trophy className="size-6"/></span>
@@ -81,7 +81,7 @@ export default function Leaderboard({ userId, profile, stats, isPremium = false 
           <h1 className="text-2xl font-extrabold">{t('leaderboard.title')}</h1>
           <p className={`mt-1 text-sm ${isPremium ? 'text-white/60' : 'text-slate-500'}`}>{t('leaderboard.subtitle')}</p>
         </div>
-        <button type="button" onClick={refresh} disabled={busy || sampleMode} className={`grid size-10 shrink-0 place-items-center rounded-xl border disabled:opacity-40 ${isPremium ? 'border-white/15 text-yellow-100 hover:bg-white/10' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`} aria-label={t('leaderboard.refresh')}><RefreshCw className={`size-4 ${busy ? 'animate-spin' : ''}`}/></button>
+        {!sampleMode && <button type="button" onClick={refresh} disabled={busy} className={`grid size-10 shrink-0 place-items-center rounded-xl border disabled:opacity-40 ${isPremium ? 'border-white/15 text-yellow-100 hover:bg-white/10' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`} aria-label={t('leaderboard.refresh')}><RefreshCw className={`size-4 ${busy ? 'animate-spin' : ''}`}/></button>}
       </div>
       <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {LEAGUES.map((league) => {
@@ -128,5 +128,21 @@ export default function Leaderboard({ userId, profile, stats, isPremium = false 
         </div>
       }) : <p className={`p-8 text-center text-sm ${isPremium ? 'text-white/55' : 'text-slate-500'}`}>{t('leaderboard.empty')}</p>}
     </div>}
+
+    <section
+      aria-labelledby="leaderboard-clans-title"
+      aria-disabled="true"
+      className={`pointer-events-none cursor-not-allowed select-none rounded-3xl border p-5 opacity-75 sm:p-6 ${isPremium ? 'border-white/10 bg-white/[.04] text-white/70' : 'border-slate-200/80 bg-slate-100/70 text-slate-500'}`}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <h2 id="leaderboard-clans-title" className="text-lg font-extrabold tracking-tight">{t('leaderboard.clans.title')}</h2>
+        <Lock className={`size-5 shrink-0 ${isPremium ? 'text-white/55' : 'text-slate-400'}`} aria-hidden="true" />
+      </div>
+      <div className="mt-4 flex justify-center">
+        <span className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[.16em] ${isPremium ? 'border-white/10 bg-white/[.06] text-white/65' : 'border-slate-300 bg-white/70 text-slate-500'}`}>
+          {t('leaderboard.clans.soon')}
+        </span>
+      </div>
+    </section>
   </section>
 }

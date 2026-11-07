@@ -27,13 +27,6 @@ function formatTime(seconds: number) {
   return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
 }
 
-function levelStyle(level: ReadingMockResult['level']) {
-  if (level === 'C1') return 'border-emerald-300/40 bg-emerald-400/10 text-emerald-100'
-  if (level === 'B2') return 'border-teal-300/40 bg-teal-400/10 text-teal-100'
-  if (level === 'B1') return 'border-amber-300/50 bg-amber-400/10 text-amber-100'
-  return 'border-slate-300/30 bg-slate-400/10 text-slate-100'
-}
-
 function Stimulus({ part, t }: { part: ReadingPart; t: (key: string) => string }) {
   return (
     <section className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7">

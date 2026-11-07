@@ -4,9 +4,9 @@ import {
   Headphones, Mic, MicOff, Play, RotateCcw, Sparkles, Volume2,
 } from 'lucide-react'
 import { calculateCertificate, scoreSection, scoreSpeakingParts, scoreWritingTasks } from '../lib/multilevelScoring'
-import { generateMockExam, SECTION_LABELS } from '../data/mockExamBank'
+import { generateMockExam } from '../data/mockExamBank'
 import ReadingMockExam from './MockExam.tsx'
-import MockExamEngine from './MockExamEngine.tsx'
+import MockExamEngine from './DatabaseMockExamEngine.tsx'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
@@ -78,21 +78,14 @@ function evaluateWriting(text, prompt) {
   }
 }
 
-function scoreTone(level) {
-  if (level === 'C1') return 'border-emerald-300/50 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300'
-  if (level === 'B2') return 'border-teal-300/50 bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300'
-  if (level === 'B1') return 'border-amber-300/50 bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300'
-  return 'border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
-}
-
-export default function MockExam({ sectionResults = {}, onSectionComplete, onExamComplete }) {
+export default function MockExam({ sectionResults = {}, onSectionComplete, onExamComplete, initialMode = 'mixed', onExit }) {
   const { t } = useI18n()
   const [mock, setMock] = useState(null)
   const [screen, setScreen] = useState('landing')
   const [activeSection, setActiveSection] = useState(null)
   const [completedThisMock, setCompletedThisMock] = useState({})
   const [lastResult, setLastResult] = useState(null)
-  const [readingOnlyMode, setReadingOnlyMode] = useState(false)
+  const [readingOnlyMode, setReadingOnlyMode] = useState(initialMode === 'reading')
   const [databaseEngineMode, setDatabaseEngineMode] = useState(false)
   const reportedExamRef = useRef(false)
 
@@ -139,7 +132,7 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
   }
 
   if (readingOnlyMode) {
-    return <ReadingMockExam onComplete={handleSectionComplete} onExit={() => setReadingOnlyMode(false)} />
+    return <ReadingMockExam onComplete={handleSectionComplete} onExit={() => initialMode === 'reading' && onExit ? onExit() : setReadingOnlyMode(false)} />
   }
 
   if (databaseEngineMode) {
@@ -187,7 +180,7 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
   }
 
   if (!mock || screen === 'landing') {
-    return <MockLanding onGenerate={generateNewMock} onStartReading={() => setReadingOnlyMode(true)} onStartDatabase={() => setDatabaseEngineMode(true)} sectionResults={sectionResults} t={t} />
+    return <MockLanding onGenerate={generateNewMock} onStartReading={() => setReadingOnlyMode(true)} onStartDatabase={() => setDatabaseEngineMode(true)} onExit={onExit} sectionResults={sectionResults} t={t} />
   }
 
   const certificate = completedThisMock && SECTION_KEYS.every((key) => completedThisMock[key])
@@ -219,11 +212,11 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
   )
 }
 
-function MockLanding({ onGenerate, onStartReading, onStartDatabase, sectionResults, t }) {
+function MockLanding({ onGenerate, onStartReading, onStartDatabase, onExit, sectionResults, t }) {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <section className="premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9">
-        <div className="relative z-10 max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4"/> {t('mock.badge')}</div><h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">{t('mock.title')}</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">{t('mock.blueprint')}</p><div className="mt-6 flex flex-wrap gap-3"><button type="button" onClick={onGenerate} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-bold text-teal-800 shadow-lg hover:bg-teal-50"><RotateCcw className="size-4"/>{t('mock.fullPlan')}</button><button type="button" onClick={onStartDatabase} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><Sparkles className="size-4 text-amber-200"/>{t('mock.engine')}</button><button type="button" onClick={onStartReading} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><BookOpenText className="size-4 text-amber-200"/>{t('mock.onlyReading')}</button></div></div>
+        <div className="relative z-10 max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4"/> {t('mock.badge')}</div><h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">{t('mock.title')}</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">{t('mock.blueprint')}</p><div className="mt-6 flex flex-wrap gap-3"><button type="button" onClick={onGenerate} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-bold text-teal-800 shadow-lg hover:bg-teal-50"><RotateCcw className="size-4"/>{t('mock.fullPlan')}</button><button type="button" onClick={onStartDatabase} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><Sparkles className="size-4 text-amber-200"/>{t('mock.engine')}</button><button type="button" onClick={onStartReading} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><BookOpenText className="size-4 text-amber-200"/>{t('mock.onlyReading')}</button>{onExit && <button type="button" onClick={onExit} className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-black/10 px-4 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/10">{t('examsHub.back')}</button>}</div></div>
       </section>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{SECTION_KEYS.map((key) => { const Icon = SECTION_ICONS[key]; const saved = sectionResults[key]; return <div key={key} className="glass premium-glass rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-slate-800 dark:bg-slate-900/80"><div className="flex items-center gap-2"><Icon className="size-4 text-teal-700 dark:text-teal-300"/><span className="font-semibold text-slate-900 dark:text-white">{t(`skill.${({ dinleme: 'listening', okuma: 'reading', yazma: 'writing', konusma: 'speaking' })[key]}`)}</span></div><p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{saved ? `${saved.scaledScore}/75 · ${saved.level}` : `${t('mock.sectionNotTaken')} · 0 / 75`}</p></div> })}</div>
     </div>
@@ -254,10 +247,14 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
   const currentPart = questionSection ? section.parts.find((part) => part.questions.some((item) => item.id === currentQuestion?.id)) : null
   const currentSpeakPart = sectionKey === 'konusma' ? section.parts[speakingPartIndex] : null
   const finishedRef = useRef(false)
+  const mountedRef = useRef(true)
   const recorderRef = useRef(null)
   const streamRef = useRef(null)
   const recordingChunksRef = useRef([])
-  const questionCount = questionSection ? questions.length : sectionKey === 'yazma' ? 2 : 3
+  const audioUrlsRef = useRef(audioUrls)
+  const currentSpeakPartRef = useRef(currentSpeakPart)
+  audioUrlsRef.current = audioUrls
+  currentSpeakPartRef.current = currentSpeakPart
 
   useEffect(() => {
     const interval = window.setInterval(() => setSecondsLeft((value) => Math.max(0, value - 1)), 1000)
@@ -270,11 +267,15 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
     return () => window.clearInterval(interval)
   }, [sectionKey, prepStarted, prepSeconds])
 
-  useEffect(() => () => {
-    if (recorderRef.current?.state === 'recording') recorderRef.current.stop()
-    streamRef.current?.getTracks().forEach((track) => track.stop())
-    Object.values(audioUrls).forEach((url) => URL.revokeObjectURL(url))
-  }, [audioUrls])
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      if (recorderRef.current?.state === 'recording') recorderRef.current.stop()
+      streamRef.current?.getTracks().forEach((track) => track.stop())
+      Object.values(audioUrlsRef.current).forEach((url) => URL.revokeObjectURL(url))
+    }
+  }, [])
 
   function complete(rawScore, maxRawScore, extra = {}) {
     if (finishedRef.current) return
@@ -343,37 +344,51 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
 
   async function toggleRecording() {
     setRecordingError('')
-    if (recorderRef.current?.state === 'recording') {
-      recorderRef.current.stop()
-      setRecording(false)
+    if (recorderRef.current) {
+      if (recorderRef.current.state === 'recording') {
+        recorderRef.current.stop()
+        if (mountedRef.current) setRecording(false)
+      }
       return
     }
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
       setRecordingError(t('mock.record.unsupported'))
       return
     }
+
+    const partId = currentSpeakPart?.id
+    if (!partId) return
+    let pendingStream
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      streamRef.current = stream
-      const recorder = new MediaRecorder(stream)
+      pendingStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      if (!mountedRef.current || currentSpeakPartRef.current?.id !== partId) {
+        pendingStream.getTracks().forEach((track) => track.stop())
+        return
+      }
+      streamRef.current = pendingStream
+      const recorder = new MediaRecorder(pendingStream)
       recorderRef.current = recorder
       recordingChunksRef.current = []
-      const partId = currentSpeakPart.id
       recorder.addEventListener('dataavailable', (event) => { if (event.data.size) recordingChunksRef.current.push(event.data) })
       recorder.addEventListener('stop', () => {
         const blob = new Blob(recordingChunksRef.current, { type: recorder.mimeType || 'audio/webm' })
+        pendingStream.getTracks().forEach((track) => track.stop())
+        if (streamRef.current === pendingStream) streamRef.current = null
+        if (recorderRef.current === recorder) recorderRef.current = null
+        if (!mountedRef.current || !blob.size) return
         const url = URL.createObjectURL(blob)
         setAudioUrls((previous) => {
           if (previous[partId]) URL.revokeObjectURL(previous[partId])
           return { ...previous, [partId]: url }
         })
-        stream.getTracks().forEach((track) => track.stop())
-        if (streamRef.current === stream) streamRef.current = null
       }, { once: true })
       recorder.start()
-      setRecording(true)
+      if (mountedRef.current) setRecording(true)
     } catch {
-      setRecordingError(t('mock.record.denied'))
+      pendingStream?.getTracks().forEach((track) => track.stop())
+      if (streamRef.current === pendingStream) streamRef.current = null
+      recorderRef.current = null
+      if (mountedRef.current) setRecordingError(t('mock.record.denied'))
     }
   }
 

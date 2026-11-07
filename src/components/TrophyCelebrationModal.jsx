@@ -90,7 +90,7 @@ export default function TrophyCelebrationModal({ event, isPremium = false, dark 
             {date && <p className={cn('mt-1 text-[10px] font-semibold', isPremium ? 'text-white/45' : dark ? 'text-slate-400' : 'text-slate-400')}>{t('trophy.tooltip.date', { date })}</p>}
           </div>
           <img
-            src="/images/mascot/success.png"
+            src="/images/mascot-roaming/kitten-wave.webp"
             alt={t('mascot.aria')}
             className={cn('mascot-cheer pointer-events-none absolute -right-1 -top-16 size-20 object-contain drop-shadow-[0_6px_14px_rgba(15,23,42,.32)] sm:-right-5 sm:-top-20 sm:size-28', isPremium && 'drop-shadow-[0_0_20px_rgba(34,211,238,.42)]')}
           />

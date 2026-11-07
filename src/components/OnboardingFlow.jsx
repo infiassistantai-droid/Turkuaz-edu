@@ -26,23 +26,24 @@ const PATHS = [
   { id: 'placement', labelKey: 'onboarding.path.placement', detailKey: 'onboarding.path.placement.detail', level: null, icon: Compass },
 ]
 
-function OnboardingBackdrop({ isPremium }) {
+function OnboardingBackdrop({ isPremium, darkMode }) {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className={cn('absolute -right-24 -top-28 size-80 rounded-full blur-[110px]', isPremium ? 'bg-rose-500/15' : 'bg-cyan-300/25')} />
-      <div className={cn('absolute -bottom-36 -left-24 size-96 rounded-full blur-[120px]', isPremium ? 'bg-yellow-500/10' : 'bg-teal-300/20')} />
-      <div className={cn('absolute inset-0 opacity-[.035]', isPremium ? 'bg-[radial-gradient(rgba(255,255,255,.75)_0.7px,transparent_0.7px)]' : 'bg-[radial-gradient(rgba(15,23,42,.45)_0.7px,transparent_0.7px)]')} style={{ backgroundSize: '6px 6px' }} />
+      <div className={cn('absolute -right-24 -top-28 size-80 rounded-full blur-[110px]', isPremium ? 'bg-rose-500/15' : darkMode ? 'bg-teal-500/10' : 'bg-cyan-300/25')} />
+      <div className={cn('absolute -bottom-36 -left-24 size-96 rounded-full blur-[120px]', isPremium ? 'bg-yellow-500/10' : darkMode ? 'bg-cyan-500/10' : 'bg-teal-300/20')} />
+      <div className={cn('absolute inset-0 opacity-[.035]', isPremium ? 'bg-[radial-gradient(rgba(255,255,255,.75)_0.7px,transparent_0.7px)]' : darkMode ? 'bg-[radial-gradient(rgba(148,163,184,.7)_0.7px,transparent_0.7px)]' : 'bg-[radial-gradient(rgba(15,23,42,.45)_0.7px,transparent_0.7px)]')} style={{ backgroundSize: '6px 6px' }} />
     </div>
   )
 }
 
-export default function OnboardingFlow({ isPremium = false, profile, onComplete }) {
+export default function OnboardingFlow({ isPremium = false, dark = false, profile, onComplete }) {
   const { t } = useI18n()
   const [step, setStep] = useState(1)
   const [goal, setGoal] = useState(profile?.learningGoal || '')
   const [path, setPath] = useState(profile?.startingPath || '')
   const [processing, setProcessing] = useState(false)
   const premium = Boolean(isPremium)
+  const darkMode = Boolean(dark && !premium)
 
   useEffect(() => {
     if (!processing) return undefined
@@ -59,8 +60,10 @@ export default function OnboardingFlow({ isPremium = false, profile, onComplete 
 
   const shellClass = premium
     ? 'border-white/10 bg-black/40 text-white shadow-[0_28px_100px_rgba(0,0,0,.5)] backdrop-blur-2xl'
-    : 'border-white bg-white/95 text-slate-900 shadow-[0_28px_100px_rgba(15,23,42,.12)] backdrop-blur-2xl'
-  const mutedText = premium ? 'text-white/55' : 'text-slate-500'
+    : darkMode
+      ? 'border-slate-700/80 bg-slate-900/90 text-slate-100 shadow-[0_28px_100px_rgba(0,0,0,.5)] backdrop-blur-2xl'
+      : 'border-white bg-white/95 text-slate-900 shadow-[0_28px_100px_rgba(15,23,42,.12)] backdrop-blur-2xl'
+  const mutedText = premium ? 'text-white/55' : darkMode ? 'text-slate-400' : 'text-slate-500'
   const isReady = step === 1 ? Boolean(goal) : Boolean(path)
 
   const continueFlow = () => {
@@ -73,11 +76,14 @@ export default function OnboardingFlow({ isPremium = false, profile, onComplete 
   }
 
   return (
-    <main className={cn(
-      'relative isolate flex min-h-[100dvh] items-center justify-center overflow-hidden px-4 py-8 sm:px-6',
-      premium ? 'bg-[#140609] text-white' : 'bg-gradient-to-br from-cyan-50 via-white to-teal-50 text-slate-900',
-    )}>
-      <OnboardingBackdrop isPremium={premium} />
+    <main
+      className={cn(
+        'relative isolate flex min-h-[100dvh] items-center justify-center overflow-hidden px-4 py-8 sm:px-6',
+        premium ? 'bg-[#140609] text-white' : darkMode ? 'bg-[#050b18] text-slate-100' : 'bg-gradient-to-br from-cyan-50 via-white to-teal-50 text-slate-900',
+      )}
+      style={darkMode ? { backgroundImage: 'radial-gradient(ellipse at 82% 0%, rgba(13,148,136,.12), transparent 34%), radial-gradient(ellipse at 10% 100%, rgba(8,145,178,.1), transparent 38%)' } : undefined}
+    >
+      <OnboardingBackdrop isPremium={premium} darkMode={darkMode} />
 
       <section className={cn('relative w-full max-w-3xl overflow-hidden rounded-[30px] border', shellClass)} aria-labelledby="onboarding-title">
         <header className={cn('flex items-center justify-between gap-4 border-b px-5 py-4 sm:px-8 sm:py-5', premium ? 'border-white/10' : 'border-slate-100')}>

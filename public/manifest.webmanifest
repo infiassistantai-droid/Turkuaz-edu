@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Türkçe Marathon — Milliy Sertifikat",
-  "short_name": "Türkçe Marathon",
-  "description": "Milliy Sertifikat B1–C1 uchun interaktiv turk tili mashqlari.",
+  "name": "Turkuaz-edu - Turk tili platformasi",
+  "short_name": "Turkuaz-edu",
+  "description": "Turk tilini o‘rganish va Milliy Sertifikat B1–C1 imtihoniga tayyorlanish uchun interaktiv platforma.",
   "lang": "uz",
   "start_url": "/",
   "scope": "/",

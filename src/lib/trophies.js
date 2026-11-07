@@ -22,18 +22,18 @@ export const TROPHY_SHELVES = [
 ]
 
 export const TROPHIES = [
-  { id: 'xp-1000', image: '/images/trophies/1000_xp.webp', titleKey: 'trophy.xp1000.title', descriptionKey: 'trophy.xp1000.description', metric: 'xp', target: 1000, progressKey: 'trophy.progress.xp' },
-  { id: 'xp-5000', image: '/images/trophies/5000_xp.webp', titleKey: 'trophy.xp5000.title', descriptionKey: 'trophy.xp5000.description', metric: 'xp', target: 5000, progressKey: 'trophy.progress.xp' },
-  { id: 'tests-100', image: '/images/trophies/100_test.webp', titleKey: 'trophy.tests100.title', descriptionKey: 'trophy.tests100.description', metric: 'completedQuizzes', target: 100, progressKey: 'trophy.progress.tests' },
-  { id: 'streak-7', image: '/images/trophies/7_kun.webp', titleKey: 'trophy.streak7.title', descriptionKey: 'trophy.streak7.description', metric: 'streak', target: 7, progressKey: 'trophy.progress.days' },
-  { id: 'streak-30', image: '/images/trophies/30_kun.webp', titleKey: 'trophy.streak30.title', descriptionKey: 'trophy.streak30.description', metric: 'streak', target: 30, progressKey: 'trophy.progress.days' },
-  { id: 'reading', image: '/images/trophies/okuma.webp', titleKey: 'trophy.reading.title', descriptionKey: 'trophy.reading.description', metric: 'readingCompletedCount', target: 5, progressKey: 'trophy.progress.passages' },
-  { id: 'listening', image: '/images/trophies/dinleme.webp', titleKey: 'trophy.listening.title', descriptionKey: 'trophy.listening.description', metric: 'listeningPercent', target: 80, progressKey: 'trophy.progress.percent' },
-  { id: 'words-50', image: '/images/trophies/50_soz.webp', titleKey: 'trophy.words50.title', descriptionKey: 'trophy.words50.description', metric: 'savedWordsCount', target: 50, progressKey: 'trophy.progress.words' },
-  { id: 'words-500', image: '/images/trophies/500_soz.webp', titleKey: 'trophy.words500.title', descriptionKey: 'trophy.words500.description', metric: 'savedWordsCount', target: 500, progressKey: 'trophy.progress.words' },
-  { id: 'flawless', image: '/images/trophies/100_percent_test.webp', titleKey: 'trophy.flawless.title', descriptionKey: 'trophy.flawless.description', metric: 'flawlessQuizAchieved', target: 1, progressKey: 'trophy.progress.perfect' },
-  { id: 'speed', image: '/images/trophies/tezkor.webp', titleKey: 'trophy.speed.title', descriptionKey: 'trophy.speed.description', metric: 'speedBonusAchieved', target: 1, progressKey: 'trophy.progress.speed' },
-  { id: 'efsane', image: '/images/trophies/efsane.webp', titleKey: 'trophy.efsane.title', descriptionKey: 'trophy.efsane.description', metric: 'xp', target: 12500, progressKey: 'trophy.progress.xp' },
+  { id: 'xp-1000', image: '/images/achievements/optimized/badge-07-first-step.webp', titleKey: 'trophy.xp1000.title', descriptionKey: 'trophy.xp1000.description', metric: 'xp', target: 1000, progressKey: 'trophy.progress.xp' },
+  { id: 'xp-5000', image: '/images/achievements/optimized/badge-05-infinity-xp.webp', titleKey: 'trophy.xp5000.title', descriptionKey: 'trophy.xp5000.description', metric: 'xp', target: 5000, progressKey: 'trophy.progress.xp' },
+  { id: 'tests-100', image: '/images/achievements/optimized/badge-03-bmba-cup.webp', titleKey: 'trophy.tests100.title', descriptionKey: 'trophy.tests100.description', metric: 'completedQuizzes', target: 100, progressKey: 'trophy.progress.tests' },
+  { id: 'streak-7', image: '/images/achievements/optimized/badge-10-hourglass-patience.webp', titleKey: 'trophy.streak7.title', descriptionKey: 'trophy.streak7.description', metric: 'streak', target: 7, progressKey: 'trophy.progress.days' },
+  { id: 'streak-30', image: '/images/achievements/optimized/badge-06-phoenix-guardian.webp', titleKey: 'trophy.streak30.title', descriptionKey: 'trophy.streak30.description', metric: 'streak', target: 30, progressKey: 'trophy.progress.days' },
+  { id: 'reading', image: '/images/achievements/optimized/badge-01-wise-owl.webp', titleKey: 'trophy.reading.title', descriptionKey: 'trophy.reading.description', metric: 'readingCompletedCount', target: 5, progressKey: 'trophy.progress.passages' },
+  { id: 'listening', image: '/images/achievements/optimized/badge-08-golden-microphone.webp', titleKey: 'trophy.listening.title', descriptionKey: 'trophy.listening.description', metric: 'listeningPercent', target: 80, progressKey: 'trophy.progress.percent' },
+  { id: 'words-50', image: '/images/achievements/optimized/badge-04-polyglot-globe.webp', titleKey: 'trophy.words50.title', descriptionKey: 'trophy.words50.description', metric: 'savedWordsCount', target: 50, progressKey: 'trophy.progress.words' },
+  { id: 'words-500', image: '/images/achievements/optimized/badge-02-crowned-dictionary.webp', titleKey: 'trophy.words500.title', descriptionKey: 'trophy.words500.description', metric: 'savedWordsCount', target: 500, progressKey: 'trophy.progress.words' },
+  { id: 'flawless', image: '/images/achievements/optimized/badge-11-perfect-ruby-star.webp', titleKey: 'trophy.flawless.title', descriptionKey: 'trophy.flawless.description', metric: 'flawlessQuizAchieved', target: 1, progressKey: 'trophy.progress.perfect' },
+  { id: 'speed', image: '/images/achievements/optimized/badge-09-writer-quill.webp', titleKey: 'trophy.speed.title', descriptionKey: 'trophy.speed.description', metric: 'speedBonusAchieved', target: 1, progressKey: 'trophy.progress.speed' },
+  { id: 'efsane', image: '/images/achievements/optimized/badge-12-hero-shield.webp', titleKey: 'trophy.efsane.title', descriptionKey: 'trophy.efsane.description', metric: 'xp', target: 12500, progressKey: 'trophy.progress.xp' },
   { id: 'winter-champion', image: '/images/trophies/winter-champion.svg', titleKey: 'winter.trophy.title', descriptionKey: 'winter.trophy.description', metric: 'winterStudyDays', target: 14, progressKey: 'winter.trophy.progress' },
 ]
 

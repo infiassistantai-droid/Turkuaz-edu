@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Flame, CheckCircle2, Copy, Star, Trophy } from 'lucide-react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Flame, CheckCircle2, Copy, LoaderCircle, Star, Trophy } from 'lucide-react'
 import { cn } from './lib/utils'
 import {
   STORAGE_KEY,
@@ -16,21 +16,9 @@ import {
   saveScore,
 } from './lib/storage'
 import TurkchaDashboard from './components/TurkchaDashboard'
-import Dashboard from './components/Dashboard'
-import ComingSoon from './components/ComingSoon'
-import KunlikReja from './components/KunlikReja'
-import ReadingLibrary from './components/modules/ReadingLibrary'
-import Dinleme from './components/modules/Dinleme'
-import YazmaModule from './components/modules/YazmaModule'
-import Yozish from './components/modules/Yozish'
-import KonusmaModule from './components/modules/KonusmaModule'
-import Kelimeler from './components/modules/Kelimeler'
-import MockExam from './components/MockExam'
-import MockExamSimulator from './components/MockExamSimulator'
 import ProfileSetupModal from './components/ProfileSetupModal'
-import OnboardingFlow from './components/OnboardingFlow'
-import Leaderboard from './components/Leaderboard'
-import AnalyticsDashboard from './components/AnalyticsDashboard'
+import ProtectedRoute from './components/ProtectedRoute'
+import NotFound from './components/NotFound'
 import { deleteLearnerCloudData, fetchLearnerGamification, fetchLearnerProgress, isSupabaseConfigured, mergeCloudVocabularyIntoLocal, supabase, syncLearnerProgress } from './lib/supabase'
 import { disableDailyReminder, enableDailyReminder, getReminderPreference, showDailyReminderIfDue } from './lib/dailyReminders'
 import { calculateCertificate } from './lib/multilevelScoring'
@@ -40,9 +28,26 @@ import { getRankProgress } from './lib/ranks'
 import { getStreakMilestonesUpTo, STREAK_MILESTONES } from './lib/streakMilestones'
 import { getTrophyProgress, TROPHIES, TROPHY_REWARD_XP } from './lib/trophies'
 import { getListeningCompletedCount } from './lib/listeningProgress'
-import { useMascot } from './context/MascotContext'
 import { useWinterUpdate } from './features/winter/WinterUpdateContext'
+import { useAuth } from './context/AuthContext.jsx'
 import { getWinterStudyDayCount, normalizeWinterStudy, recordWinterStudyDay } from './features/winter/winterSeason'
+
+const Dashboard = lazy(() => import('./components/Dashboard'))
+const ComingSoon = lazy(() => import('./components/ComingSoon'))
+const KunlikReja = lazy(() => import('./components/KunlikReja'))
+const ReadingLibrary = lazy(() => import('./components/modules/ReadingLibrary'))
+const Dinleme = lazy(() => import('./components/modules/Dinleme'))
+const YazmaModule = lazy(() => import('./components/modules/YazmaModule'))
+const Yozish = lazy(() => import('./components/modules/Yozish'))
+const KonusmaModule = lazy(() => import('./components/modules/KonusmaModule'))
+const Kelimeler = lazy(() => import('./components/modules/Kelimeler'))
+const MockExam = lazy(() => import('./components/MockExam'))
+const MockExamSimulator = lazy(() => import('./components/MockExamSimulator'))
+const MockExamEngine = lazy(() => import('./components/MockExamEngine'))
+const ImtihonlarHub = lazy(() => import('./components/ImtihonlarHub'))
+const OnboardingFlow = lazy(() => import('./components/OnboardingFlow'))
+const Leaderboard = lazy(() => import('./components/Leaderboard'))
+const Statistika = lazy(() => import('./components/Statistika'))
 
 // Learner stats and skill results start empty and are persisted after real activity.
 const DEFAULT_STATS = { xp: 0, streak: 0, streakMilestones: [], winterStudy: { seasonId: null, days: [] }, completedQuizzes: 0, readingCompletedCount: 0, readingPerfectExamAchieved: false, listeningLessonsCompleted: 0, moduleScores: {}, savedWordsCount: 0, flawlessQuizAchieved: false, speedBonusAchieved: false, trophyUnlocks: [], weeklyXp: 0, weekStart: null, dailyXp: {}, analyticsTrackingSince: null, dailyQuests: null, questWordsCredited: [], wordsLearned: 0, levelsCompleted: 0, skillsCompleted: [], completedLessons: [], completedMocks: 0, examDone: false, lastActivityDate: null }
@@ -262,14 +267,44 @@ function ToastItem({ toast }) {
   )
 }
 
+function normalizeAppPath(pathname) {
+  const normalized = `/${String(pathname || '/').split('/').filter(Boolean).join('/')}`
+  return normalized === '/' ? normalized : normalized.replace(/\/$/u, '')
+}
+
 export default function App() {
   const { t } = useI18n()
-  const { showMascot } = useMascot()
-  const { enabled: winterModeEnabled, featureEnabled: winterFeatureEnabled } = useWinterUpdate()
+  const { session: authSession, loading: authStateLoading } = useAuth()
+  const { featureEnabled: winterFeatureEnabled } = useWinterUpdate()
+  const pageFallback = (
+    <div role="status" aria-live="polite" className="grid min-h-[40vh] place-items-center text-sm font-semibold text-slate-600 dark:text-slate-300">
+      <span className="inline-flex items-center gap-2"><LoaderCircle className="size-5 animate-spin" aria-hidden="true" />{t('cloud.loading.status')}</span>
+    </div>
+  )
+  // The app uses protected in-place tabs, with only login/home as addressable routes.
+  const [pathname, setPathname] = useState(() => normalizeAppPath(typeof window === 'undefined' ? '/' : window.location.pathname))
+  const navigatePath = useCallback((nextPath, replace = false) => {
+    const next = normalizeAppPath(nextPath)
+    if (typeof window !== 'undefined' && normalizeAppPath(window.location.pathname) !== next) {
+      const method = replace ? 'replaceState' : 'pushState'
+      window.history[method]({}, '', next)
+    }
+    setPathname(next)
+  }, [])
+
+  useEffect(() => {
+    const onPopState = () => setPathname(normalizeAppPath(window.location.pathname))
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
   // Lazy initial state — hydrated straight from localStorage (SSR-safe via try/catch).
   const [active, setActive] = useState('home')
   const [resetVersion, setResetVersion] = useState(0)
-  const [dark, setDark] = useState(() => !!loadJSON(STORAGE_KEY, {})?.dark)
+  const [dark, setDark] = useState(() => {
+    const savedAppState = loadJSON(STORAGE_KEY, {})
+    return typeof savedAppState?.dark === 'boolean' ? savedAppState.dark : true
+  })
   const [isPremium, setIsPremium] = useState(() => {
     try {
       const savedTheme = window.localStorage.getItem('turkuaz-edu-premium-theme')
@@ -281,6 +316,7 @@ export default function App() {
     }
   })
   const [toasts, setToasts] = useState([])
+  const toastTimersRef = useRef(new Map())
   const [profile, setProfile] = useState(() => isSupabaseConfigured ? null : loadProfile())
   const [cloudSession, setCloudSession] = useState(null)
   const [cloudReady, setCloudReady] = useState(false)
@@ -294,7 +330,20 @@ export default function App() {
       return true
     }
   })
+  const routeAuthenticated = isSupabaseConfigured
+    ? Boolean(authSession?.user && authenticated)
+    : authenticated
   const [editingProfile, setEditingProfile] = useState(false)
+
+  useEffect(() => {
+    if (authLoading || (pathname !== '/' && pathname !== '/login')) return
+    if (!routeAuthenticated && pathname !== '/login') {
+      navigatePath('/login', true)
+    } else if (routeAuthenticated && pathname === '/login') {
+      navigatePath('/', true)
+    }
+  }, [authLoading, navigatePath, pathname, routeAuthenticated])
+
   const [stats, setStats] = useState(() => isSupabaseConfigured
     ? { ...DEFAULT_STATS, savedWordsCount: getSavedWordCount(), readingCompletedCount: getReadingCompletionCount(profile) }
     : loadLearnerStats(profile))
@@ -306,7 +355,6 @@ export default function App() {
   const streakMilestoneSequenceRef = useRef(0)
   const trophySequenceRef = useRef(0)
   const trophyBaselineIdentityRef = useRef(null)
-  const trophyMascotEventRef = useRef(null)
   const xpForRankRef = useRef(stats.xp)
   const rankUpSequenceRef = useRef(0)
   xpForRankRef.current = stats.xp
@@ -379,7 +427,8 @@ export default function App() {
     document.documentElement.classList.toggle('dark', dark)
     document.documentElement.classList.toggle('premium-theme', isPremium)
     document.documentElement.classList.toggle('theme-premium', isPremium)
-    document.documentElement.classList.toggle('theme-default', !isPremium)
+    document.documentElement.classList.toggle('theme-night', !isPremium && dark)
+    document.documentElement.classList.toggle('theme-default', !isPremium && !dark)
   }, [dark, isPremium])
 
   useEffect(() => {
@@ -413,6 +462,7 @@ export default function App() {
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) { setAuthLoading(false); return undefined }
+    if (authStateLoading) return undefined
     let alive = true
     const hydrateSession = async (session) => {
       if (!alive) return
@@ -515,29 +565,34 @@ export default function App() {
       }
     }
 
-    let subscription = null
-    try {
-      const authState = supabase.auth.onAuthStateChange((_event, session) => { void safelyHydrateSession(session) })
-      subscription = authState?.data?.subscription || null
-    } catch (error) {
-      console.warn('[Turkuaz Edu] Supabase auth listener could not start; continuing with cached local data.', error)
-    }
-    supabase.auth.getSession()
-      .then((result) => safelyHydrateSession(result?.data?.session ?? null))
-      .catch((error) => {
-        console.warn('[Turkuaz Edu] Supabase session could not be restored; continuing with cached local data.', error)
-        restoreLocalFallback()
-      })
-    return () => { alive = false; subscription?.unsubscribe?.() }
-  }, [])
+    void safelyHydrateSession(authSession)
+    return () => { alive = false }
+  }, [authSession, authStateLoading])
 
   const showToast = useCallback((message, type = 'default') => {
     const id = Math.random().toString(36).slice(2)
     setToasts((list) => [...list, { id, message, type }])
-    setTimeout(() => {
-      setToasts((list) => list.filter((t) => t.id !== id))
+    const timer = window.setTimeout(() => {
+      toastTimersRef.current.delete(id)
+      setToasts((list) => list.filter((toast) => toast.id !== id))
     }, 3000)
+    toastTimersRef.current.set(id, timer)
   }, [])
+
+  useEffect(() => () => {
+    toastTimersRef.current.forEach((timer) => window.clearTimeout(timer))
+    toastTimersRef.current.clear()
+  }, [])
+
+  useEffect(() => {
+    const onUnhandledRejection = (event) => {
+      event.preventDefault()
+      console.error('[Turkuaz Edu] Unhandled asynchronous error:', event.reason)
+      showToast(t('system.unexpectedError'), 'default')
+    }
+    window.addEventListener('unhandledrejection', onUnhandledRejection)
+    return () => window.removeEventListener('unhandledrejection', onUnhandledRejection)
+  }, [showToast, t])
 
   useEffect(() => {
     if (!isSupabaseConfigured || !cloudReady || !cloudSession?.user || !profile || profile.onboardingCompleted === false) return undefined
@@ -645,10 +700,6 @@ export default function App() {
     }
 
     window.alert('Android yoki kompyuterda Chrome’ning uch nuqta (⋮) menyusini bosing, soʻng “Install app” yoki “Add to home screen”ni tanlang.')
-  }, [])
-
-  const updateWordsLearned = useCallback((count) => {
-    setStats((s) => s.wordsLearned === count ? s : { ...s, wordsLearned: count })
   }, [])
 
   const updateSavedWordsCount = useCallback((count) => {
@@ -810,28 +861,9 @@ export default function App() {
         }
       })
       addXp(xpAward)
-      if (Number.isFinite(resultPercent)) {
-        const passed = resultPercent > 0
-        showMascot({
-          message: t(winterModeEnabled ? (passed ? 'winter.mascot.success' : 'winter.mascot.encourage') : (passed ? 'mascot.success' : 'mascot.encourage')),
-          emotion: passed ? 'cheer' : 'sad',
-          duration: 4200,
-        })
-      }
     },
-    [addXp, showMascot, t, winterModeEnabled],
+    [addXp]
   )
-
-  useEffect(() => {
-    if (authLoading || !authenticated || !profile || profile.onboardingCompleted === false) return
-    if (active === 'home') {
-      showMascot({ message: t(winterModeEnabled ? (stats.streak > 0 ? 'winter.mascot.streak' : 'winter.mascot.greeting') : 'mascot.greeting'), emotion: 'idle', duration: 4200 })
-      return
-    }
-    if (['plan', 'okuma', 'dinleme', 'writing-practice', 'yazma', 'konusma', 'lugat', 'mock', 'exams'].includes(active)) {
-      showMascot({ message: t('mascot.focus'), emotion: 'focus', duration: 3600 })
-    }
-  }, [active, authLoading, authenticated, profile, showMascot, stats.streak, t, winterModeEnabled])
 
   const navigate = useCallback((id) => {
     setActive(id)
@@ -917,18 +949,6 @@ export default function App() {
     setTrophyCelebrationEvent(nextEvent)
   }, [trophyCelebrationEvent, queuedTrophyEvents])
 
-  useEffect(() => {
-    if (!trophyCelebrationEvent || trophyMascotEventRef.current === trophyCelebrationEvent.id) return
-    const trophy = TROPHIES.find((item) => item.id === trophyCelebrationEvent.trophyId)
-    if (!trophy) return
-    trophyMascotEventRef.current = trophyCelebrationEvent.id
-    showMascot({
-      message: t('trophy.celebrate.mascot', { trophy: t(trophy.titleKey) }),
-      emotion: 'cheer',
-      duration: 7200,
-    })
-  }, [trophyCelebrationEvent, showMascot, t])
-
   // ------------------------------ auth flow ------------------------------
 
   const handleSaveProfile = (p) => {
@@ -1007,19 +1027,31 @@ export default function App() {
     setMultilevelExamResult(null)
     setUnlockedMedals(DEFAULT_UNLOCKED_MEDALS)
     setEquippedMedal(DEFAULT_EQUIPPED_MEDAL)
-    setDark(false)
+    setDark(true)
     setIsPremium(false)
     setActive('home')
     setResetVersion((version) => version + 1)
     showToast('Barcha maʼlumotlar tozalandi 🧹', 'save')
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     claimedQuestRewards.current.clear()
-    if (isSupabaseConfigured) void supabase?.auth.signOut()
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { error } = await supabase.auth.signOut()
+        if (error) throw error
+      } catch (error) {
+        console.error('[Turkuaz Edu] Supabase sign out failed:', error)
+        showToast('Hisobdan chiqib bo‘lmadi. Qayta urinib ko‘ring.', 'default')
+        return
+      }
+    }
     setCloudSession(null)
     setCloudReady(false)
+    setProfile(isSupabaseConfigured ? null : profile)
     setAuthenticated(false)
+    setActive('home')
+    navigatePath('/login', true)
     showToast('Chiqib qoldingiz', 'default')
   }
 
@@ -1027,7 +1059,7 @@ export default function App() {
 
   const renderView = () => {
     // Keep only modules without an implementation behind the Coming Soon screen.
-    if (active !== 'home' && active !== 'plan' && active !== 'okuma' && active !== 'dinleme' && active !== 'lugat' && active !== 'writing-practice' && active !== 'yazma' && active !== 'konusma') return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
+    if (!['home', 'plan', 'analytics', 'leagues', 'okuma', 'dinleme', 'lugat', 'writing-practice', 'yazma', 'konusma', 'exams', 'full-mock', 'mixed-practice', 'quick-assessment', 'mock'].includes(active)) return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
 
     switch (active) {
       case 'home':
@@ -1035,9 +1067,9 @@ export default function App() {
       case 'leagues':
         return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} isPremium={isPremium} />
       case 'analytics':
-        return <AnalyticsDashboard sectionResults={sectionResults} progress={progress} stats={stats} isPremium={isPremium} />
+        return <Statistika profile={profile} stats={stats} progress={progress} isPremium={isPremium} dark={dark} navigate={navigate} />
       case 'plan':
-        return <KunlikReja stats={stats} progress={progress} navigate={navigate} addXp={addXp} isPremium={isPremium} />
+        return <KunlikReja stats={stats} navigate={navigate} addXp={addXp} isPremium={isPremium} />
       case 'okuma':
         return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onPerfectReadingExam={recordPerfectReadingExam} onSpeedBonus={recordSpeedBonus} />
       case 'dinleme':
@@ -1093,10 +1125,19 @@ export default function App() {
           dark={dark}
         />
       case 'exams':
-        return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} />
+        return <ImtihonlarHub onNavigate={navigate} />
+      case 'mixed-practice':
+        return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} onExit={() => navigate('exams')} />
+      case 'full-mock':
+        return <MockExamEngine onExit={() => navigate('exams')} onExamComplete={() => {
+          setStats((current) => ({ ...current, completedMocks: (current.completedMocks || 0) + 1 }))
+        }} />
       case 'mock':
+      case 'quick-assessment':
         return (
           <MockExam
+            initialMode={active === 'quick-assessment' ? 'reading' : 'mixed'}
+            onExit={() => navigate('exams')}
             sectionResults={sectionResults}
             onSectionComplete={(result) => {
               setSectionResults((previous) => {
@@ -1122,6 +1163,24 @@ export default function App() {
     }
   }
 
+  const profileModal = (
+    <ProfileSetupModal
+      open={!authLoading && (!routeAuthenticated || editingProfile)}
+      mode={editingProfile ? 'edit' : profile ? 'auth' : 'signup'}
+      profile={profile}
+      hasProfile={!!profile}
+      isPremium={isPremium}
+      onClose={editingProfile ? () => setEditingProfile(false) : undefined}
+      onSave={handleSaveProfile}
+      onLogin={handleLogin}
+      cloudEnabled={isSupabaseConfigured}
+      onCloudRegister={handleCloudRegister}
+      onCloudLogin={handleCloudLogin}
+      remindersEnabled={remindersEnabled}
+      onToggleReminders={toggleDailyReminder}
+    />
+  )
+
   if (authLoading) {
     const loadingSurface = isPremium
       ? 'border-white/10 bg-black/30 text-white shadow-2xl shadow-black/30 backdrop-blur-xl'
@@ -1146,19 +1205,42 @@ export default function App() {
     )
   }
 
-  if (!authLoading && authenticated && profile?.onboardingCompleted === false) {
-    return <OnboardingFlow isPremium={isPremium} profile={profile} onComplete={completeOnboarding} />
+  if (pathname !== '/' && pathname !== '/login') {
+    return <NotFound onHome={() => { setActive('home'); navigatePath('/', false) }} />
+  }
+
+  if (!routeAuthenticated) {
+    return (
+      <main className="relative isolate grid min-h-[100dvh] place-items-center overflow-hidden bg-gradient-to-br from-slate-950 via-[#071b26] to-slate-950 px-4 py-10 text-white">
+        <div className="pointer-events-none absolute -right-20 -top-24 size-80 rounded-full bg-teal-500/10 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-24 -left-20 size-80 rounded-full bg-cyan-500/10 blur-3xl" aria-hidden="true" />
+        <div className="relative z-10 flex flex-col items-center gap-2 text-center">
+          <img src="/icons/turkish-education.svg" alt="" className="size-14 rounded-2xl shadow-lg shadow-black/25" />
+          <h1 className="text-xl font-black tracking-tight">Turkuaz-edu</h1>
+          <p className="text-xs font-semibold text-slate-400">Turk tili platformasi</p>
+        </div>
+        {profileModal}
+      </main>
+    )
+  }
+
+  if (routeAuthenticated && profile?.onboardingCompleted === false) {
+    return (
+      <Suspense fallback={pageFallback}>
+        <OnboardingFlow isPremium={isPremium} dark={dark} profile={profile} onComplete={completeOnboarding} />
+      </Suspense>
+    )
   }
 
   return (
     <>
-      <TurkchaDashboard
-        active={active === 'writing-practice' ? 'plan' : active}
+      <ProtectedRoute authenticated={routeAuthenticated}>
+        <TurkchaDashboard
+        active={['full-mock', 'mixed-practice', 'quick-assessment', 'mock'].includes(active) ? 'exams' : active === 'writing-practice' ? 'plan' : active}
         onNavigate={navigate}
         dark={dark}
         onToggleDark={() => setDark((value) => !value)}
         isPremium={isPremium}
-        onTogglePremium={() => setIsPremium((value) => !value)}
         xp={stats.xp}
         rankUpEvent={rankUpEvent}
         onDismissRankUp={() => setRankUpEvent(null)}
@@ -1179,28 +1261,16 @@ export default function App() {
         onInstallApp={handleInstallApp}
       >
         {/* View transition — fade + slide on every sidebar tab switch */}
-        <div key={`${active}-${resetVersion}`} className="animate-view">
-          {renderView()}
-        </div>
-      </TurkchaDashboard>
+        <Suspense fallback={pageFallback}>
+          <div key={`${active}-${resetVersion}`} className="animate-view">
+            {renderView()}
+          </div>
+        </Suspense>
+        </TurkchaDashboard>
+      </ProtectedRoute>
 
       {/* Auth / profile modal — first-run sign up, or edit profile */}
-      <ProfileSetupModal
-        open={!authLoading && (!authenticated || editingProfile)}
-        mode={editingProfile ? 'edit' : profile ? 'auth' : 'signup'}
-        profile={profile}
-        hasProfile={!!profile}
-        isPremium={isPremium}
-        onTogglePremium={() => setIsPremium((value) => !value)}
-        onClose={editingProfile ? () => setEditingProfile(false) : undefined}
-        onSave={handleSaveProfile}
-        onLogin={handleLogin}
-        cloudEnabled={isSupabaseConfigured}
-        onCloudRegister={handleCloudRegister}
-        onCloudLogin={handleCloudLogin}
-        remindersEnabled={remindersEnabled}
-        onToggleReminders={toggleDailyReminder}
-      />
+      {profileModal}
 
       {/* Toasts — top-right corner */}
       <div className="pointer-events-none fixed right-4 top-20 z-50 flex flex-col items-end gap-3 sm:right-6">
