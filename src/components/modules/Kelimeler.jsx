@@ -1,8 +1,49 @@
-import { useEffect, useMemo, useState } from 'react'
-import { BookmarkPlus, BookOpen, Check, CheckCircle2, CircleHelp, Plus, RotateCcw, Trash2 } from 'lucide-react'
-import { STARTER_VOCABULARY, claimVocabularyXpForWord, createVocabularyWord, loadSavedVocabulary, normalizeWordKey, saveVocabularyState } from '../../data/vocabulary'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { BookmarkPlus, BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleHelp, Plus, RotateCcw, Search, Trash2 } from 'lucide-react'
+import TURKUAZ_LUGAT_DATA from '../../data/turkuaz_lugat.json'
+import { STARTER_VOCABULARY, claimVocabularyXpForWord, createVocabularyWord, loadSavedVocabulary, loadTurkuazLearnedIds, normalizeWordKey, saveTurkuazLearnedIds, saveVocabularyState } from '../../data/vocabulary'
 import { cn } from '../../lib/utils'
 import { useI18n } from '../../lib/i18n.jsx'
+
+const PAGE_SIZE = 20
+const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']
+const CATALOG_WORDS = TURKUAZ_LUGAT_DATA.map((item, index) => ({
+  id: `lugat-${index + 1}`,
+  word: String(item.word || item.tr || '').trim(),
+  translation: String(item.translation || item.uz || '').trim(),
+  english: String(item.english || item.en || '').trim(),
+  level: CEFR_LEVELS.includes(String(item.level || '').toUpperCase()) ? String(item.level).toUpperCase() : '',
+  example: String(item.example || '').trim(),
+})).filter((item) => item.word)
+
+const FIRST_CATALOG_ID_BY_TERM = new Map()
+for (const item of CATALOG_WORDS) {
+  const key = normalizeCatalogTerm(item.word)
+  if (!FIRST_CATALOG_ID_BY_TERM.has(key)) FIRST_CATALOG_ID_BY_TERM.set(key, item.id)
+}
+
+function normalizeCatalogTerm(value) {
+  return String(value || '').trim().toLocaleLowerCase('tr-TR').replace(/\s+/gu, ' ')
+}
+
+function loadInitialCatalogLearnedIds() {
+  const ids = new Set(loadTurkuazLearnedIds())
+  const previouslyLearnedTerms = new Set(loadSavedVocabulary().filter((word) => word.learned).map((word) => normalizeCatalogTerm(word.tr)))
+  for (const item of CATALOG_WORDS) {
+    const key = normalizeCatalogTerm(item.word)
+    if (FIRST_CATALOG_ID_BY_TERM.get(key) === item.id && previouslyLearnedTerms.has(key)) ids.add(item.id)
+  }
+  return saveTurkuazLearnedIds([...ids])
+}
+
+function normalizeSearch(value) {
+  return String(value || '')
+    .toLocaleLowerCase('tr-TR')
+    .replace(/ı/gu, 'i')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/gu, '')
+    .trim()
+}
 
 export function Flashcard({ word, language = 'uz', flipped, onFlip, dark = false }) {
   const { t } = useI18n()
@@ -49,14 +90,32 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
   const isDark = Boolean(isPremium || dark)
   const [words, setWords] = useState(loadSavedVocabulary)
   const [queue, setQueue] = useState(() => loadSavedVocabulary().map((word) => word.id))
+  const [learnedCatalogIds, setLearnedCatalogIds] = useState(loadInitialCatalogLearnedIds)
   const [flipped, setFlipped] = useState(false)
   const [form, setForm] = useState({ tr: '', uz: '', en: '' })
   const [formError, setFormError] = useState('')
   const [notice, setNotice] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const deferredSearchQuery = useDeferredValue(searchQuery)
+  const [levelFilter, setLevelFilter] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const uniqueSavedCount = useMemo(() => new Set(words.map((word) => normalizeWordKey(word.tr))).size, [words])
   const learnedCount = useMemo(() => words.filter((word) => word.learned).length, [words])
   const current = words.find((word) => word.id === queue[0]) || null
+  const availableLevels = useMemo(() => [...new Set(CATALOG_WORDS.map((word) => word.level).filter(Boolean))].sort(), [])
+  const learnedIdSet = useMemo(() => new Set(learnedCatalogIds), [learnedCatalogIds])
+  const catalogLearnedCount = useMemo(() => CATALOG_WORDS.filter((word) => learnedIdSet.has(word.id)).length, [learnedIdSet])
+
+  const normalizedQuery = normalizeSearch(deferredSearchQuery)
+  const filteredCatalog = useMemo(() => CATALOG_WORDS.filter((word) => {
+    if (levelFilter && word.level !== levelFilter) return false
+    if (!normalizedQuery) return true
+    const searchable = normalizeSearch([word.word, word.translation, word.english, word.example].join(' '))
+    return searchable.includes(normalizedQuery)
+  }), [levelFilter, normalizedQuery])
+  const totalPages = Math.max(1, Math.ceil(filteredCatalog.length / PAGE_SIZE))
+  const visibleCatalog = filteredCatalog.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   useEffect(() => {
     saveVocabularyState(words)
@@ -66,6 +125,14 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
   useEffect(() => {
     setQueue((previous) => previous.filter((id) => words.some((word) => word.id === id)))
   }, [words])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [normalizedQuery, levelFilter])
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages)
+  }, [currentPage, totalPages])
 
   const appendWords = (candidates) => {
     const existing = new Set(words.map((word) => normalizeWordKey(word.tr)))
@@ -119,6 +186,35 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
     setFlipped(false)
   }
 
+  const markCatalogWordLearned = (entry) => {
+    const termKey = normalizeWordKey(entry.word)
+    const alreadyLearned = learnedIdSet.has(entry.id)
+    if (alreadyLearned) return
+
+    const nextLearnedIds = [...learnedCatalogIds, entry.id]
+    setLearnedCatalogIds(nextLearnedIds)
+    saveTurkuazLearnedIds(nextLearnedIds)
+    setWords((previous) => {
+      const existingIndex = previous.findIndex((word) => normalizeWordKey(word.tr) === termKey)
+      if (existingIndex >= 0) return previous.map((word, index) => index === existingIndex ? { ...word, learned: true } : word)
+      return [...previous, {
+        id: `catalog-saved-${entry.id}`,
+        tr: entry.word,
+        uz: entry.translation,
+        en: entry.english,
+        learned: true,
+      }]
+    })
+
+    const learnedWord = { tr: entry.word, uz: entry.translation, en: entry.english, learned: true }
+    const earnedXp = claimVocabularyXpForWord(entry.word)
+    if (earnedXp) {
+      onWordLearned?.(learnedWord)
+      onNewQuestWord?.(entry.word)
+    }
+    setNotice(t(earnedXp ? 'words.catalog.learnedReward' : 'words.catalog.learnedNoReward', { word: entry.word }))
+  }
+
   const reviewAgain = () => {
     if (!current) return
     setQueue((previous) => previous.length > 1 ? [...previous.slice(1), previous[0]] : [...previous])
@@ -141,7 +237,7 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
   const field = isDark ? 'border-white/10 bg-black/30 text-white placeholder:text-white/35 focus:border-teal-300/50' : 'border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-teal-500'
 
   return (
-    <main className="mx-auto w-full max-w-6xl space-y-6 pb-10" aria-label={t('words.title')}>
+    <main className="mx-auto w-full max-w-7xl space-y-6 pb-10" aria-label={t('words.title')}>
       <header className={cn('flex flex-wrap items-center justify-between gap-4 rounded-3xl border p-5 sm:p-7', panel)}>
         <div className="flex items-center gap-4">
           <span className={cn('grid size-12 place-items-center rounded-2xl', isDark ? 'bg-teal-300/10 text-teal-200' : 'bg-teal-50 text-teal-700')}><BookOpen className="size-6" /></span>
@@ -161,6 +257,102 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
       </header>
 
       {notice && <p role="status" className={cn('rounded-xl border px-4 py-2.5 text-sm font-semibold', isDark ? 'border-emerald-300/15 bg-emerald-300/[.05] text-emerald-100' : 'border-emerald-100 bg-emerald-50 text-emerald-800')}>{notice}</p>}
+
+      <section className={cn('overflow-hidden rounded-3xl border p-4 sm:p-6', panel)} aria-label={t('words.catalog.title')}>
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-black tracking-tight sm:text-2xl">{t('words.catalog.title')}</h2>
+            <p className={cn('mt-1 text-sm', muted)}>{t('words.catalog.subtitle', { count: CATALOG_WORDS.length })}</p>
+          </div>
+          <div className={cn('min-w-44 rounded-2xl border px-4 py-2.5 text-center', isDark ? 'border-emerald-300/15 bg-emerald-300/[.05]' : 'border-emerald-100 bg-emerald-50/70')}>
+            <div className="text-xl font-black tabular-nums">{catalogLearnedCount} / {CATALOG_WORDS.length}</div>
+            <div className={cn('text-[10px] font-bold uppercase tracking-wide', muted)}>{t('words.catalog.progressLabel')}</div>
+          </div>
+        </div>
+        <div className={cn('mb-5 h-2 overflow-hidden rounded-full', isDark ? 'bg-white/10' : 'bg-slate-100')} role="progressbar" aria-label={t('words.catalog.progressLabel')} aria-valuemin={0} aria-valuemax={CATALOG_WORDS.length} aria-valuenow={catalogLearnedCount}>
+          <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-[width] duration-300" style={{ width: `${Math.min(100, (catalogLearnedCount / CATALOG_WORDS.length) * 100)}%` }} />
+        </div>
+
+        <div className="mb-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+          <label className="relative block">
+            <span className="sr-only">{t('words.catalog.searchLabel')}</span>
+            <Search className={cn('pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2', muted)} />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder={t('words.catalog.searchPlaceholder')}
+              className={cn('w-full rounded-xl border py-3 pl-10 pr-4 text-sm outline-none transition focus:ring-2 focus:ring-teal-500/20', field)}
+            />
+          </label>
+          {availableLevels.length > 0 ? (
+            <label className="flex items-center gap-2">
+              <span className={cn('text-xs font-bold', muted)}>{t('words.catalog.levelLabel')}</span>
+              <select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} className={cn('min-w-36 rounded-xl border px-3 py-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-teal-500/20', field)}>
+                <option value="">{t('words.catalog.allLevels')}</option>
+                {availableLevels.map((level) => <option key={level} value={level}>{level}</option>)}
+              </select>
+            </label>
+          ) : (
+            <p className={cn('self-center text-xs', muted)}>{t('words.catalog.levelsUnavailable')}</p>
+          )}
+        </div>
+
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <p className={cn('text-xs font-semibold', muted)}>{t('words.catalog.results', { count: filteredCatalog.length })}</p>
+          <p className={cn('text-xs', muted)}>{t('words.catalog.pageOf', { page: currentPage, pages: totalPages })}</p>
+        </div>
+
+        {visibleCatalog.length > 0 ? (
+          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {visibleCatalog.map((entry) => {
+              const isLearned = learnedIdSet.has(entry.id)
+              return (
+                <li key={entry.id} className={cn('flex min-w-0 flex-col rounded-2xl border p-4 transition-colors', isDark ? 'border-white/10 bg-white/[.025] hover:bg-white/[.045]' : 'border-slate-200 bg-slate-50/60 hover:bg-white hover:shadow-md hover:shadow-slate-900/5')}>
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 lang="tr" className="min-w-0 break-words text-lg font-black tracking-tight">{entry.word}</h3>
+                    <span className={cn('shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide', entry.level ? isDark ? 'bg-indigo-300/10 text-indigo-100' : 'bg-indigo-50 text-indigo-700' : isDark ? 'bg-white/[.06] text-white/45' : 'bg-slate-100 text-slate-500')}>
+                      {entry.level || t('words.catalog.levelUnknown')}
+                    </span>
+                  </div>
+                  <p className={cn('mt-3 text-base font-bold', isDark ? 'text-teal-100' : 'text-teal-800')}><span className={cn('mr-1 text-[10px] font-bold uppercase tracking-wide', muted)}>{t('words.catalog.uzbekLabel')}</span>{entry.translation || '—'}</p>
+                  {entry.english && <p className={cn('mt-1 text-xs', muted)}>{entry.english}</p>}
+                  <div className={cn('mt-4 flex-1 rounded-xl border px-3 py-2.5', isDark ? 'border-white/[.07] bg-black/15' : 'border-slate-100 bg-white/80')}>
+                    <p className={cn('text-[10px] font-extrabold uppercase tracking-wider', muted)}>{t('words.catalog.exampleLabel')}</p>
+                    <p className={cn('mt-1 text-xs leading-relaxed', entry.example ? '' : muted)}>{entry.example || t('words.catalog.exampleUnavailable')}</p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isLearned}
+                    onClick={() => markCatalogWordLearned(entry)}
+                    className={cn('mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-extrabold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/20 disabled:cursor-default', isLearned ? isDark ? 'bg-emerald-300/10 text-emerald-100' : 'bg-emerald-50 text-emerald-800' : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-900/10 hover:-translate-y-0.5 hover:from-emerald-700 hover:to-teal-700 active:scale-[.98]')}
+                  >
+                    {isLearned ? <CheckCircle2 className="size-4" /> : <Check className="size-4" />}
+                    {t(isLearned ? 'words.catalog.learned' : 'words.catalog.markLearned')}
+                    {!isLearned && <span className="text-xs text-white/80">+5 XP</span>}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          <div className={cn('rounded-2xl border border-dashed p-8 text-center text-sm', isDark ? 'border-white/15 text-white/55' : 'border-slate-200 text-slate-500')}>
+            <Search className="mx-auto size-7 opacity-50" />
+            <p className="mt-2 font-semibold">{t('words.catalog.noResults')}</p>
+          </div>
+        )}
+
+        <nav className="mt-5 flex items-center justify-between gap-3" aria-label={t('words.catalog.pagination')}>
+          <button type="button" disabled={currentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} className={cn('inline-flex min-h-10 items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
+            <ChevronLeft className="size-4" />{t('words.catalog.previous')}
+          </button>
+          <span className={cn('text-xs font-semibold tabular-nums', muted)}>{t('words.catalog.pageOf', { page: currentPage, pages: totalPages })}</span>
+          <button type="button" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} className={cn('inline-flex min-h-10 items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
+            {t('words.catalog.next')}<ChevronRight className="size-4" />
+          </button>
+        </nav>
+        <p className={cn('mt-3 text-[11px] leading-relaxed', muted)}>{t('words.catalog.sourceLimitations')}</p>
+      </section>
 
       <section className={cn('rounded-3xl border p-4 sm:p-6', panel)} aria-label={t('words.practice.title')}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">

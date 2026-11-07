@@ -175,7 +175,6 @@ export default function ProfileSetupModal({
   profile,
   hasProfile,
   isPremium = false,
-  onTogglePremium,
   onClose,
   onSave,
   onLogin,
@@ -409,10 +408,6 @@ export default function ProfileSetupModal({
             <div className={cn('flex items-center justify-between gap-4 rounded-2xl border p-4', premium ? 'border-yellow-300/25 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
               <div className="flex items-center gap-3"><span className={cn('grid size-10 place-items-center rounded-xl', premium ? 'bg-white/10 text-yellow-300' : 'bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300')}><Bell className="size-4"/></span><div><p className="text-sm font-bold">{t('auth.reminder.title')}</p><p className={cn('text-xs', premium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t('auth.reminder.subtitle')}</p></div></div>
               <button type="button" disabled={reminderBusy} onClick={async () => { setReminderBusy(true); try { await onToggleReminders?.(!remindersEnabled) } finally { setReminderBusy(false) } }} aria-pressed={remindersEnabled} className={cn('relative h-7 w-12 rounded-full p-1 transition-all duration-300 disabled:opacity-50', remindersEnabled ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700')}><span className={cn('block size-5 rounded-full bg-white shadow transition-transform duration-300', remindersEnabled && 'translate-x-5')} /><span className="sr-only">{remindersEnabled ? t('auth.reminder.title') : t('auth.reminder.title')}</span></button>
-            </div>
-            <div className={cn('flex items-center justify-between gap-4 rounded-2xl border p-4', premium ? 'border-yellow-300/25 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
-              <div className="flex items-center gap-3"><span className={cn('grid size-10 place-items-center rounded-xl', premium ? 'bg-gradient-to-br from-rose-600 to-red-700 text-yellow-300' : 'bg-gradient-to-br from-teal-600 to-cyan-500 text-white')}><Sparkles className="size-4"/></span><div><p className="text-sm font-bold">{t('auth.theme.title')}</p><p className={cn('text-xs', premium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t('auth.theme.subtitle')}</p></div></div>
-              <button type="button" onClick={onTogglePremium} aria-pressed={premium} className={cn('relative h-7 w-12 rounded-full p-1 transition-all duration-300', premium ? 'bg-gradient-to-r from-rose-600 to-red-700 ring-1 ring-yellow-300/60' : 'bg-slate-300 dark:bg-slate-700')}><span className={cn('block size-5 rounded-full bg-white shadow transition-transform duration-300', premium && 'translate-x-5')} /> <span className="sr-only">{premium ? t('auth.theme.enabled') : t('auth.theme.disabled')}</span></button>
             </div>
             {error && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-200">{error}</p>}
             <button type="submit" className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 py-3 text-sm font-extrabold text-white shadow-lg shadow-teal-900/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">{t('auth.save')}</button>

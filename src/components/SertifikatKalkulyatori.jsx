@@ -263,7 +263,7 @@ export function CertificateCalculator({ initialScores, targetCert, compact = fal
 // ----------------------------------------------------------------------
 // Standalone certificate page (BAZA VA SINOV section)
 // ----------------------------------------------------------------------
-export default function SertifikatKalkulyatori({ stats, progress, targetCert }) {
+export default function SertifikatKalkulyatori({ stats, targetCert }) {
   const { t } = useI18n()
   // Practice progress is not an exam score; do not present it as a certificate result.
   const initialScores = { okuma: 0, dinleme: 0, yazma: 0, konusma: 0 }

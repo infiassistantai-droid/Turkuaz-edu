@@ -13,7 +13,7 @@
     "part_2": {
       "level": "B1-B2",
       "category": "Monolog (Konu Anlatımı)",
-      "topic": "Unutulmaz Bir Seyehat",
+      "topic": "Unutulmaz Bir Seyahat",
       "prompt": "Hayatınızda yaptığınız en unutulmaz yolculuğu veya tatili anlatınız. (Düşünmek için 1 dakika, konuşmak için 2 dakikanız var.)",
       "key_points": [
         "Bu yolculuğu nereye, ne zaman ve kiminle yaptığınız.",

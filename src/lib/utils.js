@@ -120,7 +120,6 @@ export function gradeWriting(text, targetWords) {
  */
 const BACK = ['a', 'ı', 'o', 'u']
 const BACK_ROUND = ['o', 'u']
-const FRONT = ['e', 'i', 'ö', 'ü']
 const FRONT_ROUND = ['ö', 'ü']
 
 export function lastVowelOf(word) {

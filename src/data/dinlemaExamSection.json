@@ -246,7 +246,7 @@
     "level": "B2",
     "category": "Röportaj",
     "title": "Uyku ve Başarı İlişkisi",
-    "audio_script": "Sunucu: Değerli dinleyenler, bugün stüdyomuzda Nöroloji Uzmanı Dr. Ahmet Yılmaz var. Ahmet Bey, günümüzde başarılı olmak için 'az uyumak ve çok çalışmak' gerektiği gibi bir inanış var. Günde 4 saat uyuyarak çok başarılı olan CEO'lardan bahsediliyor. Buna katılıyor musunuz?\nDr. Yılmaz: Kesinlikle katılmıyorum. Bu, modern çağın en tehlikeli yanılgılarından biridir. İnsan beyni bir makine değildir. Uyku, gün içinde beynimizde biriken toksinlerin (zararlı maddelerin) temizlendiği ve yeni öğrenilen bilgilerin kalıcı hafızaya aktarıldığı tek zamandır. Günde 4 saat uyuyan bir insan, kısa vadede işlerini yetiştirse de, uzun vadede yaratıcılığını, problem çözme yeteneğini ve duygusal zekasını kaybeder.\nSunucu: Yani az uyuyan biri aslında kendine zarar mı veriyor?\nDr. Yılmaz: Kesinlikle. Kronik uykusuzluk çeken kişilerin karar verme mekanizmaları sarhoş bir insanınkiyle hemen hemen aynı seviyeye iner. Ayrıca Alzheimer gibi hafıza hastalıklarının en büyük tetikleyicilerinden biri de kalitesiz uykudur. Yetişkin bir birey verimli çalışmak istiyorsa, 24 saatlik döngüde en az 7 buçuk saat kesintisiz karanlıkta uyumalıdır. O 4 saat uyuyan CEO'lar muhtemelen başarılarını az uyumalarına değil, başka faktörlere borçlular; ve eğer 8 saat uyusalardı çok daha vizyoner olabilirlerdi.",
+    "audio_script": "Sunucu: Değerli dinleyenler, bugün stüdyomuzda Nöroloji Uzmanı Dr. Ahmet Yılmaz var. Ahmet Bey, günümüzde başarılı olmak için 'az uyumak ve çok çalışmak' gerektiği gibi bir inanış var. Günde 4 saat uyuyarak çok başarılı olan CEO'lardan bahsediliyor. Buna katılıyor musunuz?\nDr. Yılmaz: Kesinlikle katılmıyorum. Bu, modern çağın en tehlikeli yanılgılarından biridir. İnsan beyni bir makine değildir. Uyku, gün içinde beynimizde biriken toksinlerin (zararlı maddelerin) temizlendiği ve yeni öğrenilen bilgilerin kalıcı hafızaya aktarıldığı tek zamandır. Günde 4 saat uyuyan bir insan, kısa vadede işlerini yetiştirse de, uzun vadede yaratıcılığını, problem çözme yeteneğini ve duygusal zekâsını kaybeder.\nSunucu: Yani az uyuyan biri aslında kendine zarar mı veriyor?\nDr. Yılmaz: Kesinlikle. Kronik uykusuzluk çeken kişilerin karar verme mekanizmaları sarhoş bir insanınkiyle hemen hemen aynı seviyeye iner. Ayrıca Alzheimer gibi hafıza hastalıklarının en büyük tetikleyicilerinden biri de kalitesiz uykudur. Yetişkin bir birey verimli çalışmak istiyorsa, 24 saatlik döngüde en az 7 buçuk saat kesintisiz karanlıkta uyumalıdır. O 4 saat uyuyan CEO'lar muhtemelen başarılarını az uyumalarına değil, başka faktörlere borçlular; ve eğer 8 saat uyusalardı çok daha vizyoner olabilirlerdi.",
     "questions": [
       {
         "type": "multiple_choice",
@@ -278,11 +278,11 @@
         "options": [
           "Sadece fiziksel güç kaybı.",
           "İşitme ve görme kaybı.",
-          "Yaratıcılık, problem çözme ve duygusal zeka kaybı.",
+          "Yaratıcılık, problem çözme ve duygusal zekâ kaybı.",
           "Hızlı kilo alma."
         ],
         "correct_answer_index": 2,
-        "explanation": "Uzun vadede yaratıcılığını, problem çözme yeteneğini ve duygusal zekasını kaybeder."
+        "explanation": "Uzun vadede yaratıcılığını, problem çözme yeteneğini ve duygusal zekâsını kaybeder."
       },
       {
         "type": "multiple_choice",
@@ -364,7 +364,7 @@
       },
       {
         "type": "true_false_not_given",
-        "question": "Karanlık madde ışığı yansıtmadığı için teleskoplarla doğrudan görülmesi imkansızdır.",
+        "question": "Karanlık madde ışığı yansıtmadığı için teleskoplarla doğrudan görülmesi imkânsızdır.",
         "options": [
           "Doğru",
           "Yanlış",
@@ -564,11 +564,11 @@
     "level": "B1",
     "category": "Eşleştirme",
     "title": "Yapay Zeka Korkusu",
-    "audio_script": "A) Serdar: Ben bir yazılımcıyım ve yapay zekanın (AI) işlerimizi elimizden alacağına inanmıyorum. Aksine, yapay zeka bizim angarya (sıkıcı ve tekrarlayan) kod yazma süreçlerimizi hızlandırıyor. O bir düşman değil, kod yazarken bana hatalarımı gösteren mükemmel bir asistan.\nB) Aylin: Bir çevirmen olarak çok endişeliyim. Eskiden sayfalarca metni çevirmek günler alırdı, şimdi yapay zeka aynı işi saniyeler içinde, üstelik oldukça doğal bir dille yapıyor. Birkaç yıl içinde bizim mesleğimize hiç ihtiyaç kalmayacağından korkuyorum.\nC) Kemal: Ben yapay zekanın insani değerleri yok edeceğini düşünüyorum. Filmlerde gördüğümüz o robotların dünyayı ele geçirmesi senaryosu bence o kadar da hayal değil. Eğer bu sistemlere sınır konulmazsa, insanlığın sonunu kendi ellerimizle hazırlamış olacağız.\nD) Elif: Ben bir doktorum. Yapay zeka tıpta harikalar yaratıyor! Radyoloji sonuçlarını ve MR görüntülerini incelerken bir insanın göremeyeceği milimetrik tümörleri anında tespit ediyor. Yapay zeka benim yerime geçemez ama hastalarımın hayatını kurtarmamda bana çok büyük güç veriyor.",
+    "audio_script": "A) Serdar: Ben bir yazılımcıyım ve yapay zekânın (AI) işlerimizi elimizden alacağına inanmıyorum. Aksine, yapay zekâ bizim angarya (sıkıcı ve tekrarlayan) kod yazma süreçlerimizi hızlandırıyor. O bir düşman değil, kod yazarken bana hatalarımı gösteren mükemmel bir asistan.\nB) Aylin: Bir çevirmen olarak çok endişeliyim. Eskiden sayfalarca metni çevirmek günler alırdı, şimdi yapay zekâ aynı işi saniyeler içinde, üstelik oldukça doğal bir dille yapıyor. Birkaç yıl içinde bizim mesleğimize hiç ihtiyaç kalmayacağından korkuyorum.\nC) Kemal: Ben yapay zekânın insani değerleri yok edeceğini düşünüyorum. Filmlerde gördüğümüz o robotların dünyayı ele geçirmesi senaryosu bence o kadar da hayal değil. Eğer bu sistemlere sınır konulmazsa, insanlığın sonunu kendi ellerimizle hazırlamış olacağız.\nD) Elif: Ben bir doktorum. Yapay zekâ tıpta harikalar yaratıyor! Radyoloji sonuçlarını ve MR görüntülerini incelerken bir insanın göremeyeceği milimetrik tümörleri anında tespit ediyor. Yapay zekâ benim yerime geçemez ama hastalarımın hayatını kurtarmamda bana çok büyük güç veriyor.",
     "questions": [
       {
         "type": "matching_paragraph",
-        "question": "Yapay zekanın saniyeler içinde yaptığı işler yüzünden kendi mesleğinin yok olacağından korkan kişi kimdir?",
+        "question": "Yapay zekânın saniyeler içinde yaptığı işler yüzünden kendi mesleğinin yok olacağından korkan kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -580,7 +580,7 @@
       },
       {
         "type": "matching_paragraph",
-        "question": "Yapay zekayı hastalıkların teşhisinde hayat kurtaran çok faydalı bir teknoloji olarak gören kişi kimdir?",
+        "question": "Yapay zekâyı hastalıkların teşhisinde hayat kurtaran çok faydalı bir teknoloji olarak gören kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -588,11 +588,11 @@
           "D) Elif"
         ],
         "correct_answer_index": 3,
-        "explanation": "Elif (doktor) yapay zekanın tümörleri tespit ettiğini ve hastaların hayatını kurtardığını söylemiştir."
+        "explanation": "Elif (doktor) yapay zekânın tümörleri tespit ettiğini ve hastaların hayatını kurtardığını söylemiştir."
       },
       {
         "type": "matching_paragraph",
-        "question": "Yapay zekanın kontrol edilmezse insanlığın sonunu getirecek büyük bir tehdit olduğuna inanan kişi kimdir?",
+        "question": "Yapay zekânın kontrol edilmezse insanlığın sonunu getirecek büyük bir tehdit olduğuna inanan kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -604,7 +604,7 @@
       },
       {
         "type": "matching_paragraph",
-        "question": "Sıkıcı ve tekrarlayan işlerden kurtulmak için yapay zekayı bir asistan olarak kullanan kişi kimdir?",
+        "question": "Sıkıcı ve tekrarlayan işlerden kurtulmak için yapay zekâyı bir asistan olarak kullanan kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -636,7 +636,7 @@
           "D) Elif"
         ],
         "correct_answer_index": 1,
-        "explanation": "Aylin (çevirmen) yapay zekanın doğal bir dille saniyeler içinde çeviri yapmasından korkmaktadır."
+        "explanation": "Aylin (çevirmen) yapay zekânın doğal bir dille saniyeler içinde çeviri yapmasından korkmaktadır."
       }
     ],
     "audio_url": "/audio/08_B2_Eslestirme.mp3"
@@ -963,7 +963,7 @@
     "level": "B1",
     "category": "Eşleştirme",
     "title": "Üniversite Öğrencilerinin Gelecek Kaygıları",
-    "audio_script": "A) Emre: Uluslararası ilişkiler son sınıf öğrencisiyim. Benim en büyük korkum mezun olduktan sonra işsiz kalmak. Türkiye'de binlerce üniversite mezunu iş bulamıyor. Bu yüzden gecemi gündüzüme katıp ikinci bir yabancı dil (Çince) öğreniyorum. Rakiplerimden bir adım önde olmam lazım.\nB) Aylin: Tıp fakültesinde okuyorum ve işsizlik diye bir korkum yok. Ancak benim endişem 'tükenmişlik'. Doktor abilerimi, ablalarımı hastanelerde görüyorum; günde 36 saat nöbet tutuyorlar ve sürekli stres altındalar. Gençliğimi hastane koridorlarında tüketmek istemiyorum.\nC) Burak: Ben bilgisayar mühendisliği okuyorum. Gelecek benim için harika görünüyor ama tek derdim 'yapay zeka'. Biz daha mezun olmadan teknoloji o kadar hızlı değişiyor ki, okulda öğrendiğimiz kodlama dilleri hemen eskiyor. Sürekli kendimi güncellemek zorundayım, yoksa yapay zeka işimi elimden alacak.\nD) Zeynep: Grafik tasarım bölümündeyim. Benim kaygım tamamen ekonomik bağımsızlık. Ailemden hala harçlık almak gururuma dokunuyor. Mezun olur olmaz kendi ofisimi açmak istiyorum ama bunun için çok büyük bir sermayeye (paraya) ihtiyacım var ve o para bende yok.",
+    "audio_script": "A) Emre: Uluslararası ilişkiler son sınıf öğrencisiyim. Benim en büyük korkum mezun olduktan sonra işsiz kalmak. Türkiye'de binlerce üniversite mezunu iş bulamıyor. Bu yüzden gecemi gündüzüme katıp ikinci bir yabancı dil (Çince) öğreniyorum. Rakiplerimden bir adım önde olmam lazım.\nB) Aylin: Tıp fakültesinde okuyorum ve işsizlik diye bir korkum yok. Ancak benim endişem 'tükenmişlik'. Doktor abilerimi, ablalarımı hastanelerde görüyorum; günde 36 saat nöbet tutuyorlar ve sürekli stres altındalar. Gençliğimi hastane koridorlarında tüketmek istemiyorum.\nC) Burak: Ben bilgisayar mühendisliği okuyorum. Gelecek benim için harika görünüyor ama tek derdim 'yapay zekâ'. Biz daha mezun olmadan teknoloji o kadar hızlı değişiyor ki, okulda öğrendiğimiz kodlama dilleri hemen eskiyor. Sürekli kendimi güncellemek zorundayım, yoksa yapay zekâ işimi elimden alacak.\nD) Zeynep: Grafik tasarım bölümündeyim. Benim kaygım tamamen ekonomik bağımsızlık. Ailemden hâlâ harçlık almak gururuma dokunuyor. Mezun olur olmaz kendi ofisimi açmak istiyorum ama bunun için çok büyük bir sermayeye (paraya) ihtiyacım var ve o para bende yok.",
     "questions": [
       {
         "type": "matching_paragraph",
@@ -1023,11 +1023,11 @@
           "D) Zeynep"
         ],
         "correct_answer_index": 3,
-        "explanation": "Zeynep, 'Ailemden hala harçlık almak gururuma dokunuyor' demiştir."
+        "explanation": "Zeynep, 'Ailemden hâlâ harçlık almak gururuma dokunuyor' demiştir."
       },
       {
         "type": "matching_paragraph",
-        "question": "Gelişen akıllı sistemlerin (yapay zekanın) kendi mesleğini tehdit ettiğini düşünen kişi kimdir?",
+        "question": "Gelişen akıllı sistemlerin (yapay zekânın) kendi mesleğini tehdit ettiğini düşünen kişi kimdir?",
         "options": [
           "A) Emre",
           "B) Aylin",
@@ -1035,7 +1035,7 @@
           "D) Zeynep"
         ],
         "correct_answer_index": 2,
-        "explanation": "Burak, 'yoksa yapay zeka işimi elimden alacak' demiştir."
+        "explanation": "Burak, 'yoksa yapay zekâ işimi elimden alacak' demiştir."
       }
     ],
     "audio_url": "/audio/13_B2_Eslestirme.mp3"
@@ -1345,7 +1345,7 @@
       },
       {
         "type": "multiple_choice",
-        "question": "Konuşmacının hikayesinin ana mesajı aşağıdakilerden hangisidir?",
+        "question": "Konuşmacının hikâyesinin ana mesajı aşağıdakilerden hangisidir?",
         "options": [
           "Sosyal medya kullanmak insanları zengin eder.",
           "Sanal (dijital) dünyadan uzaklaşmak, insanın gerçek hayatın güzelliklerini ve anı yaşamasını sağlar.",
@@ -1524,7 +1524,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Psikolojide Cam Tavan Sendromu (Glass Ceiling)",
-    "audio_script": "Saygıdeğer misafirler, bugün iş ve sosyoloji dünyasında çok konuşulan, görünmez ama aşılamaz bir engelden, 'Cam Tavan' (Glass Ceiling) sendromundan bahsedeceğiz. Cam tavan; özellikle kadınların veya azınlık gruplarının, çalıştıkları kurumlarda yetenekleri ve başarıları ne kadar yüksek olursa olsun, üst düzey yönetici (CEO vb.) pozisyonlarına gelmelerini engelleyen, yazılı olmayan ve resmiyette var görünmeyen hiyerarşik (ve önyargılı) bir bariyerdir. 1980'lerde Wall Street'te ortaya çıkan bu terim, 'Yukarıyı (zirveyi) görüyorsun, ama oraya asla ulaşamıyorsun' hissini sembolize eder. Şirketler kağıt üzerinde herkese eşit fırsat tanıdığını iddia etse de, bilinçaltı önyargılar, erkek egemen ağlar (network) ve aile sorumluluklarının yükü, kadınların terfi süreçlerinde gizlice elenmesine neden olur. Cam tavanı kırmak, sadece yasal yasaklarla değil, şirket kültürlerinin derinlemesine değiştirilmesiyle mümkündür. Eğer yetenekli bireyler sadece cinsiyetleri yüzünden zirveye çıkamıyorsa, bu durum sadece onların kişisel kariyerini değil, o şirketin yaratıcılığını ve ekonomik potansiyelini de ciddi şekilde baltalamaktadır.",
+    "audio_script": "Saygıdeğer misafirler, bugün iş ve sosyoloji dünyasında çok konuşulan, görünmez ama aşılamaz bir engelden, 'Cam Tavan' (Glass Ceiling) sendromundan bahsedeceğiz. Cam tavan; özellikle kadınların veya azınlık gruplarının, çalıştıkları kurumlarda yetenekleri ve başarıları ne kadar yüksek olursa olsun, üst düzey yönetici (CEO vb.) pozisyonlarına gelmelerini engelleyen, yazılı olmayan ve resmiyette var görünmeyen hiyerarşik (ve önyargılı) bir bariyerdir. 1980'lerde Wall Street'te ortaya çıkan bu terim, 'Yukarıyı (zirveyi) görüyorsun, ama oraya asla ulaşamıyorsun' hissini sembolize eder. Şirketler kâğıt üzerinde herkese eşit fırsat tanıdığını iddia etse de, bilinçaltı önyargılar, erkek egemen ağlar (network) ve aile sorumluluklarının yükü, kadınların terfi süreçlerinde gizlice elenmesine neden olur. Cam tavanı kırmak, sadece yasal yasaklarla değil, şirket kültürlerinin derinlemesine değiştirilmesiyle mümkündür. Eğer yetenekli bireyler sadece cinsiyetleri yüzünden zirveye çıkamıyorsa, bu durum sadece onların kişisel kariyerini değil, o şirketin yaratıcılığını ve ekonomik potansiyelini de ciddi şekilde baltalamaktadır.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -2241,11 +2241,11 @@
     "level": "B2",
     "category": "Röportaj",
     "title": "Yapay Zeka ve Eğitim Sisteminin Geleceği",
-    "audio_script": "Sunucu: Sayın dinleyiciler, eğitimde dijital devrimi konuşmak üzere Eğitim Bilimci Prof. Dr. Kerem Yılmaz bizimle. Hocam, öğrenciler artık ödevlerini ve hatta makalelerini ChatGPT gibi yapay zeka araçlarına yazdırıyorlar. Bu durum okulların sonunu mu getirecek?\nProf. Dr. Yılmaz: Hayır, okulların değil ama geleneksel 'ezberci' eğitim sisteminin sonunu getirecek. Yıllarca öğrencilerden sadece bilgiyi ezberlemelerini ve sınav kağıdına geri kusmalarını istedik. Şimdi bir makine bunu saniyeler içinde ve kusursuz yapıyor. Dolayısıyla öğrenciye 'Şu tarihi olayı yaz' demek artık anlamsız. Eğitimciler olarak yapay zekayı yasaklamak yerine, onu bir araç olarak entegre etmeliyiz.\nSunucu: Peki nasıl bir ölçme yöntemi (sınav) kullanılmalı o zaman?\nProf. Dr. Yılmaz: Artık öğrencilerin bilgiyi ne kadar bildiğini değil, yapay zekanın ürettiği bilgiyi ne kadar 'sorgulayabildiğini', analiz edebildiğini ve doğrulayabildiğini ölçmeliyiz. Buna 'Eleştirel Düşünme' diyoruz. Geleceğin okulları, öğrencilere yapay zekaya nasıl doğru sorular (prompt) soracaklarını ve o makineden çıkan cevaptaki mantık hatalarını nasıl bulacaklarını öğreten yerler olmalıdır. Bilgiyi üreten değil, bilgiyi yorumlayan ve ahlaki (etik) süzgeçten geçiren insan değer kazanacaktır.",
+    "audio_script": "Sunucu: Sayın dinleyiciler, eğitimde dijital devrimi konuşmak üzere Eğitim Bilimci Prof. Dr. Kerem Yılmaz bizimle. Hocam, öğrenciler artık ödevlerini ve hatta makalelerini ChatGPT gibi yapay zekâ araçlarına yazdırıyorlar. Bu durum okulların sonunu mu getirecek?\nProf. Dr. Yılmaz: Hayır, okulların değil ama geleneksel 'ezberci' eğitim sisteminin sonunu getirecek. Yıllarca öğrencilerden sadece bilgiyi ezberlemelerini ve sınav kağıdına geri kusmalarını istedik. Şimdi bir makine bunu saniyeler içinde ve kusursuz yapıyor. Dolayısıyla öğrenciye 'Şu tarihi olayı yaz' demek artık anlamsız. Eğitimciler olarak yapay zekâyı yasaklamak yerine, onu bir araç olarak entegre etmeliyiz.\nSunucu: Peki nasıl bir ölçme yöntemi (sınav) kullanılmalı o zaman?\nProf. Dr. Yılmaz: Artık öğrencilerin bilgiyi ne kadar bildiğini değil, yapay zekânın ürettiği bilgiyi ne kadar 'sorgulayabildiğini', analiz edebildiğini ve doğrulayabildiğini ölçmeliyiz. Buna 'Eleştirel Düşünme' diyoruz. Geleceğin okulları, öğrencilere yapay zekâya nasıl doğru sorular (prompt) soracaklarını ve o makineden çıkan cevaptaki mantık hatalarını nasıl bulacaklarını öğreten yerler olmalıdır. Bilgiyi üreten değil, bilgiyi yorumlayan ve ahlaki (etik) süzgeçten geçiren insan değer kazanacaktır.",
     "questions": [
       {
         "type": "multiple_choice",
-        "question": "Sunucuya göre yapay zeka araçları (ChatGPT vb.) eğitimde nasıl bir soruna (veya duruma) yol açmıştır?",
+        "question": "Sunucuya göre yapay zekâ araçları (ChatGPT vb.) eğitimde nasıl bir soruna (veya duruma) yol açmıştır?",
         "options": [
           "Öğrencilerin tamamen okulu bırakmasına.",
           "Öğretmenlerin teknoloji kullanamamasına.",
@@ -2253,11 +2253,11 @@
           "Okul ücretlerinin artmasına."
         ],
         "correct_answer_index": 2,
-        "explanation": "Sunucu: 'öğrenciler artık ödevlerini ve hatta makalelerini ChatGPT gibi yapay zeka araçlarına yazdırıyorlar' demiştir."
+        "explanation": "Sunucu: 'öğrenciler artık ödevlerini ve hatta makalelerini ChatGPT gibi yapay zekâ araçlarına yazdırıyorlar' demiştir."
       },
       {
         "type": "multiple_choice",
-        "question": "Prof. Dr. Kerem Yılmaz'a göre yapay zeka neyin sonunu getirecektir?",
+        "question": "Prof. Dr. Kerem Yılmaz'a göre yapay zekâ neyin sonunu getirecektir?",
         "options": [
           "Tüm okulların ve üniversitelerin",
           "Geleneksel ezberci eğitim sisteminin",
@@ -2269,15 +2269,15 @@
       },
       {
         "type": "multiple_choice",
-        "question": "Profesöre göre eğitimciler yapay zeka karşısında nasıl bir tutum sergilemelidir?",
+        "question": "Profesöre göre eğitimciler yapay zekâ karşısında nasıl bir tutum sergilemelidir?",
         "options": [
           "Onu okullarda tamamen yasaklamalıdırlar.",
           "Sadece sınavlarda kullanılmasına izin vermelidirler.",
           "Onu yasaklamak yerine bir araç olarak eğitim sistemine entegre etmelidirler.",
-          "Yapay zeka ile yarışmaya çalışmalıdırlar."
+          "Yapay zekâ ile yarışmaya çalışmalıdırlar."
         ],
         "correct_answer_index": 2,
-        "explanation": "Eğitimciler olarak yapay zekayı yasaklamak yerine, onu bir araç olarak entegre etmeliyiz."
+        "explanation": "Eğitimciler olarak yapay zekâyı yasaklamak yerine, onu bir araç olarak entegre etmeliyiz."
       },
       {
         "type": "multiple_choice",
@@ -2285,11 +2285,11 @@
         "options": [
           "Ansiklopedik bilgileri ne kadar hızlı ezberledikleri.",
           "Matematik formüllerini ezbere bilmeleri.",
-          "Yapay zekanın ürettiği bilgiyi ne kadar sorgulayabildikleri, analiz edip doğrulayabildikleri.",
+          "Yapay zekânın ürettiği bilgiyi ne kadar sorgulayabildikleri, analiz edip doğrulayabildikleri.",
           "Bilgisayarda ne kadar hızlı yazı yazdıkları."
         ],
         "correct_answer_index": 2,
-        "explanation": "Bilgiyi ne kadar bildiğini değil, yapay zekanın ürettiği bilgiyi ne kadar 'sorgulayabildiğini' ölçmeliyiz."
+        "explanation": "Bilgiyi ne kadar bildiğini değil, yapay zekânın ürettiği bilgiyi ne kadar 'sorgulayabildiğini' ölçmeliyiz."
       },
       {
         "type": "kelime",
@@ -2721,7 +2721,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Uyku Felci (Karabasan): Beynin Bir Oyunu",
-    "audio_script": "Saygıdeğer misafirler, bugün halk arasında 'Karabasan' olarak bilinen ama tıptaki adıyla 'Uyku Felci' (Sleep Paralysis) adı verilen o korkutucu deneyimi bilimsel çerçevede inceleyeceğiz. Birçok kültürde uyku felci; göğse oturan cinler, uzaylılar tarafından kaçırılma veya kötü ruhların saldırısı olarak mitolojik hikayelerle açıklanmıştır. Oysa gerçek tamamen nörolojiktir (beyinle ilgilidir). Normalde biz rüya görürken, beynimiz vücudumuza bir sinyal göndererek tüm kaslarımızı geçici olarak felç eder. Bu, rüyada koşarken yatakta da koşup kendimize zarar vermemizi engelleyen harika bir güvenlik mekanizmasıdır. Ancak bazen beyin uyanır, bilincimiz açılır, etrafımızdaki odayı görürüz; fakat beyin henüz kaslara 'felci kaldır' komutunu göndermemiştir. Yani kişi zihnen uyanık ama bedenen felçli (kilitli) durumdadır. Bu korkutucu kilitlenme anında beyin paniğe kapılır ve hala rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar (gölgeler, canavarlar) yansıtır. Göğüsteki baskı hissi ise kişinin panikleyip hızlı nefes almaya çalışması ama göğüs kaslarının felçli olduğu için buna tepki verememesinden kaynaklanır. Uyku felci zararsızdır ve genellikle aşırı stres veya uyku düzensizliği durumlarında ortaya çıkar.",
+    "audio_script": "Saygıdeğer misafirler, bugün halk arasında 'Karabasan' olarak bilinen ama tıptaki adıyla 'Uyku Felci' (Sleep Paralysis) adı verilen o korkutucu deneyimi bilimsel çerçevede inceleyeceğiz. Birçok kültürde uyku felci; göğse oturan cinler, uzaylılar tarafından kaçırılma veya kötü ruhların saldırısı olarak mitolojik hikâyelerle açıklanmıştır. Oysa gerçek tamamen nörolojiktir (beyinle ilgilidir). Normalde biz rüya görürken, beynimiz vücudumuza bir sinyal göndererek tüm kaslarımızı geçici olarak felç eder. Bu, rüyada koşarken yatakta da koşup kendimize zarar vermemizi engelleyen harika bir güvenlik mekanizmasıdır. Ancak bazen beyin uyanır, bilincimiz açılır, etrafımızdaki odayı görürüz; fakat beyin henüz kaslara 'felci kaldır' komutunu göndermemiştir. Yani kişi zihnen uyanık ama bedenen felçli (kilitli) durumdadır. Bu korkutucu kilitlenme anında beyin paniğe kapılır ve hâlâ rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar (gölgeler, canavarlar) yansıtır. Göğüsteki baskı hissi ise kişinin panikleyip hızlı nefes almaya çalışması ama göğüs kaslarının felçli olduğu için buna tepki verememesinden kaynaklanır. Uyku felci zararsızdır ve genellikle aşırı stres veya uyku düzensizliği durumlarında ortaya çıkar.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -2765,7 +2765,7 @@
           "Metinde Yok"
         ],
         "correct_answer_index": 1,
-        "explanation": "Yanlış. Karanlıktan değil, 'beyin paniğe kapılır ve hala rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar yansıtır' denilmiştir."
+        "explanation": "Yanlış. Karanlıktan değil, 'beyin paniğe kapılır ve hâlâ rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar yansıtır' denilmiştir."
       },
       {
         "type": "true_false_not_given",
@@ -2958,7 +2958,7 @@
     "level": "B1",
     "category": "Eşleştirme",
     "title": "Film Tercihleri ve Sinema Zevkleri",
-    "audio_script": "A) Yusuf: Ben gerçekliğin sınırlarını zorlayan şeyleri severim. Benim için sinema, uzay gemileri, zaman yolculuğu, yapay zeka ve farklı gezegenlerde geçen 'Bilim Kurgu' demektir. Gelecekte dünyamızın nasıl olabileceğine dair üretilen o zekice teorileri izlemek zihnimi açıyor.\nB) Seda: Ben ekranda sahte oyuncular veya abartılı senaryolar görmek istemiyorum. Benim tercihim her zaman 'Belgesel'lerdir. Doğa, tarih veya suç üzerine yapılmış gerçek olayları inceleyen yapımlar bana, okumaya üşendiğim kitapların bilgisini hap gibi veriyor.\nC) Kerem: Ben sinemaya gittiğimde kalp atışlarımın hızlanmasını ve koltuğa çivilenmeyi isterim. Bu yüzden 'Korku ve Gerilim' filmlerinin hastasıyım. Karanlık bir ev, açıklanamayan doğaüstü olaylar ve o aniden yükselen müzik bana inanılmaz bir adrenalin yaşatıyor.\nD) Ayşe: Günlük hayat zaten yeterince stresli ve zor, sinemada neden kendimi daha fazla gereyim ki? Ben sıcak, insanı gülümseten 'Romantik Komedi' filmlerini tercih ediyorum. Sonu her zaman mutlu biten, basit ama eğlenceli aşk hikayeleri benim ruhumu dinlendiriyor.",
+    "audio_script": "A) Yusuf: Ben gerçekliğin sınırlarını zorlayan şeyleri severim. Benim için sinema, uzay gemileri, zaman yolculuğu, yapay zekâ ve farklı gezegenlerde geçen 'Bilim Kurgu' demektir. Gelecekte dünyamızın nasıl olabileceğine dair üretilen o zekice teorileri izlemek zihnimi açıyor.\nB) Seda: Ben ekranda sahte oyuncular veya abartılı senaryolar görmek istemiyorum. Benim tercihim her zaman 'Belgesel'lerdir. Doğa, tarih veya suç üzerine yapılmış gerçek olayları inceleyen yapımlar bana, okumaya üşendiğim kitapların bilgisini hap gibi veriyor.\nC) Kerem: Ben sinemaya gittiğimde kalp atışlarımın hızlanmasını ve koltuğa çivilenmeyi isterim. Bu yüzden 'Korku ve Gerilim' filmlerinin hastasıyım. Karanlık bir ev, açıklanamayan doğaüstü olaylar ve o aniden yükselen müzik bana inanılmaz bir adrenalin yaşatıyor.\nD) Ayşe: Günlük hayat zaten yeterince stresli ve zor, sinemada neden kendimi daha fazla gereyim ki? Ben sıcak, insanı gülümseten 'Romantik Komedi' filmlerini tercih ediyorum. Sonu her zaman mutlu biten, basit ama eğlenceli aşk hikâyeleri benim ruhumu dinlendiriyor.",
     "questions": [
       {
         "type": "matching_paragraph",
@@ -2986,7 +2986,7 @@
       },
       {
         "type": "matching_paragraph",
-        "question": "Mutlu sonla biten, stresten uzak ve eğlenceli aşk hikayelerini (Romantik Komedi) tercih eden kişi kimdir?",
+        "question": "Mutlu sonla biten, stresten uzak ve eğlenceli aşk hikâyelerini (Romantik Komedi) tercih eden kişi kimdir?",
         "options": [
           "A) Yusuf",
           "B) Seda",
@@ -3039,11 +3039,11 @@
     "level": "B2",
     "category": "Röportaj",
     "title": "Geleceğin Meslekleri Neler Olacak?",
-    "audio_script": "Sunucu: Değerli dinleyiciler, bugünkü konuğumuz Fütürist (Gelecek Bilimci) Cemal Bey. Cemal Bey, yapay zeka ve robotların hızla gelişmesiyle herkes 'Acaba işsiz mi kalacağım?' diye korkuyor. Gerçekten de 20 yıl sonra mesleklerin çoğu yok mu olacak?\nCemal Bey: Merhaba. Hayır, meslekler yok olmayacak, sadece şekil değiştirecek. Tarih boyunca teknoloji daima bazı işleri yok ederken yeni iş kolları yaratmıştır. Örneğin otonom (sürücüsüz) araçlar yaygınlaştığında şoförlük mesleği büyük yara alacak; marketlerde kasiyerleri zaten artık görmüyoruz. Muhasebe ve veri giriş elemanları (sadece hesap yapanlar) tamamen yapay zekaya yenik düşecek.\nSunucu: Peki hangi meslekler parlayacak veya yeni çıkacak?\nCemal Bey: İnsan olmanın getirdiği o eşsiz özellikleri; yani empatiyi, yaratıcılığı ve karmaşık problem çözmeyi gerektiren işler daha da değerlenecek. Psikologlar, sanatçılar, hasta bakıcılar ve öğretmenler her zaman var olacak. Yeni çıkacak mesleklere gelirsek; 'Robot Psikoloğu' (insanlarla çalışan robotların uyumunu sağlayan kişi), 'Yapay Zeka Etik Uzmanı' (makinelerin ahlaki kararlarını denetleyen kişi) veya 'İklim Değişikliği Mühendisi' (bozulan doğayı onaran kişi) gibi şu an okullarda bölümü dahi olmayan yeni unvanlar duyacağız. Gençlere tavsiyem, tek bir mesleği ezberlemek yerine uyum sağlama (adaptasyon) yeteneklerini geliştirmeleridir.",
+    "audio_script": "Sunucu: Değerli dinleyiciler, bugünkü konuğumuz Fütürist (Gelecek Bilimci) Cemal Bey. Cemal Bey, yapay zekâ ve robotların hızla gelişmesiyle herkes 'Acaba işsiz mi kalacağım?' diye korkuyor. Gerçekten de 20 yıl sonra mesleklerin çoğu yok mu olacak?\nCemal Bey: Merhaba. Hayır, meslekler yok olmayacak, sadece şekil değiştirecek. Tarih boyunca teknoloji daima bazı işleri yok ederken yeni iş kolları yaratmıştır. Örneğin otonom (sürücüsüz) araçlar yaygınlaştığında şoförlük mesleği büyük yara alacak; marketlerde kasiyerleri zaten artık görmüyoruz. Muhasebe ve veri giriş elemanları (sadece hesap yapanlar) tamamen yapay zekâya yenik düşecek.\nSunucu: Peki hangi meslekler parlayacak veya yeni çıkacak?\nCemal Bey: İnsan olmanın getirdiği o eşsiz özellikleri; yani empatiyi, yaratıcılığı ve karmaşık problem çözmeyi gerektiren işler daha da değerlenecek. Psikologlar, sanatçılar, hasta bakıcılar ve öğretmenler her zaman var olacak. Yeni çıkacak mesleklere gelirsek; 'Robot Psikoloğu' (insanlarla çalışan robotların uyumunu sağlayan kişi), 'Yapay Zeka Etik Uzmanı' (makinelerin ahlaki kararlarını denetleyen kişi) veya 'İklim Değişikliği Mühendisi' (bozulan doğayı onaran kişi) gibi şu an okullarda bölümü dahi olmayan yeni unvanlar duyacağız. Gençlere tavsiyem, tek bir mesleği ezberlemek yerine uyum sağlama (adaptasyon) yeteneklerini geliştirmeleridir.",
     "questions": [
       {
         "type": "multiple_choice",
-        "question": "Fütürist (Gelecek Bilimci) Cemal Bey'e göre robotlar ve yapay zeka meslekleri nasıl etkileyecektir?",
+        "question": "Fütürist (Gelecek Bilimci) Cemal Bey'e göre robotlar ve yapay zekâ meslekleri nasıl etkileyecektir?",
         "options": [
           "Dünyadaki tüm insanların işsiz kalmasına neden olacaktır.",
           "Meslekleri tamamen yok etmeyecek, sadece şekil değiştirmesine ve yeni iş kollarının doğmasına neden olacaktır.",
@@ -3055,7 +3055,7 @@
       },
       {
         "type": "multiple_choice",
-        "question": "Konuşmacıya göre yapay zekaya (makinelere) yenik düşecek ve ortadan kalkacak mesleklerden biri hangisidir?",
+        "question": "Konuşmacıya göre yapay zekâya (makinelere) yenik düşecek ve ortadan kalkacak mesleklerden biri hangisidir?",
         "options": [
           "Öğretmenlik",
           "Hasta bakıcılık",
@@ -3063,7 +3063,7 @@
           "Veri giriş elemanı ve muhasebecilik (hesap yapanlar)"
         ],
         "correct_answer_index": 3,
-        "explanation": "Muhasebe ve veri giriş elemanları (sadece hesap yapanlar) tamamen yapay zekaya yenik düşecek."
+        "explanation": "Muhasebe ve veri giriş elemanları (sadece hesap yapanlar) tamamen yapay zekâya yenik düşecek."
       },
       {
         "type": "multiple_choice",
@@ -3082,7 +3082,7 @@
         "question": "Röportajda bahsedilen 'Yapay Zeka Etik Uzmanı'nın görevi nedir?",
         "options": [
           "Robotlara Türkçe öğretmek.",
-          "Yapay zeka makinelerinin verdiği ahlaki (etik) kararları denetlemek.",
+          "Yapay zekâ makinelerinin verdiği ahlaki (etik) kararları denetlemek.",
           "Bozulan bilgisayarları tamir etmek.",
           "Robotların daha fazla elektrik tüketmesini sağlamak."
         ],
@@ -3120,7 +3120,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Blokzincir (Blockchain) Teknolojisinin Temeli",
-    "audio_script": "Kıymetli dinleyiciler, bugün kripto paraların (Bitcoin gibi) arkasındaki asıl devrimsel teknoloji olan 'Blokzincir' (Blockchain) sistemini bilimsel olarak inceleyeceğiz. Çoğu kişi Blokzincir'i sadece bir para birimi sanır, oysa o aslında bir 'Dağıtık Kayıt Defteri' (Distributed Ledger) teknolojisidir. Geleneksel bankacılık sisteminde tüm paranız ve bilgileriniz bankanın merkezi sunucusunda tutulur; eğer bu sunucu hacklenirse veya banka batarsa her şeyinizi kaybedebilirsiniz (Merkeziyetçilik). Blokzincir'de ise merkezi bir patron veya banka yoktur. Yapılan bir işlem (örneğin A kişisinden B kişisine para gönderimi) ağdaki tüm bilgisayarlara aynı anda kaydedilir ve bir şifreleme zinciri oluşturulur. Bu işlem onaylandıktan sonra bir 'blok' haline gelir ve geçmişteki zincire eklenir. Sistemin en büyük özelliği, bu zincire eklenen bir verinin geriye dönük olarak asla değiştirilememesi, silinememesi veya hacklenememesidir. Çünkü veriyi değiştirmek için dünyadaki milyonlarca bilgisayarı aynı anda hacklemek gerekir ki bu matematiksel olarak imkansızdır. Bu yüzden Blokzincir sadece para transferlerinde değil; seçimlerde güvenli oy kullanma sistemlerinde, noter onaylarında ve tapu işlemlerinde aracı kurumları ortadan kaldırarak tam güven sağlayacak bir teknolojidir.",
+    "audio_script": "Kıymetli dinleyiciler, bugün kripto paraların (Bitcoin gibi) arkasındaki asıl devrimsel teknoloji olan 'Blokzincir' (Blockchain) sistemini bilimsel olarak inceleyeceğiz. Çoğu kişi Blokzincir'i sadece bir para birimi sanır, oysa o aslında bir 'Dağıtık Kayıt Defteri' (Distributed Ledger) teknolojisidir. Geleneksel bankacılık sisteminde tüm paranız ve bilgileriniz bankanın merkezi sunucusunda tutulur; eğer bu sunucu hacklenirse veya banka batarsa her şeyinizi kaybedebilirsiniz (Merkeziyetçilik). Blokzincir'de ise merkezi bir patron veya banka yoktur. Yapılan bir işlem (örneğin A kişisinden B kişisine para gönderimi) ağdaki tüm bilgisayarlara aynı anda kaydedilir ve bir şifreleme zinciri oluşturulur. Bu işlem onaylandıktan sonra bir 'blok' haline gelir ve geçmişteki zincire eklenir. Sistemin en büyük özelliği, bu zincire eklenen bir verinin geriye dönük olarak asla değiştirilememesi, silinememesi veya hacklenememesidir. Çünkü veriyi değiştirmek için dünyadaki milyonlarca bilgisayarı aynı anda hacklemek gerekir ki bu matematiksel olarak imkânsızdır. Bu yüzden Blokzincir sadece para transferlerinde değil; seçimlerde güvenli oy kullanma sistemlerinde, noter onaylarında ve tapu işlemlerinde aracı kurumları ortadan kaldırarak tam güven sağlayacak bir teknolojidir.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -3164,7 +3164,7 @@
           "Metinde Yok"
         ],
         "correct_answer_index": 0,
-        "explanation": "Doğru. 'dünyadaki milyonlarca bilgisayarı aynı anda hacklemek gerekir ki bu matematiksel olarak imkansızdır' denilmiştir."
+        "explanation": "Doğru. 'dünyadaki milyonlarca bilgisayarı aynı anda hacklemek gerekir ki bu matematiksel olarak imkânsızdır' denilmiştir."
       },
       {
         "type": "true_false_not_given",
@@ -3340,7 +3340,7 @@
       },
       {
         "type": "multiple_choice",
-        "question": "Konuşmacının hikayesinin ana mesajı aşağıdakilerden hangisidir?",
+        "question": "Konuşmacının hikâyesinin ana mesajı aşağıdakilerden hangisidir?",
         "options": [
           "Sosyal medya kullanmak insanları zengin eder.",
           "Sanal (dijital) dünyadan uzaklaşmak, insanın gerçek hayatın güzelliklerini ve anı yaşamasını sağlar.",
@@ -3519,7 +3519,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Psikolojide Cam Tavan Sendromu (Glass Ceiling)",
-    "audio_script": "Saygıdeğer misafirler, bugün iş ve sosyoloji dünyasında çok konuşulan, görünmez ama aşılamaz bir engelden, 'Cam Tavan' (Glass Ceiling) sendromundan bahsedeceğiz. Cam tavan; özellikle kadınların veya azınlık gruplarının, çalıştıkları kurumlarda yetenekleri ve başarıları ne kadar yüksek olursa olsun, üst düzey yönetici (CEO vb.) pozisyonlarına gelmelerini engelleyen, yazılı olmayan ve resmiyette var görünmeyen hiyerarşik (ve önyargılı) bir bariyerdir. 1980'lerde Wall Street'te ortaya çıkan bu terim, 'Yukarıyı (zirveyi) görüyorsun, ama oraya asla ulaşamıyorsun' hissini sembolize eder. Şirketler kağıt üzerinde herkese eşit fırsat tanıdığını iddia etse de, bilinçaltı önyargılar, erkek egemen ağlar (network) ve aile sorumluluklarının yükü, kadınların terfi süreçlerinde gizlice elenmesine neden olur. Cam tavanı kırmak, sadece yasal yasaklarla değil, şirket kültürlerinin derinlemesine değiştirilmesiyle mümkündür. Eğer yetenekli bireyler sadece cinsiyetleri yüzünden zirveye çıkamıyorsa, bu durum sadece onların kişisel kariyerini değil, o şirketin yaratıcılığını ve ekonomik potansiyelini de ciddi şekilde baltalamaktadır.",
+    "audio_script": "Saygıdeğer misafirler, bugün iş ve sosyoloji dünyasında çok konuşulan, görünmez ama aşılamaz bir engelden, 'Cam Tavan' (Glass Ceiling) sendromundan bahsedeceğiz. Cam tavan; özellikle kadınların veya azınlık gruplarının, çalıştıkları kurumlarda yetenekleri ve başarıları ne kadar yüksek olursa olsun, üst düzey yönetici (CEO vb.) pozisyonlarına gelmelerini engelleyen, yazılı olmayan ve resmiyette var görünmeyen hiyerarşik (ve önyargılı) bir bariyerdir. 1980'lerde Wall Street'te ortaya çıkan bu terim, 'Yukarıyı (zirveyi) görüyorsun, ama oraya asla ulaşamıyorsun' hissini sembolize eder. Şirketler kâğıt üzerinde herkese eşit fırsat tanıdığını iddia etse de, bilinçaltı önyargılar, erkek egemen ağlar (network) ve aile sorumluluklarının yükü, kadınların terfi süreçlerinde gizlice elenmesine neden olur. Cam tavanı kırmak, sadece yasal yasaklarla değil, şirket kültürlerinin derinlemesine değiştirilmesiyle mümkündür. Eğer yetenekli bireyler sadece cinsiyetleri yüzünden zirveye çıkamıyorsa, bu durum sadece onların kişisel kariyerini değil, o şirketin yaratıcılığını ve ekonomik potansiyelini de ciddi şekilde baltalamaktadır.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -3756,11 +3756,11 @@
     "level": "B1",
     "category": "Eşleştirme",
     "title": "Yapay Zeka Korkusu",
-    "audio_script": "A) Serdar: Ben bir yazılımcıyım ve yapay zekanın (AI) işlerimizi elimizden alacağına inanmıyorum. Aksine, yapay zeka bizim angarya (sıkıcı ve tekrarlayan) kod yazma süreçlerimizi hızlandırıyor. O bir düşman değil, kod yazarken bana hatalarımı gösteren mükemmel bir asistan.\nB) Aylin: Bir çevirmen olarak çok endişeliyim. Eskiden sayfalarca metni çevirmek günler alırdı, şimdi yapay zeka aynı işi saniyeler içinde, üstelik oldukça doğal bir dille yapıyor. Birkaç yıl içinde bizim mesleğimize hiç ihtiyaç kalmayacağından korkuyorum.\nC) Kemal: Ben yapay zekanın insani değerleri yok edeceğini düşünüyorum. Filmlerde gördüğümüz o robotların dünyayı ele geçirmesi senaryosu bence o kadar da hayal değil. Eğer bu sistemlere sınır konulmazsa, insanlığın sonunu kendi ellerimizle hazırlamış olacağız.\nD) Elif: Ben bir doktorum. Yapay zeka tıpta harikalar yaratıyor! Radyoloji sonuçlarını ve MR görüntülerini incelerken bir insanın göremeyeceği milimetrik tümörleri anında tespit ediyor. Yapay zeka benim yerime geçemez ama hastalarımın hayatını kurtarmamda bana çok büyük güç veriyor.",
+    "audio_script": "A) Serdar: Ben bir yazılımcıyım ve yapay zekânın (AI) işlerimizi elimizden alacağına inanmıyorum. Aksine, yapay zekâ bizim angarya (sıkıcı ve tekrarlayan) kod yazma süreçlerimizi hızlandırıyor. O bir düşman değil, kod yazarken bana hatalarımı gösteren mükemmel bir asistan.\nB) Aylin: Bir çevirmen olarak çok endişeliyim. Eskiden sayfalarca metni çevirmek günler alırdı, şimdi yapay zekâ aynı işi saniyeler içinde, üstelik oldukça doğal bir dille yapıyor. Birkaç yıl içinde bizim mesleğimize hiç ihtiyaç kalmayacağından korkuyorum.\nC) Kemal: Ben yapay zekânın insani değerleri yok edeceğini düşünüyorum. Filmlerde gördüğümüz o robotların dünyayı ele geçirmesi senaryosu bence o kadar da hayal değil. Eğer bu sistemlere sınır konulmazsa, insanlığın sonunu kendi ellerimizle hazırlamış olacağız.\nD) Elif: Ben bir doktorum. Yapay zekâ tıpta harikalar yaratıyor! Radyoloji sonuçlarını ve MR görüntülerini incelerken bir insanın göremeyeceği milimetrik tümörleri anında tespit ediyor. Yapay zekâ benim yerime geçemez ama hastalarımın hayatını kurtarmamda bana çok büyük güç veriyor.",
     "questions": [
       {
         "type": "matching_paragraph",
-        "question": "Yapay zekanın saniyeler içinde yaptığı işler yüzünden kendi mesleğinin yok olacağından korkan kişi kimdir?",
+        "question": "Yapay zekânın saniyeler içinde yaptığı işler yüzünden kendi mesleğinin yok olacağından korkan kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -3772,7 +3772,7 @@
       },
       {
         "type": "matching_paragraph",
-        "question": "Yapay zekayı hastalıkların teşhisinde hayat kurtaran çok faydalı bir teknoloji olarak gören kişi kimdir?",
+        "question": "Yapay zekâyı hastalıkların teşhisinde hayat kurtaran çok faydalı bir teknoloji olarak gören kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -3780,11 +3780,11 @@
           "D) Elif"
         ],
         "correct_answer_index": 3,
-        "explanation": "Elif (doktor) yapay zekanın tümörleri tespit ettiğini ve hastaların hayatını kurtardığını söylemiştir."
+        "explanation": "Elif (doktor) yapay zekânın tümörleri tespit ettiğini ve hastaların hayatını kurtardığını söylemiştir."
       },
       {
         "type": "matching_paragraph",
-        "question": "Yapay zekanın kontrol edilmezse insanlığın sonunu getirecek büyük bir tehdit olduğuna inanan kişi kimdir?",
+        "question": "Yapay zekânın kontrol edilmezse insanlığın sonunu getirecek büyük bir tehdit olduğuna inanan kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -3796,7 +3796,7 @@
       },
       {
         "type": "matching_paragraph",
-        "question": "Sıkıcı ve tekrarlayan işlerden kurtulmak için yapay zekayı bir asistan olarak kullanan kişi kimdir?",
+        "question": "Sıkıcı ve tekrarlayan işlerden kurtulmak için yapay zekâyı bir asistan olarak kullanan kişi kimdir?",
         "options": [
           "A) Serdar",
           "B) Aylin",
@@ -3828,7 +3828,7 @@
           "D) Elif"
         ],
         "correct_answer_index": 1,
-        "explanation": "Aylin (çevirmen) yapay zekanın doğal bir dille saniyeler içinde çeviri yapmasından korkmaktadır."
+        "explanation": "Aylin (çevirmen) yapay zekânın doğal bir dille saniyeler içinde çeviri yapmasından korkmaktadır."
       }
     ],
     "audio_url": "/audio/48_B2_Eslestirme.mp3"
@@ -4074,19 +4074,19 @@
     "level": "A2",
     "category": "Monolog",
     "title": "Köy Okulunda Öğretmenlik",
-    "audio_script": "Benim adım Ahmet. İstanbul'da doğup büyüdüm. Üniversiteden mezun olunca ilk görev yerim olarak Doğu Anadolu'da, kışın yollarının kardan kapandığı küçük bir köye atandım. Şehir hayatına o kadar alışkındım ki, ilk geldiğimde buradaki sessizlik ve imkansızlıklar beni çok korkutmuştu. Okulun sobasını yakmayı bile bilmiyordum. Ancak köy halkı o kadar misafirperverdi ki, beni evlatları gibi bağırlarına bastılar. Her sabah kapımda taze süt, sıcak ekmek buluyordum. Çocukların gözlerindeki o okuma hevesi, bana tüm yorgunluğumu unutturdu. Birçoğu daha önce hiç sinemaya gitmemişti. Sınıfımıza bir projeksiyon cihazı aldırıp onlara hafta sonları belgeseller ve filmler izletmeye başladım. Şehirdeki öğrencilerde gördüğüm o teknoloji bağımlılığı ve bıkkınlık bu çocuklarda yoktu. Üç yılımı bu köyde geçirdim. Şehre döndüğümde cebim boştu belki, ama kalbim dünyanın en büyük servetiyle, o çocukların sevgisiyle doluydu.",
+    "audio_script": "Benim adım Ahmet. İstanbul'da doğup büyüdüm. Üniversiteden mezun olunca ilk görev yerim olarak Doğu Anadolu'da, kışın yollarının kardan kapandığı küçük bir köye atandım. Şehir hayatına o kadar alışkındım ki, ilk geldiğimde buradaki sessizlik ve imkânsızlıklar beni çok korkutmuştu. Okulun sobasını yakmayı bile bilmiyordum. Ancak köy halkı o kadar misafirperverdi ki, beni evlatları gibi bağırlarına bastılar. Her sabah kapımda taze süt, sıcak ekmek buluyordum. Çocukların gözlerindeki o okuma hevesi, bana tüm yorgunluğumu unutturdu. Birçoğu daha önce hiç sinemaya gitmemişti. Sınıfımıza bir projeksiyon cihazı aldırıp onlara hafta sonları belgeseller ve filmler izletmeye başladım. Şehirdeki öğrencilerde gördüğüm o teknoloji bağımlılığı ve bıkkınlık bu çocuklarda yoktu. Üç yılımı bu köyde geçirdim. Şehre döndüğümde cebim boştu belki, ama kalbim dünyanın en büyük servetiyle, o çocukların sevgisiyle doluydu.",
     "questions": [
       {
         "type": "multiple_choice",
         "question": "Ahmet'in köy okuluna atandığında ilk hissettiği duygu ne olmuştur?",
         "options": [
           "Çok sevinmiştir",
-          "Sessizlik ve imkansızlıklardan dolayı korkmuştur",
+          "Sessizlik ve imkânsızlıklardan dolayı korkmuştur",
           "Hemen geri dönmek istemiştir",
           "Köy halkına sinirlenmiştir"
         ],
         "correct_answer_index": 1,
-        "explanation": "İlk geldiğimde buradaki sessizlik ve imkansızlıklar beni çok korkutmuştu."
+        "explanation": "İlk geldiğimde buradaki sessizlik ve imkânsızlıklar beni çok korkutmuştu."
       },
       {
         "type": "multiple_choice",
@@ -4527,7 +4527,7 @@
         "type": "multiple_choice",
         "question": "Zeynep'in şu anki Korece seviyesi için ne söylenebilir?",
         "options": [
-          "Hala sadece alfabeyi biliyor.",
+          "Hâlâ sadece alfabeyi biliyor.",
           "Sadece yazabiliyor ama konuşamıyor.",
           "Kore dizilerini altyazısız izleyebilecek seviyededir.",
           "Korece kitaplar yazmaktadır."
@@ -4716,7 +4716,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "İnsan Hafızasının Yanıltıcılığı: Sahte Anılar (Mandela Etkisi)",
-    "audio_script": "Değerli dinleyiciler, hafızamızı genellikle geçmişi kusursuzca kaydeden ve istediğimizde geri oynatan bir 'video kameraya' benzetiriz. Ancak nöroloji ve psikoloji bilimi bunun büyük bir yanılgı olduğunu kanıtlamıştır. Hafızamız bir kamera değil, bir 'yapboz'dur (puzzle). Geçmişteki bir anıyı her hatırladığımızda, beyin onu raftan alıp aynen okumaz; o anıyı o anki duygularımızla, sonradan öğrendiğimiz bilgilerle yeniden inşa eder. Bu durum beyni 'Sahte Anılar' (False Memories) üretmeye çok yatkın hale getirir. Bunun en ünlü örneği 'Mandela Etkisi'dir. 2010 yılında binlerce insan, Güney Afrikalı lider Nelson Mandela'nın 1980'lerde hapishanede öldüğünü çok net bir şekilde hatırladıklarını iddia etmişlerdir. Oysa Mandela o tarihte hala hayattaydı ve 2013'te ölmüştür. Binlerce insanın tamamen yanlış bir olayı gerçekmiş gibi (aynı detaylarla) hatırlaması, beynin kitle iletişim araçlarındaki (haberlerdeki) yanlış bilgileri alıp, geçmişteki boşlukları kendi kendine doldurmasının bir sonucudur. Kısacası, beyninize ve en net anılarınıza bile yüzde yüz güvenmemelisiniz; zihnimiz bize mükemmel yalanlar söyleyebilen usta bir hikaye anlatıcısıdır.",
+    "audio_script": "Değerli dinleyiciler, hafızamızı genellikle geçmişi kusursuzca kaydeden ve istediğimizde geri oynatan bir 'video kameraya' benzetiriz. Ancak nöroloji ve psikoloji bilimi bunun büyük bir yanılgı olduğunu kanıtlamıştır. Hafızamız bir kamera değil, bir 'yapboz'dur (puzzle). Geçmişteki bir anıyı her hatırladığımızda, beyin onu raftan alıp aynen okumaz; o anıyı o anki duygularımızla, sonradan öğrendiğimiz bilgilerle yeniden inşa eder. Bu durum beyni 'Sahte Anılar' (False Memories) üretmeye çok yatkın hale getirir. Bunun en ünlü örneği 'Mandela Etkisi'dir. 2010 yılında binlerce insan, Güney Afrikalı lider Nelson Mandela'nın 1980'lerde hapishanede öldüğünü çok net bir şekilde hatırladıklarını iddia etmişlerdir. Oysa Mandela o tarihte hâlâ hayattaydı ve 2013'te ölmüştür. Binlerce insanın tamamen yanlış bir olayı gerçekmiş gibi (aynı detaylarla) hatırlaması, beynin kitle iletişim araçlarındaki (haberlerdeki) yanlış bilgileri alıp, geçmişteki boşlukları kendi kendine doldurmasının bir sonucudur. Kısacası, beyninize ve en net anılarınıza bile yüzde yüz güvenmemelisiniz; zihnimiz bize mükemmel yalanlar söyleyebilen usta bir hikâye anlatıcısıdır.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -4771,7 +4771,7 @@
           "Metinde Yok"
         ],
         "correct_answer_index": 1,
-        "explanation": "Yanlış. 'Oysa Mandela o tarihte hala hayattaydı ve 2013'te ölmüştür' denilmiştir."
+        "explanation": "Yanlış. 'Oysa Mandela o tarihte hâlâ hayattaydı ve 2013'te ölmüştür' denilmiştir."
       },
       {
         "type": "true_false_not_given",
@@ -4782,7 +4782,7 @@
           "Metinde Yok"
         ],
         "correct_answer_index": 0,
-        "explanation": "Doğru. 'en net anılarınıza bile yüzde yüz güvenmemelisiniz; zihnimiz bize mükemmel yalanlar söyleyebilen usta bir hikaye anlatıcısıdır' denilmiştir."
+        "explanation": "Doğru. 'en net anılarınıza bile yüzde yüz güvenmemelisiniz; zihnimiz bize mükemmel yalanlar söyleyebilen usta bir hikâye anlatıcısıdır' denilmiştir."
       }
     ],
     "audio_url": "/audio/60_C1_Akademik.mp3"
@@ -5115,7 +5115,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Doğanın Kusursuz Ağı: Karınca Kolonileri",
-    "audio_script": "Sevgili öğrenciler, bugünkü biyoloji dersimizde doğadaki en mükemmel işbirliği sistemini, yani karınca kolonilerini inceleyeceğiz. İnsanlar şehirlerde trafik sıkışıklığı, işsizlik veya hiyerarşik (yönetimsel) krizler yaşarken, milyonlarca karıncadan oluşan bir kolonide asla kaos çıkmaz. Peki bunu nasıl başarıyorlar? Sanılanın aksine, 'Kraliçe Karınca' koloninin yöneticisi veya patronu değildir; onun tek görevi yumurtlayarak neslin devamını sağlamaktır. Karıncalar arasında bir emir-komuta zinciri yoktur. Kararlar 'Kolektif Zeka' (Swarm Intelligence) adı verilen ve feromon (koku) kimyasallarıyla işleyen bir sistemle alınır. Örneğin, bir karınca yiyecek bulduğunda yuvaya dönerken arkasında bir koku izi bırakır. Diğer karıncalar da bu kokuyu takip eder ve koku güçlendikçe oraya yönelen karınca sayısı artar. Trafikleri hiç sıkışmaz, çünkü yolda karşılaşan iki karınca hızla birbirine dokunarak (antenleriyle) iletişim kurar ve dolu olana her zaman yol verilir. İnsanoğlu günümüzde yapay zeka ile yönlendirilen sürücüsüz araç filolarını tasarlarken, karıncaların bu kusursuz ve lidersiz 'kolektif zeka' algoritmasını kopyalamaktadır.",
+    "audio_script": "Sevgili öğrenciler, bugünkü biyoloji dersimizde doğadaki en mükemmel işbirliği sistemini, yani karınca kolonilerini inceleyeceğiz. İnsanlar şehirlerde trafik sıkışıklığı, işsizlik veya hiyerarşik (yönetimsel) krizler yaşarken, milyonlarca karıncadan oluşan bir kolonide asla kaos çıkmaz. Peki bunu nasıl başarıyorlar? Sanılanın aksine, 'Kraliçe Karınca' koloninin yöneticisi veya patronu değildir; onun tek görevi yumurtlayarak neslin devamını sağlamaktır. Karıncalar arasında bir emir-komuta zinciri yoktur. Kararlar 'Kolektif Zeka' (Swarm Intelligence) adı verilen ve feromon (koku) kimyasallarıyla işleyen bir sistemle alınır. Örneğin, bir karınca yiyecek bulduğunda yuvaya dönerken arkasında bir koku izi bırakır. Diğer karıncalar da bu kokuyu takip eder ve koku güçlendikçe oraya yönelen karınca sayısı artar. Trafikleri hiç sıkışmaz, çünkü yolda karşılaşan iki karınca hızla birbirine dokunarak (antenleriyle) iletişim kurar ve dolu olana her zaman yol verilir. İnsanoğlu günümüzde yapay zekâ ile yönlendirilen sürücüsüz araç filolarını tasarlarken, karıncaların bu kusursuz ve lidersiz 'kolektif zekâ' algoritmasını kopyalamaktadır.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -5174,7 +5174,7 @@
       },
       {
         "type": "true_false_not_given",
-        "question": "Mühendisler günümüzde sürücüsüz araç sistemlerini geliştirirken karıncaların bu 'kolektif zeka' sistemini örnek almaktadır.",
+        "question": "Mühendisler günümüzde sürücüsüz araç sistemlerini geliştirirken karıncaların bu 'kolektif zekâ' sistemini örnek almaktadır.",
         "options": [
           "Doğru",
           "Yanlış",
@@ -5289,7 +5289,7 @@
         "type": "multiple_choice",
         "question": "Zeynep markette naylon poşet yerine ne kullanmaktadır?",
         "options": [
-          "Kağıt poşet",
+          "Kâğıt poşet",
           "Plastik sepet",
           "Kendi bez çantalarını",
           "Karton kutu"
@@ -5465,7 +5465,7 @@
         "options": [
           "Çocuk çok hızlı kitap okumaya başlar.",
           "Yüksek dopamine alışan beyin için gerçek dünya (okul, kitaplar) çok yavaş ve sıkıcı gelmeye başlar.",
-          "Çocuğun matematik zekası inanılmaz derecede artar.",
+          "Çocuğun matematik zekâsı inanılmaz derecede artar.",
           "Çocuk daha çok dışarıda oynamak ister."
         ],
         "correct_answer_index": 1,
@@ -5499,7 +5499,7 @@
         "type": "cikarim",
         "question": "Röportajın sonunda belirtilen 'Dijital ebeveynlik yasaklamak değil, rehberlik etmektir' sözünden çıkarılacak sonuç nedir?",
         "options": [
-          "Çocukları dijital dünyadan tamamen koparmak imkansızdır, önemli olan onlara bu dünyada güvenle nasıl yol alacaklarını öğretmektir.",
+          "Çocukları dijital dünyadan tamamen koparmak imkânsızdır, önemli olan onlara bu dünyada güvenle nasıl yol alacaklarını öğretmektir.",
           "Çocukların sosyal medya kullanması kesinlikle yasaklanmalıdır.",
           "Ebeveynlerin çocuklarının yerine bilgisayar oyunları oynaması gerekir.",
           "Sadece okuldaki öğretmenler dijital eğitim vermelidir."
@@ -5670,7 +5670,7 @@
     "level": "A2",
     "category": "Monolog",
     "title": "Minimalist Yaşam Tarzı",
-    "audio_script": "Benim adım Cemre. Bundan üç yıl önce, odamdaki eşyaların beni boğduğunu hissetmeye başladım. Dolabım giymediğim kıyafetlerle doluydu, raflarımda okumadığım kitaplar vardı ama ben hala 'hiçbir şeyim yok' diyerek sürekli yeni şeyler alıyordum. Bir gün bir belgesel izledim ve minimalist yaşam tarzıyla tanıştım. Amacım daha az şeye sahip olmak, böylece daha çok şeye yer (zaman ve enerji) açmaktı. İlk olarak dolabımdaki kıyafetlerin yarısını bağışladım. Sadece gerçekten ihtiyacım olan ve beni mutlu eden şeyleri sakladım. İnsanlar 'Bu kadar az eşyayla nasıl yaşıyorsun?' diye soruyor. Aslında, eşyalarım azaldıkça hayatımın daha düzenli, huzurlu ve ucuz olduğunu gördüm. Artık sabahları ne giyeceğim diye düşünmüyorum, çünkü dolabımda sadece sevdiğim ve birbiriyle uyumlu kıyafetlerim var. Minimalizm, bana sahip olduklarımın kölesi olmamayı öğretti.",
+    "audio_script": "Benim adım Cemre. Bundan üç yıl önce, odamdaki eşyaların beni boğduğunu hissetmeye başladım. Dolabım giymediğim kıyafetlerle doluydu, raflarımda okumadığım kitaplar vardı ama ben hâlâ 'hiçbir şeyim yok' diyerek sürekli yeni şeyler alıyordum. Bir gün bir belgesel izledim ve minimalist yaşam tarzıyla tanıştım. Amacım daha az şeye sahip olmak, böylece daha çok şeye yer (zaman ve enerji) açmaktı. İlk olarak dolabımdaki kıyafetlerin yarısını bağışladım. Sadece gerçekten ihtiyacım olan ve beni mutlu eden şeyleri sakladım. İnsanlar 'Bu kadar az eşyayla nasıl yaşıyorsun?' diye soruyor. Aslında, eşyalarım azaldıkça hayatımın daha düzenli, huzurlu ve ucuz olduğunu gördüm. Artık sabahları ne giyeceğim diye düşünmüyorum, çünkü dolabımda sadece sevdiğim ve birbiriyle uyumlu kıyafetlerim var. Minimalizm, bana sahip olduklarımın kölesi olmamayı öğretti.",
     "questions": [
       {
         "type": "multiple_choice",
@@ -5678,11 +5678,11 @@
         "options": [
           "Çok fakir olması",
           "Odasının çok büyük olması",
-          "Çok fazla eşyası (kıyafeti) olmasına rağmen hala sürekli yeni şeyler alması",
+          "Çok fazla eşyası (kıyafeti) olmasına rağmen hâlâ sürekli yeni şeyler alması",
           "Hiçbir eşyasının olmaması"
         ],
         "correct_answer_index": 2,
-        "explanation": "Dolabım giymediğim kıyafetlerle doluydu... ama ben hala 'hiçbir şeyim yok' diyerek sürekli yeni şeyler alıyordum."
+        "explanation": "Dolabım giymediğim kıyafetlerle doluydu... ama ben hâlâ 'hiçbir şeyim yok' diyerek sürekli yeni şeyler alıyordum."
       },
       {
         "type": "multiple_choice",
@@ -5913,7 +5913,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Uyku Felci (Karabasan): Beynin Bir Oyunu",
-    "audio_script": "Saygıdeğer misafirler, bugün halk arasında 'Karabasan' olarak bilinen ama tıptaki adıyla 'Uyku Felci' (Sleep Paralysis) adı verilen o korkutucu deneyimi bilimsel çerçevede inceleyeceğiz. Birçok kültürde uyku felci; göğse oturan cinler, uzaylılar tarafından kaçırılma veya kötü ruhların saldırısı olarak mitolojik hikayelerle açıklanmıştır. Oysa gerçek tamamen nörolojiktir (beyinle ilgilidir). Normalde biz rüya görürken, beynimiz vücudumuza bir sinyal göndererek tüm kaslarımızı geçici olarak felç eder. Bu, rüyada koşarken yatakta da koşup kendimize zarar vermemizi engelleyen harika bir güvenlik mekanizmasıdır. Ancak bazen beyin uyanır, bilincimiz açılır, etrafımızdaki odayı görürüz; fakat beyin henüz kaslara 'felci kaldır' komutunu göndermemiştir. Yani kişi zihnen uyanık ama bedenen felçli (kilitli) durumdadır. Bu korkutucu kilitlenme anında beyin paniğe kapılır ve hala rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar (gölgeler, canavarlar) yansıtır. Göğüsteki baskı hissi ise kişinin panikleyip hızlı nefes almaya çalışması ama göğüs kaslarının felçli olduğu için buna tepki verememesinden kaynaklanır. Uyku felci zararsızdır ve genellikle aşırı stres veya uyku düzensizliği durumlarında ortaya çıkar.",
+    "audio_script": "Saygıdeğer misafirler, bugün halk arasında 'Karabasan' olarak bilinen ama tıptaki adıyla 'Uyku Felci' (Sleep Paralysis) adı verilen o korkutucu deneyimi bilimsel çerçevede inceleyeceğiz. Birçok kültürde uyku felci; göğse oturan cinler, uzaylılar tarafından kaçırılma veya kötü ruhların saldırısı olarak mitolojik hikâyelerle açıklanmıştır. Oysa gerçek tamamen nörolojiktir (beyinle ilgilidir). Normalde biz rüya görürken, beynimiz vücudumuza bir sinyal göndererek tüm kaslarımızı geçici olarak felç eder. Bu, rüyada koşarken yatakta da koşup kendimize zarar vermemizi engelleyen harika bir güvenlik mekanizmasıdır. Ancak bazen beyin uyanır, bilincimiz açılır, etrafımızdaki odayı görürüz; fakat beyin henüz kaslara 'felci kaldır' komutunu göndermemiştir. Yani kişi zihnen uyanık ama bedenen felçli (kilitli) durumdadır. Bu korkutucu kilitlenme anında beyin paniğe kapılır ve hâlâ rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar (gölgeler, canavarlar) yansıtır. Göğüsteki baskı hissi ise kişinin panikleyip hızlı nefes almaya çalışması ama göğüs kaslarının felçli olduğu için buna tepki verememesinden kaynaklanır. Uyku felci zararsızdır ve genellikle aşırı stres veya uyku düzensizliği durumlarında ortaya çıkar.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -5957,7 +5957,7 @@
           "Metinde Yok"
         ],
         "correct_answer_index": 1,
-        "explanation": "Yanlış. Karanlıktan değil, 'beyin paniğe kapılır ve hala rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar yansıtır' denilmiştir."
+        "explanation": "Yanlış. Karanlıktan değil, 'beyin paniğe kapılır ve hâlâ rüya (REM) evresinde olduğu için odaya korkunç halüsinasyonlar yansıtır' denilmiştir."
       },
       {
         "type": "true_false_not_given",
@@ -6630,7 +6630,7 @@
     "level": "B2",
     "category": "Röportaj",
     "title": "Uzay Çöpleri ve Kessler Sendromu",
-    "audio_script": "Sunucu: Bugün stüdyomuzda Uzay Mühendisi Cenk Bey ile atmosferimizin hemen dışındaki büyük bir tehlikeyi, 'Uzay Çöplerini' konuşacağız. Cenk Bey, uzay çöpü nedir ve neden bu kadar tehlikeli?\nCenk Bey: İnsanoğlu 1957'de Sputnik uydusunu fırlattığından beri yörüngeye binlerce roket ve uydu gönderdi. Ömrü biten (bozulan) bu uydular ve roket parçaları dünyaya geri dönmüyor, yörüngede saniyede 8 kilometre (mermiden 10 kat daha hızlı) hızla dönmeye devam ediyorlar. Şu an tepemizde milyonlarca parça 'uzay çöpü' var. Boyutu sadece bir fıstık kadar olan bir boya parçası bile, o inanılmaz hızı nedeniyle çalışan bir uydunun camını delip geçebilir.\nSunucu: Peki bu çöpler temizlenmezse ne olur?\nCenk Bey: İşte o zaman NASA bilim insanı Donald Kessler'in ortaya attığı 'Kessler Sendromu' devreye girer. Eğer bu çöplerden ikisi çarpışırsa, binlerce yeni şarapnel parçası oluşur. Bu parçalar diğer uydulara çarparak zincirleme bir reaksiyon başlatır. Kısa süre içinde Dünya'nın etrafı geçilemez bir çöp bulutuyla kaplanır. Sonuç olarak GPS, internet ve televizyon yayınları tamamen çöker. Dahası, uzay yolculuğu (roket fırlatmak) yüzlerce yıl boyunca imkansız hale gelir. Çözüm için şu an devasa mıknatıslara veya ağlara sahip 'uzay çöpçüsü' robotlar tasarlanıyor.",
+    "audio_script": "Sunucu: Bugün stüdyomuzda Uzay Mühendisi Cenk Bey ile atmosferimizin hemen dışındaki büyük bir tehlikeyi, 'Uzay Çöplerini' konuşacağız. Cenk Bey, uzay çöpü nedir ve neden bu kadar tehlikeli?\nCenk Bey: İnsanoğlu 1957'de Sputnik uydusunu fırlattığından beri yörüngeye binlerce roket ve uydu gönderdi. Ömrü biten (bozulan) bu uydular ve roket parçaları dünyaya geri dönmüyor, yörüngede saniyede 8 kilometre (mermiden 10 kat daha hızlı) hızla dönmeye devam ediyorlar. Şu an tepemizde milyonlarca parça 'uzay çöpü' var. Boyutu sadece bir fıstık kadar olan bir boya parçası bile, o inanılmaz hızı nedeniyle çalışan bir uydunun camını delip geçebilir.\nSunucu: Peki bu çöpler temizlenmezse ne olur?\nCenk Bey: İşte o zaman NASA bilim insanı Donald Kessler'in ortaya attığı 'Kessler Sendromu' devreye girer. Eğer bu çöplerden ikisi çarpışırsa, binlerce yeni şarapnel parçası oluşur. Bu parçalar diğer uydulara çarparak zincirleme bir reaksiyon başlatır. Kısa süre içinde Dünya'nın etrafı geçilemez bir çöp bulutuyla kaplanır. Sonuç olarak GPS, internet ve televizyon yayınları tamamen çöker. Dahası, uzay yolculuğu (roket fırlatmak) yüzlerce yıl boyunca imkânsız hale gelir. Çözüm için şu an devasa mıknatıslara veya ağlara sahip 'uzay çöpçüsü' robotlar tasarlanıyor.",
     "questions": [
       {
         "type": "multiple_choice",
@@ -6697,12 +6697,12 @@
         "question": "Cenk Bey'e göre, dünya yörüngesi uzay çöpüyle kaplanırsa insanlığın gelecekteki en büyük teknolojik kaybı ne olacaktır?",
         "options": [
           "Yeraltı madenlerinin çıkarılamaması.",
-          "Uzay yolculuğu yapmanın ve yeni roket fırlatmanın yüzlerce yıl boyunca imkansız hale gelmesi.",
+          "Uzay yolculuğu yapmanın ve yeni roket fırlatmanın yüzlerce yıl boyunca imkânsız hale gelmesi.",
           "Denizaltıların çalışmaması.",
           "Elektrikli arabaların şarj edilememesi."
         ],
         "correct_answer_index": 1,
-        "explanation": "Dahası, uzay yolculuğu (roket fırlatmak) yüzlerce yıl boyunca imkansız hale gelir demiştir."
+        "explanation": "Dahası, uzay yolculuğu (roket fırlatmak) yüzlerce yıl boyunca imkânsız hale gelir demiştir."
       }
     ],
     "audio_url": "/audio/84_C1_Roportaj.mp3"
@@ -6948,7 +6948,7 @@
     "level": "B1",
     "category": "Eşleştirme",
     "title": "Ev Dekorasyonu ve Yaşam Alanı",
-    "audio_script": "A) Ayşe: Benim için ev demek nefes almak demektir. Kalabalık, çok eşyalı ve koyu renkli odalar ruhumu daraltır. Evimdeki mobilyalar çok azdır, her yer bembeyazdır. Masanın üstünde bile fazladan bir bardak durmasını istemem. Minimalist ve ferah bir ortam beni dinlendiriyor.\nB) Burak: Ben yeni ve parlak mobilyalardan nefret ederim. Benim evim geçmişin izlerini taşımalıdır. Hafta sonları antikacıları gezip eski radyolar, el dokuması eski halılar ve ahşap eşyalar alırım. Eşyaların bir yaşanmışlığı ve hikayesi olması gerektiğine inanıyorum.\nC) Selin: Doğadan kopuk bir hayat düşünemiyorum. Evimin her köşesi, salonum, mutfağım ve hatta banyom bile çeşit çeşit saksı bitkileriyle (botanik) doludur. Şehrin ortasında yaşasam da evimin içi küçük bir orman gibidir. Onları sulamak ve yapraklarıyla ilgilenmek en büyük terapimdir.\nD) Emre: Ben tam bir teknoloji tutkunuyum. Benim evimde fiziksel bir şeye dokunmanıza gerek yoktur. Işıklar, perdeler, televizyon ve kahve makinesi tamamen akıllı sistemlere bağlıdır. Kapıdan girdiğim an sesli komutla her şeyi kontrol ederim. Evim bana gelecekte yaşadığımı hissettiriyor.",
+    "audio_script": "A) Ayşe: Benim için ev demek nefes almak demektir. Kalabalık, çok eşyalı ve koyu renkli odalar ruhumu daraltır. Evimdeki mobilyalar çok azdır, her yer bembeyazdır. Masanın üstünde bile fazladan bir bardak durmasını istemem. Minimalist ve ferah bir ortam beni dinlendiriyor.\nB) Burak: Ben yeni ve parlak mobilyalardan nefret ederim. Benim evim geçmişin izlerini taşımalıdır. Hafta sonları antikacıları gezip eski radyolar, el dokuması eski halılar ve ahşap eşyalar alırım. Eşyaların bir yaşanmışlığı ve hikâyesi olması gerektiğine inanıyorum.\nC) Selin: Doğadan kopuk bir hayat düşünemiyorum. Evimin her köşesi, salonum, mutfağım ve hatta banyom bile çeşit çeşit saksı bitkileriyle (botanik) doludur. Şehrin ortasında yaşasam da evimin içi küçük bir orman gibidir. Onları sulamak ve yapraklarıyla ilgilenmek en büyük terapimdir.\nD) Emre: Ben tam bir teknoloji tutkunuyum. Benim evimde fiziksel bir şeye dokunmanıza gerek yoktur. Işıklar, perdeler, televizyon ve kahve makinesi tamamen akıllı sistemlere bağlıdır. Kapıdan girdiğim an sesli komutla her şeyi kontrol ederim. Evim bana gelecekte yaşadığımı hissettiriyor.",
     "questions": [
       {
         "type": "matching_paragraph",
@@ -6964,7 +6964,7 @@
       },
       {
         "type": "matching_paragraph",
-        "question": "Eşyaların bir geçmişi ve hikayesi olması gerektiğine inanan kişi kimdir?",
+        "question": "Eşyaların bir geçmişi ve hikâyesi olması gerektiğine inanan kişi kimdir?",
         "options": [
           "A) Ayşe",
           "B) Burak",
@@ -7095,7 +7095,7 @@
         "type": "multiple_choice",
         "question": "Röportajın genel mesajına göre, Mars'ta kolonileşme (yaşam alanı kurma) hakkında ne düşünülmektedir?",
         "options": [
-          "Bunun tamamen imkansız bir hayal olduğu.",
+          "Bunun tamamen imkânsız bir hayal olduğu.",
           "Bunun sadece zenginleri kurtaracak bir plan olduğu.",
           "Bunun insanlık için yavaş gelişen ama kaçınılmaz bir zorunluluk olduğu.",
           "Bunun doğaya zarar verdiği."
@@ -7110,7 +7110,7 @@
     "level": "C1",
     "category": "Akademik",
     "title": "Mısır Piramitlerinin Sırrı",
-    "audio_script": "Kıymetli tarih meraklıları, bugün Antik Mısır'ın en büyük gizemi olan Giza Piramitleri'nin, özellikle de Keops Piramidi'nin inşasını konuşacağız. Yıllar boyunca komplo teorisyenleri bu devasa yapıların uzaylılar tarafından veya kayıp bir teknolojiyle yapıldığını iddia ettiler. Bunlar, eski insanların mühendislik zekasını küçümseyen temelsiz efsanelerdir. Bilimsel kazılar, piramitlerin tamamen insan emeği ve kusursuz bir matematik ile inşa edildiğini kanıtlamıştır. Bir diğer büyük yanılgı ise, piramitleri inşa edenlerin zorla çalıştırılan, kırbaçlanan 'köleler' olduğu inancıdır. Arkeologlar, piramitlerin hemen yanında devasa bir işçi şehri kalıntıları buldular. Bu işçilere et ve bira gibi o dönemin en pahalı gıdaları veriliyordu ve onlar köle değil, maaşlı ve saygın zanaatkarlardı. Peki her biri tonlarca ağırlığındaki o devasa taşlar tepeye nasıl taşındı? Mısırlılar suyun kaldırma kuvvetini, kızak sistemlerini ve sürtünmeyi azaltmak için ıslatılmış kumu zekice kullandılar. Spiral şeklinde inşa edilen toprak rampalar yardımıyla taşları yukarı çektiler. Piramitler uzaylıların değil, insan azminin, kusursuz geometrinin ve inanılmaz bir organizasyon yeteneğinin eseridir.",
+    "audio_script": "Kıymetli tarih meraklıları, bugün Antik Mısır'ın en büyük gizemi olan Giza Piramitleri'nin, özellikle de Keops Piramidi'nin inşasını konuşacağız. Yıllar boyunca komplo teorisyenleri bu devasa yapıların uzaylılar tarafından veya kayıp bir teknolojiyle yapıldığını iddia ettiler. Bunlar, eski insanların mühendislik zekâsını küçümseyen temelsiz efsanelerdir. Bilimsel kazılar, piramitlerin tamamen insan emeği ve kusursuz bir matematik ile inşa edildiğini kanıtlamıştır. Bir diğer büyük yanılgı ise, piramitleri inşa edenlerin zorla çalıştırılan, kırbaçlanan 'köleler' olduğu inancıdır. Arkeologlar, piramitlerin hemen yanında devasa bir işçi şehri kalıntıları buldular. Bu işçilere et ve bira gibi o dönemin en pahalı gıdaları veriliyordu ve onlar köle değil, maaşlı ve saygın zanaatkarlardı. Peki her biri tonlarca ağırlığındaki o devasa taşlar tepeye nasıl taşındı? Mısırlılar suyun kaldırma kuvvetini, kızak sistemlerini ve sürtünmeyi azaltmak için ıslatılmış kumu zekice kullandılar. Spiral şeklinde inşa edilen toprak rampalar yardımıyla taşları yukarı çektiler. Piramitler uzaylıların değil, insan azminin, kusursuz geometrinin ve inanılmaz bir organizasyon yeteneğinin eseridir.",
     "questions": [
       {
         "type": "true_false_not_given",
@@ -7121,7 +7121,7 @@
           "Metinde Yok"
         ],
         "correct_answer_index": 1,
-        "explanation": "Yanlış. Bunların eski insanların zekasını küçümseyen temelsiz efsaneler olduğu belirtilmiştir."
+        "explanation": "Yanlış. Bunların eski insanların zekâsını küçümseyen temelsiz efsaneler olduğu belirtilmiştir."
       },
       {
         "type": "true_false_not_given",
@@ -7266,7 +7266,7 @@
     "level": "A2",
     "category": "Monolog",
     "title": "İlk İş Günü Heyecanı",
-    "audio_script": "Adım Elif. Üniversiteden yeni mezun olmuştum ve aylarca süren iş aramalarından sonra nihayet büyük bir reklam ajansında işe kabul edilmiştim. İlk iş günümde kalbim yerinden çıkacak gibi atıyordu. Çok şık giyinmiştim ama ofisteki herkesin kot pantolon ve tişörtle (çok rahat) çalıştığını görünce biraz utandım. En kötüsü öğle arasında oldu. Patronumuza kahve götürürken ayağım halıya takıldı ve bütün kahveyi onun beyaz gömleğine döktüm. O an 'Kesin kovuldum' diye düşündüm ve ağlamak üzereydim. Ancak patronum gülmeye başladı ve 'Merak etme, benim ilk günümde ben de fotokopi makinesini bozmuştum' dedi. Bu beni inanılmaz rahatlattı. O gün ofisteki herkesin aslında ne kadar sıcakkanlı olduğunu anladım. Şimdi o ajansta Sanat Yönetmeni olarak çalışıyorum ve ofise gelen yeni mezunlar heyecanlanıp hata yaptığında, onlara hep kendi hikayemi anlatıyorum.",
+    "audio_script": "Adım Elif. Üniversiteden yeni mezun olmuştum ve aylarca süren iş aramalarından sonra nihayet büyük bir reklam ajansında işe kabul edilmiştim. İlk iş günümde kalbim yerinden çıkacak gibi atıyordu. Çok şık giyinmiştim ama ofisteki herkesin kot pantolon ve tişörtle (çok rahat) çalıştığını görünce biraz utandım. En kötüsü öğle arasında oldu. Patronumuza kahve götürürken ayağım halıya takıldı ve bütün kahveyi onun beyaz gömleğine döktüm. O an 'Kesin kovuldum' diye düşündüm ve ağlamak üzereydim. Ancak patronum gülmeye başladı ve 'Merak etme, benim ilk günümde ben de fotokopi makinesini bozmuştum' dedi. Bu beni inanılmaz rahatlattı. O gün ofisteki herkesin aslında ne kadar sıcakkanlı olduğunu anladım. Şimdi o ajansta Sanat Yönetmeni olarak çalışıyorum ve ofise gelen yeni mezunlar heyecanlanıp hata yaptığında, onlara hep kendi hikâyemi anlatıyorum.",
     "questions": [
       {
         "type": "multiple_choice",
@@ -7333,12 +7333,12 @@
         "question": "Elif işe yeni başlayan (ve heyecanlanan) gençlere ne yapmaktadır?",
         "options": [
           "Onlara kızmaktadır.",
-          "Onlara kendi komik/hatalı ilk gün hikayesini anlatarak onları rahatlatmaktadır.",
+          "Onlara kendi komik/hatalı ilk gün hikâyesini anlatarak onları rahatlatmaktadır.",
           "Onları işten çıkarmaktadır.",
           "Onlara zor işler vermektedir."
         ],
         "correct_answer_index": 1,
-        "explanation": "Yeni mezunlar heyecanlanıp hata yaptığında, onlara hep kendi hikayemi anlatıyorum."
+        "explanation": "Yeni mezunlar heyecanlanıp hata yaptığında, onlara hep kendi hikâyemi anlatıyorum."
       }
     ],
     "audio_url": "/audio/92_B1_Monolog.mp3"
@@ -7347,7 +7347,7 @@
     "level": "B1",
     "category": "Eşleştirme",
     "title": "Alışveriş Alışkanlıkları ve Tüketici Profilleri",
-    "audio_script": "A) Mert: Alışveriş benim için bir statü meselesidir. Giydiğim kıyafetin veya taktığım saatin mutlaka ünlü ve pahalı bir marka olması gerekir. İndirim çadırlarına veya ucuzluk pazarlarına asla gitmem. Kalite ve prestij için ne gerekiyorsa o parayı öderim.\nB) Zeynep: Ben çevre bilincine sahip bir tüketiciyim. Fabrikaların dünyayı kirletmesini istemediğim için 'sürdürülebilir' modayı destekliyorum. Kıyafetlerimin çoğunu 'İkinci El' (Vintage) dükkanlarından alırım. Başkasının eskisi, benim için yepyeni bir hikayedir ve çok da ekonomiktir.\nC) Hakan: Benim mağazaları gezmek için ne vaktim var ne de sabrım. Ben tam bir internet bağımlısıyım. Giyeceğim ayakkabıdan, evdeki tuvalet kağıdına kadar her şeyi mobil uygulamalardan sipariş ederim. Kapıma kadar gelmesi benim için dünyanın en büyük lüksü.\nD) Aylin: Ben tam bir 'Minimalist' tüketiciyim. İndirim var diye veya canım sıkıldı diye asla alışveriş yapmam. Gardırobumda az ama öz eşya vardır. Sadece bir eşyam tamamen bozulduğunda veya bittiğinde, yani 'tam bir ihtiyaç anında' yenisini alırım.",
+    "audio_script": "A) Mert: Alışveriş benim için bir statü meselesidir. Giydiğim kıyafetin veya taktığım saatin mutlaka ünlü ve pahalı bir marka olması gerekir. İndirim çadırlarına veya ucuzluk pazarlarına asla gitmem. Kalite ve prestij için ne gerekiyorsa o parayı öderim.\nB) Zeynep: Ben çevre bilincine sahip bir tüketiciyim. Fabrikaların dünyayı kirletmesini istemediğim için 'sürdürülebilir' modayı destekliyorum. Kıyafetlerimin çoğunu 'İkinci El' (Vintage) dükkanlarından alırım. Başkasının eskisi, benim için yepyeni bir hikâyedir ve çok da ekonomiktir.\nC) Hakan: Benim mağazaları gezmek için ne vaktim var ne de sabrım. Ben tam bir internet bağımlısıyım. Giyeceğim ayakkabıdan, evdeki tuvalet kağıdına kadar her şeyi mobil uygulamalardan sipariş ederim. Kapıma kadar gelmesi benim için dünyanın en büyük lüksü.\nD) Aylin: Ben tam bir 'Minimalist' tüketiciyim. İndirim var diye veya canım sıkıldı diye asla alışveriş yapmam. Gardırobumda az ama öz eşya vardır. Sadece bir eşyam tamamen bozulduğunda veya bittiğinde, yani 'tam bir ihtiyaç anında' yenisini alırım.",
     "questions": [
       {
         "type": "matching_paragraph",
@@ -7665,7 +7665,7 @@
     "level": "A2",
     "category": "Monolog",
     "title": "Japonca Öğrenmek",
-    "audio_script": "Benim adım Zeynep. Pandemi döneminde evde vakit geçirirken izlediğim animeler (Japon çizgi filmleri) hayatımı değiştirdi. Karakterlerin duygusal konuşmaları ve dilin melodisi o kadar hoşuma gitti ki, Japonca öğrenmeye karar verdim. Başlangıçta alfabe beni çok korkuttu; çünkü Japoncada Hiragana, Katakana ve Kanji olmak üzere üç farklı yazı sistemi var. Binlerce Kanji karakterini öğrenmek imkansız gibi görünüyordu. Ancak her gün 5 yeni karakteri defterime çizerek ve görsel hafızamı kullanarak bu zorluğu aştım. Dil bilgisi (gramer) konusunda ise çok şanslıydım. Çünkü Türkçe ile Japoncanın cümle yapısı tamamen aynı; ikisi de özne, nesne ve yüklem sırasıyla diziliyor. Bu sayede cümle kurmayı çok hızlı öğrendim. Dil pratiği yapmak için şehrimdeki Japon restoranlarına gidip oradaki turistlerle sohbet etmeye çalıştım. Bazen komik hatalar yapsam da onların gülümseyerek bana yardım etmesi özgüvenimi artırdı. Şu an en büyük hayalim Tokyo'da bir üniversitede yüksek lisans yapmak.",
+    "audio_script": "Benim adım Zeynep. Pandemi döneminde evde vakit geçirirken izlediğim animeler (Japon çizgi filmleri) hayatımı değiştirdi. Karakterlerin duygusal konuşmaları ve dilin melodisi o kadar hoşuma gitti ki, Japonca öğrenmeye karar verdim. Başlangıçta alfabe beni çok korkuttu; çünkü Japoncada Hiragana, Katakana ve Kanji olmak üzere üç farklı yazı sistemi var. Binlerce Kanji karakterini öğrenmek imkânsız gibi görünüyordu. Ancak her gün 5 yeni karakteri defterime çizerek ve görsel hafızamı kullanarak bu zorluğu aştım. Dil bilgisi (gramer) konusunda ise çok şanslıydım. Çünkü Türkçe ile Japoncanın cümle yapısı tamamen aynı; ikisi de özne, nesne ve yüklem sırasıyla diziliyor. Bu sayede cümle kurmayı çok hızlı öğrendim. Dil pratiği yapmak için şehrimdeki Japon restoranlarına gidip oradaki turistlerle sohbet etmeye çalıştım. Bazen komik hatalar yapsam da onların gülümseyerek bana yardım etmesi özgüvenimi artırdı. Şu an en büyük hayalim Tokyo'da bir üniversitede yüksek lisans yapmak.",
     "questions": [
       {
         "type": "multiple_choice",
@@ -7827,7 +7827,7 @@
     "level": "B2",
     "category": "Röportaj",
     "title": "Biyolojik Saatimiz: Sirkadiyen Ritim",
-    "audio_script": "Sunucu: Bugün Biyolog Doktor Cenk Bey ile vücudumuzun içindeki görünmez saati, yani 'Sirkadiyen Ritmi' konuşacağız. Cenk Bey, sirkadiyen ritim tam olarak nedir?\nDr. Cenk: Merhaba. Sirkadiyen ritim, vücudumuzun 24 saatlik uyku-uyanıklık, vücut ısısı ve hormon salgılama döngüsüdür. Binlerce yıl boyunca atalarımız güneş doğduğunda uyanıp, battığında uyudular. Beynimiz bu doğal ışık döngüsüne göre programlanmıştır. Karanlık çöktüğünde beynimiz 'Melatonin' adı verilen uyku hormonunu salgılar. Ancak günümüzde gece yarılarına kadar baktığımız telefon ve tablet ekranlarından yayılan 'mavi ışık', beyni kandırarak hala gündüz olduğunu zannettirir ve melatonin salgısını durdurur. Bu da kronik uykusuzluğa neden olur.\nSunucu: Gece vardiyasında çalışanların sağlığı bu yüzden mi bozuluyor?\nDr. Cenk: Kesinlikle. Gece çalışmak ve gündüz uyumak insanın biyolojik saatine tamamen aykırıdır. Araştırmalar, gece çalışanlarda kalp hastalıkları, obezite ve diyabet riskinin normal insanlara göre iki kat daha fazla olduğunu gösteriyor. Üstelik gece geç saatlerde yemek yemek de çok tehlikelidir. Çünkü gece vakti sindirim sistemimiz yavaşlar; vücut kendini yenilemeye ve onarmaya odaklanır. O saatte yenen yemek, doğrudan yağ olarak depolanır. Doğaya (biyolojik saatimize) karşı gelirsek, vücudumuz bunun cezasını hastalıklarla keser.",
+    "audio_script": "Sunucu: Bugün Biyolog Doktor Cenk Bey ile vücudumuzun içindeki görünmez saati, yani 'Sirkadiyen Ritmi' konuşacağız. Cenk Bey, sirkadiyen ritim tam olarak nedir?\nDr. Cenk: Merhaba. Sirkadiyen ritim, vücudumuzun 24 saatlik uyku-uyanıklık, vücut ısısı ve hormon salgılama döngüsüdür. Binlerce yıl boyunca atalarımız güneş doğduğunda uyanıp, battığında uyudular. Beynimiz bu doğal ışık döngüsüne göre programlanmıştır. Karanlık çöktüğünde beynimiz 'Melatonin' adı verilen uyku hormonunu salgılar. Ancak günümüzde gece yarılarına kadar baktığımız telefon ve tablet ekranlarından yayılan 'mavi ışık', beyni kandırarak hâlâ gündüz olduğunu zannettirir ve melatonin salgısını durdurur. Bu da kronik uykusuzluğa neden olur.\nSunucu: Gece vardiyasında çalışanların sağlığı bu yüzden mi bozuluyor?\nDr. Cenk: Kesinlikle. Gece çalışmak ve gündüz uyumak insanın biyolojik saatine tamamen aykırıdır. Araştırmalar, gece çalışanlarda kalp hastalıkları, obezite ve diyabet riskinin normal insanlara göre iki kat daha fazla olduğunu gösteriyor. Üstelik gece geç saatlerde yemek yemek de çok tehlikelidir. Çünkü gece vakti sindirim sistemimiz yavaşlar; vücut kendini yenilemeye ve onarmaya odaklanır. O saatte yenen yemek, doğrudan yağ olarak depolanır. Doğaya (biyolojik saatimize) karşı gelirsek, vücudumuz bunun cezasını hastalıklarla keser.",
     "questions": [
       {
         "type": "multiple_choice",

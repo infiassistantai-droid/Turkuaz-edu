@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  ArrowLeft, BookmarkCheck, BookmarkPlus, Check, CheckCircle2, ChevronDown, CircleHelp,
-  FileText, Flame, Gauge, Headphones, Pause, Play, RotateCcw, SkipBack, SkipForward,
+  BookmarkCheck, BookmarkPlus, Check, CheckCircle2, ChevronDown, CircleHelp,
+  FileText, Gauge, Headphones, Pause, Play, RotateCcw, SkipBack, SkipForward,
   Sparkles, Volume2, XCircle,
 } from 'lucide-react'
 import { extendedListeningLessons as listeningLessons } from '../../data/listeningLessons'

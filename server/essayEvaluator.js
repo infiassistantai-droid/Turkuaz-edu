@@ -107,8 +107,6 @@ export async function evaluateEssayWithGemini(input, { apiKey, model = 'gemini-2
   }
 
   const responseText = await response.text()
-  if (debug) console.log('RAW AI RESPONSE:', responseText)
-
   if (!response.ok) {
     const invalidApiKey = response.status === 401 || response.status === 403 || /API_KEY_INVALID|API key not valid|invalid API key/iu.test(responseText)
     if (invalidApiKey) {

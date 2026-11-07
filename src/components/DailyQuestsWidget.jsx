@@ -1,7 +1,6 @@
 import { BookOpenText, CheckCircle, Headphones, Sparkles, Zap } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
-import { useMascot } from '../context/MascotContext'
 
 const QUESTS = [
   { id: 'words', titleKey: 'quests.words', target: 3, icon: BookOpenText, tone: 'violet' },
@@ -32,15 +31,13 @@ const TONES = {
 
 export default function DailyQuestsWidget({ progress = {}, onClaimReward, isPremium = false, dark = false }) {
   const { t } = useI18n()
-  const { showMascot } = useMascot()
   const premium = Boolean(isPremium)
   const darkMode = Boolean(dark && !premium)
   const safeProgress = progress && typeof progress === 'object' ? progress : {}
 
   const claimReward = () => {
     if (typeof onClaimReward !== 'function') return
-    const claimed = onClaimReward()
-    if (claimed) showMascot({ message: t('mascot.success'), emotion: 'cheer', duration: 4200 })
+    onClaimReward()
   }
   const values = {
     words: Math.min(3, Math.max(0, Array.isArray(safeProgress.words) ? safeProgress.words.length : 0)),

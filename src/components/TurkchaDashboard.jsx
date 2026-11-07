@@ -6,7 +6,6 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ChevronDown,
-  ClipboardCheck,
   Download,
   Headphones,
   House,
@@ -14,11 +13,9 @@ import {
   Lock,
   Mic,
   Menu,
-  Moon,
   PenLine,
   Snowflake,
   Sparkles,
-  Sun,
   Target,
   Trophy,
   X,
@@ -62,7 +59,6 @@ const NAV = [
     sectionKey: 'nav.section.practice',
     items: [
       { id: 'lugat', labelKey: 'nav.vocabulary', icon: Library },
-      { id: 'mock', labelKey: 'nav.mock', icon: ClipboardCheck, badgeKey: 'nav.new', urgent: true },
       { id: 'exams', labelKey: 'nav.exams', icon: Trophy },
       { id: 'leagues', labelKey: 'nav.leagues', icon: Trophy },
     ],
@@ -73,7 +69,7 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, level, profile, onOpenProfile, onInstallApp, showInstall, isPremium, onTogglePremium }) {
+function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, level, profile, onOpenProfile, onInstallApp, showInstall, isPremium }) {
   const { t } = useI18n()
   const { enabled: winterModeEnabled, featureEnabled: winterFeatureEnabled, toggle: toggleWinterMode } = useWinterUpdate()
   return (
@@ -134,7 +130,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                 {group.items.map((item) => {
                   const Icon = item.icon
                   const isActive = active === item.id
-                  const isLocked = !['home', 'plan', 'okuma', 'dinleme', 'yazma', 'konusma', 'lugat'].includes(item.id)
+                  const isLocked = !['home', 'plan', 'analytics', 'okuma', 'dinleme', 'yazma', 'konusma', 'lugat', 'exams', 'leagues'].includes(item.id)
                   return (
                     <li key={item.id}>
                       <button
@@ -185,26 +181,6 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
             <Download className="size-4 shrink-0" aria-hidden="true" />
             <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>{t('nav.install')}</span>
           </button>}
-          <button
-            type="button"
-            onClick={onTogglePremium}
-            aria-pressed={isPremium}
-            className={cn(
-              'mb-3 flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold transition active:scale-[0.98]',
-              isPremium
-                ? 'border-yellow-300/55 bg-yellow-300/15 text-yellow-100 shadow-[0_0_20px_rgba(250,204,21,0.14)]'
-                : 'border-slate-200/80 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800',
-              collapsed && 'lg:justify-center lg:px-0',
-            )}
-            data-testid="toggle-premium-view"
-            title={collapsed ? t('auth.theme.title') : undefined}
-          >
-            <Sparkles className="size-4 shrink-0" aria-hidden="true" />
-            <span className={cn('flex-1 text-left', collapsed && 'lg:sr-only')}>{t('auth.theme.title')}</span>
-            <span className={cn('h-4 w-7 rounded-full p-0.5 transition-colors', isPremium ? 'bg-yellow-400' : 'bg-slate-300 dark:bg-slate-700')} aria-hidden="true">
-              <span className={cn('block size-3 rounded-full bg-white shadow transition-transform', isPremium && 'translate-x-3')} />
-            </span>
-          </button>
           {winterFeatureEnabled && (
             <button
               type="button"
@@ -266,9 +242,9 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
                     isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800',
                     collapsed && 'lg:absolute lg:left-1/2 lg:top-10 lg:-translate-x-1/2 lg:px-1 lg:text-[8px]',
                   )}
-                  title={`Level ${level}`}
+                  title={t('rank.level', { level })}
                 >
-                  Lvl {level}
+                  {t('rank.level', { level })}
                 </span>
               </div>
               <div className={cn('min-w-0 flex-1', collapsed && 'lg:hidden')}>
@@ -314,7 +290,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOpen, onToggleSidebar, xp, level, profile, onOpenProfile }) {
+function Header({ breadcrumb, isPremium, collapsed, mobileOpen, onToggleSidebar, xp, level, profile, onOpenProfile }) {
   const { language, t } = useI18n()
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(min-width: 1024px)').matches))
   const sidebarExpanded = isDesktop ? !collapsed : mobileOpen
@@ -329,8 +305,8 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
   }, [])
 
   return (
-    <header className="glass rise-in sticky top-3 z-30 flex min-h-[70px] items-center rounded-[20px] bg-white/80 px-3 py-3 backdrop-blur-xl dark:bg-slate-950/80 sm:px-5">
-      <div className="flex w-full items-center gap-3">
+    <header className="glass rise-in sticky top-2 z-30 flex min-h-[60px] items-center rounded-[20px] bg-white/80 px-2.5 py-2.5 backdrop-blur-xl dark:bg-slate-950/80 sm:top-3 sm:min-h-[70px] sm:px-5 sm:py-3">
+      <div className="flex w-full min-w-0 items-center gap-2 sm:gap-3">
         <button
           type="button"
           onClick={onToggleSidebar}
@@ -342,20 +318,20 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
           <Menu className="size-4" aria-hidden="true" />
         </button>
 
-        <nav aria-label="Breadcrumb" className="min-w-0">
-          <ol className="flex items-center gap-1.5 text-sm">
+        <nav aria-label={t('breadcrumb.label')} className="min-w-0 flex-1 overflow-hidden">
+          <ol className="flex min-w-0 items-center gap-1.5 text-sm">
             <li className="hidden text-slate-400 sm:block dark:text-slate-500">{breadcrumb.section}</li>
             <li className="hidden text-slate-300 sm:block dark:text-slate-700" aria-hidden="true">/</li>
-            <li className="truncate font-semibold tracking-tight text-slate-900 dark:text-white" aria-current="page">
+            <li className="min-w-0 truncate font-semibold tracking-tight text-slate-900 dark:text-white" aria-current="page">
               {breadcrumb.label}
             </li>
           </ol>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
           <span role="img" aria-label={`${xp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300 sm:px-3">
             <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
-            <span className="hidden min-[400px]:inline">{xp.toLocaleString(language)} XP</span>
+            <span className="hidden min-[480px]:inline">{xp.toLocaleString(language)} XP</span>
           </span>
           {profile && (
             <button
@@ -364,7 +340,7 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
               aria-label={`${profile.name || t('nav.profile')} · ${t('profile.settings')}`}
               aria-haspopup="dialog"
               className={cn(
-                'flex shrink-0 items-center gap-2 rounded-full border py-1 pl-1 pr-2.5 transition-all hover:-translate-y-0.5 active:translate-y-0',
+                'flex shrink-0 items-center gap-1.5 rounded-full border py-1 pl-1 pr-1.5 transition-all hover:-translate-y-0.5 active:translate-y-0 min-[480px]:gap-2 min-[480px]:pr-2.5',
                 isPremium ? 'border-white/10 bg-black/30 text-white hover:bg-white/10' : 'border-slate-200/80 bg-white/80 text-slate-700 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200',
               )}
             >
@@ -373,23 +349,14 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
                 sizeClass="size-8"
                 className="ring-1 ring-white/20"
               />
-              <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
-                Lvl {level}
+              <span className={cn('hidden rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide min-[480px]:inline-flex', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={t('rank.level', { level })}>
+                {t('rank.level', { level })}
               </span>
               <span className="hidden max-w-20 truncate text-sm font-bold sm:block">{profile.name}</span>
-              <ChevronDown className="size-3.5 shrink-0 opacity-60" aria-hidden="true" />
+              <ChevronDown className="hidden size-3.5 shrink-0 opacity-60 min-[480px]:block" aria-hidden="true" />
             </button>
           )}
           <NotificationPopover isPremium={isPremium} />
-          <button
-            type="button"
-            onClick={onToggleDark}
-            className="grid size-9 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
-            aria-label={dark ? t('header.theme.light') : t('header.theme.dark')}
-            aria-pressed={dark}
-          >
-            {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-          </button>
         </div>
       </div>
     </header>
@@ -400,7 +367,7 @@ function Header({ breadcrumb, dark, onToggleDark, isPremium, collapsed, mobileOp
 /*                                   App shell                                */
 /* -------------------------------------------------------------------------- */
 
-export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, onTogglePremium, xp, rankUpEvent, onDismissRankUp, currentStreak = 0, streakMilestones = [], winterStudy = null, streakMilestoneEvent, onDismissStreakMilestone, trophyMetrics, trophyUnlocks = [], trophyCelebrationEvent, onDismissTrophyCelebration, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
+export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDark, isPremium, xp, rankUpEvent, onDismissRankUp, currentStreak = 0, streakMilestones = [], winterStudy = null, streakMilestoneEvent, onDismissStreakMilestone, trophyMetrics, trophyUnlocks = [], trophyCelebrationEvent, onDismissTrophyCelebration, targetPct, profile, onEditProfile, onClearData, onLogout, onInstallApp, children }) {
   const { t } = useI18n()
   const { enabled: winterModeEnabled } = useWinterUpdate()
   const safeStreakMilestones = Array.isArray(streakMilestones) ? streakMilestones : []
@@ -464,14 +431,14 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
   }
 
   return (
-    <div data-theme={isPremium ? 'premium' : 'default'} data-winter={winterModeEnabled || undefined} className={cn('min-h-[100dvh] bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : 'theme-default', winterModeEnabled && 'winter-mode')}>
+    <div data-theme={isPremium ? 'premium' : dark ? 'night' : 'default'} data-winter={winterModeEnabled || undefined} className={cn('min-h-[100dvh] bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : dark ? 'theme-night' : 'theme-default', winterModeEnabled && 'winter-mode')}>
       <WinterEffects />
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
         <div className={`absolute -right-32 top-28 size-96 rounded-full blur-[100px] ${isPremium ? 'bg-amber-300/10' : 'bg-cyan-300/10'}`} />
         <div className={`absolute -left-36 bottom-[-4rem] size-[32rem] rounded-full blur-[100px] ${isPremium ? 'bg-red-950/45' : 'bg-teal-900/10'}`} />
         <div className="absolute inset-0 opacity-[.035]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,.55) .65px, transparent .65px)', backgroundSize: '5px 5px' }} />
       </div>
-      <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1600px] gap-3 p-3 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
+      <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[1600px] gap-2 overflow-x-clip p-2 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
         <Sidebar
           active={active}
           onNavigate={navigate}
@@ -486,14 +453,11 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
           onInstallApp={onInstallApp}
           showInstall={!isInstalled}
           isPremium={isPremium}
-          onTogglePremium={onTogglePremium}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">
           <Header
             breadcrumb={breadcrumb}
-            dark={dark}
-            onToggleDark={onToggleDark}
             isPremium={isPremium}
             collapsed={collapsed}
             mobileOpen={mobileOpen}
@@ -520,12 +484,12 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
         winterChampionUnlocked={safeTrophyUnlocks.some((record) => record?.id === 'winter-champion')}
         trophyMetrics={trophyMetrics}
         trophyUnlocks={safeTrophyUnlocks}
-        level={level}
         onEditProfile={onEditProfile}
         onClearData={onClearData}
         onLogout={onLogout}
         isPremium={isPremium}
         dark={dark}
+        onToggleDark={onToggleDark}
       />
       <RankUpModal event={trophyCelebrationEvent || streakMilestoneEvent ? null : rankUpEvent} isPremium={isPremium} dark={dark} onDismiss={onDismissRankUp} />
       <StreakMilestoneModal event={trophyCelebrationEvent ? null : streakMilestoneEvent} isPremium={isPremium} dark={dark} onDismiss={onDismissStreakMilestone} />

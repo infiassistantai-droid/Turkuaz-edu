@@ -20,7 +20,6 @@ import {
 import { mockReadingMaterials } from '../../data/mockReadingMaterials'
 import { loadJSON, READING_COMPLETIONS_PREFIX, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON } from '../../lib/storage'
 import { useI18n } from '../../lib/i18n.jsx'
-import { useMascot } from '../../context/MascotContext'
 import { cn } from '../../lib/utils'
 import OkumaModule from './OkumaModule'
 
@@ -262,7 +261,7 @@ function AudioPlayer({ text, premium, voiceId = ELEVENLABS_VOICE_ID }) {
     }
   }
 
-  const startPlayback = async (rate = speedRef.current, pauseOnStart = false) => {
+  const startPlayback = async (pauseOnStart = false) => {
     const playbackId = playbackIdRef.current + 1
     playbackIdRef.current = playbackId
     requestRef.current?.abort()
@@ -334,7 +333,7 @@ function AudioPlayer({ text, premium, voiceId = ELEVENLABS_VOICE_ID }) {
         await audio.play()
         if (playbackId === playbackIdRef.current) setStatus('playing')
         return
-      } catch (error) {
+      } catch {
         if (playbackId !== playbackIdRef.current) return
         releaseAudio()
         console.warn('[Okuma audio] ElevenLabs playback failed; falling back to browser speech synthesis.')
@@ -383,11 +382,11 @@ function AudioPlayer({ text, premium, voiceId = ELEVENLABS_VOICE_ID }) {
           playWithBrowserSpeech(speedRef.current, playbackId)
         }
       } else {
-        startPlayback(speedRef.current)
+        startPlayback()
       }
       return
     }
-    startPlayback(speedRef.current)
+    startPlayback()
   }
 
   const changeSpeed = (event) => {
@@ -483,7 +482,6 @@ function AudioPlayer({ text, premium, voiceId = ELEVENLABS_VOICE_ID }) {
 
 export default function ReadingLibrary({ addXp, completeLevel, isPremium = false, dark = false, profile, onReadingCompletionsChange, onSavedWordsChange, onFlawlessQuiz, onPerfectReadingExam, onSpeedBonus }) {
   const { t } = useI18n()
-  const { showMascot } = useMascot()
   // Reuse the dark glass reading palette when the app's regular dark mode is on,
   // so reading panels don't stay white against the dark dashboard background.
   const premium = Boolean(isPremium || dark)
@@ -626,13 +624,6 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
       return nextResults
     })
     setAnswerFeedback(isCorrect ? 'correct' : 'incorrect')
-    if (!isCorrect) {
-      showMascot({
-        message: t('reading.quiz.encourage'),
-        emotion: 'encourage',
-        duration: 4600,
-      })
-    }
   }
 
   const completeQuiz = () => {
@@ -650,9 +641,6 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
       setEarnedXp(0)
       setEarnedFlawlessBonus(0)
       setEarnedSpeedBonus(0)
-      if (score < 5) {
-        showMascot({ message: t('reading.quiz.encourage'), emotion: 'encourage', duration: 5200 })
-      }
       setView('results')
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
@@ -678,11 +666,6 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
     setEarnedXp(totalAward)
     setEarnedFlawlessBonus(flawlessBonus)
     setEarnedSpeedBonus(speedBonus)
-    showMascot({
-      message: speedBonus > 0 ? t('reading.speed.mascot') : t('reading.mascot.success'),
-      emotion: speedBonus > 0 ? 'speed' : 'cheer',
-      duration: speedBonus > 0 ? 7000 : 6000,
-    })
     setView('success')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }

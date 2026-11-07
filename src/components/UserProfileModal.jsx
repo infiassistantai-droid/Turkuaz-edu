@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Check, ChevronRight, Flame, Globe, LogOut, Pencil, Trash2, X } from 'lucide-react'
+import { Check, ChevronRight, Flame, Globe, LogOut, Moon, Pencil, Sun, Trash2, X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { getInitials } from '../lib/storage'
 import { useI18n } from '../lib/i18n.jsx'
@@ -21,12 +21,12 @@ export default function UserProfileModal({
   winterChampionUnlocked = false,
   trophyMetrics,
   trophyUnlocks = [],
-  level = 1,
   onEditProfile,
   onClearData,
   onLogout,
   isPremium = false,
   dark = false,
+  onToggleDark,
 }) {
   const { language, setLanguage, t } = useI18n()
   const [confirmingClear, setConfirmingClear] = useState(false)
@@ -167,6 +167,22 @@ export default function UserProfileModal({
                   )
                 })}
               </div>
+            </section>
+
+            <section className={cn('rounded-2xl border p-4', isPremium ? 'border-white/10 bg-black/25' : dark ? 'border-slate-700 bg-slate-900' : 'border-slate-200 bg-white')}>
+              <h3 className={cn('mb-3 text-sm font-extrabold', isPremium ? 'text-white' : dark ? 'text-slate-100' : 'text-slate-800')}>{t('profile.appearance')}</h3>
+              <button
+                type="button"
+                onClick={onToggleDark}
+                aria-pressed={dark}
+                className={cn('flex min-h-11 w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition-colors', isPremium ? 'border-white/10 text-white hover:bg-white/10' : dark ? 'border-slate-700 text-slate-200 hover:bg-slate-800' : 'border-slate-200 text-slate-700 hover:bg-slate-50')}
+              >
+                {dark ? <Sun className="size-4 shrink-0 text-amber-400" aria-hidden="true" /> : <Moon className="size-4 shrink-0 text-slate-500" aria-hidden="true" />}
+                <span className="min-w-0 flex-1">{t(dark ? 'header.theme.light' : 'header.theme.dark')}</span>
+                <span className={cn('h-5 w-9 shrink-0 rounded-full p-0.5 transition-colors', dark ? 'bg-teal-500' : 'bg-slate-300')} aria-hidden="true">
+                  <span className={cn('block size-4 rounded-full bg-white shadow transition-transform', dark && 'translate-x-4')} />
+                </span>
+              </button>
             </section>
 
             {profile?.email && (

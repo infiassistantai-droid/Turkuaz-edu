@@ -70,8 +70,8 @@ export default function ProfileMenu({ profile, stats, level = 1, open, onOpenCha
         className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 py-1 pl-1 pr-2.5 transition-all active:scale-95 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/80"
       >
         <ProfileAvatar profile={profile} fallbackText={initials} sizeClass="size-8" className="ring-1 ring-white/20" />
-        <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={`Level ${level}`}>
-          Lvl {level}
+        <span className={cn('rounded-md border px-1.5 py-1 text-[9px] font-black leading-none tracking-wide', isPremium ? 'border-yellow-200/20 bg-yellow-200/10 text-yellow-100' : 'border-amber-200 bg-amber-50 text-amber-800')} title={t('rank.level', { level })}>
+          {t('rank.level', { level })}
         </span>
         <span className="hidden max-w-20 truncate text-sm font-bold text-slate-700 sm:block dark:text-slate-200">
           {profile.name}

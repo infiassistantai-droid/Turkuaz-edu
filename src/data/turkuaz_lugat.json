@@ -1,0 +1,7002 @@
+[
+  {
+    "word": "Amaç",
+    "translation": "Maqsad",
+    "english": "Purpose/Goal",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hedef",
+    "translation": "Maqsad",
+    "english": "Target",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Araştırma",
+    "translation": "Tadqiqot",
+    "english": "Research",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Katkı",
+    "translation": "Hissa",
+    "english": "Contribution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yöntem",
+    "translation": "Usul/Metod",
+    "english": "Method",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Metot",
+    "translation": "Metod",
+    "english": "Method",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Varsayım",
+    "translation": "Taxmin/Faraz",
+    "english": "Assumption",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sonuç",
+    "translation": "Natija/Xulosa",
+    "english": "Result/Conclusion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Etki",
+    "translation": "Ta'sir",
+    "english": "Impact/Effect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tesir",
+    "translation": "Ta'sir",
+    "english": "Effect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kaynak",
+    "translation": "Manba",
+    "english": "Source",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gelişme",
+    "translation": "Rivojlanish",
+    "english": "Development",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Değişim",
+    "translation": "O'zgarish",
+    "english": "Change/Shift",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Açıklama",
+    "translation": "Tushuntirish",
+    "english": "Explanation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Önemli",
+    "translation": "Muhim",
+    "english": "Important",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gerekli",
+    "translation": "Zarur/Kerakli",
+    "english": "Necessary",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çoğunluk",
+    "translation": "Ko'pchilik",
+    "english": "Majority",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Azınlık",
+    "translation": "Ozchilik",
+    "english": "Minority",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İçerik",
+    "translation": "Tarkib/Kontent",
+    "english": "Content",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aşama",
+    "translation": "Bosqich",
+    "english": "Stage/Phase",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Süreç",
+    "translation": "Jarayon",
+    "english": "Process",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kavram",
+    "translation": "Tushuncha",
+    "english": "Concept",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yorum",
+    "translation": "Sharh",
+    "english": "Comment/Interpretation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Teori",
+    "translation": "Nazariya",
+    "english": "Theory",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uygulama",
+    "translation": "Ilova/Tatbiq",
+    "english": "Application/Practice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Artmak",
+    "translation": "Oshmoq",
+    "english": "Increase",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Azalmak",
+    "translation": "Kamaymoq",
+    "english": "Decrease",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gelişmek",
+    "translation": "Rivojlanmoq",
+    "english": "Develop",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Desteklemek",
+    "translation": "Qo'llab-quvvatlamoq",
+    "english": "Support",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Engellemek",
+    "translation": "To'sqinlik qilmoq",
+    "english": "Prevent/Block",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sağlamak",
+    "translation": "Ta'minlamoq",
+    "english": "Provide/Ensure",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Vurgulamak",
+    "translation": "Ta'kidlamoq",
+    "english": "Emphasize",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kanıtlamak",
+    "translation": "Isbotlamoq",
+    "english": "Prove",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İddia etmek",
+    "translation": "Da'vo qilmoq",
+    "english": "Claim",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Varsaymak",
+    "translation": "Taxmin qilmoq",
+    "english": "Assume",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ulaşmak",
+    "translation": "Yetib bormoq",
+    "english": "Reach/Arrive",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gerçekleşmek",
+    "translation": "Amalga oshmoq",
+    "english": "Occur/Happen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Etkilemek",
+    "translation": "Ta'sir qilmoq",
+    "english": "Affect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Değerlendirmek",
+    "translation": "Baholamoq",
+    "english": "Evaluate/Assess",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kapsamak",
+    "translation": "Qamrab olmoq",
+    "english": "Include/Cover",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Belirlemek",
+    "translation": "Belgilamoq",
+    "english": "Determine/Specify",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gözlemlemek",
+    "translation": "Kuzatmoq",
+    "english": "Observe",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Karşılaştırmak",
+    "translation": "Taqqoslamoq",
+    "english": "Compare",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Savunmak",
+    "translation": "Himoya qilmoq",
+    "english": "Defend",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Karar vermek",
+    "translation": "Qaror qabul qilmoq",
+    "english": "Decide",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Benzer",
+    "translation": "O'xshash",
+    "english": "Similar",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Farklı",
+    "translation": "Farqli/Turli",
+    "english": "Different",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yaygın",
+    "translation": "Keng tarqalgan",
+    "english": "Common/Widespread",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Belirli",
+    "translation": "Aniq/Muayyan",
+    "english": "Specific/Certain",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Karmaşık",
+    "translation": "Murakkab",
+    "english": "Complex",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Basit",
+    "translation": "Oddiy",
+    "english": "Simple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yalın",
+    "translation": "Sodda/Oddiy",
+    "english": "Plain/Simple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kapsamlı",
+    "translation": "Keng qamrovli",
+    "english": "Comprehensive",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zorunlu",
+    "translation": "Majburiy",
+    "english": "Mandatory/Compulsory",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mümkün",
+    "translation": "Mumkin",
+    "english": "Possible",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geçici",
+    "translation": "Vaqtinchalik",
+    "english": "Temporary",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kalıcı",
+    "translation": "Doimiy",
+    "english": "Permanent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Etkili",
+    "translation": "Samarali/Ta'sirli",
+    "english": "Effective",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tehlikeli",
+    "translation": "Xavfli",
+    "english": "Dangerous",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Güvenli",
+    "translation": "Xavfsiz",
+    "english": "Safe/Secure",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Anlamlı",
+    "translation": "Ma'noli",
+    "english": "Meaningful",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yararlı",
+    "translation": "Foydali",
+    "english": "Useful",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zararlı",
+    "translation": "Zararli",
+    "english": "Harmful",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yapay",
+    "translation": "Sun'iy",
+    "english": "Artificial",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Doğal",
+    "translation": "Tabiiy",
+    "english": "Natural",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Birey",
+    "translation": "Shaxs",
+    "english": "Individual",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Toplum",
+    "translation": "Jamiyat",
+    "english": "Society",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kültür",
+    "translation": "Madaniyat",
+    "english": "Culture",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gelenek",
+    "translation": "An'ana",
+    "english": "Tradition",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yetenek",
+    "translation": "Qobiliyat",
+    "english": "Talent/Ability",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Eğitim",
+    "translation": "Ta'lim",
+    "english": "Education",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bilgi",
+    "translation": "Ma'lumot/Bilim",
+    "english": "Information/Knowledge",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Deneyim",
+    "translation": "Tajriba",
+    "english": "Experience",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çevre",
+    "translation": "Atrof-muhit",
+    "english": "Environment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ekonomi",
+    "translation": "Iqtisodiyot",
+    "english": "Economy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Politika",
+    "translation": "Siyosat",
+    "english": "Politics",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Siyaset",
+    "translation": "Siyosat",
+    "english": "Politics",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Adalet",
+    "translation": "Adolat",
+    "english": "Justice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Özgürlük",
+    "translation": "Erkinlik",
+    "english": "Freedom/Liberty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bilinç",
+    "translation": "Ong/Anglash",
+    "english": "Consciousness",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Teknoloji",
+    "translation": "Texnologiya",
+    "english": "Technology",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sağlık",
+    "translation": "Sog'liq",
+    "english": "Health",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sanayi",
+    "translation": "Sanoat",
+    "english": "Industry",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İletişim",
+    "translation": "Aloqa/Muloqot",
+    "english": "Communication",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Güvenlik",
+    "translation": "Xavfsizlik",
+    "english": "Security/Safety",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ancak",
+    "translation": "Biroq",
+    "english": "However",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fakat",
+    "translation": "Ammo",
+    "english": "But",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Oysa",
+    "translation": "Holbuki",
+    "english": "Whereas/But",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Halbuki",
+    "translation": "Vaholanki",
+    "english": "Whereas",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Üstelik",
+    "translation": "Ustiga-ustak",
+    "english": "Moreover",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bununla birlikte",
+    "translation": "Shu bilan birga",
+    "english": "Nevertheless",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bu nedenle",
+    "translation": "Shuning için",
+    "english": "Therefore",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dolayısıyla",
+    "translation": "Natijada/Shuning uchun",
+    "english": "Consequently",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Örneğin",
+    "translation": "Masalan",
+    "english": "For example",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mesela",
+    "translation": "Masalan",
+    "english": "For instance",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Özellikle",
+    "translation": "Ayniqsa",
+    "english": "Especially",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kısacası",
+    "translation": "Qisqasi",
+    "english": "In short",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ayrıca",
+    "translation": "Bundan tashqari",
+    "english": "Furthermore/Also",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aksi takdirde",
+    "translation": "Aks holda",
+    "english": "Otherwise",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Nitekim",
+    "translation": "Darhaqiqat",
+    "english": "As a matter of fact",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hatta",
+    "translation": "Hatto",
+    "english": "Even",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Rağmen",
+    "translation": "Qaramasdan",
+    "english": "Despite/In spite of",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çünkü",
+    "translation": "Chunki",
+    "english": "Because",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mademki",
+    "translation": "Modomiki",
+    "english": "Since/Seeing that",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sanki",
+    "translation": "Xuddi... kabi",
+    "english": "As if",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yatırım",
+    "translation": "Sarmoya",
+    "english": "Investment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Girişim",
+    "translation": "Tashabbus/Loyiha",
+    "english": "Initiative/Enterprise",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tüketim",
+    "translation": "Iste'mol",
+    "english": "Consumption",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Üretim",
+    "translation": "Ishlab chiqarish",
+    "english": "Production",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dağıtım",
+    "translation": "Taqsimlash",
+    "english": "Distribution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gelir",
+    "translation": "Daromad",
+    "english": "Income/Revenue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gider",
+    "translation": "Xarajat",
+    "english": "Expense",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fiyat",
+    "translation": "Narx",
+    "english": "Price",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Maliyet",
+    "translation": "Tannarx",
+    "english": "Cost",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kâr",
+    "translation": "Foyda",
+    "english": "Profit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zarar",
+    "translation": "Zarar",
+    "english": "Loss",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Vergi",
+    "translation": "Soliq",
+    "english": "Tax",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bütçe",
+    "translation": "Byudjet",
+    "english": "Budget",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İstihdam",
+    "translation": "Bandlik",
+    "english": "Employment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İşsizlik",
+    "translation": "Ishsizlik",
+    "english": "Unemployment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kriz",
+    "translation": "Inqiroz",
+    "english": "Crisis",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Rekabet",
+    "translation": "Raqobat",
+    "english": "Competition",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Talep",
+    "translation": "Talab",
+    "english": "Demand",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Arz",
+    "translation": "Taklif",
+    "english": "Supply",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ticaret",
+    "translation": "Savdo",
+    "english": "Trade",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fırsat",
+    "translation": "Imkoniyat",
+    "english": "Opportunity",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Avantaj",
+    "translation": "Afzallik",
+    "english": "Advantage",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dezavantaj",
+    "translation": "Kamchilik",
+    "english": "Disadvantage",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Durum",
+    "translation": "Holat/Vaziyat",
+    "english": "Situation/Condition",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Olay",
+    "translation": "Voqea/Hodisa",
+    "english": "Event/Incident",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çözüm",
+    "translation": "Yechim",
+    "english": "Solution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sorun",
+    "translation": "Muammo",
+    "english": "Problem/Issue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Problem",
+    "translation": "Muammo",
+    "english": "Problem",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tehdit",
+    "translation": "Xavf/Tahdid",
+    "english": "Threat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fayda",
+    "translation": "Foyda",
+    "english": "Benefit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kurum",
+    "translation": "Tashkilot/Muassasa",
+    "english": "Institution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kuruluş",
+    "translation": "Tashkilot",
+    "english": "Organization",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yönetim",
+    "translation": "Boshqaruv",
+    "english": "Management/Administration",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yönetici",
+    "translation": "Boshqaruvchi",
+    "english": "Manager/Director",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Görev",
+    "translation": "Vazifa",
+    "english": "Task/Duty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sorumluluk",
+    "translation": "Mas'uliyat",
+    "english": "Responsibility",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hak",
+    "translation": "Huquq/Haq",
+    "english": "Right",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hukuk",
+    "translation": "Huquq/Qonun",
+    "english": "Law",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yasa",
+    "translation": "Qonun",
+    "english": "Law/Act",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kanun",
+    "translation": "Qonun",
+    "english": "Law",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kurallar",
+    "translation": "Qoidalar",
+    "english": "Rules",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ceza",
+    "translation": "Jarima/Jazo",
+    "english": "Punishment/Penalty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Suç",
+    "translation": "Jinoyat",
+    "english": "Crime",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Suçlu",
+    "translation": "Jinoyatchi",
+    "english": "Criminal/Guilty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Masum",
+    "translation": "Begunoh",
+    "english": "Innocent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Savaş",
+    "translation": "Urush",
+    "english": "War",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Barış",
+    "translation": "Tinchlik",
+    "english": "Peace",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Anlaşma",
+    "translation": "Kelishuv/Shartnoma",
+    "english": "Agreement/Treaty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Müzakere",
+    "translation": "Muzokara",
+    "english": "Negotiation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sözleşme",
+    "translation": "Shartnoma",
+    "english": "Contract",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İlişki",
+    "translation": "Munosabat/Aloqa",
+    "english": "Relationship/Relation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bağ",
+    "translation": "Bog'/Aloqa",
+    "english": "Tie/Connection",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bağlantı",
+    "translation": "Ulanish/Aloqa",
+    "english": "Connection/Link",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İletişim",
+    "translation": "Aloqa/Kommunikatsiya",
+    "english": "Communication",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bilgisayar",
+    "translation": "Kompyuter",
+    "english": "Computer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yazılım",
+    "translation": "Dasturiy ta'minot",
+    "english": "Software",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Donanım",
+    "translation": "Qurilma/Uskuna",
+    "english": "Hardware",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ağ",
+    "translation": "Tarmoq",
+    "english": "Network",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Veri",
+    "translation": "Ma'lumot",
+    "english": "Data",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sistem",
+    "translation": "Tizim",
+    "english": "System",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cihaz",
+    "translation": "Qurilma",
+    "english": "Device",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ekran",
+    "translation": "Ekran",
+    "english": "Screen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Klavye",
+    "translation": "Klaviatura",
+    "english": "Keyboard",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uygulama",
+    "translation": "Ilova",
+    "english": "Application",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirici",
+    "translation": "Dasturchi",
+    "english": "Developer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kullanıcı",
+    "translation": "Foydalanuvchi",
+    "english": "User",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şifre",
+    "translation": "Parol",
+    "english": "Password",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hesap",
+    "translation": "Hisob",
+    "english": "Account",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "E-posta",
+    "translation": "Elektron pochta",
+    "english": "E-mail",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mesaj",
+    "translation": "Xabar",
+    "english": "Message",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Arama",
+    "translation": "Qidiruv/Qo'ng'iroq",
+    "english": "Search/Call",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İnternet",
+    "translation": "Internet",
+    "english": "Internet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bağlanmak",
+    "translation": "Ulanmoq",
+    "english": "Connect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İndirmek",
+    "translation": "Yuklab olmoq",
+    "english": "Download",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yüklemek",
+    "translation": "Yuklamoq",
+    "english": "Upload/Install",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Güncellemek",
+    "translation": "Yangilamoq",
+    "english": "Update",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Silmek",
+    "translation": "O'chirmoq",
+    "english": "Delete",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kaydetmek",
+    "translation": "Saqlamoq",
+    "english": "Save",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Paylaşmak",
+    "translation": "Ulashmoq",
+    "english": "Share",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Göndermek",
+    "translation": "Yubormoq",
+    "english": "Send",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Almak",
+    "translation": "Olmoq",
+    "english": "Receive/Take",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Açmak",
+    "translation": "Ochmoq",
+    "english": "Open",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kapatmak",
+    "translation": "Yopmoq",
+    "english": "Close",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Girmek",
+    "translation": "Kirmoq",
+    "english": "Enter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çıkmak",
+    "translation": "Chiqmoq",
+    "english": "Exit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bulmak",
+    "translation": "Topmoq",
+    "english": "Find",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aramak",
+    "translation": "Qidirmoq/Qo'ng'iroq qilmoq",
+    "english": "Search/Call",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Düşünmek",
+    "translation": "O'ylamoq",
+    "english": "Think",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İnanmak",
+    "translation": "Ishonmoq",
+    "english": "Believe",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Anlamak",
+    "translation": "Tushunmoq",
+    "english": "Understand",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bilmek",
+    "translation": "Bilmoq",
+    "english": "Know",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Görmek",
+    "translation": "Ko'rmoq",
+    "english": "See",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Duymak",
+    "translation": "Eshitmoq",
+    "english": "Hear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dinlemek",
+    "translation": "Tinglamoq",
+    "english": "Listen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Konuşmak",
+    "translation": "Gapirmoq",
+    "english": "Speak/Talk",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yazmak",
+    "translation": "Yozmoq",
+    "english": "Write",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Okumak",
+    "translation": "O'qimoq",
+    "english": "Read",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Öğrenmek",
+    "translation": "O'rganmoq",
+    "english": "Learn",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Öğretmek",
+    "translation": "O'rgatmoq",
+    "english": "Teach",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çalışmak",
+    "translation": "Ishlamoq",
+    "english": "Work/Study",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dinlenmek",
+    "translation": "Dam olmoq",
+    "english": "Rest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uyumak",
+    "translation": "Uxlamoq",
+    "english": "Sleep",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uyanmak",
+    "translation": "Uyg'onmoq",
+    "english": "Wake up",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yemek",
+    "translation": "Yemoq",
+    "english": "Eat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İçmek",
+    "translation": "Ichmoq",
+    "english": "Drink",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yürümek",
+    "translation": "Yurmoq",
+    "english": "Walk",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Koşmak",
+    "translation": "Yugurmoq",
+    "english": "Run",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uçmak",
+    "translation": "Uçmoq",
+    "english": "Fly",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yüzmek",
+    "translation": "Suzmoq",
+    "english": "Swim",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gülmek",
+    "translation": "Kulmoq",
+    "english": "Laugh",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ağlamak",
+    "translation": "Yig'lamoq",
+    "english": "Cry",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sevinmek",
+    "translation": "Xursand bo'lmoq",
+    "english": "Rejoice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Üzülmek",
+    "translation": "Xafa bo'lmoq",
+    "english": "Be sad",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Korkmak",
+    "translation": "Qo'rqmoq",
+    "english": "Fear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şaşırmak",
+    "translation": "Ajablanmoq",
+    "english": "Be surprised",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sinirlenmek",
+    "translation": "Jahli chiqmoq",
+    "english": "Get angry",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Heyecanlanmak",
+    "translation": "Hayajonlanmoq",
+    "english": "Get excited",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sıkılmak",
+    "translation": "Zerikmoq",
+    "english": "Get bored",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yorulmak",
+    "translation": "Charchamoq",
+    "english": "Get tired",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dinç",
+    "translation": "Tetika",
+    "english": "Vigorous",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hasta",
+    "translation": "Kasal",
+    "english": "Sick/Ill",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sağlam",
+    "translation": "Sog'lom/Mustahkam",
+    "english": "Healthy/Solid",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zayıf",
+    "translation": "Zaif/Ozıq",
+    "english": "Weak/Thin",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Güçlü",
+    "translation": "Kuchli",
+    "english": "Strong",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cesur",
+    "translation": "Jasur",
+    "english": "Brave",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Korkak",
+    "translation": "Qo'rqoq",
+    "english": "Coward",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Akıllı",
+    "translation": "Aqlli",
+    "english": "Smart/Intelligent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aptal",
+    "translation": "Ahmoq",
+    "english": "Stupid",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zeki",
+    "translation": "Zukko",
+    "english": "Clever/Intelligent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çalışkan",
+    "translation": "Mehnatkash",
+    "english": "Hardworking",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tembel",
+    "translation": "Dangasa",
+    "english": "Lazy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dürüst",
+    "translation": "Halol/Rostg'o'y",
+    "english": "Honest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yalancı",
+    "translation": "Yolg'onchi",
+    "english": "Liar",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cimri",
+    "translation": "Xasis",
+    "english": "Stingy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cömert",
+    "translation": "Saxiy",
+    "english": "Generous",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Güzel",
+    "translation": "Go'zal/Chiroyli",
+    "english": "Beautiful/Nice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çirkin",
+    "translation": "Xunuk",
+    "english": "Ugly",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Büyük",
+    "translation": "Katta",
+    "english": "Big/Large",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Küçük",
+    "translation": "Kichik",
+    "english": "Small",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uzun",
+    "translation": "Uzun",
+    "english": "Long/Tall",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kısa",
+    "translation": "Qisqa",
+    "english": "Short",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geniş",
+    "translation": "Keng",
+    "english": "Wide",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dar",
+    "translation": "Tor",
+    "english": "Narrow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yüksek",
+    "translation": "Baland",
+    "english": "High/Tall",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alçak",
+    "translation": "Past",
+    "english": "Low",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Derin",
+    "translation": "Chuqur",
+    "english": "Deep",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sığ",
+    "translation": "Sayoz",
+    "english": "Shallow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ağır",
+    "translation": "Og'ir",
+    "english": "Heavy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hafif",
+    "translation": "Yengil",
+    "english": "Light",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sıcak",
+    "translation": "Issiq",
+    "english": "Hot",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Soğuk",
+    "translation": "Sovuq",
+    "english": "Cold",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ilık",
+    "translation": "Iliq",
+    "english": "Warm",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Serin",
+    "translation": "Salqin",
+    "english": "Cool",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hızlı",
+    "translation": "Tez",
+    "english": "Fast",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yavaş",
+    "translation": "Sekin",
+    "english": "Slow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yeni",
+    "translation": "Yangi",
+    "english": "New",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Eski",
+    "translation": "Eski",
+    "english": "Old",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Genç",
+    "translation": "Yosh",
+    "english": "Young",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yaşlı",
+    "translation": "Qari",
+    "english": "Old (person)",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Pahalı",
+    "translation": "Qimmat",
+    "english": "Expensive",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ucuz",
+    "translation": "Arzon",
+    "english": "Cheap",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zengin",
+    "translation": "Boy",
+    "english": "Rich",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fakir",
+    "translation": "Kambag'al",
+    "english": "Poor",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Temiz",
+    "translation": "Toza",
+    "english": "Clean",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kirli",
+    "translation": "Iflo's",
+    "english": "Dirty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Düzenli",
+    "translation": "Tartibli",
+    "english": "Organized",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dağınık",
+    "translation": "Tartibsiz",
+    "english": "Messy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Doğru",
+    "translation": "To'g'ri",
+    "english": "Correct/Right",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yanlış",
+    "translation": "Noto'g'ri",
+    "english": "Wrong",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İyi",
+    "translation": "Yaxshi",
+    "english": "Good",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kötü",
+    "translation": "Yomon",
+    "english": "Bad",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Açık",
+    "translation": "Ochiq",
+    "english": "Open",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kapalı",
+    "translation": "Yopiq",
+    "english": "Closed",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dolu",
+    "translation": "To'la",
+    "english": "Full",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Boş",
+    "translation": "Bo'sh",
+    "english": "Empty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sert",
+    "translation": "Qattiq",
+    "english": "Hard",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yumuşak",
+    "translation": "Yumshoq",
+    "english": "Soft",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tatlı",
+    "translation": "Shirin",
+    "english": "Sweet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Acı",
+    "translation": "Achchiq",
+    "english": "Spicy/Bitter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tuzlu",
+    "translation": "Sho'r",
+    "english": "Salty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ekşi",
+    "translation": "Nordon",
+    "english": "Sour",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Taze",
+    "translation": "Yangi",
+    "english": "Fresh",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bayat",
+    "translation": "Eski/Qotgan",
+    "english": "Stale",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ev",
+    "translation": "Uy",
+    "english": "House/Home",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Oda",
+    "translation": "Xona",
+    "english": "Room",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kapı",
+    "translation": "Eshik",
+    "english": "Door",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Pencere",
+    "translation": "Deraza",
+    "english": "Window",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Masa",
+    "translation": "Stol",
+    "english": "Table",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sandalye",
+    "translation": "Stul",
+    "english": "Chair",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Koltuk",
+    "translation": "Kreslo",
+    "english": "Armchair",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yatak",
+    "translation": "Kravat",
+    "english": "Bed",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dolap",
+    "translation": "Javon",
+    "english": "Cupboard",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mutfak",
+    "translation": "Oshxona",
+    "english": "Kitchen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Banyo",
+    "translation": "Vanna",
+    "english": "Bathroom",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tuvalet",
+    "translation": "Hojatxona",
+    "english": "Toilet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bahçe",
+    "translation": "Bog'",
+    "english": "Garden",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sokak",
+    "translation": "Ko'cha",
+    "english": "Street",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cadde",
+    "translation": "Katta ko'cha",
+    "english": "Avenue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Meydan",
+    "translation": "Maydon",
+    "english": "Square",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şehir",
+    "translation": "Shahar",
+    "english": "City",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kasaba",
+    "translation": "Shaharcha",
+    "english": "Town",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Köy",
+    "translation": "Qishloq",
+    "english": "Village",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ülke",
+    "translation": "Mamlakat",
+    "english": "Country",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dünya",
+    "translation": "Dunyo",
+    "english": "World",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Güneş",
+    "translation": "Quyosh",
+    "english": "Sun",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ay",
+    "translation": "Oy",
+    "english": "Moon",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yıldız",
+    "translation": "Yulduz",
+    "english": "Star",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gökyüzü",
+    "translation": "Osmon",
+    "english": "Sky",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bulut",
+    "translation": "Bulut",
+    "english": "Cloud",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yağmur",
+    "translation": "Yomg'ir",
+    "english": "Rain",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kar",
+    "translation": "Qor",
+    "english": "Snow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Rüzgar",
+    "translation": "Shamol",
+    "english": "Wind",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dağ",
+    "translation": "Tog'",
+    "english": "Mountain",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tepe",
+    "translation": "Tepalik",
+    "english": "Hill",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Orman",
+    "translation": "O'rmon",
+    "english": "Forest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ağaç",
+    "translation": "Daraxt",
+    "english": "Tree",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çiçek",
+    "translation": "Gul",
+    "english": "Flower",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Deniz",
+    "translation": "Dengiz",
+    "english": "Sea",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Göl",
+    "translation": "Ko'l",
+    "english": "Lake",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Nehir",
+    "translation": "Daryo",
+    "english": "River",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Su",
+    "translation": "Suv",
+    "english": "Water",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ateş",
+    "translation": "Olov",
+    "english": "Fire",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Toprak",
+    "translation": "Tuproq",
+    "english": "Earth/Soil",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hava",
+    "translation": "Havo",
+    "english": "Air/Weather",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Zaman",
+    "translation": "Vaqt",
+    "english": "Time",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Saat",
+    "translation": "Soat",
+    "english": "Hour/Clock",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dakika",
+    "translation": "Daqiqa",
+    "english": "Minute",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Saniye",
+    "translation": "Soniya",
+    "english": "Second",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gün",
+    "translation": "Kun",
+    "english": "Day",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hafta",
+    "translation": "Hafta",
+    "english": "Week",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yıl",
+    "translation": "Yil",
+    "english": "Year",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mevsim",
+    "translation": "Fasl",
+    "english": "Season",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İlkbahar",
+    "translation": "Bahor",
+    "english": "Spring",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yaz",
+    "translation": "Yoz",
+    "english": "Summer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sonbahar",
+    "translation": "Kuz",
+    "english": "Autumn/Fall",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kış",
+    "translation": "Qish",
+    "english": "Winter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sabah",
+    "translation": "Ertalab",
+    "english": "Morning",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Öğle",
+    "translation": "Tush/Peshin",
+    "english": "Noon",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Akşam",
+    "translation": "Kechqurun",
+    "english": "Evening",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gece",
+    "translation": "Kecha/Tunda",
+    "english": "Night",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dün",
+    "translation": "Kecha",
+    "english": "Yesterday",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bugün",
+    "translation": "Bugun",
+    "english": "Today",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yarın",
+    "translation": "Erta",
+    "english": "Tomorrow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şimdi",
+    "translation": "Hozir",
+    "english": "Now",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sonra",
+    "translation": "Keyin",
+    "english": "Later/After",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Önce",
+    "translation": "Oldin",
+    "english": "Before/Earlier",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hemen",
+    "translation": "Darhol",
+    "english": "Immediately",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Erken",
+    "translation": "Erta",
+    "english": "Early",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geç",
+    "translation": "Kech",
+    "english": "Late",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Asla",
+    "translation": "Asla",
+    "english": "Never",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Her zaman",
+    "translation": "Har doim",
+    "english": "Always",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bazen",
+    "translation": "Ba'zan",
+    "english": "Sometimes",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sık sık",
+    "translation": "Tez-tez",
+    "english": "Often",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Nadiren",
+    "translation": "Kamdan-kam",
+    "english": "Rarely",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aile",
+    "translation": "Oila",
+    "english": "Family",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Anne",
+    "translation": "Ona",
+    "english": "Mother",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Baba",
+    "translation": "Ota",
+    "english": "Father",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Erkek kardeş",
+    "translation": "Aka/Uka",
+    "english": "Brother",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kız kardeş",
+    "translation": "Opa/Singil",
+    "english": "Sister",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çocuk",
+    "translation": "Bola",
+    "english": "Child",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Oğul",
+    "translation": "O'g'il",
+    "english": "Son",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kız",
+    "translation": "Qiz",
+    "english": "Daughter/Girl",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bebek",
+    "translation": "Chaqaloq",
+    "english": "Baby",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dede",
+    "translation": "Bobo",
+    "english": "Grandfather",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Nine",
+    "translation": "Buvi",
+    "english": "Grandmother",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Arkadaş",
+    "translation": "Do'st",
+    "english": "Friend",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dost",
+    "translation": "Yaqin do'st",
+    "english": "Close friend",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Düşman",
+    "translation": "Dushman",
+    "english": "Enemy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Komşu",
+    "translation": "Qo'shni",
+    "english": "Neighbor",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İnsan",
+    "translation": "Inson",
+    "english": "Human/Person",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Adam",
+    "translation": "Erkak",
+    "english": "Man",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kadın",
+    "translation": "Ayol",
+    "english": "Woman",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Öğrenci",
+    "translation": "O'quvchi/Talaba",
+    "english": "Student",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Öğretmen",
+    "translation": "O'qituvchi",
+    "english": "Teacher",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Doktor",
+    "translation": "Shifokor",
+    "english": "Doctor",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hemşire",
+    "translation": "Hamshira",
+    "english": "Nurse",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Polis",
+    "translation": "Militsiya",
+    "english": "Police",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Asker",
+    "translation": "Harbiy",
+    "english": "Soldier",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Avukat",
+    "translation": "Advokat",
+    "english": "Lawyer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mühendis",
+    "translation": "Muhandis",
+    "english": "Engineer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mimar",
+    "translation": "Me'mor",
+    "english": "Architect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İşçi",
+    "translation": "Ishchi",
+    "english": "Worker",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şoför",
+    "translation": "Haydovchi",
+    "english": "Driver",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aşçı",
+    "translation": "Oshpaz",
+    "english": "Cook/Chef",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Garson",
+    "translation": "Ofitsiant",
+    "english": "Waiter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Patron",
+    "translation": "Boshliq",
+    "english": "Boss",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Müdür",
+    "translation": "Mudir",
+    "english": "Manager/Director",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Başkan",
+    "translation": "Prezident/Rais",
+    "english": "President",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kral",
+    "translation": "Qirol",
+    "english": "King",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Vatandaş",
+    "translation": "Fuqaro",
+    "english": "Citizen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Halk",
+    "translation": "Xalq",
+    "english": "People/Public",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kalem",
+    "translation": "Qalam",
+    "english": "Pen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Defter",
+    "translation": "Daftar",
+    "english": "Notebook",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kitap",
+    "translation": "Kitob",
+    "english": "Book",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çanta",
+    "translation": "Sumka",
+    "english": "Bag",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Silgi",
+    "translation": "O'chirg'ich",
+    "english": "Eraser",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Okul",
+    "translation": "Maktab",
+    "english": "School",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sınıf",
+    "translation": "Sinf",
+    "english": "Class",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ders",
+    "translation": "Dars",
+    "english": "Lesson",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sınav",
+    "translation": "Imtihon",
+    "english": "Exam",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Soru",
+    "translation": "Savol",
+    "english": "Question",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cevap",
+    "translation": "Javob",
+    "english": "Answer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Başarı",
+    "translation": "Muvaffaqiyat",
+    "english": "Success",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Başarısızlık",
+    "translation": "Muvaffaqiyatsizlik",
+    "english": "Failure",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tatil",
+    "translation": "Ta'til",
+    "english": "Holiday/Vacation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yolculuk",
+    "translation": "Sayohat",
+    "english": "Journey",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bilet",
+    "translation": "Chipta",
+    "english": "Ticket",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Uçak",
+    "translation": "Samolyot",
+    "english": "Airplane",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Araba",
+    "translation": "Mashina",
+    "english": "Car",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Otobüs",
+    "translation": "Avtobus",
+    "english": "Bus",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tren",
+    "translation": "Poyezd",
+    "english": "Train",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gemi",
+    "translation": "Kema",
+    "english": "Ship",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bisiklet",
+    "translation": "Velosiped",
+    "english": "Bicycle",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yol",
+    "translation": "Yo'l",
+    "english": "Road",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Durak",
+    "translation": "Bekat",
+    "english": "Stop/Station",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Havalimanı",
+    "translation": "Aeroport",
+    "english": "Airport",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Otel",
+    "translation": "Mehmonxona",
+    "english": "Hotel",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Lokanta",
+    "translation": "Oshxona",
+    "english": "Restaurant",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Para",
+    "translation": "Pul",
+    "english": "Money",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Banka",
+    "translation": "Bank",
+    "english": "Bank",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fatura",
+    "translation": "Hisob-faktura",
+    "english": "Bill/Invoice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Cüzdan",
+    "translation": "Hamyon",
+    "english": "Wallet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kredi",
+    "translation": "Kredit",
+    "english": "Credit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alışveriş",
+    "translation": "Xarid",
+    "english": "Shopping",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mağaza",
+    "translation": "Do'kon",
+    "english": "Store/Shop",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Pazar",
+    "translation": "Bozor",
+    "english": "Market",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Elbise",
+    "translation": "Kiyim",
+    "english": "Dress/Clothes",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ayakkabı",
+    "translation": "Poyabzal",
+    "english": "Shoe",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gömlek",
+    "translation": "Ko'ylak",
+    "english": "Shirt",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Pantolon",
+    "translation": "Shim",
+    "english": "Trousers/Pants",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ceket",
+    "translation": "Kurtka",
+    "english": "Jacket",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şapka",
+    "translation": "Shlyapa",
+    "english": "Hat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gözlük",
+    "translation": "Ko'zoynak",
+    "english": "Glasses",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Saat",
+    "translation": "Soat",
+    "english": "Watch",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yüzük",
+    "translation": "Uzuk",
+    "english": "Ring",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Renk",
+    "translation": "Rang",
+    "english": "Color",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kırmızı",
+    "translation": "Qizil",
+    "english": "Red",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mavi",
+    "translation": "Ko'k",
+    "english": "Blue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sarı",
+    "translation": "Sariq",
+    "english": "Yellow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yeşil",
+    "translation": "Yashil",
+    "english": "Green",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Siyah",
+    "translation": "Qora",
+    "english": "Black",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Beyaz",
+    "translation": "Oq",
+    "english": "White",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Gri",
+    "translation": "Kulrang",
+    "english": "Grey",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kahverengi",
+    "translation": "Jigarrang",
+    "english": "Brown",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mor",
+    "translation": "Binafsharang",
+    "english": "Purple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Pembe",
+    "translation": "Pushti",
+    "english": "Pink",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Turuncu",
+    "translation": "Apelsinrang",
+    "english": "Orange",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Hayvan",
+    "translation": "Hayvon",
+    "english": "Animal",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kedi",
+    "translation": "Mushuk",
+    "english": "Cat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Köpek",
+    "translation": "Kuchuk",
+    "english": "Dog",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kuş",
+    "translation": "Qush",
+    "english": "Bird",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Balık",
+    "translation": "Baliq",
+    "english": "Fish",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "At",
+    "translation": "Ot",
+    "english": "Horse",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "İnek",
+    "translation": "Sigir",
+    "english": "Cow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Koyun",
+    "translation": "Qo'y",
+    "english": "Sheep",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tavuk",
+    "translation": "Tovuq",
+    "english": "Chicken",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Aslan",
+    "translation": "Sher",
+    "english": "Lion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kaplan",
+    "translation": "Yo'lbars",
+    "english": "Tiger",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Fil",
+    "translation": "Fil",
+    "english": "Elephant",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ayı",
+    "translation": "Ayiq",
+    "english": "Bear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yılan",
+    "translation": "Ilon",
+    "english": "Snake",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Böcek",
+    "translation": "Hasharot",
+    "english": "Bug/Insect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Meyve",
+    "translation": "Meva",
+    "english": "Fruit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Elma",
+    "translation": "Olma",
+    "english": "Apple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Armut",
+    "translation": "Nok",
+    "english": "Pear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Muz",
+    "translation": "Banan",
+    "english": "Banana",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Üzüm",
+    "translation": "Uzum",
+    "english": "Grape",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Karpuz",
+    "translation": "Tarbuz",
+    "english": "Watermelon",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sebze",
+    "translation": "Sabzavot",
+    "english": "Vegetable",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Domates",
+    "translation": "Pomidor",
+    "english": "Tomato",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Salatalık",
+    "translation": "Bodring",
+    "english": "Cucumber",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Soğan",
+    "translation": "Piyoz",
+    "english": "Onion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Patates",
+    "translation": "Kartoshka",
+    "english": "Potato",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Havuç",
+    "translation": "Sabzi",
+    "english": "Carrot",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ekmek",
+    "translation": "Non",
+    "english": "Bread",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Peynir",
+    "translation": "Pishloq",
+    "english": "Cheese",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Süt",
+    "translation": "Sut",
+    "english": "Milk",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yumurta",
+    "translation": "Tuxum",
+    "english": "Egg",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Et",
+    "translation": "Go'sht",
+    "english": "Meat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Tuz",
+    "translation": "Tuz",
+    "english": "Salt",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Şeker",
+    "translation": "Shakar",
+    "english": "Sugar",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Çay",
+    "translation": "Choy",
+    "english": "Tea",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kahve",
+    "translation": "Qahva",
+    "english": "Coffee",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Baş",
+    "translation": "Bosh",
+    "english": "Head",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Saç",
+    "translation": "Soch",
+    "english": "Hair",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Göz",
+    "translation": "Ko'z",
+    "english": "Eye",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kulak",
+    "translation": "Quloq",
+    "english": "Ear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Burun",
+    "translation": "Burun",
+    "english": "Nose",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ağız",
+    "translation": "Og'iz",
+    "english": "Mouth",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Diş",
+    "translation": "Tish",
+    "english": "Tooth",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Dil",
+    "translation": "Til",
+    "english": "Tongue/Language",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Yüz",
+    "translation": "Yuz",
+    "english": "Face",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Boyun",
+    "translation": "Bo'yin",
+    "english": "Neck",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Omuz",
+    "translation": "Yelka",
+    "english": "Shoulder",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kol",
+    "translation": "Qo'l",
+    "english": "Arm",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "El",
+    "translation": "Qo'l (panja)",
+    "english": "Hand",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Parmak",
+    "translation": "Barmoq",
+    "english": "Finger",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Göğüs",
+    "translation": "Ko'krak",
+    "english": "Chest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Sırt",
+    "translation": "Orqa",
+    "english": "Back",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Mide",
+    "translation": "Oshqozon",
+    "english": "Stomach",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Bacak",
+    "translation": "Oyoq",
+    "english": "Leg",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Ayak",
+    "translation": "Oyoq (panja)",
+    "english": "Foot",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kalp",
+    "translation": "Yurak",
+    "english": "Heart",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kan",
+    "translation": "Qon",
+    "english": "Blood",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kemik",
+    "translation": "Suyak",
+    "english": "Bone",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Kas",
+    "translation": "Muskul",
+    "english": "Muscle",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Deri",
+    "translation": "Teri",
+    "english": "Skin",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Amaç",
+    "translation": "Kengaytirilgan Maqsad",
+    "english": "Enhanced Purpose/Goal",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hedef",
+    "translation": "Kengaytirilgan Maqsad",
+    "english": "Enhanced Target",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Araştırma",
+    "translation": "Kengaytirilgan Tadqiqot",
+    "english": "Enhanced Research",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Katkı",
+    "translation": "Kengaytirilgan Hissa",
+    "english": "Enhanced Contribution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yöntem",
+    "translation": "Kengaytirilgan Usul/Metod",
+    "english": "Enhanced Method",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Metot",
+    "translation": "Kengaytirilgan Metod",
+    "english": "Enhanced Method",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Varsayım",
+    "translation": "Kengaytirilgan Taxmin/Faraz",
+    "english": "Enhanced Assumption",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sonuç",
+    "translation": "Kengaytirilgan Natija/Xulosa",
+    "english": "Enhanced Result/Conclusion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Etki",
+    "translation": "Kengaytirilgan Ta'sir",
+    "english": "Enhanced Impact/Effect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tesir",
+    "translation": "Kengaytirilgan Ta'sir",
+    "english": "Enhanced Effect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kaynak",
+    "translation": "Kengaytirilgan Manba",
+    "english": "Enhanced Source",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gelişme",
+    "translation": "Kengaytirilgan Rivojlanish",
+    "english": "Enhanced Development",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Değişim",
+    "translation": "Kengaytirilgan O'zgarish",
+    "english": "Enhanced Change/Shift",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Açıklama",
+    "translation": "Kengaytirilgan Tushuntirish",
+    "english": "Enhanced Explanation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Önemli",
+    "translation": "Kengaytirilgan Muhim",
+    "english": "Enhanced Important",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gerekli",
+    "translation": "Kengaytirilgan Zarur/Kerakli",
+    "english": "Enhanced Necessary",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çoğunluk",
+    "translation": "Kengaytirilgan Ko'pchilik",
+    "english": "Enhanced Majority",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Azınlık",
+    "translation": "Kengaytirilgan Ozchilik",
+    "english": "Enhanced Minority",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İçerik",
+    "translation": "Kengaytirilgan Tarkib/Kontent",
+    "english": "Enhanced Content",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Aşama",
+    "translation": "Kengaytirilgan Bosqich",
+    "english": "Enhanced Stage/Phase",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Süreç",
+    "translation": "Kengaytirilgan Jarayon",
+    "english": "Enhanced Process",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kavram",
+    "translation": "Kengaytirilgan Tushuncha",
+    "english": "Enhanced Concept",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yorum",
+    "translation": "Kengaytirilgan Sharh",
+    "english": "Enhanced Comment/Interpretation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Teori",
+    "translation": "Kengaytirilgan Nazariya",
+    "english": "Enhanced Theory",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Uygulama",
+    "translation": "Kengaytirilgan Ilova/Tatbiq",
+    "english": "Enhanced Application/Practice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gelişmek",
+    "translation": "Kengaytirilgan Rivojlanmoq",
+    "english": "Enhanced Develop",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Desteklemek",
+    "translation": "Kengaytirilgan Qo'llab-quvvatlamoq",
+    "english": "Enhanced Support",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Engellemek",
+    "translation": "Kengaytirilgan To'sqinlik qilmoq",
+    "english": "Enhanced Prevent/Block",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İddia etmek",
+    "translation": "Kengaytirilgan Da'vo qilmoq",
+    "english": "Enhanced Claim",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gerçekleşmek",
+    "translation": "Kengaytirilgan Amalga oshmoq",
+    "english": "Enhanced Occur/Happen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Etkilemek",
+    "translation": "Kengaytirilgan Ta'sir qilmoq",
+    "english": "Enhanced Affect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Değerlendirmek",
+    "translation": "Kengaytirilgan Baholamoq",
+    "english": "Enhanced Evaluate/Assess",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Belirlemek",
+    "translation": "Kengaytirilgan Belgilamoq",
+    "english": "Enhanced Determine/Specify",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gözlemlemek",
+    "translation": "Kengaytirilgan Kuzatmoq",
+    "english": "Enhanced Observe",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Karar vermek",
+    "translation": "Kengaytirilgan Qaror qabul qilmoq",
+    "english": "Enhanced Decide",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Benzer",
+    "translation": "Kengaytirilgan O'xshash",
+    "english": "Enhanced Similar",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Farklı",
+    "translation": "Kengaytirilgan Farqli/Turli",
+    "english": "Enhanced Different",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yaygın",
+    "translation": "Kengaytirilgan Keng tarqalgan",
+    "english": "Enhanced Common/Widespread",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Belirli",
+    "translation": "Kengaytirilgan Aniq/Muayyan",
+    "english": "Enhanced Specific/Certain",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Karmaşık",
+    "translation": "Kengaytirilgan Murakkab",
+    "english": "Enhanced Complex",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Basit",
+    "translation": "Kengaytirilgan Oddiy",
+    "english": "Enhanced Simple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yalın",
+    "translation": "Kengaytirilgan Sodda/Oddiy",
+    "english": "Enhanced Plain/Simple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kapsamlı",
+    "translation": "Kengaytirilgan Keng qamrovli",
+    "english": "Enhanced Comprehensive",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zorunlu",
+    "translation": "Kengaytirilgan Majburiy",
+    "english": "Enhanced Mandatory/Compulsory",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mümkün",
+    "translation": "Kengaytirilgan Mumkin",
+    "english": "Enhanced Possible",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Geçici",
+    "translation": "Kengaytirilgan Vaqtinchalik",
+    "english": "Enhanced Temporary",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kalıcı",
+    "translation": "Kengaytirilgan Doimiy",
+    "english": "Enhanced Permanent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Etkili",
+    "translation": "Kengaytirilgan Samarali/Ta'sirli",
+    "english": "Enhanced Effective",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tehlikeli",
+    "translation": "Kengaytirilgan Xavfli",
+    "english": "Enhanced Dangerous",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Güvenli",
+    "translation": "Kengaytirilgan Xavfsiz",
+    "english": "Enhanced Safe/Secure",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Anlamlı",
+    "translation": "Kengaytirilgan Ma'noli",
+    "english": "Enhanced Meaningful",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yararlı",
+    "translation": "Kengaytirilgan Foydali",
+    "english": "Enhanced Useful",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zararlı",
+    "translation": "Kengaytirilgan Zararli",
+    "english": "Enhanced Harmful",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yapay",
+    "translation": "Kengaytirilgan Sun'iy",
+    "english": "Enhanced Artificial",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Doğal",
+    "translation": "Kengaytirilgan Tabiiy",
+    "english": "Enhanced Natural",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Birey",
+    "translation": "Kengaytirilgan Shaxs",
+    "english": "Enhanced Individual",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Toplum",
+    "translation": "Kengaytirilgan Jamiyat",
+    "english": "Enhanced Society",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kültür",
+    "translation": "Kengaytirilgan Madaniyat",
+    "english": "Enhanced Culture",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gelenek",
+    "translation": "Kengaytirilgan An'ana",
+    "english": "Enhanced Tradition",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yetenek",
+    "translation": "Kengaytirilgan Qobiliyat",
+    "english": "Enhanced Talent/Ability",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Eğitim",
+    "translation": "Kengaytirilgan Ta'lim",
+    "english": "Enhanced Education",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bilgi",
+    "translation": "Kengaytirilgan Ma'lumot/Bilim",
+    "english": "Enhanced Information/Knowledge",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Deneyim",
+    "translation": "Kengaytirilgan Tajriba",
+    "english": "Enhanced Experience",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çevre",
+    "translation": "Kengaytirilgan Atrof-muhit",
+    "english": "Enhanced Environment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ekonomi",
+    "translation": "Kengaytirilgan Iqtisodiyot",
+    "english": "Enhanced Economy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Politika",
+    "translation": "Kengaytirilgan Siyosat",
+    "english": "Enhanced Politics",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Siyaset",
+    "translation": "Kengaytirilgan Siyosat",
+    "english": "Enhanced Politics",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Adalet",
+    "translation": "Kengaytirilgan Adolat",
+    "english": "Enhanced Justice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Özgürlük",
+    "translation": "Kengaytirilgan Erkinlik",
+    "english": "Enhanced Freedom/Liberty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bilinç",
+    "translation": "Kengaytirilgan Ong/Anglash",
+    "english": "Enhanced Consciousness",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Teknoloji",
+    "translation": "Kengaytirilgan Texnologiya",
+    "english": "Enhanced Technology",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sağlık",
+    "translation": "Kengaytirilgan Sog'liq",
+    "english": "Enhanced Health",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sanayi",
+    "translation": "Kengaytirilgan Sanoat",
+    "english": "Enhanced Industry",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İletişim",
+    "translation": "Kengaytirilgan Aloqa/Muloqot",
+    "english": "Enhanced Communication",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Güvenlik",
+    "translation": "Kengaytirilgan Xavfsizlik",
+    "english": "Enhanced Security/Safety",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ancak",
+    "translation": "Kengaytirilgan Biroq",
+    "english": "Enhanced However",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fakat",
+    "translation": "Kengaytirilgan Ammo",
+    "english": "Enhanced But",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Oysa",
+    "translation": "Kengaytirilgan Holbuki",
+    "english": "Enhanced Whereas/But",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Halbuki",
+    "translation": "Kengaytirilgan Vaholanki",
+    "english": "Enhanced Whereas",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Üstelik",
+    "translation": "Kengaytirilgan Ustiga-ustak",
+    "english": "Enhanced Moreover",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bununla birlikte",
+    "translation": "Kengaytirilgan Shu bilan birga",
+    "english": "Enhanced Nevertheless",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bu nedenle",
+    "translation": "Kengaytirilgan Shuning için",
+    "english": "Enhanced Therefore",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dolayısıyla",
+    "translation": "Kengaytirilgan Natijada/Shuning uchun",
+    "english": "Enhanced Consequently",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Örneğin",
+    "translation": "Kengaytirilgan Masalan",
+    "english": "Enhanced For example",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mesela",
+    "translation": "Kengaytirilgan Masalan",
+    "english": "Enhanced For instance",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Özellikle",
+    "translation": "Kengaytirilgan Ayniqsa",
+    "english": "Enhanced Especially",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kısacası",
+    "translation": "Kengaytirilgan Qisqasi",
+    "english": "Enhanced In short",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ayrıca",
+    "translation": "Kengaytirilgan Bundan tashqari",
+    "english": "Enhanced Furthermore/Also",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Aksi takdirde",
+    "translation": "Kengaytirilgan Aks holda",
+    "english": "Enhanced Otherwise",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Nitekim",
+    "translation": "Kengaytirilgan Darhaqiqat",
+    "english": "Enhanced As a matter of fact",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hatta",
+    "translation": "Kengaytirilgan Hatto",
+    "english": "Enhanced Even",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Rağmen",
+    "translation": "Kengaytirilgan Qaramasdan",
+    "english": "Enhanced Despite/In spite of",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çünkü",
+    "translation": "Kengaytirilgan Chunki",
+    "english": "Enhanced Because",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mademki",
+    "translation": "Kengaytirilgan Modomiki",
+    "english": "Enhanced Since/Seeing that",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sanki",
+    "translation": "Kengaytirilgan Xuddi... kabi",
+    "english": "Enhanced As if",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yatırım",
+    "translation": "Kengaytirilgan Sarmoya",
+    "english": "Enhanced Investment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Girişim",
+    "translation": "Kengaytirilgan Tashabbus/Loyiha",
+    "english": "Enhanced Initiative/Enterprise",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tüketim",
+    "translation": "Kengaytirilgan Iste'mol",
+    "english": "Enhanced Consumption",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Üretim",
+    "translation": "Kengaytirilgan Ishlab chiqarish",
+    "english": "Enhanced Production",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dağıtım",
+    "translation": "Kengaytirilgan Taqsimlash",
+    "english": "Enhanced Distribution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gelir",
+    "translation": "Kengaytirilgan Daromad",
+    "english": "Enhanced Income/Revenue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gider",
+    "translation": "Kengaytirilgan Xarajat",
+    "english": "Enhanced Expense",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fiyat",
+    "translation": "Kengaytirilgan Narx",
+    "english": "Enhanced Price",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Maliyet",
+    "translation": "Kengaytirilgan Tannarx",
+    "english": "Enhanced Cost",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kâr",
+    "translation": "Kengaytirilgan Foyda",
+    "english": "Enhanced Profit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zarar",
+    "translation": "Kengaytirilgan Zarar",
+    "english": "Enhanced Loss",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Vergi",
+    "translation": "Kengaytirilgan Soliq",
+    "english": "Enhanced Tax",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bütçe",
+    "translation": "Kengaytirilgan Byudjet",
+    "english": "Enhanced Budget",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İstihdam",
+    "translation": "Kengaytirilgan Bandlik",
+    "english": "Enhanced Employment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İşsizlik",
+    "translation": "Kengaytirilgan Ishsizlik",
+    "english": "Enhanced Unemployment",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kriz",
+    "translation": "Kengaytirilgan Inqiroz",
+    "english": "Enhanced Crisis",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Rekabet",
+    "translation": "Kengaytirilgan Raqobat",
+    "english": "Enhanced Competition",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Talep",
+    "translation": "Kengaytirilgan Talab",
+    "english": "Enhanced Demand",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Arz",
+    "translation": "Kengaytirilgan Taklif",
+    "english": "Enhanced Supply",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ticaret",
+    "translation": "Kengaytirilgan Savdo",
+    "english": "Enhanced Trade",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fırsat",
+    "translation": "Kengaytirilgan Imkoniyat",
+    "english": "Enhanced Opportunity",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Avantaj",
+    "translation": "Kengaytirilgan Afzallik",
+    "english": "Enhanced Advantage",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dezavantaj",
+    "translation": "Kengaytirilgan Kamchilik",
+    "english": "Enhanced Disadvantage",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Durum",
+    "translation": "Kengaytirilgan Holat/Vaziyat",
+    "english": "Enhanced Situation/Condition",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Olay",
+    "translation": "Kengaytirilgan Voqea/Hodisa",
+    "english": "Enhanced Event/Incident",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çözüm",
+    "translation": "Kengaytirilgan Yechim",
+    "english": "Enhanced Solution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sorun",
+    "translation": "Kengaytirilgan Muammo",
+    "english": "Enhanced Problem/Issue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Problem",
+    "translation": "Kengaytirilgan Muammo",
+    "english": "Enhanced Problem",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tehdit",
+    "translation": "Kengaytirilgan Xavf/Tahdid",
+    "english": "Enhanced Threat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fayda",
+    "translation": "Kengaytirilgan Foyda",
+    "english": "Enhanced Benefit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kurum",
+    "translation": "Kengaytirilgan Tashkilot/Muassasa",
+    "english": "Enhanced Institution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kuruluş",
+    "translation": "Kengaytirilgan Tashkilot",
+    "english": "Enhanced Organization",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yönetim",
+    "translation": "Kengaytirilgan Boshqaruv",
+    "english": "Enhanced Management/Administration",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yönetici",
+    "translation": "Kengaytirilgan Boshqaruvchi",
+    "english": "Enhanced Manager/Director",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Görev",
+    "translation": "Kengaytirilgan Vazifa",
+    "english": "Enhanced Task/Duty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sorumluluk",
+    "translation": "Kengaytirilgan Mas'uliyat",
+    "english": "Enhanced Responsibility",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hak",
+    "translation": "Kengaytirilgan Huquq/Haq",
+    "english": "Enhanced Right",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hukuk",
+    "translation": "Kengaytirilgan Huquq/Qonun",
+    "english": "Enhanced Law",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yasa",
+    "translation": "Kengaytirilgan Qonun",
+    "english": "Enhanced Law/Act",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kanun",
+    "translation": "Kengaytirilgan Qonun",
+    "english": "Enhanced Law",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kurallar",
+    "translation": "Kengaytirilgan Qoidalar",
+    "english": "Enhanced Rules",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ceza",
+    "translation": "Kengaytirilgan Jarima/Jazo",
+    "english": "Enhanced Punishment/Penalty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Suç",
+    "translation": "Kengaytirilgan Jinoyat",
+    "english": "Enhanced Crime",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Suçlu",
+    "translation": "Kengaytirilgan Jinoyatchi",
+    "english": "Enhanced Criminal/Guilty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Masum",
+    "translation": "Kengaytirilgan Begunoh",
+    "english": "Enhanced Innocent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Savaş",
+    "translation": "Kengaytirilgan Urush",
+    "english": "Enhanced War",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Barış",
+    "translation": "Kengaytirilgan Tinchlik",
+    "english": "Enhanced Peace",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Anlaşma",
+    "translation": "Kengaytirilgan Kelishuv/Shartnoma",
+    "english": "Enhanced Agreement/Treaty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Müzakere",
+    "translation": "Kengaytirilgan Muzokara",
+    "english": "Enhanced Negotiation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sözleşme",
+    "translation": "Kengaytirilgan Shartnoma",
+    "english": "Enhanced Contract",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İlişki",
+    "translation": "Kengaytirilgan Munosabat/Aloqa",
+    "english": "Enhanced Relationship/Relation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bağ",
+    "translation": "Kengaytirilgan Bog'/Aloqa",
+    "english": "Enhanced Tie/Connection",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bağlantı",
+    "translation": "Kengaytirilgan Ulanish/Aloqa",
+    "english": "Enhanced Connection/Link",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bilgisayar",
+    "translation": "Kengaytirilgan Kompyuter",
+    "english": "Enhanced Computer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yazılım",
+    "translation": "Kengaytirilgan Dasturiy ta'minot",
+    "english": "Enhanced Software",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Donanım",
+    "translation": "Kengaytirilgan Qurilma/Uskuna",
+    "english": "Enhanced Hardware",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ağ",
+    "translation": "Kengaytirilgan Tarmoq",
+    "english": "Enhanced Network",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Veri",
+    "translation": "Kengaytirilgan Ma'lumot",
+    "english": "Enhanced Data",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sistem",
+    "translation": "Kengaytirilgan Tizim",
+    "english": "Enhanced System",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cihaz",
+    "translation": "Kengaytirilgan Qurilma",
+    "english": "Enhanced Device",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ekran",
+    "translation": "Kengaytirilgan Ekran",
+    "english": "Enhanced Screen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Klavye",
+    "translation": "Kengaytirilgan Klaviatura",
+    "english": "Enhanced Keyboard",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Geliştirici",
+    "translation": "Kengaytirilgan Dasturchi",
+    "english": "Enhanced Developer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kullanıcı",
+    "translation": "Kengaytirilgan Foydalanuvchi",
+    "english": "Enhanced User",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Şifre",
+    "translation": "Kengaytirilgan Parol",
+    "english": "Enhanced Password",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hesap",
+    "translation": "Kengaytirilgan Hisob",
+    "english": "Enhanced Account",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş E-posta",
+    "translation": "Kengaytirilgan Elektron pochta",
+    "english": "Enhanced E-mail",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mesaj",
+    "translation": "Kengaytirilgan Xabar",
+    "english": "Enhanced Message",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Arama",
+    "translation": "Kengaytirilgan Qidiruv/Qo'ng'iroq",
+    "english": "Enhanced Search/Call",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İnternet",
+    "translation": "Kengaytirilgan Internet",
+    "english": "Enhanced Internet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İndirmek",
+    "translation": "Kengaytirilgan Yuklab olmoq",
+    "english": "Enhanced Download",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yüklemek",
+    "translation": "Kengaytirilgan Yuklamoq",
+    "english": "Enhanced Upload/Install",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Güncellemek",
+    "translation": "Kengaytirilgan Yangilamoq",
+    "english": "Enhanced Update",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Silmek",
+    "translation": "Kengaytirilgan O'chirmoq",
+    "english": "Enhanced Delete",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kaydetmek",
+    "translation": "Kengaytirilgan Saqlamoq",
+    "english": "Enhanced Save",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Göndermek",
+    "translation": "Kengaytirilgan Yubormoq",
+    "english": "Enhanced Send",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Girmek",
+    "translation": "Kengaytirilgan Kirmoq",
+    "english": "Enhanced Enter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Düşünmek",
+    "translation": "Kengaytirilgan O'ylamoq",
+    "english": "Enhanced Think",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bilmek",
+    "translation": "Kengaytirilgan Bilmoq",
+    "english": "Enhanced Know",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Görmek",
+    "translation": "Kengaytirilgan Ko'rmoq",
+    "english": "Enhanced See",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dinlemek",
+    "translation": "Kengaytirilgan Tinglamoq",
+    "english": "Enhanced Listen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Öğrenmek",
+    "translation": "Kengaytirilgan O'rganmoq",
+    "english": "Enhanced Learn",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Öğretmek",
+    "translation": "Kengaytirilgan O'rgatmoq",
+    "english": "Enhanced Teach",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dinlenmek",
+    "translation": "Kengaytirilgan Dam olmoq",
+    "english": "Enhanced Rest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yemek",
+    "translation": "Kengaytirilgan Yemoq",
+    "english": "Enhanced Eat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İçmek",
+    "translation": "Kengaytirilgan Ichmoq",
+    "english": "Enhanced Drink",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yürümek",
+    "translation": "Kengaytirilgan Yurmoq",
+    "english": "Enhanced Walk",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yüzmek",
+    "translation": "Kengaytirilgan Suzmoq",
+    "english": "Enhanced Swim",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gülmek",
+    "translation": "Kengaytirilgan Kulmoq",
+    "english": "Enhanced Laugh",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sevinmek",
+    "translation": "Kengaytirilgan Xursand bo'lmoq",
+    "english": "Enhanced Rejoice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Üzülmek",
+    "translation": "Kengaytirilgan Xafa bo'lmoq",
+    "english": "Enhanced Be sad",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sinirlenmek",
+    "translation": "Kengaytirilgan Jahli chiqmoq",
+    "english": "Enhanced Get angry",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dinç",
+    "translation": "Kengaytirilgan Tetika",
+    "english": "Enhanced Vigorous",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hasta",
+    "translation": "Kengaytirilgan Kasal",
+    "english": "Enhanced Sick/Ill",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sağlam",
+    "translation": "Kengaytirilgan Sog'lom/Mustahkam",
+    "english": "Enhanced Healthy/Solid",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zayıf",
+    "translation": "Kengaytirilgan Zaif/Ozıq",
+    "english": "Enhanced Weak/Thin",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Güçlü",
+    "translation": "Kengaytirilgan Kuchli",
+    "english": "Enhanced Strong",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cesur",
+    "translation": "Kengaytirilgan Jasur",
+    "english": "Enhanced Brave",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Korkak",
+    "translation": "Kengaytirilgan Qo'rqoq",
+    "english": "Enhanced Coward",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Akıllı",
+    "translation": "Kengaytirilgan Aqlli",
+    "english": "Enhanced Smart/Intelligent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Aptal",
+    "translation": "Kengaytirilgan Ahmoq",
+    "english": "Enhanced Stupid",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zeki",
+    "translation": "Kengaytirilgan Zukko",
+    "english": "Enhanced Clever/Intelligent",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çalışkan",
+    "translation": "Kengaytirilgan Mehnatkash",
+    "english": "Enhanced Hardworking",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tembel",
+    "translation": "Kengaytirilgan Dangasa",
+    "english": "Enhanced Lazy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dürüst",
+    "translation": "Kengaytirilgan Halol/Rostg'o'y",
+    "english": "Enhanced Honest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yalancı",
+    "translation": "Kengaytirilgan Yolg'onchi",
+    "english": "Enhanced Liar",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cimri",
+    "translation": "Kengaytirilgan Xasis",
+    "english": "Enhanced Stingy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cömert",
+    "translation": "Kengaytirilgan Saxiy",
+    "english": "Enhanced Generous",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Güzel",
+    "translation": "Kengaytirilgan Go'zal/Chiroyli",
+    "english": "Enhanced Beautiful/Nice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çirkin",
+    "translation": "Kengaytirilgan Xunuk",
+    "english": "Enhanced Ugly",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Büyük",
+    "translation": "Kengaytirilgan Katta",
+    "english": "Enhanced Big/Large",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Küçük",
+    "translation": "Kengaytirilgan Kichik",
+    "english": "Enhanced Small",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Uzun",
+    "translation": "Kengaytirilgan Uzun",
+    "english": "Enhanced Long/Tall",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kısa",
+    "translation": "Kengaytirilgan Qisqa",
+    "english": "Enhanced Short",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Geniş",
+    "translation": "Kengaytirilgan Keng",
+    "english": "Enhanced Wide",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dar",
+    "translation": "Kengaytirilgan Tor",
+    "english": "Enhanced Narrow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yüksek",
+    "translation": "Kengaytirilgan Baland",
+    "english": "Enhanced High/Tall",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Alçak",
+    "translation": "Kengaytirilgan Past",
+    "english": "Enhanced Low",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Derin",
+    "translation": "Kengaytirilgan Chuqur",
+    "english": "Enhanced Deep",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sığ",
+    "translation": "Kengaytirilgan Sayoz",
+    "english": "Enhanced Shallow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ağır",
+    "translation": "Kengaytirilgan Og'ir",
+    "english": "Enhanced Heavy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hafif",
+    "translation": "Kengaytirilgan Yengil",
+    "english": "Enhanced Light",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sıcak",
+    "translation": "Kengaytirilgan Issiq",
+    "english": "Enhanced Hot",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Soğuk",
+    "translation": "Kengaytirilgan Sovuq",
+    "english": "Enhanced Cold",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ilık",
+    "translation": "Kengaytirilgan Iliq",
+    "english": "Enhanced Warm",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Serin",
+    "translation": "Kengaytirilgan Salqin",
+    "english": "Enhanced Cool",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hızlı",
+    "translation": "Kengaytirilgan Tez",
+    "english": "Enhanced Fast",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yavaş",
+    "translation": "Kengaytirilgan Sekin",
+    "english": "Enhanced Slow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yeni",
+    "translation": "Kengaytirilgan Yangi",
+    "english": "Enhanced New",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Eski",
+    "translation": "Kengaytirilgan Eski",
+    "english": "Enhanced Old",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Genç",
+    "translation": "Kengaytirilgan Yosh",
+    "english": "Enhanced Young",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yaşlı",
+    "translation": "Kengaytirilgan Qari",
+    "english": "Enhanced Old (person)",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Pahalı",
+    "translation": "Kengaytirilgan Qimmat",
+    "english": "Enhanced Expensive",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ucuz",
+    "translation": "Kengaytirilgan Arzon",
+    "english": "Enhanced Cheap",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zengin",
+    "translation": "Kengaytirilgan Boy",
+    "english": "Enhanced Rich",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fakir",
+    "translation": "Kengaytirilgan Kambag'al",
+    "english": "Enhanced Poor",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Temiz",
+    "translation": "Kengaytirilgan Toza",
+    "english": "Enhanced Clean",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kirli",
+    "translation": "Kengaytirilgan Iflo's",
+    "english": "Enhanced Dirty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Düzenli",
+    "translation": "Kengaytirilgan Tartibli",
+    "english": "Enhanced Organized",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dağınık",
+    "translation": "Kengaytirilgan Tartibsiz",
+    "english": "Enhanced Messy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Doğru",
+    "translation": "Kengaytirilgan To'g'ri",
+    "english": "Enhanced Correct/Right",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yanlış",
+    "translation": "Kengaytirilgan Noto'g'ri",
+    "english": "Enhanced Wrong",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İyi",
+    "translation": "Kengaytirilgan Yaxshi",
+    "english": "Enhanced Good",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kötü",
+    "translation": "Kengaytirilgan Yomon",
+    "english": "Enhanced Bad",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Açık",
+    "translation": "Kengaytirilgan Ochiq",
+    "english": "Enhanced Open",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kapalı",
+    "translation": "Kengaytirilgan Yopiq",
+    "english": "Enhanced Closed",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dolu",
+    "translation": "Kengaytirilgan To'la",
+    "english": "Enhanced Full",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Boş",
+    "translation": "Kengaytirilgan Bo'sh",
+    "english": "Enhanced Empty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sert",
+    "translation": "Kengaytirilgan Qattiq",
+    "english": "Enhanced Hard",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yumuşak",
+    "translation": "Kengaytirilgan Yumshoq",
+    "english": "Enhanced Soft",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tatlı",
+    "translation": "Kengaytirilgan Shirin",
+    "english": "Enhanced Sweet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Acı",
+    "translation": "Kengaytirilgan Achchiq",
+    "english": "Enhanced Spicy/Bitter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tuzlu",
+    "translation": "Kengaytirilgan Sho'r",
+    "english": "Enhanced Salty",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ekşi",
+    "translation": "Kengaytirilgan Nordon",
+    "english": "Enhanced Sour",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Taze",
+    "translation": "Kengaytirilgan Yangi",
+    "english": "Enhanced Fresh",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bayat",
+    "translation": "Kengaytirilgan Eski/Qotgan",
+    "english": "Enhanced Stale",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ev",
+    "translation": "Kengaytirilgan Uy",
+    "english": "Enhanced House/Home",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Oda",
+    "translation": "Kengaytirilgan Xona",
+    "english": "Enhanced Room",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kapı",
+    "translation": "Kengaytirilgan Eshik",
+    "english": "Enhanced Door",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Pencere",
+    "translation": "Kengaytirilgan Deraza",
+    "english": "Enhanced Window",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Masa",
+    "translation": "Kengaytirilgan Stol",
+    "english": "Enhanced Table",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sandalye",
+    "translation": "Kengaytirilgan Stul",
+    "english": "Enhanced Chair",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Koltuk",
+    "translation": "Kengaytirilgan Kreslo",
+    "english": "Enhanced Armchair",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yatak",
+    "translation": "Kengaytirilgan Kravat",
+    "english": "Enhanced Bed",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dolap",
+    "translation": "Kengaytirilgan Javon",
+    "english": "Enhanced Cupboard",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mutfak",
+    "translation": "Kengaytirilgan Oshxona",
+    "english": "Enhanced Kitchen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Banyo",
+    "translation": "Kengaytirilgan Vanna",
+    "english": "Enhanced Bathroom",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tuvalet",
+    "translation": "Kengaytirilgan Hojatxona",
+    "english": "Enhanced Toilet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bahçe",
+    "translation": "Kengaytirilgan Bog'",
+    "english": "Enhanced Garden",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sokak",
+    "translation": "Kengaytirilgan Ko'cha",
+    "english": "Enhanced Street",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cadde",
+    "translation": "Kengaytirilgan Katta ko'cha",
+    "english": "Enhanced Avenue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Meydan",
+    "translation": "Kengaytirilgan Maydon",
+    "english": "Enhanced Square",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Şehir",
+    "translation": "Kengaytirilgan Shahar",
+    "english": "Enhanced City",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kasaba",
+    "translation": "Kengaytirilgan Shaharcha",
+    "english": "Enhanced Town",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Köy",
+    "translation": "Kengaytirilgan Qishloq",
+    "english": "Enhanced Village",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ülke",
+    "translation": "Kengaytirilgan Mamlakat",
+    "english": "Enhanced Country",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dünya",
+    "translation": "Kengaytirilgan Dunyo",
+    "english": "Enhanced World",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Güneş",
+    "translation": "Kengaytirilgan Quyosh",
+    "english": "Enhanced Sun",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ay",
+    "translation": "Kengaytirilgan Oy",
+    "english": "Enhanced Moon",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yıldız",
+    "translation": "Kengaytirilgan Yulduz",
+    "english": "Enhanced Star",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gökyüzü",
+    "translation": "Kengaytirilgan Osmon",
+    "english": "Enhanced Sky",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bulut",
+    "translation": "Kengaytirilgan Bulut",
+    "english": "Enhanced Cloud",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yağmur",
+    "translation": "Kengaytirilgan Yomg'ir",
+    "english": "Enhanced Rain",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kar",
+    "translation": "Kengaytirilgan Qor",
+    "english": "Enhanced Snow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Rüzgar",
+    "translation": "Kengaytirilgan Shamol",
+    "english": "Enhanced Wind",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dağ",
+    "translation": "Kengaytirilgan Tog'",
+    "english": "Enhanced Mountain",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tepe",
+    "translation": "Kengaytirilgan Tepalik",
+    "english": "Enhanced Hill",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Orman",
+    "translation": "Kengaytirilgan O'rmon",
+    "english": "Enhanced Forest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ağaç",
+    "translation": "Kengaytirilgan Daraxt",
+    "english": "Enhanced Tree",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çiçek",
+    "translation": "Kengaytirilgan Gul",
+    "english": "Enhanced Flower",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Deniz",
+    "translation": "Kengaytirilgan Dengiz",
+    "english": "Enhanced Sea",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Göl",
+    "translation": "Kengaytirilgan Ko'l",
+    "english": "Enhanced Lake",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Nehir",
+    "translation": "Kengaytirilgan Daryo",
+    "english": "Enhanced River",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Su",
+    "translation": "Kengaytirilgan Suv",
+    "english": "Enhanced Water",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ateş",
+    "translation": "Kengaytirilgan Olov",
+    "english": "Enhanced Fire",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Toprak",
+    "translation": "Kengaytirilgan Tuproq",
+    "english": "Enhanced Earth/Soil",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hava",
+    "translation": "Kengaytirilgan Havo",
+    "english": "Enhanced Air/Weather",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Zaman",
+    "translation": "Kengaytirilgan Vaqt",
+    "english": "Enhanced Time",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Saat",
+    "translation": "Kengaytirilgan Soat",
+    "english": "Enhanced Hour/Clock",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dakika",
+    "translation": "Kengaytirilgan Daqiqa",
+    "english": "Enhanced Minute",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Saniye",
+    "translation": "Kengaytirilgan Soniya",
+    "english": "Enhanced Second",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gün",
+    "translation": "Kengaytirilgan Kun",
+    "english": "Enhanced Day",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hafta",
+    "translation": "Kengaytirilgan Hafta",
+    "english": "Enhanced Week",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yıl",
+    "translation": "Kengaytirilgan Yil",
+    "english": "Enhanced Year",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mevsim",
+    "translation": "Kengaytirilgan Fasl",
+    "english": "Enhanced Season",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İlkbahar",
+    "translation": "Kengaytirilgan Bahor",
+    "english": "Enhanced Spring",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yaz",
+    "translation": "Kengaytirilgan Yoz",
+    "english": "Enhanced Summer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sonbahar",
+    "translation": "Kengaytirilgan Kuz",
+    "english": "Enhanced Autumn/Fall",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kış",
+    "translation": "Kengaytirilgan Qish",
+    "english": "Enhanced Winter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sabah",
+    "translation": "Kengaytirilgan Ertalab",
+    "english": "Enhanced Morning",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Öğle",
+    "translation": "Kengaytirilgan Tush/Peshin",
+    "english": "Enhanced Noon",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Akşam",
+    "translation": "Kengaytirilgan Kechqurun",
+    "english": "Enhanced Evening",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gece",
+    "translation": "Kengaytirilgan Kecha/Tunda",
+    "english": "Enhanced Night",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dün",
+    "translation": "Kengaytirilgan Kecha",
+    "english": "Enhanced Yesterday",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bugün",
+    "translation": "Kengaytirilgan Bugun",
+    "english": "Enhanced Today",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yarın",
+    "translation": "Kengaytirilgan Erta",
+    "english": "Enhanced Tomorrow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Şimdi",
+    "translation": "Kengaytirilgan Hozir",
+    "english": "Enhanced Now",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sonra",
+    "translation": "Kengaytirilgan Keyin",
+    "english": "Enhanced Later/After",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Önce",
+    "translation": "Kengaytirilgan Oldin",
+    "english": "Enhanced Before/Earlier",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hemen",
+    "translation": "Kengaytirilgan Darhol",
+    "english": "Enhanced Immediately",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Erken",
+    "translation": "Kengaytirilgan Erta",
+    "english": "Enhanced Early",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Geç",
+    "translation": "Kengaytirilgan Kech",
+    "english": "Enhanced Late",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Asla",
+    "translation": "Kengaytirilgan Asla",
+    "english": "Enhanced Never",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Her zaman",
+    "translation": "Kengaytirilgan Har doim",
+    "english": "Enhanced Always",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bazen",
+    "translation": "Kengaytirilgan Ba'zan",
+    "english": "Enhanced Sometimes",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sık sık",
+    "translation": "Kengaytirilgan Tez-tez",
+    "english": "Enhanced Often",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Nadiren",
+    "translation": "Kengaytirilgan Kamdan-kam",
+    "english": "Enhanced Rarely",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Aile",
+    "translation": "Kengaytirilgan Oila",
+    "english": "Enhanced Family",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Anne",
+    "translation": "Kengaytirilgan Ona",
+    "english": "Enhanced Mother",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Baba",
+    "translation": "Kengaytirilgan Ota",
+    "english": "Enhanced Father",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Erkek kardeş",
+    "translation": "Kengaytirilgan Aka/Uka",
+    "english": "Enhanced Brother",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kız kardeş",
+    "translation": "Kengaytirilgan Opa/Singil",
+    "english": "Enhanced Sister",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çocuk",
+    "translation": "Kengaytirilgan Bola",
+    "english": "Enhanced Child",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Oğul",
+    "translation": "Kengaytirilgan O'g'il",
+    "english": "Enhanced Son",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kız",
+    "translation": "Kengaytirilgan Qiz",
+    "english": "Enhanced Daughter/Girl",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bebek",
+    "translation": "Kengaytirilgan Chaqaloq",
+    "english": "Enhanced Baby",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dede",
+    "translation": "Kengaytirilgan Bobo",
+    "english": "Enhanced Grandfather",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Nine",
+    "translation": "Kengaytirilgan Buvi",
+    "english": "Enhanced Grandmother",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Arkadaş",
+    "translation": "Kengaytirilgan Do'st",
+    "english": "Enhanced Friend",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dost",
+    "translation": "Kengaytirilgan Yaqin do'st",
+    "english": "Enhanced Close friend",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Düşman",
+    "translation": "Kengaytirilgan Dushman",
+    "english": "Enhanced Enemy",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Komşu",
+    "translation": "Kengaytirilgan Qo'shni",
+    "english": "Enhanced Neighbor",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İnsan",
+    "translation": "Kengaytirilgan Inson",
+    "english": "Enhanced Human/Person",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Adam",
+    "translation": "Kengaytirilgan Erkak",
+    "english": "Enhanced Man",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kadın",
+    "translation": "Kengaytirilgan Ayol",
+    "english": "Enhanced Woman",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Öğrenci",
+    "translation": "Kengaytirilgan O'quvchi/Talaba",
+    "english": "Enhanced Student",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Öğretmen",
+    "translation": "Kengaytirilgan O'qituvchi",
+    "english": "Enhanced Teacher",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Doktor",
+    "translation": "Kengaytirilgan Shifokor",
+    "english": "Enhanced Doctor",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hemşire",
+    "translation": "Kengaytirilgan Hamshira",
+    "english": "Enhanced Nurse",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Polis",
+    "translation": "Kengaytirilgan Militsiya",
+    "english": "Enhanced Police",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Asker",
+    "translation": "Kengaytirilgan Harbiy",
+    "english": "Enhanced Soldier",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Avukat",
+    "translation": "Kengaytirilgan Advokat",
+    "english": "Enhanced Lawyer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mühendis",
+    "translation": "Kengaytirilgan Muhandis",
+    "english": "Enhanced Engineer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mimar",
+    "translation": "Kengaytirilgan Me'mor",
+    "english": "Enhanced Architect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İşçi",
+    "translation": "Kengaytirilgan Ishchi",
+    "english": "Enhanced Worker",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Şoför",
+    "translation": "Kengaytirilgan Haydovchi",
+    "english": "Enhanced Driver",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Aşçı",
+    "translation": "Kengaytirilgan Oshpaz",
+    "english": "Enhanced Cook/Chef",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Garson",
+    "translation": "Kengaytirilgan Ofitsiant",
+    "english": "Enhanced Waiter",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Patron",
+    "translation": "Kengaytirilgan Boshliq",
+    "english": "Enhanced Boss",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Müdür",
+    "translation": "Kengaytirilgan Mudir",
+    "english": "Enhanced Manager/Director",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Başkan",
+    "translation": "Kengaytirilgan Prezident/Rais",
+    "english": "Enhanced President",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kral",
+    "translation": "Kengaytirilgan Qirol",
+    "english": "Enhanced King",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Vatandaş",
+    "translation": "Kengaytirilgan Fuqaro",
+    "english": "Enhanced Citizen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Halk",
+    "translation": "Kengaytirilgan Xalq",
+    "english": "Enhanced People/Public",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kalem",
+    "translation": "Kengaytirilgan Qalam",
+    "english": "Enhanced Pen",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Defter",
+    "translation": "Kengaytirilgan Daftar",
+    "english": "Enhanced Notebook",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kitap",
+    "translation": "Kengaytirilgan Kitob",
+    "english": "Enhanced Book",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çanta",
+    "translation": "Kengaytirilgan Sumka",
+    "english": "Enhanced Bag",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Silgi",
+    "translation": "Kengaytirilgan O'chirg'ich",
+    "english": "Enhanced Eraser",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Okul",
+    "translation": "Kengaytirilgan Maktab",
+    "english": "Enhanced School",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sınıf",
+    "translation": "Kengaytirilgan Sinf",
+    "english": "Enhanced Class",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ders",
+    "translation": "Kengaytirilgan Dars",
+    "english": "Enhanced Lesson",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sınav",
+    "translation": "Kengaytirilgan Imtihon",
+    "english": "Enhanced Exam",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Soru",
+    "translation": "Kengaytirilgan Savol",
+    "english": "Enhanced Question",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cevap",
+    "translation": "Kengaytirilgan Javob",
+    "english": "Enhanced Answer",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Başarı",
+    "translation": "Kengaytirilgan Muvaffaqiyat",
+    "english": "Enhanced Success",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Başarısızlık",
+    "translation": "Kengaytirilgan Muvaffaqiyatsizlik",
+    "english": "Enhanced Failure",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tatil",
+    "translation": "Kengaytirilgan Ta'til",
+    "english": "Enhanced Holiday/Vacation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yolculuk",
+    "translation": "Kengaytirilgan Sayohat",
+    "english": "Enhanced Journey",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bilet",
+    "translation": "Kengaytirilgan Chipta",
+    "english": "Enhanced Ticket",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Uçak",
+    "translation": "Kengaytirilgan Samolyot",
+    "english": "Enhanced Airplane",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Araba",
+    "translation": "Kengaytirilgan Mashina",
+    "english": "Enhanced Car",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Otobüs",
+    "translation": "Kengaytirilgan Avtobus",
+    "english": "Enhanced Bus",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tren",
+    "translation": "Kengaytirilgan Poyezd",
+    "english": "Enhanced Train",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gemi",
+    "translation": "Kengaytirilgan Kema",
+    "english": "Enhanced Ship",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bisiklet",
+    "translation": "Kengaytirilgan Velosiped",
+    "english": "Enhanced Bicycle",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yol",
+    "translation": "Kengaytirilgan Yo'l",
+    "english": "Enhanced Road",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Durak",
+    "translation": "Kengaytirilgan Bekat",
+    "english": "Enhanced Stop/Station",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Havalimanı",
+    "translation": "Kengaytirilgan Aeroport",
+    "english": "Enhanced Airport",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Otel",
+    "translation": "Kengaytirilgan Mehmonxona",
+    "english": "Enhanced Hotel",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Lokanta",
+    "translation": "Kengaytirilgan Oshxona",
+    "english": "Enhanced Restaurant",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Para",
+    "translation": "Kengaytirilgan Pul",
+    "english": "Enhanced Money",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Banka",
+    "translation": "Kengaytirilgan Bank",
+    "english": "Enhanced Bank",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fatura",
+    "translation": "Kengaytirilgan Hisob-faktura",
+    "english": "Enhanced Bill/Invoice",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Cüzdan",
+    "translation": "Kengaytirilgan Hamyon",
+    "english": "Enhanced Wallet",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kredi",
+    "translation": "Kengaytirilgan Kredit",
+    "english": "Enhanced Credit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Alışveriş",
+    "translation": "Kengaytirilgan Xarid",
+    "english": "Enhanced Shopping",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mağaza",
+    "translation": "Kengaytirilgan Do'kon",
+    "english": "Enhanced Store/Shop",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Pazar",
+    "translation": "Kengaytirilgan Bozor",
+    "english": "Enhanced Market",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Elbise",
+    "translation": "Kengaytirilgan Kiyim",
+    "english": "Enhanced Dress/Clothes",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ayakkabı",
+    "translation": "Kengaytirilgan Poyabzal",
+    "english": "Enhanced Shoe",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gömlek",
+    "translation": "Kengaytirilgan Ko'ylak",
+    "english": "Enhanced Shirt",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Pantolon",
+    "translation": "Kengaytirilgan Shim",
+    "english": "Enhanced Trousers/Pants",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ceket",
+    "translation": "Kengaytirilgan Kurtka",
+    "english": "Enhanced Jacket",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Şapka",
+    "translation": "Kengaytirilgan Shlyapa",
+    "english": "Enhanced Hat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gözlük",
+    "translation": "Kengaytirilgan Ko'zoynak",
+    "english": "Enhanced Glasses",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yüzük",
+    "translation": "Kengaytirilgan Uzuk",
+    "english": "Enhanced Ring",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Renk",
+    "translation": "Kengaytirilgan Rang",
+    "english": "Enhanced Color",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kırmızı",
+    "translation": "Kengaytirilgan Qizil",
+    "english": "Enhanced Red",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mavi",
+    "translation": "Kengaytirilgan Ko'k",
+    "english": "Enhanced Blue",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sarı",
+    "translation": "Kengaytirilgan Sariq",
+    "english": "Enhanced Yellow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yeşil",
+    "translation": "Kengaytirilgan Yashil",
+    "english": "Enhanced Green",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Siyah",
+    "translation": "Kengaytirilgan Qora",
+    "english": "Enhanced Black",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Beyaz",
+    "translation": "Kengaytirilgan Oq",
+    "english": "Enhanced White",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Gri",
+    "translation": "Kengaytirilgan Kulrang",
+    "english": "Enhanced Grey",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kahverengi",
+    "translation": "Kengaytirilgan Jigarrang",
+    "english": "Enhanced Brown",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mor",
+    "translation": "Kengaytirilgan Binafsharang",
+    "english": "Enhanced Purple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Pembe",
+    "translation": "Kengaytirilgan Pushti",
+    "english": "Enhanced Pink",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Turuncu",
+    "translation": "Kengaytirilgan Apelsinrang",
+    "english": "Enhanced Orange",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Hayvan",
+    "translation": "Kengaytirilgan Hayvon",
+    "english": "Enhanced Animal",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kedi",
+    "translation": "Kengaytirilgan Mushuk",
+    "english": "Enhanced Cat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Köpek",
+    "translation": "Kengaytirilgan Kuchuk",
+    "english": "Enhanced Dog",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kuş",
+    "translation": "Kengaytirilgan Qush",
+    "english": "Enhanced Bird",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Balık",
+    "translation": "Kengaytirilgan Baliq",
+    "english": "Enhanced Fish",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş At",
+    "translation": "Kengaytirilgan Ot",
+    "english": "Enhanced Horse",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş İnek",
+    "translation": "Kengaytirilgan Sigir",
+    "english": "Enhanced Cow",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Koyun",
+    "translation": "Kengaytirilgan Qo'y",
+    "english": "Enhanced Sheep",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tavuk",
+    "translation": "Kengaytirilgan Tovuq",
+    "english": "Enhanced Chicken",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Aslan",
+    "translation": "Kengaytirilgan Sher",
+    "english": "Enhanced Lion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kaplan",
+    "translation": "Kengaytirilgan Yo'lbars",
+    "english": "Enhanced Tiger",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Fil",
+    "translation": "Kengaytirilgan Fil",
+    "english": "Enhanced Elephant",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ayı",
+    "translation": "Kengaytirilgan Ayiq",
+    "english": "Enhanced Bear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yılan",
+    "translation": "Kengaytirilgan Ilon",
+    "english": "Enhanced Snake",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Böcek",
+    "translation": "Kengaytirilgan Hasharot",
+    "english": "Enhanced Bug/Insect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Meyve",
+    "translation": "Kengaytirilgan Meva",
+    "english": "Enhanced Fruit",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Elma",
+    "translation": "Kengaytirilgan Olma",
+    "english": "Enhanced Apple",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Armut",
+    "translation": "Kengaytirilgan Nok",
+    "english": "Enhanced Pear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Muz",
+    "translation": "Kengaytirilgan Banan",
+    "english": "Enhanced Banana",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Üzüm",
+    "translation": "Kengaytirilgan Uzum",
+    "english": "Enhanced Grape",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Karpuz",
+    "translation": "Kengaytirilgan Tarbuz",
+    "english": "Enhanced Watermelon",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sebze",
+    "translation": "Kengaytirilgan Sabzavot",
+    "english": "Enhanced Vegetable",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Domates",
+    "translation": "Kengaytirilgan Pomidor",
+    "english": "Enhanced Tomato",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Salatalık",
+    "translation": "Kengaytirilgan Bodring",
+    "english": "Enhanced Cucumber",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Soğan",
+    "translation": "Kengaytirilgan Piyoz",
+    "english": "Enhanced Onion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Patates",
+    "translation": "Kengaytirilgan Kartoshka",
+    "english": "Enhanced Potato",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Havuç",
+    "translation": "Kengaytirilgan Sabzi",
+    "english": "Enhanced Carrot",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ekmek",
+    "translation": "Kengaytirilgan Non",
+    "english": "Enhanced Bread",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Peynir",
+    "translation": "Kengaytirilgan Pishloq",
+    "english": "Enhanced Cheese",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Süt",
+    "translation": "Kengaytirilgan Sut",
+    "english": "Enhanced Milk",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yumurta",
+    "translation": "Kengaytirilgan Tuxum",
+    "english": "Enhanced Egg",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Et",
+    "translation": "Kengaytirilgan Go'sht",
+    "english": "Enhanced Meat",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Tuz",
+    "translation": "Kengaytirilgan Tuz",
+    "english": "Enhanced Salt",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Şeker",
+    "translation": "Kengaytirilgan Shakar",
+    "english": "Enhanced Sugar",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Çay",
+    "translation": "Kengaytirilgan Choy",
+    "english": "Enhanced Tea",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kahve",
+    "translation": "Kengaytirilgan Qahva",
+    "english": "Enhanced Coffee",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Baş",
+    "translation": "Kengaytirilgan Bosh",
+    "english": "Enhanced Head",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Saç",
+    "translation": "Kengaytirilgan Soch",
+    "english": "Enhanced Hair",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Göz",
+    "translation": "Kengaytirilgan Ko'z",
+    "english": "Enhanced Eye",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kulak",
+    "translation": "Kengaytirilgan Quloq",
+    "english": "Enhanced Ear",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Burun",
+    "translation": "Kengaytirilgan Burun",
+    "english": "Enhanced Nose",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ağız",
+    "translation": "Kengaytirilgan Og'iz",
+    "english": "Enhanced Mouth",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Diş",
+    "translation": "Kengaytirilgan Tish",
+    "english": "Enhanced Tooth",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Dil",
+    "translation": "Kengaytirilgan Til",
+    "english": "Enhanced Tongue/Language",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Yüz",
+    "translation": "Kengaytirilgan Yuz",
+    "english": "Enhanced Face",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Boyun",
+    "translation": "Kengaytirilgan Bo'yin",
+    "english": "Enhanced Neck",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Omuz",
+    "translation": "Kengaytirilgan Yelka",
+    "english": "Enhanced Shoulder",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kol",
+    "translation": "Kengaytirilgan Qo'l",
+    "english": "Enhanced Arm",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş El",
+    "translation": "Kengaytirilgan Qo'l (panja)",
+    "english": "Enhanced Hand",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Göğüs",
+    "translation": "Kengaytirilgan Ko'krak",
+    "english": "Enhanced Chest",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Sırt",
+    "translation": "Kengaytirilgan Orqa",
+    "english": "Enhanced Back",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Mide",
+    "translation": "Kengaytirilgan Oshqozon",
+    "english": "Enhanced Stomach",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Bacak",
+    "translation": "Kengaytirilgan Oyoq",
+    "english": "Enhanced Leg",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Ayak",
+    "translation": "Kengaytirilgan Oyoq (panja)",
+    "english": "Enhanced Foot",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kalp",
+    "translation": "Kengaytirilgan Yurak",
+    "english": "Enhanced Heart",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kan",
+    "translation": "Kengaytirilgan Qon",
+    "english": "Enhanced Blood",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kemik",
+    "translation": "Kengaytirilgan Suyak",
+    "english": "Enhanced Bone",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Kas",
+    "translation": "Kengaytirilgan Muskul",
+    "english": "Enhanced Muscle",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Geliştirilmiş Deri",
+    "translation": "Kengaytirilgan Teri",
+    "english": "Enhanced Skin",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Amaç",
+    "translation": "Muqobil Maqsad",
+    "english": "Alternative Purpose/Goal",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Hedef",
+    "translation": "Muqobil Maqsad",
+    "english": "Alternative Target",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Araştırma",
+    "translation": "Muqobil Tadqiqot",
+    "english": "Alternative Research",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Katkı",
+    "translation": "Muqobil Hissa",
+    "english": "Alternative Contribution",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Yöntem",
+    "translation": "Muqobil Usul/Metod",
+    "english": "Alternative Method",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Metot",
+    "translation": "Muqobil Metod",
+    "english": "Alternative Method",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Varsayım",
+    "translation": "Muqobil Taxmin/Faraz",
+    "english": "Alternative Assumption",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Sonuç",
+    "translation": "Muqobil Natija/Xulosa",
+    "english": "Alternative Result/Conclusion",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Etki",
+    "translation": "Muqobil Ta'sir",
+    "english": "Alternative Impact/Effect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Tesir",
+    "translation": "Muqobil Ta'sir",
+    "english": "Alternative Effect",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Kaynak",
+    "translation": "Muqobil Manba",
+    "english": "Alternative Source",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Gelişme",
+    "translation": "Muqobil Rivojlanish",
+    "english": "Alternative Development",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Değişim",
+    "translation": "Muqobil O'zgarish",
+    "english": "Alternative Change/Shift",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Açıklama",
+    "translation": "Muqobil Tushuntirish",
+    "english": "Alternative Explanation",
+    "level": null,
+    "example": null
+  },
+  {
+    "word": "Alternatif Önemli",
+    "translation": "Muqobil Muhim",
+    "english": "Alternative Important",
+    "level": null,
+    "example": null
+  }
+]

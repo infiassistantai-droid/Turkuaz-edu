@@ -4,7 +4,6 @@ import { completeListeningLesson, loadListeningProgress } from '../../lib/listen
 import { loadJSON, saveJSON } from '../../lib/storage'
 import { cn } from '../../lib/utils'
 import { useI18n } from '../../lib/i18n.jsx'
-import { useMascot } from '../../context/MascotContext'
 
 const STAGE_COUNT = 20
 const AUDIOS_PER_STAGE = 5
@@ -154,6 +153,7 @@ const COPY = {
     eyebrow: 'TINGLAB TUSHUNISH', title: 'Dinleme', subtitle: '20 bosqich · har birida 5 audio va 30 savol.', completed: 'bosqich yakunlandi',
     play: 'Tinglash', pause: 'Pauza', resume: 'Davom ettirish', loading: 'Audio yuklanmoqda…', done: 'Audio tugadi',
     fallback: 'Brauzer ovozi ishlatilmoqda', audioError: 'Audio ishga tushmadi. Qayta urinib ko‘ring.', speed: 'Tezlik',
+    playerProgress: 'Audio ijrosi', rewind: '5 soniya orqaga qaytarish', forward: '5 soniya oldinga o‘tkazish',
     transcriptShow: 'Matnni ko‘rsatish', transcriptHide: 'Matnni yashirish', transcript: 'Matn', quiz: 'Savollar',
     question: 'Savol', submit: 'Javoblarni tekshirish', choose: 'Har bir savolga javob tanlang.', retry: 'Qayta urinish',
     perfect: 'Ajoyib! Barcha javoblar to‘g‘ri.', passed: 'Audio test yakunlandi', already: 'Bosqich avval yakunlangan — XP qayta berilmaydi.',
@@ -168,6 +168,7 @@ const COPY = {
     eyebrow: 'LISTENING COMPREHENSION', title: 'Listening', subtitle: '20 stages · 5 audio tasks and 30 questions each.', completed: 'stages completed',
     play: 'Play', pause: 'Pause', resume: 'Resume', loading: 'Loading audio…', done: 'Audio finished',
     fallback: 'Browser speech fallback', audioError: 'Audio could not be played. Try again.', speed: 'Speed',
+    playerProgress: 'Audio progress', rewind: 'Rewind 5 seconds', forward: 'Forward 5 seconds',
     transcriptShow: 'Show transcript', transcriptHide: 'Hide transcript', transcript: 'Transcript', quiz: 'Questions',
     question: 'Question', submit: 'Submit answers', choose: 'Choose an answer for every question.', retry: 'Try again',
     perfect: 'Great! Every answer is correct.', passed: 'Audio task submitted', already: 'This stage was already completed — XP is not awarded again.',
@@ -182,6 +183,7 @@ const COPY = {
     eyebrow: 'DİNLEME', title: 'Dinleme', subtitle: '20 aşama · her birinde 5 ses ve 30 soru.', completed: 'aşama tamamlandı',
     play: 'Dinle', pause: 'Duraklat', resume: 'Devam et', loading: 'Ses yükleniyor…', done: 'Ses tamamlandı',
     fallback: 'Tarayıcı sesi kullanılıyor', audioError: 'Ses oynatılamadı. Yeniden deneyin.', speed: 'Hız',
+    playerProgress: 'Ses ilerlemesi', rewind: '5 saniye geri sar', forward: '5 saniye ileri sar',
     transcriptShow: 'Metni göster', transcriptHide: 'Metni gizle', transcript: 'Metin', quiz: 'Sorular',
     question: 'Soru', submit: 'Cevapları gönder', choose: 'Her soru için bir cevap seçin.', retry: 'Tekrar dene',
     perfect: 'Harika! Tüm cevaplar doğru.', passed: 'Ses testi tamamlandı', already: 'Bu aşama tamamlandı — XP tekrar verilmez.',
@@ -194,6 +196,20 @@ const COPY = {
   },
 }
 
+function getCopy(language) {
+  const localized = COPY[language] || COPY.uz
+  return {
+    ...localized,
+    loading: COPY.uz.loading,
+    audioError: COPY.uz.audioError,
+    choose: COPY.uz.choose,
+    noQuestions: COPY.uz.noQuestions,
+    listenFirst: COPY.uz.listenFirst,
+    dataMissing: COPY.uz.dataMissing,
+    invalidStage: COPY.uz.invalidStage,
+  }
+}
+
 const API_KEY = typeof import.meta.env?.VITE_ELEVENLABS_API_KEY === 'string'
   ? import.meta.env.VITE_ELEVENLABS_API_KEY.trim()
   : ''
@@ -202,7 +218,7 @@ const VOICE_ID = typeof import.meta.env?.VITE_ELEVENLABS_VOICE_ID === 'string'
   : '21m00Tcm4TlvDq8ikWAM'
 
 function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
-  const copy = COPY[language] || COPY.uz
+  const copy = getCopy(language)
   const [status, setStatus] = useState('ready')
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -504,12 +520,12 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
       </div>
       <div className="mt-4 flex min-w-0 items-center gap-2 sm:gap-3">
         <span className="w-10 shrink-0 text-right font-mono text-xs tabular-nums">{formatTime(progressValue)}</span>
-        <input type="range" min="0" max={duration || 0} step="0.1" value={Math.min(progressValue, duration || 0)} onChange={(event) => seekTo(event.target.value)} disabled={!duration || sourceRef.current === 'speech'} aria-label="Audio progress" className="h-2 min-w-0 flex-1 cursor-pointer accent-teal-600 disabled:cursor-not-allowed disabled:opacity-50" />
+        <input type="range" min="0" max={duration || 0} step="0.1" value={Math.min(progressValue, duration || 0)} onChange={(event) => seekTo(event.target.value)} disabled={!duration || sourceRef.current === 'speech'} aria-label={copy.playerProgress} className="h-2 min-w-0 flex-1 cursor-pointer accent-teal-600 disabled:cursor-not-allowed disabled:opacity-50" />
         <span className="w-10 shrink-0 font-mono text-xs tabular-nums">{formatTime(duration)}</span>
       </div>
       <div className="mt-3 flex justify-center gap-2 sm:justify-start">
-        <button type="button" onClick={() => seekBy(-5)} aria-label="Rewind 5 seconds" className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 dark:border-slate-700"><Rewind className="size-4" aria-hidden="true" />- 5s</button>
-        <button type="button" onClick={() => seekBy(5)} aria-label="Forward 5 seconds" className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 dark:border-slate-700">+ 5s<FastForward className="size-4" aria-hidden="true" /></button>
+        <button type="button" onClick={() => seekBy(-5)} aria-label={copy.rewind} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 dark:border-slate-700"><Rewind className="size-4" aria-hidden="true" />- 5s</button>
+        <button type="button" onClick={() => seekBy(5)} aria-label={copy.forward} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 dark:border-slate-700">+ 5s<FastForward className="size-4" aria-hidden="true" /></button>
       </div>
       <button type="button" onClick={() => setTranscriptVisible((visible) => !visible)} aria-expanded={transcriptVisible} className="mt-4 text-sm font-bold text-teal-700 underline decoration-dotted underline-offset-4 dark:text-teal-300">
         {transcriptVisible ? copy.transcriptHide : copy.transcriptShow}
@@ -520,9 +536,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
 }
 
 export default function Dinleme({ profile, moduleScores = {}, isPremium = false, dark = false, onLessonComplete }) {
-  const { language, t } = useI18n()
-  const { showMascot } = useMascot()
-  const copy = COPY[language] || COPY.uz
+  const { language } = useI18n()
+  const copy = getCopy(language)
   const identity = profile?.userId || profile?.email || 'local'
   const stagePanelRef = useRef(null)
   const [tests, setTests] = useState(bundledListeningTests)
@@ -685,7 +700,6 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
 
     setProgressVersion((version) => version + 1)
     setStageSummary({ stageId: selectedStage.id, correctCount: totalCorrect, questionCount: totalQuestions, scorePct: stageScorePct, xpAward, firstCompletion })
-    showMascot({ message: t('listening.feedback.celebration'), emotion: stageScorePct === 100 ? 'cheer' : 'focus', duration: 5200 })
     onLessonComplete?.({
       testId: selectedStage.id,
       scorePct: stageScorePct,

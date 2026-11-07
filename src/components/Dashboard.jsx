@@ -18,6 +18,7 @@ import { loadJSON, saveJSON } from '../lib/storage'
 import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
 import DailyQuestsWidget from './DailyQuestsWidget'
+import PersonalPlanCard from './PersonalPlanCard'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -501,13 +502,20 @@ const CALC_FIELDS = [
   { key: 'konusma', labelKey: 'skill.speaking', subKey: 'skill.speaking.sub', icon: Mic },
 ]
 
-function CertificateCalculator({ initial }) {
+function CertificateCalculator({ initial, dark = false, isPremium = false }) {
   const { t } = useI18n()
   const [scores, setScores] = useState(initial)
   useEffect(() => setScores(initial), [initial])
   const total = (scores.dinleme + scores.okuma + scores.yazma + scores.konusma) / 4
   const pct = Math.round((total / 75) * 100)
   const cert = getCertificate(total, t)
+  const nightCardTones = {
+    C1: 'from-emerald-950 via-teal-950 to-slate-950 text-emerald-50 shadow-emerald-950/30',
+    B2: 'from-teal-950 via-cyan-950 to-slate-950 text-cyan-50 shadow-teal-950/30',
+    B1: 'from-cyan-950 via-sky-950 to-slate-950 text-cyan-50 shadow-cyan-950/30',
+    'Below B1': 'from-rose-950 via-slate-900 to-[#1f1119] text-rose-50 shadow-rose-950/30',
+  }
+  const certificateCardTone = dark && !isPremium ? nightCardTones[cert.level] : cert.card
 
   return (
     <Card className="p-6 lg:col-span-2">
@@ -561,7 +569,7 @@ function CertificateCalculator({ initial }) {
           <div
             className={cn(
               'relative flex items-start gap-4 overflow-hidden rounded-2xl bg-gradient-to-br p-4 shadow-lg ring-1 transition-all duration-500',
-              cert.card,
+              certificateCardTone,
               cert.ring,
             )}
             aria-live="polite"
@@ -796,8 +804,8 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
       <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} dark={dark} />
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-        <CertificateCalculator initial={initialScores} />
-        <DailyPlanCard addXp={addXp} />
+        <CertificateCalculator initial={initialScores} dark={dark} isPremium={isPremium} />
+        <PersonalPlanCard navigate={navigate} />
       </div>
 
       <footer className="pb-2 pt-2 text-center text-xs text-slate-400 dark:text-slate-500">
