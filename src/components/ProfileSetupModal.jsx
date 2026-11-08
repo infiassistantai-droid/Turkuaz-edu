@@ -5,6 +5,7 @@ import { useI18n } from '../lib/i18n.jsx'
 import { ONBOARDING_PENDING_KEY } from '../lib/storage'
 import { supabase } from '../lib/supabase'
 import ProfileAvatar from './ProfileAvatar'
+import { PRESET_AVATAR_PATHS, isPresetAvatarPath } from '../lib/profileAvatar'
 
 const LEVELS = [
   { id: 'B1', subtitleKey: 'auth.level.B1.name', descriptionKey: 'auth.level.B1.desc' },
@@ -12,6 +13,7 @@ const LEVELS = [
   { id: 'C1', subtitleKey: 'auth.level.C1.name', descriptionKey: 'auth.level.C1.desc' },
 ]
 const PBKDF2_ITERATIONS = 180_000
+const PRESET_AVATARS = PRESET_AVATAR_PATHS.map((src, index) => ({ id: index + 1, src, labelKey: `profile.avatar.name.${index + 1}` }))
 
 function GoogleMark() {
   return (
@@ -177,6 +179,7 @@ export default function ProfileSetupModal({
   isPremium = false,
   onClose,
   onSave,
+  onSaveAvatar,
   onLogin,
   onCloudRegister,
   onCloudLogin,
@@ -195,6 +198,8 @@ export default function ProfileSetupModal({
   const [busy, setBusy] = useState(false)
   const [reminderBusy, setReminderBusy] = useState(false)
   const [photoBusy, setPhotoBusy] = useState(false)
+  const [avatarBusy, setAvatarBusy] = useState(false)
+  const [avatarNotice, setAvatarNotice] = useState('')
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatarUrl || profile?.avatar_url || '')
   const photoInputRef = useRef(null)
   const isEdit = mode === 'edit'
@@ -204,6 +209,8 @@ export default function ProfileSetupModal({
     if (!open) return
     setError('')
     setBusy(false)
+    setAvatarBusy(false)
+    setAvatarNotice('')
     setStep(1)
     setPassword('')
     if (isEdit && profile) {
@@ -219,7 +226,7 @@ export default function ProfileSetupModal({
       setLevel(profile?.targetLevel || '')
       setAvatarUrl(profile?.avatarUrl || profile?.avatar_url || '')
     }
-  }, [open, mode, isEdit, hasProfile, profile])
+  }, [open, mode, isEdit, hasProfile])
 
   if (!open) return null
 
@@ -244,6 +251,7 @@ export default function ProfileSetupModal({
       return
     }
     setError('')
+    setAvatarNotice('')
     setPhotoBusy(true)
     try {
       setAvatarUrl(await compressProfilePhoto(file))
@@ -251,6 +259,21 @@ export default function ProfileSetupModal({
       setError(t('profile.photo.processingError'))
     } finally {
       setPhotoBusy(false)
+    }
+  }
+
+  const saveSelectedAvatar = async () => {
+    if (!isPresetAvatarPath(avatarUrl) || !onSaveAvatar) return
+    setError('')
+    setAvatarNotice('')
+    setAvatarBusy(true)
+    try {
+      await onSaveAvatar(avatarUrl)
+      setAvatarNotice(t('profile.avatar.saved'))
+    } catch {
+      setError(t('profile.avatar.failure'))
+    } finally {
+      setAvatarBusy(false)
     }
   }
 
@@ -373,27 +396,38 @@ export default function ProfileSetupModal({
 
         {isEdit ? (
           <form onSubmit={saveProfileChanges} className="mt-6 space-y-6">
-            <section className={cn('flex flex-col gap-4 rounded-2xl border p-4 sm:flex-row sm:items-center', premium ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
-              <ProfileAvatar profile={{ ...profile, avatarUrl }} sizeClass="size-16 rounded-2xl" className="ring-2 ring-white/40 dark:ring-white/10" />
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-bold">{t('profile.photo.title')}</h3>
-                <p className={cn('mt-1 text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('profile.photo.savedLocally')}</p>
-                <input
-                  ref={photoInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  className="sr-only"
-                  onChange={handlePhotoSelect}
-                  aria-label={t('profile.photo.title')}
-                />
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()} className={cn('inline-flex min-h-9 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold disabled:cursor-wait disabled:opacity-60', secondaryButton)}>
-                    {photoBusy ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : <Camera className="size-3.5" aria-hidden="true" />}
-                    {t(avatarUrl ? 'profile.photo.replace' : 'profile.photo.upload')}
+            <section className={cn('rounded-2xl border p-4', premium ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-slate-50/80 dark:border-slate-700 dark:bg-white/5')}>
+              <div className="flex items-center gap-4">
+                <ProfileAvatar profile={{ ...profile, avatarUrl }} sizeClass="size-16 shrink-0 rounded-2xl" className="ring-2 ring-white/40 dark:ring-white/10" />
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold">{t('profile.photo.title')}</h3>
+                  <p className={cn('mt-1 text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('profile.avatar.subtitle')}</p>
+                </div>
+              </div>
+              <div className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-700">
+                <div className="mb-3"><h4 className="text-sm font-extrabold">{t('profile.avatar.choose')}</h4><p className={cn('mt-1 text-xs', premium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t(cloudEnabled ? 'profile.avatar.hint.cloud' : 'profile.avatar.hint.local')}</p></div>
+                <div className="grid grid-cols-3 justify-items-center gap-3 sm:grid-cols-6 sm:gap-2.5">
+                  {PRESET_AVATARS.map((avatar) => {
+                    const selected = avatarUrl === avatar.src
+                    return <button key={avatar.id} type="button" aria-label={t(avatar.labelKey)} aria-pressed={selected} onClick={() => { setAvatarUrl(avatar.src); setError(''); setAvatarNotice('') }} className={cn('group relative aspect-square w-full max-w-24 rounded-full border-[5px] p-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400/40', selected ? 'border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'border-slate-300 opacity-75 grayscale-[.2] hover:scale-105 hover:border-slate-400 hover:opacity-100 hover:grayscale-0 dark:border-slate-600 dark:hover:border-slate-400')}>
+                      <img src={avatar.src} alt="" loading="lazy" className="size-full rounded-full object-cover"/>
+                      {selected && <span className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full border-2 border-white bg-purple-600 text-white shadow-md dark:border-slate-900"><Check className="size-3.5" aria-hidden="true"/></span>}
+                    </button>
+                  })}
+                </div>
+                {avatarUrl.startsWith('data:image/') && <p className={cn('mt-3 text-[11px] leading-4', premium ? 'text-white/50' : 'text-slate-500 dark:text-slate-400')}>{t('profile.photo.savedLocally')}</p>}
+                {avatarNotice && <p role="status" aria-live="polite" className="mt-3 text-xs font-semibold text-emerald-700 dark:text-emerald-300">{avatarNotice}</p>}
+                <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={handlePhotoSelect} aria-label={t('profile.photo.title')}/>
+                <div className="mt-4 flex flex-col-reverse gap-2 border-t border-slate-200/70 pt-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()} className={cn('inline-flex min-h-10 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold disabled:cursor-wait disabled:opacity-60', secondaryButton)}>
+                      {photoBusy ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true"/> : <Camera className="size-3.5" aria-hidden="true"/>}{t('profile.avatar.custom')}
+                    </button>
+                    {avatarUrl && <button type="button" disabled={photoBusy || avatarBusy} onClick={() => { setAvatarUrl(''); setError(''); setAvatarNotice('') }} className={cn('inline-flex min-h-10 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold disabled:opacity-60', secondaryButton)}><Trash2 className="size-3.5" aria-hidden="true"/>{t('profile.photo.remove')}</button>}
+                  </div>
+                  <button type="button" disabled={avatarBusy || !isPresetAvatarPath(avatarUrl)} onClick={saveSelectedAvatar} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-sm font-extrabold text-white shadow-md shadow-purple-900/20 transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50">
+                    {avatarBusy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true"/> : <Check className="size-4" aria-hidden="true"/>}{t(avatarBusy ? 'profile.avatar.working' : 'profile.avatar.save')}
                   </button>
-                  {avatarUrl && <button type="button" disabled={photoBusy} onClick={() => { setAvatarUrl(''); setError('') }} className={cn('inline-flex min-h-9 items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold disabled:opacity-60', secondaryButton)}>
-                    <Trash2 className="size-3.5" aria-hidden="true" />{t('profile.photo.remove')}
-                  </button>}
                 </div>
               </div>
             </section>

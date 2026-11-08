@@ -3,6 +3,7 @@ import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON } from './storage
 import { getRankProgress } from './ranks.js'
 import { normalizeWinterStudy } from '../features/winter/winterSeason.js'
 import { translations } from './i18n.jsx'
+import { isPresetAvatarPath } from './profileAvatar.js'
 
 const configuredUrl = typeof import.meta.env.VITE_SUPABASE_URL === 'string'
   ? import.meta.env.VITE_SUPABASE_URL.trim()
@@ -74,6 +75,33 @@ export async function fetchLearnerProgress(userId) {
   return data
 }
 
+/** Persist a user-selected, bundled avatar path without rewriting learner stats. */
+export async function updateLearnerAvatar(userId, avatarPath, profile = {}) {
+  if (!supabase || !userId) throw new Error('A signed-in Supabase user is required.')
+  if (!isPresetAvatarPath(avatarPath)) {
+    throw new Error('Unsupported avatar selection.')
+  }
+
+  const { data, error } = await supabase.from('profiles')
+    .update({ avatar_url: avatarPath, updated_at: new Date().toISOString() })
+    .eq('user_id', userId)
+    .select('user_id')
+    .maybeSingle()
+  throwQueryError(error)
+  if (data?.user_id) return
+
+  const fullName = [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || 'Learner'
+  const { error: insertError } = await supabase.from('profiles').insert({
+    id: userId,
+    user_id: userId,
+    full_name: fullName,
+    avatar_url: avatarPath,
+    current_streak: Math.max(0, Math.floor(Number(profile?.streak) || 0)),
+    total_xp: Math.max(0, Math.floor(Number(profile?.xp) || 0)),
+  })
+  throwQueryError(insertError)
+}
+
 /** Run one cloud read independently so a missing table/network outage cannot break rendering. */
 async function readOrFallback(label, request, fallback) {
   try {
@@ -92,7 +120,7 @@ async function readOrFallback(label, request, fallback) {
 /** Fetch the normalized cloud profile and the durable streak/achievement/vocabulary records. */
 export async function fetchLearnerGamification(userId) {
   if (!supabase || !userId) return { profile: null, streak: null, achievements: [], vocabulary: [] }
-  const profileRequest = () => supabase.from('profiles').select('id,user_id,full_name,avatar_url,current_streak,total_xp,level,rank_title,created_at,updated_at').eq('user_id', userId).maybeSingle()
+  const profileRequest = () => supabase.from('profiles').select('id,user_id,full_name,avatar_url,current_streak,total_xp,rating_tier,level,rank_title,created_at,updated_at').eq('user_id', userId).maybeSingle()
   const streakRequest = () => supabase.from('user_streaks').select('user_id,streak_count,last_active_date,unlocked_milestones,winter_study_days').eq('user_id', userId).maybeSingle()
   const achievementRequest = () => supabase.from('user_achievements').select('user_id,trophy_id,unlocked_at,progress_data').eq('user_id', userId)
   const vocabularyRequest = () => supabase.from('user_vocabulary').select('user_id,word,translation,lesson_id,created_at').eq('user_id', userId)
@@ -173,6 +201,47 @@ export function mergeCloudVocabularyIntoLocal(remoteRows) {
   if (glossaryChanged) saveJSON(READING_VOCABULARY_KEY, glossaryList)
 }
 
+/** Award XP through the authenticated, daily-limited Supabase RPC. */
+export async function awardXP(userId, amount, taskType) {
+  if (!supabase || !userId) return { totalXp: null, amountAwarded: 0, limitReached: false }
+  const xpAmount = Math.floor(Number(amount) || 0)
+  const normalizedTaskType = String(taskType || '').trim()
+  if (xpAmount <= 0 || !normalizedTaskType) return { totalXp: null, amountAwarded: 0, limitReached: false }
+
+  const { data, error } = await supabase.rpc('award_profile_xp', {
+    p_user_id: userId,
+    p_amount: xpAmount,
+    p_task_type: normalizedTaskType,
+  })
+  throwQueryError(error)
+  const result = Array.isArray(data) ? data[0] : data
+  const totalXp = Number(result?.total_xp)
+  const amountAwarded = Number(result?.awarded)
+  if (!Number.isFinite(totalXp) || !Number.isFinite(amountAwarded)) throw new Error('Supabase returned an invalid XP award.')
+  return { totalXp, amountAwarded, limitReached: Boolean(result?.limit_reached) }
+}
+
+/** Backwards-compatible alias for older call sites; new code should pass a task type. */
+export async function addXP(userId, amount) {
+  const taskType = `legacy:${Date.now()}:${Math.random().toString(36).slice(2)}`
+  const result = await awardXP(userId, amount, taskType)
+  return result.totalXp
+}
+
+/** Keep a migrated local/legacy total from being lost on the first cloud sync. */
+export async function syncProfileXpFloor(userId, totalXp) {
+  if (!supabase || !userId) return null
+  const safeTotal = Math.max(0, Math.floor(Number(totalXp) || 0))
+  const { data, error } = await withReadTimeout(supabase.rpc('sync_profile_xp_floor', {
+    p_user_id: userId,
+    p_total_xp: safeTotal,
+  }), 'profile XP reconciliation')
+  throwQueryError(error)
+  const syncedTotal = Number(data)
+  if (!Number.isFinite(syncedTotal)) throw new Error('Supabase returned an invalid XP total.')
+  return syncedTotal
+}
+
 /** Sync legacy progress plus the normalized profile, streak, trophies, and vocabulary tables. */
 export async function syncLearnerProgress(userId, profile, stats) {
   if (!supabase || !userId) return
@@ -186,8 +255,10 @@ export async function syncLearnerProgress(userId, profile, stats) {
   const streak = Math.max(0, Number(safeStats.streak) || 0)
   const rankProgress = getRankProgress(xp)
   const fullName = [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.fullName || profile?.full_name || 'Learner'
-  const avatarCandidate = profile?.avatarUrl || profile?.avatar_url || ''
-  const avatarUrl = /^https?:\/\/\S+$/u.test(avatarCandidate) ? avatarCandidate : null
+  const avatarCandidate = String(profile?.avatarUrl || profile?.avatar_url || '').trim()
+  const isRemoteAvatar = /^https?:\/\/\S+$/u.test(avatarCandidate)
+  const isPresetAvatar = isPresetAvatarPath(avatarCandidate)
+  const avatarUrl = isRemoteAvatar || isPresetAvatar ? avatarCandidate : null
   const trophies = Array.isArray(safeStats.trophyUnlocks) ? safeStats.trophyUnlocks : []
   const milestones = [...new Set((Array.isArray(safeStats.streakMilestones) ? safeStats.streakMilestones : []).map(Number).filter(Number.isFinite))].sort((a, b) => a - b)
 
@@ -209,11 +280,11 @@ export async function syncLearnerProgress(userId, profile, stats) {
     updated_at: now,
   }
   const profileRow = {
+    id: userId,
     user_id: userId,
     full_name: fullName,
     avatar_url: avatarUrl,
     current_streak: streak,
-    total_xp: xp,
     level: rankProgress.level,
     rank_title: rankProgress.rank.id,
     updated_at: now,
@@ -257,15 +328,10 @@ export async function deleteLearnerCloudData(userId) {
 
 export async function fetchWeeklyLeaderboard() {
   if (!supabase) return []
-  try {
-    const monday = new Date()
-    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
-    const weekKey = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
-    const { data, error } = await withReadTimeout(supabase.rpc('get_weekly_leaderboard', { requested_week_start: weekKey }), 'leaderboard')
-    throwQueryError(error)
-    return Array.isArray(data) ? data.filter((row) => row && typeof row === 'object') : []
-  } catch (error) {
-    console.warn('[Turkuaz Edu] Could not read leaderboard; using an empty list.', error)
-    return []
-  }
+  const monday = new Date()
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
+  const weekKey = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
+  const { data, error } = await withReadTimeout(supabase.rpc('get_weekly_leaderboard', { requested_week_start: weekKey }), 'leaderboard')
+  throwQueryError(error)
+  return Array.isArray(data) ? data.filter((row) => row && typeof row === 'object') : []
 }

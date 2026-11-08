@@ -1,6 +1,10 @@
-import { ArrowRight, BookOpenText, Clock3, Layers3, Shuffle, Trophy } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowRight, BookOpenText, Clock3, FileText, Headphones, Layers3, Mic, PencilLine, Shuffle, Trophy } from 'lucide-react'
+import { EXAM_TASK_CATALOG, EXAM_TASK_CATEGORIES } from '../data/examTaskCatalog'
 import { useI18n } from '../lib/i18n.jsx'
 import { cn } from '../lib/utils'
+
+const TASK_ICONS = { headphones: Headphones, 'book-open': BookOpenText, 'pen-line': PencilLine, mic: Mic }
 
 const EXAM_CARDS = [
   {
@@ -44,8 +48,10 @@ const EXAM_CARDS = [
   },
 ]
 
-export default function ImtihonlarHub({ onNavigate }) {
+export default function ImtihonlarHub({ onNavigate, onStartTask }) {
   const { t } = useI18n()
+  const [activeCategory, setActiveCategory] = useState('dinleme')
+  const tasks = EXAM_TASK_CATALOG[activeCategory] || []
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 pb-12 pt-4 sm:px-6 lg:px-8">
@@ -79,14 +85,67 @@ export default function ImtihonlarHub({ onNavigate }) {
                 </div>
                 <h2 className="mt-6 text-xl font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-2xl">{t(card.titleKey)}</h2>
                 <p className="mt-3 flex-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{t(card.descriptionKey)}</p>
-                <button type="button" onClick={() => onNavigate(card.route)} className={cn('mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-extrabold text-white shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900', card.buttonTone)}>
+                <button type="button" onClick={() => onNavigate?.(card.route)} className={cn('mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-extrabold text-white shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900', card.buttonTone)}>
                   {t(card.buttonKey)}<ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </button>
-                {card.id === 'mixed' && <button type="button" onClick={() => onNavigate('mock')} className="mt-3 text-center text-xs font-semibold text-slate-500 underline decoration-slate-300 underline-offset-4 transition hover:text-teal-700 dark:text-slate-400 dark:decoration-slate-600 dark:hover:text-teal-200">{t('examsHub.mixed.extended')}</button>}
+                {card.id === 'mixed' && <button type="button" onClick={() => onNavigate?.('mock')} className="mt-3 text-center text-xs font-semibold text-slate-500 underline decoration-slate-300 underline-offset-4 transition hover:text-teal-700 dark:text-slate-400 dark:decoration-slate-600 dark:hover:text-teal-200">{t('examsHub.mixed.extended')}</button>}
               </div>
             </article>
           )
         })}
+      </section>
+
+      <section className="mt-8" aria-labelledby="exam-task-list-heading">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-[.18em] text-teal-700 dark:text-teal-300">{t('examsHub.task.eyebrow')}</p>
+            <h2 id="exam-task-list-heading" className="mt-1 text-2xl font-black tracking-tight text-slate-950 dark:text-white">{t('examsHub.task.title')}</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300">{t('examsHub.task.subtitle')}</p>
+          </div>
+        </div>
+
+        <div role="tablist" aria-label={t('examsHub.task.categoryLabel')} className="mt-5 flex gap-2 overflow-x-auto pb-1">
+          {EXAM_TASK_CATEGORIES.map((category) => {
+            const Icon = TASK_ICONS[category.icon]
+            const selected = activeCategory === category.id
+            return (
+              <button
+                key={category.id}
+                id={`exam-category-tab-${category.id}`}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                aria-controls={`exam-category-panel-${category.id}`}
+                onClick={() => setActiveCategory(category.id)}
+                className={cn('inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-xs font-extrabold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400', selected ? 'border-teal-600 bg-gradient-to-r from-teal-700 to-cyan-600 text-white shadow-md shadow-teal-900/15' : 'border-slate-200 bg-white text-slate-700 hover:border-teal-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200')}
+              >
+                <Icon className="size-4" aria-hidden="true" />{t(category.titleKey)}
+              </button>
+            )
+          })}
+        </div>
+
+        <div id={`exam-category-panel-${activeCategory}`} role="tabpanel" aria-labelledby={`exam-category-tab-${activeCategory}`} className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {tasks.map((task) => {
+            const Icon = TASK_ICONS[task.type] || FileText
+            return (
+              <article key={task.id} className="flex min-w-0 flex-col rounded-2xl border border-slate-200/80 bg-white/85 p-4 shadow-sm transition hover:border-teal-300/70 hover:shadow-lg dark:border-slate-700/80 dark:bg-slate-900/80 sm:p-5">
+                <div className="flex items-start gap-3">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-teal-200/70 bg-teal-50 text-teal-800 dark:border-teal-300/15 dark:bg-teal-300/10 dark:text-teal-200"><Icon className="size-5" aria-hidden="true" /></span>
+                  <div className="min-w-0 flex-1"><h3 className="line-clamp-2 text-sm font-extrabold leading-5 text-slate-900 dark:text-white">{task.title}</h3><p className="mt-1 line-clamp-3 text-xs leading-5 text-slate-600 dark:text-slate-300">{task.description}</p></div>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-bold">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300"><Clock3 className="size-3.5" aria-hidden="true" />{t('common.minutes', { count: task.estimatedTimeMinutes })}</span>
+                  <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">{t('examsHub.task.itemCount', { count: task.totalQuestions })}</span>
+                  <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-800 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-200">{task.xpReward > 0 ? t('examsHub.task.xp', { count: task.xpReward }) : t('examsHub.task.fullXpOnly')}</span>
+                </div>
+                <button type="button" onClick={() => onStartTask ? onStartTask(task) : onNavigate?.(task.route)} className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-4 py-2.5 text-xs font-extrabold text-white shadow-md shadow-teal-950/15 transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400">
+                  {t('examsHub.task.start')}<ArrowRight className="size-4" aria-hidden="true" />
+                </button>
+              </article>
+            )
+          })}
+        </div>
       </section>
     </main>
   )

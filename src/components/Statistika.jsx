@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Activity, BookOpenText, CalendarDays, ChevronRight, Flame, Headphones, Mic, PenLine, Sparkles, Trophy, Zap } from 'lucide-react'
+import { Activity, BookOpenText, ChevronRight, Flame, Headphones, Mic, PenLine, Sparkles, Trophy } from 'lucide-react'
 import { loadTurkuazLearnedIds } from '../data/vocabulary'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
 const CATALOG_TOTAL = 1000
-const DEMO_SKILLS = [
-  { id: 'okuma', labelKey: 'nav.reading', icon: BookOpenText, completed: 15, total: 20, xp: 480, tone: 'blue' },
-  { id: 'dinleme', labelKey: 'nav.listening', icon: Headphones, completed: 12, total: 20, xp: 360, tone: 'cyan' },
-  { id: 'yazma', labelKey: 'nav.writing', icon: PenLine, completed: 9, total: 20, xp: 275, tone: 'emerald' },
-  { id: 'konusma', labelKey: 'nav.speaking', icon: Mic, completed: 7, total: 20, xp: 210, tone: 'violet' },
+const SKILLS = [
+  { id: 'okuma', labelKey: 'nav.reading', icon: BookOpenText, tone: 'blue' },
+  { id: 'dinleme', labelKey: 'nav.listening', icon: Headphones, tone: 'cyan' },
+  { id: 'yazma', labelKey: 'nav.writing', icon: PenLine, tone: 'emerald' },
+  { id: 'konusma', labelKey: 'nav.speaking', icon: Mic, tone: 'violet' },
 ]
 
 const SKILL_TONES = {
@@ -42,12 +42,6 @@ const SKILL_TONES = {
     border: 'border-violet-100 dark:border-violet-400/15',
   },
 }
-
-const DEMO_ACTIVITY = [
-  { id: 'writing', icon: PenLine, titleKey: 'statistika.activity.writing', tone: 'text-emerald-600 bg-emerald-50 dark:text-emerald-200 dark:bg-emerald-300/10' },
-  { id: 'vocabulary', icon: BookOpenText, titleKey: 'statistika.activity.vocabulary', tone: 'text-violet-600 bg-violet-50 dark:text-violet-200 dark:bg-violet-300/10' },
-  { id: 'listening', icon: Headphones, titleKey: 'statistika.activity.listening', tone: 'text-blue-600 bg-blue-50 dark:text-blue-200 dark:bg-blue-300/10' },
-]
 
 function getCatalogLearnedCount() {
   return loadTurkuazLearnedIds().filter((id) => {
@@ -122,46 +116,28 @@ export default function Statistika({ profile, stats = {}, progress = {}, isPremi
         </div>
       </section>
 
-      <aside className={cn('flex items-start gap-3 rounded-2xl border px-4 py-3.5 text-xs leading-relaxed sm:text-sm', isDark ? 'border-teal-300/20 bg-teal-300/[.08] text-teal-50/90' : 'border-cyan-200 bg-cyan-50/80 text-slate-800')}>
-        <Sparkles className="mt-0.5 size-4 shrink-0" />
-        <p><strong className="font-black">{t('statistika.demoLabel')}</strong> {t('statistika.demoDisclaimer')}</p>
-      </aside>
-
       <section className="space-y-4" aria-labelledby="statistika-skills-title">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className={cn('text-[10px] font-black uppercase tracking-[.18em]', isDark ? 'text-teal-200' : 'text-teal-700')}>{t('statistika.skillsEyebrow')}</p>
-            <h2 id="statistika-skills-title" className={cn('mt-1 text-xl font-black tracking-tight sm:text-2xl', isDark ? 'text-white' : 'text-slate-900')}>{t('statistika.skillsTitle')}</h2>
-          </div>
-          <span className={cn('rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider', isDark ? 'bg-white/[.06] text-white/55' : 'bg-slate-100 text-slate-500')}>{t('statistika.demoTag')}</span>
+        <div>
+          <p className={cn('text-[10px] font-black uppercase tracking-[.18em]', isDark ? 'text-teal-200' : 'text-teal-700')}>{t('statistika.skillsEyebrow')}</p>
+          <h2 id="statistika-skills-title" className={cn('mt-1 text-xl font-black tracking-tight sm:text-2xl', isDark ? 'text-white' : 'text-slate-900')}>{t('statistika.skillsTitle')}</h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {DEMO_SKILLS.map((skill, index) => {
+          {SKILLS.map((skill, index) => {
             const Icon = skill.icon
             const tone = SKILL_TONES[skill.tone]
-            const percent = Math.round((skill.completed / skill.total) * 100)
-            const actualPercent = Math.max(0, Math.min(100, Number(progress?.[skill.id]) || 0))
+            const percent = Math.round(Math.max(0, Math.min(100, Number(progress?.[skill.id]) || 0)))
             return (
               <article key={skill.id} className={cn('group rounded-3xl border p-4 transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-5', tone.border, isDark ? 'bg-slate-950/60 text-white hover:shadow-black/20' : 'bg-white text-slate-900 hover:shadow-slate-900/5')} style={{ transitionDelay: `${index * 45}ms` }}>
                 <div className="flex items-center gap-3">
                   <span className={cn('grid size-11 place-items-center rounded-2xl', tone.icon)}><Icon className="size-5" /></span>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-black">{t(skill.labelKey)}</h3>
-                    <span className={cn('mt-0.5 inline-flex rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider', isDark ? 'bg-white/[.06] text-white/45' : 'bg-slate-100 text-slate-500')}>{t('statistika.demoTag')}</span>
-                  </div>
+                  <h3 className="min-w-0 flex-1 truncate font-black">{t(skill.labelKey)}</h3>
                 </div>
                 <div className="mt-5 flex items-baseline justify-between gap-2">
-                  <span className="text-lg font-black tabular-nums">{formatNumber.format(skill.completed)}<span className={cn('mx-1 text-sm font-semibold', isDark ? 'text-white/45' : 'text-slate-400')}>/ {formatNumber.format(skill.total)}</span></span>
-                  <span className={cn('text-xs font-extrabold tabular-nums', tone.value)}>{percent}%</span>
+                  <span className={cn('text-lg font-black tabular-nums', tone.value)}>{formatNumber.format(percent)}%</span>
+                  <span className={cn('text-[11px] font-semibold', isDark ? 'text-white/50' : 'text-slate-500')}>{t('statistika.currentProgress')}</span>
                 </div>
-                <p className={cn('mt-0.5 text-[11px]', isDark ? 'text-white/50' : 'text-slate-500')}>{t('statistika.levelsCompleted')}</p>
-                <div role="progressbar" aria-label={t(skill.labelKey)} aria-valuemin={0} aria-valuemax={skill.total} aria-valuenow={skill.completed} aria-valuetext={t('statistika.progressAria', { completed: skill.completed, total: skill.total })} className={cn('mt-3 h-2.5 overflow-hidden rounded-full', tone.track)}>
+                <div role="progressbar" aria-label={t(skill.labelKey)} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('statistika.progressAria', { skill: t(skill.labelKey), percent: formatNumber.format(percent) })} className={cn('mt-3 h-2.5 overflow-hidden rounded-full', tone.track)}>
                   <div className={cn('h-full rounded-full bg-gradient-to-r transition-[width] duration-1000 ease-out motion-reduce:transition-none', tone.fill)} style={{ width: mounted ? `${percent}%` : '0%' }} />
-                </div>
-                <p className={cn('mt-2 text-[10px]', isDark ? 'text-white/45' : 'text-slate-500')}>{t('statistika.actualProgress', { percent: formatNumber.format(actualPercent) })}</p>
-                <div className={cn('mt-3 flex items-center justify-between border-t pt-3', isDark ? 'border-white/[.08]' : 'border-slate-100')}>
-                  <span className={cn('inline-flex items-center gap-1.5 text-xs font-semibold', isDark ? 'text-white/55' : 'text-slate-500')}><Zap className={cn('size-3.5', isDark ? 'text-cyan-200' : 'text-teal-700')} />{t('statistika.skillXp')}</span>
-                  <strong className="text-sm font-black tabular-nums">{formatNumber.format(skill.xp)} XP</strong>
                 </div>
               </article>
             )
@@ -205,26 +181,14 @@ export default function Statistika({ profile, stats = {}, progress = {}, isPremi
       </section>
 
       <section className={cn('rounded-3xl border p-4 sm:p-6', isDark ? 'border-white/10 bg-slate-950/70 text-white' : 'border-slate-200 bg-white text-slate-900')}>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className={cn('text-[10px] font-black uppercase tracking-[.18em]', isDark ? 'text-blue-200' : 'text-blue-700')}>{t('statistika.activityEyebrow')}</p>
-            <h2 className="mt-1 text-xl font-black tracking-tight sm:text-2xl">{t('statistika.activityTitle')}</h2>
-          </div>
-          <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider', isDark ? 'bg-white/[.06] text-white/55' : 'bg-slate-100 text-slate-500')}><CalendarDays className="size-3.5" />{t('statistika.demoTag')}</span>
+        <div>
+          <p className={cn('text-[10px] font-black uppercase tracking-[.18em]', isDark ? 'text-blue-200' : 'text-blue-700')}>{t('statistika.activityEyebrow')}</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight sm:text-2xl">{t('statistika.activityTitle')}</h2>
         </div>
-        <ol className="relative space-y-3 before:absolute before:bottom-5 before:left-[19px] before:top-5 before:w-px before:bg-slate-200 dark:before:bg-white/10">
-          {DEMO_ACTIVITY.map((item) => {
-            const Icon = item.icon
-            return (
-              <li key={item.id} className={cn('relative flex items-center gap-3 rounded-2xl border p-3 sm:gap-4 sm:p-4', isDark ? 'border-white/[.07] bg-white/[.025]' : 'border-slate-100 bg-slate-50/70')}>
-                <span className={cn('z-10 grid size-10 shrink-0 place-items-center rounded-xl', item.tone)}><Icon className="size-[18px]" /></span>
-                <p className="min-w-0 flex-1 text-sm font-bold leading-relaxed">{t(item.titleKey)}</p>
-                <span className={cn('shrink-0 rounded-full px-2 py-1 text-[9px] font-black uppercase tracking-wider', isDark ? 'bg-white/[.06] text-white/40' : 'bg-white text-slate-400')}>{t('statistika.demoTag')}</span>
-              </li>
-            )
-          })}
-        </ol>
-        <p className={cn('mt-3 flex items-start gap-2 text-[11px] leading-relaxed', isDark ? 'text-white/45' : 'text-slate-500')}><Activity className="mt-0.5 size-3.5 shrink-0" />{t('statistika.activityDisclaimer')}</p>
+        <div className={cn('mt-4 flex items-center gap-3 rounded-2xl border p-4 text-sm', isDark ? 'border-white/[.07] bg-white/[.025] text-white/55' : 'border-slate-100 bg-slate-50/70 text-slate-500')}>
+          <Activity className="size-5 shrink-0" aria-hidden="true" />
+          <p>{t('statistika.activityEmpty')}</p>
+        </div>
         {navigate && <button type="button" onClick={() => navigate('home')} className={cn('mt-4 inline-flex items-center gap-1 text-xs font-extrabold transition hover:gap-2', isDark ? 'text-teal-200' : 'text-teal-800')}>{t('statistika.backDashboard')}<ChevronRight className="size-4" /></button>}
       </section>
     </main>

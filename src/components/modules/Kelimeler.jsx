@@ -1,11 +1,13 @@
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { BookmarkPlus, BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleHelp, Plus, RotateCcw, Search, Trash2 } from 'lucide-react'
 import TURKUAZ_LUGAT_DATA from '../../data/turkuaz_lugat.json'
-import { STARTER_VOCABULARY, claimVocabularyXpForWord, createVocabularyWord, loadSavedVocabulary, loadTurkuazLearnedIds, normalizeWordKey, saveTurkuazLearnedIds, saveVocabularyState } from '../../data/vocabulary'
+import { STARTER_VOCABULARY, createVocabularyWord, loadSavedVocabulary, loadTurkuazLearnedIds, normalizeWordKey, saveTurkuazLearnedIds, saveVocabularyState } from '../../data/vocabulary'
 import { cn } from '../../lib/utils'
 import { useI18n } from '../../lib/i18n.jsx'
 
 const PAGE_SIZE = 20
+const VOCABULARY_BATCH_MINIMUM = 20
+const VOCABULARY_BATCH_MINIMUM_MS = 10_000
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']
 const CATALOG_WORDS = TURKUAZ_LUGAT_DATA.map((item, index) => ({
   id: `lugat-${index + 1}`,
@@ -85,7 +87,7 @@ export function Flashcard({ word, language = 'uz', flipped, onFlip, dark = false
   )
 }
 
-export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQuestWord, isPremium = false, dark = false }) {
+export default function Kelimeler({ onSavedWordsChange, onBatchComplete, onNewQuestWord, onToast, isPremium = false, dark = false }) {
   const { language, t } = useI18n()
   const isDark = Boolean(isPremium || dark)
   const [words, setWords] = useState(loadSavedVocabulary)
@@ -99,6 +101,7 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
   const deferredSearchQuery = useDeferredValue(searchQuery)
   const [levelFilter, setLevelFilter] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const practiceBatchRef = useRef(null)
 
   const uniqueSavedCount = useMemo(() => new Set(words.map((word) => normalizeWordKey(word.tr))).size, [words])
   const learnedCount = useMemo(() => words.filter((word) => word.learned).length, [words])
@@ -177,42 +180,57 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
 
   const markLearned = () => {
     if (!current) return
+    const batch = practiceBatchRef.current || {
+      wordIds: queue.slice(0, VOCABULARY_BATCH_MINIMUM),
+      learnedIds: [],
+      newlyLearnedIds: [],
+      startedAt: Date.now(),
+    }
+    if (!practiceBatchRef.current) practiceBatchRef.current = batch
+    if (!batch.learnedIds.includes(current.id)) batch.learnedIds.push(current.id)
+
     if (!current.learned) {
       setWords((previous) => previous.map((word) => word.id === current.id ? { ...word, learned: true } : word))
-      if (claimVocabularyXpForWord(current.tr)) onWordLearned?.(current)
-      onNewQuestWord?.(current.tr)
+      batch.newlyLearnedIds.push(current.id)
     }
+
+    const finishesDeck = batch.wordIds.length > 0 && batch.wordIds.every((wordId) => batch.learnedIds.includes(wordId))
+    if (finishesDeck) {
+      const elapsedMs = Date.now() - batch.startedAt
+      if (batch.wordIds.length >= VOCABULARY_BATCH_MINIMUM && batch.learnedIds.length >= batch.wordIds.length) {
+        if (elapsedMs < VOCABULARY_BATCH_MINIMUM_MS) {
+          const message = t('words.batch.tooFast')
+          setNotice(message)
+          onToast?.(message, 'default')
+        } else {
+          batch.newlyLearnedIds.forEach((wordId) => {
+            const word = words.find((item) => item.id === wordId)
+            if (word) onNewQuestWord?.(word.tr)
+          })
+          const awarded = onBatchComplete?.(15, 'vocabulary:deck')
+          const message = awarded === false ? t('words.batch.limit') : t('words.batch.completed', { count: batch.wordIds.length })
+          setNotice(message)
+          if (awarded === false) onToast?.(message, 'default')
+        }
+      } else if (batch.wordIds.length < VOCABULARY_BATCH_MINIMUM) {
+        setNotice(t('words.batch.minimum', { count: VOCABULARY_BATCH_MINIMUM }))
+      }
+      practiceBatchRef.current = null
+    }
+
     setQueue((previous) => previous.slice(1))
     setFlipped(false)
   }
 
   const markCatalogWordLearned = (entry) => {
-    const termKey = normalizeWordKey(entry.word)
     const alreadyLearned = learnedIdSet.has(entry.id)
     if (alreadyLearned) return
 
     const nextLearnedIds = [...learnedCatalogIds, entry.id]
     setLearnedCatalogIds(nextLearnedIds)
     saveTurkuazLearnedIds(nextLearnedIds)
-    setWords((previous) => {
-      const existingIndex = previous.findIndex((word) => normalizeWordKey(word.tr) === termKey)
-      if (existingIndex >= 0) return previous.map((word, index) => index === existingIndex ? { ...word, learned: true } : word)
-      return [...previous, {
-        id: `catalog-saved-${entry.id}`,
-        tr: entry.word,
-        uz: entry.translation,
-        en: entry.english,
-        learned: true,
-      }]
-    })
-
-    const learnedWord = { tr: entry.word, uz: entry.translation, en: entry.english, learned: true }
-    const earnedXp = claimVocabularyXpForWord(entry.word)
-    if (earnedXp) {
-      onWordLearned?.(learnedWord)
-      onNewQuestWord?.(entry.word)
-    }
-    setNotice(t(earnedXp ? 'words.catalog.learnedReward' : 'words.catalog.learnedNoReward', { word: entry.word }))
+    // Catalogue learning stays separate from personal saved words and XP quests.
+    setNotice(t('words.catalog.learnedNoReward', { word: entry.word }))
   }
 
   const reviewAgain = () => {
@@ -304,7 +322,7 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
         </div>
 
         {visibleCatalog.length > 0 ? (
-          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {visibleCatalog.map((entry) => {
               const isLearned = learnedIdSet.has(entry.id)
               return (
@@ -329,7 +347,6 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
                   >
                     {isLearned ? <CheckCircle2 className="size-4" /> : <Check className="size-4" />}
                     {t(isLearned ? 'words.catalog.learned' : 'words.catalog.markLearned')}
-                    {!isLearned && <span className="text-xs text-white/80">+5 XP</span>}
                   </button>
                 </li>
               )
@@ -343,11 +360,11 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
         )}
 
         <nav className="mt-5 flex items-center justify-between gap-3" aria-label={t('words.catalog.pagination')}>
-          <button type="button" disabled={currentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} className={cn('inline-flex min-h-10 items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
+          <button type="button" disabled={currentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} className={cn('inline-flex min-h-11 min-w-[44px] items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
             <ChevronLeft className="size-4" />{t('words.catalog.previous')}
           </button>
           <span className={cn('text-xs font-semibold tabular-nums', muted)}>{t('words.catalog.pageOf', { page: currentPage, pages: totalPages })}</span>
-          <button type="button" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} className={cn('inline-flex min-h-10 items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
+          <button type="button" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} className={cn('inline-flex min-h-11 min-w-[44px] items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
             {t('words.catalog.next')}<ChevronRight className="size-4" />
           </button>
         </nav>
@@ -363,22 +380,22 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
         {current ? (
           <div className="mx-auto max-w-2xl">
             <Flashcard word={current} language={language} flipped={flipped} onFlip={() => setFlipped((value) => !value)} dark={isDark} />
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               <button type="button" onClick={reviewAgain} className={cn('min-h-16 rounded-2xl border-2 px-5 py-4 text-base font-black transition hover:-translate-y-0.5 active:scale-[.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/20', isDark ? 'border-amber-300/25 bg-amber-300/[.06] text-amber-100 hover:bg-amber-300/10' : 'border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100')}>
                 <RotateCcw className="mr-2 inline size-5" />{t('words.reviewAgain')}
               </button>
               <button type="button" onClick={markLearned} className="min-h-16 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-4 text-base font-black text-white shadow-lg shadow-emerald-900/15 transition hover:-translate-y-0.5 hover:from-emerald-700 hover:to-teal-700 active:scale-[.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/25">
-                <Check className="mr-2 inline size-5" />{t('words.gotIt')} <span className="ml-1 text-sm text-white/80">+5 XP</span>
+                <Check className="mr-2 inline size-5" />{t('words.gotIt')}
               </button>
             </div>
-            <p className={cn('mt-3 text-center text-xs', muted)}>{t('words.rewardOnce')}</p>
+            <p className={cn('mt-3 text-center text-xs', muted)}>{t('words.batch.rewardHint', { count: VOCABULARY_BATCH_MINIMUM, xp: 15 })}</p>
           </div>
         ) : words.length > 0 ? (
           <div className={cn('rounded-2xl border border-dashed p-8 text-center', isDark ? 'border-white/15 bg-white/[.02]' : 'border-slate-200 bg-slate-50/60')}>
             <CheckCircle2 className={cn('mx-auto size-9', isDark ? 'text-emerald-200' : 'text-emerald-600')} />
             <h3 className="mt-3 text-lg font-black">{t('words.practice.complete')}</h3>
             <p className={cn('mx-auto mt-1 max-w-md text-sm', muted)}>{t('words.practice.completeHint')}</p>
-            <button type="button" onClick={restartPractice} className="mt-4 rounded-xl bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-teal-800"><RotateCcw className="mr-2 inline size-4" />{t('words.practice.restart')}</button>
+            <button type="button" onClick={() => { practiceBatchRef.current = null; restartPractice() }} className="mt-4 rounded-xl bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-teal-800"><RotateCcw className="mr-2 inline size-4" />{t('words.practice.restart')}</button>
           </div>
         ) : (
           <div className={cn('rounded-2xl border border-dashed p-8 text-center', isDark ? 'border-white/15 bg-white/[.02]' : 'border-slate-200 bg-slate-50/60')}>
@@ -405,23 +422,23 @@ export default function Kelimeler({ onSavedWordsChange, onWordLearned, onNewQues
 
       <section className={cn('rounded-3xl border p-4 sm:p-6', panel)}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-black">{t('words.saved.title')}</h2><p className={cn('mt-1 text-xs', muted)}>{t('words.saved.subtitle')}</p></div><button type="button" onClick={saveAllStarterWords} className={cn('rounded-xl border px-3 py-2 text-xs font-extrabold transition', isDark ? 'border-white/10 bg-white/[.04] text-white hover:bg-white/10' : 'border-teal-100 bg-teal-50 text-teal-800 hover:bg-teal-100')}><BookmarkPlus className="mr-1.5 inline size-4" />{t('words.saved.addAll')}</button></div>
-        {words.length > 0 ? <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {words.length > 0 ? <ul className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
           {words.map((word) => <li key={word.id} className={cn('flex min-w-0 items-center gap-2 rounded-xl border px-3 py-2.5', isDark ? 'border-white/10 bg-white/[.03]' : 'border-slate-100 bg-slate-50')}>
             <button type="button" onClick={() => { setQueue((previous) => previous.includes(word.id) ? previous : [...previous, word.id]); setFlipped(false) }} className="min-w-0 flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/30"><span lang="tr" className="block truncate text-sm font-black">{word.tr}</span><span className={cn('block truncate text-xs', muted)}>{language === 'uz' ? word.uz || word.en : word.en || word.uz}</span></button>
             {word.learned && <CheckCircle2 className="size-4 shrink-0 text-emerald-500" aria-label={t('words.learned')} />}
-            <button type="button" onClick={() => removeSavedWord(word.id)} aria-label={t('words.saved.remove', { word: word.tr })} className={cn('grid size-8 shrink-0 place-items-center rounded-lg transition', isDark ? 'text-white/45 hover:bg-rose-400/10 hover:text-rose-200' : 'text-slate-400 hover:bg-rose-50 hover:text-rose-600')}><Trash2 className="size-4" /></button>
+            <button type="button" onClick={() => removeSavedWord(word.id)} aria-label={t('words.saved.remove', { word: word.tr })} className={cn('grid size-11 shrink-0 place-items-center rounded-lg transition active:scale-95', isDark ? 'text-white/45 hover:bg-rose-400/10 hover:text-rose-200' : 'text-slate-400 hover:bg-rose-50 hover:text-rose-600')}><Trash2 className="size-4" /></button>
           </li>)}
         </ul> : <p className={cn('rounded-xl border border-dashed p-5 text-center text-sm', isDark ? 'border-white/10 text-white/55' : 'border-slate-200 text-slate-500')}>{t('words.saved.empty')}</p>}
       </section>
 
       <section className={cn('rounded-3xl border p-4 sm:p-6', panel)}>
         <div className="mb-4"><h2 className="text-lg font-black">{t('words.starters.title')}</h2><p className={cn('mt-1 text-xs', muted)}>{t('words.starters.subtitle')}</p></div>
-        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
           {STARTER_VOCABULARY.map((word) => {
             const saved = words.some((item) => normalizeWordKey(item.tr) === normalizeWordKey(word.tr))
             return <li key={word.id} className={cn('flex items-center gap-3 rounded-xl border px-3 py-2.5', isDark ? 'border-white/10 bg-white/[.03]' : 'border-slate-100 bg-slate-50')}>
               <span className="min-w-0 flex-1"><span lang="tr" className="block truncate text-sm font-black">{word.tr}</span><span className={cn('block truncate text-xs', muted)}>{language === 'uz' ? word.uz : word.en}</span></span>
-              <button type="button" disabled={saved} onClick={() => saveStarterWord(word)} aria-label={t(saved ? 'words.starters.saved' : 'words.starters.save', { word: word.tr })} className={cn('grid size-9 shrink-0 place-items-center rounded-xl transition disabled:cursor-default', saved ? isDark ? 'bg-emerald-300/10 text-emerald-200' : 'bg-emerald-50 text-emerald-700' : isDark ? 'bg-teal-300/10 text-teal-100 hover:bg-teal-300/20' : 'bg-teal-50 text-teal-800 hover:bg-teal-100')}>
+              <button type="button" disabled={saved} onClick={() => saveStarterWord(word)} aria-label={t(saved ? 'words.starters.saved' : 'words.starters.save', { word: word.tr })} className={cn('grid size-11 shrink-0 place-items-center rounded-xl transition active:scale-95 disabled:cursor-default', saved ? isDark ? 'bg-emerald-300/10 text-emerald-200' : 'bg-emerald-50 text-emerald-700' : isDark ? 'bg-teal-300/10 text-teal-100 hover:bg-teal-300/20' : 'bg-teal-50 text-teal-800 hover:bg-teal-100')}>
                 {saved ? <Check className="size-4" /> : <BookmarkPlus className="size-4" />}
               </button>
             </li>

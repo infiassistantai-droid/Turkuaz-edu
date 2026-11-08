@@ -20,7 +20,8 @@ import { cn } from '../../lib/utils'
 import { useI18n } from '../../lib/i18n.jsx'
 
 const SPEAKING_PROGRESS_PREFIX = 'turkuaz-edu-speaking-recording-progress-v1:'
-const COMPLETION_XP = 35
+const COMPLETION_XP = 40
+const MIN_RECORDING_SECONDS = 5
 const PARTS = [
   { key: 'part_1', labelKey: 'konusma.part.part1' },
   { key: 'part_2', labelKey: 'konusma.part.part2' },
@@ -74,6 +75,7 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [recordingPart, setRecordingPart] = useState(null)
   const [requestingMicrophone, setRequestingMicrophone] = useState(false)
+  const [microphoneStatus, setMicrophoneStatus] = useState('idle')
   const [recordingError, setRecordingError] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [xpGrantedThisRun, setXpGrantedThisRun] = useState(false)
@@ -86,6 +88,7 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
   const mountedRef = useRef(true)
   const submitGuardRef = useRef(false)
   const recordingSecondsRef = useRef(0)
+  const recordingStartedAtRef = useRef(0)
 
   const selectedExam = useMemo(
     () => EXAMS.find((exam) => exam.exam_number === selectedExamNumber) || null,
@@ -101,6 +104,7 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
     ? recordings.part_2 ? 2 : 1
     : 0
   const hasAllRecordings = PARTS.every(({ key }) => Boolean(recordings[key]?.url))
+  const hasQualifiedRecordings = PARTS.every(({ key }) => Boolean(recordings[key]?.url) && Number(recordings[key]?.durationSeconds) >= MIN_RECORDING_SECONDS)
   const busy = Boolean(recordingPart || requestingMicrophone || preparationRunning)
 
   useEffect(() => {
@@ -177,6 +181,8 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
 
   function openExam(examNumber) {
     if (busy) return
+    releaseStream()
+    setMicrophoneStatus('idle')
     clearRecordings()
     setSelectedExamNumber(examNumber)
     setCurrentStep(0)
@@ -195,6 +201,8 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
 
   function returnToExamLibrary() {
     if (busy) return
+    releaseStream()
+    setMicrophoneStatus('idle')
     clearRecordings()
     setSelectedExamNumber(null)
     setCurrentStep(0)
@@ -205,6 +213,8 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
 
   function goToStep(index) {
     if (busy || submitted || index < 0 || index > lastUnlockedStep) return
+    releaseStream()
+    setMicrophoneStatus('idle')
     setCurrentStep(index)
     setRecordingError('')
   }
@@ -216,35 +226,65 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
     setPreparationRunning(true)
   }
 
+  async function requestMicrophonePermission() {
+    if (!selectedExam || submitted || recordingPart || requestingMicrophone || recordings[currentPart.key]) return
+    setRecordingError('')
+
+    if (!window.isSecureContext) {
+      setRecordingError('konusma.record.secureContext')
+      return
+    }
+    if (!navigator.mediaDevices?.getUserMedia || typeof window.MediaRecorder === 'undefined') {
+      setRecordingError('konusma.record.notSupported')
+      return
+    }
+
+    setMicrophoneStatus('prompting')
+    setRequestingMicrophone(true)
+    let pendingStream
+    try {
+      pendingStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      if (!mountedRef.current) {
+        pendingStream.getTracks().forEach((track) => track.stop())
+        return
+      }
+      releaseStream()
+      streamRef.current = pendingStream
+      setMicrophoneStatus('ready')
+    } catch (error) {
+      pendingStream?.getTracks().forEach((track) => track.stop())
+      if (streamRef.current === pendingStream) streamRef.current = null
+      const errorName = error && typeof error === 'object' ? error.name : ''
+      const denied = ['NotAllowedError', 'PermissionDeniedError'].includes(errorName)
+      if (mountedRef.current) {
+        setMicrophoneStatus(denied ? 'denied' : 'idle')
+        setRecordingError(getPermissionErrorKey(error))
+      }
+    } finally {
+      if (mountedRef.current) setRequestingMicrophone(false)
+    }
+  }
+
   async function startRecording() {
     if (!selectedExam || submitted || recordingPart || requestingMicrophone || recordings[currentPart.key]) return
     if (currentStep === 1 && !preparationReady) {
       setRecordingError('konusma.prep.required')
       return
     }
-    setRecordingError('')
-
-    if (!navigator.mediaDevices?.getUserMedia || typeof window.MediaRecorder === 'undefined') {
-      setRecordingError('konusma.record.notSupported')
+    const stream = streamRef.current
+    if (!stream) {
+      setMicrophoneStatus('idle')
       return
     }
+    setRecordingError('')
 
-    setRequestingMicrophone(true)
-    let stream
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      if (!mountedRef.current) {
-        stream.getTracks().forEach((track) => track.stop())
-        return
-      }
-
       const Recorder = window.MediaRecorder
       const supportedMime = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4']
         .find((mimeType) => typeof Recorder.isTypeSupported === 'function' && Recorder.isTypeSupported(mimeType))
       const recorder = supportedMime
         ? new Recorder(stream, { mimeType: supportedMime })
         : new Recorder(stream)
-      streamRef.current = stream
       chunksRef.current = []
       discardRecordingRef.current = false
       recorderRef.current = recorder
@@ -262,6 +302,7 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
         releaseStream()
         recorderRef.current = null
         setRecordingPart(null)
+        setMicrophoneStatus('idle')
         if (discardRecordingRef.current) {
           discardRecordingRef.current = false
           return
@@ -272,26 +313,30 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
         }
 
         const url = URL.createObjectURL(blob)
+        const durationSeconds = Math.max(recordingSecondsRef.current, Math.floor((Date.now() - recordingStartedAtRef.current) / 1000))
         const nextRecordings = {
           ...recordingsRef.current,
-          [currentPart.key]: { blob, url, mimeType: blob.type, durationSeconds: recordingSecondsRef.current },
+          [currentPart.key]: { blob, url, mimeType: blob.type, durationSeconds },
         }
         replaceRecordings(nextRecordings)
-        setRecordingError('')
+        setRecordingError(durationSeconds < MIN_RECORDING_SECONDS ? 'konusma.record.minimumDuration' : '')
       }
 
       recordingSecondsRef.current = 0
+      recordingStartedAtRef.current = Date.now()
       setElapsedSeconds(0)
       if (currentStep === 1) setSpeechSeconds(120)
       recorder.start(250)
       setRecordingPart(currentPart.key)
-    } catch (error) {
-      stream?.getTracks().forEach((track) => track.stop())
-      streamRef.current = null
+      setMicrophoneStatus('recording')
+    } catch {
+      stream.getTracks().forEach((track) => track.stop())
+      if (streamRef.current === stream) streamRef.current = null
       recorderRef.current = null
-      if (mountedRef.current) setRecordingError(getPermissionErrorKey(error))
-    } finally {
-      if (mountedRef.current) setRequestingMicrophone(false)
+      if (mountedRef.current) {
+        setMicrophoneStatus('idle')
+        setRecordingError('konusma.record.failed')
+      }
     }
   }
 
@@ -324,7 +369,7 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
   }
 
   function submitExam() {
-    if (!selectedExam || !hasAllRecordings || !hasPreviousPartRecording || submitted || submitGuardRef.current) return
+    if (!selectedExam || !hasAllRecordings || !hasQualifiedRecordings || !hasPreviousPartRecording || submitted || submitGuardRef.current) return
     submitGuardRef.current = true
     const completionId = `exam-${selectedExam.exam_number}`
     const knownCompletions = [...new Set([...completedExamIds, ...readCompletedExams(progressStorageKey)])]
@@ -339,7 +384,7 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
         // State still marks this completion for the current session.
       }
       setXpGrantedThisRun(true)
-      onComplete?.(COMPLETION_XP)
+      onComplete?.(COMPLETION_XP, `speaking:exam-${selectedExam.exam_number}`)
     }
     setSubmitted(true)
   }
@@ -396,7 +441,8 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
     ? speechSeconds
     : recordingPart ? elapsedSeconds : currentRecording?.durationSeconds || 0
   const canStartRecording = !submitted && !currentRecording && !recordingPart && !requestingMicrophone && (!isPartTwo || preparationReady)
-  const canContinue = Boolean(currentRecording) && currentStep < 2 && currentStep < lastUnlockedStep && !busy
+  const canRequestMicrophone = !submitted && !currentRecording && !recordingPart && !requestingMicrophone
+  const canContinue = Boolean(currentRecording) && Number(currentRecording?.durationSeconds) >= MIN_RECORDING_SECONDS && currentStep < 2 && currentStep < lastUnlockedStep && !busy
   const isExamComplete = submitted
 
   return (
@@ -532,15 +578,21 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
             </div>
             {isPartTwo && <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"><div className="h-full rounded-full bg-teal-600 transition-[width] dark:bg-teal-400" style={{ width: `${Math.min(100, ((recordingPart === 'part_2' ? 120 - speechSeconds : currentRecording?.durationSeconds || 0) / 120) * 100)}%` }} /></div>}
 
-            {recordingError && <p className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200" role="alert">{t(recordingError)}</p>}
+            {microphoneStatus === 'denied' && recordingError === 'konusma.record.permissionDenied' ? (
+              <p className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200" role="alert">{t('konusma.record.permissionDenied')}</p>
+            ) : recordingError ? (
+              <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/30 dark:text-amber-200" role="status">{t(recordingError)}</p>
+            ) : null}
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {recordingPart === currentPart.key ? (
-                <button type="button" onClick={stopRecording} className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-rose-700 px-5 py-3 text-sm font-extrabold text-white hover:bg-rose-800"><Square className="size-4 fill-current" aria-hidden="true" />{t('konusma.record.stop')}</button>
-              ) : requestingMicrophone ? (
-                <button type="button" disabled className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-slate-400 px-5 py-3 text-sm font-bold text-white"><Mic className="size-4 animate-pulse" aria-hidden="true" />{t('konusma.record.requesting')}</button>
+                <button type="button" onClick={stopRecording} className="inline-flex min-h-12 min-w-[44px] items-center gap-2 rounded-lg bg-rose-700 px-5 py-3 text-sm font-extrabold text-white transition active:scale-95 active:bg-rose-800 hover:bg-rose-800"><Square className="size-4 fill-current" aria-hidden="true" />{t('konusma.record.stop')}</button>
+              ) : requestingMicrophone || microphoneStatus === 'prompting' ? (
+                <button type="button" disabled className="inline-flex min-h-12 min-w-[44px] items-center gap-2 rounded-lg bg-slate-400 px-5 py-3 text-sm font-bold text-white"><Mic className="size-4 animate-pulse" aria-hidden="true" />{t('konusma.record.requesting')}</button>
+              ) : !currentRecording && microphoneStatus !== 'ready' ? (
+                <button type="button" onClick={requestMicrophonePermission} disabled={!canRequestMicrophone} className="inline-flex min-h-12 min-w-[44px] items-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition active:scale-95 active:bg-teal-800 hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"><Mic className="size-5" aria-hidden="true" />{t('konusma.record.allow')}</button>
               ) : !currentRecording ? (
-                <button type="button" onClick={startRecording} disabled={!canStartRecording} className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-extrabold text-white hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"><Mic className="size-5" aria-hidden="true" />{t('konusma.record.start')}</button>
+                <button type="button" onClick={startRecording} disabled={!canStartRecording} className="inline-flex min-h-12 min-w-[44px] items-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition active:scale-95 active:bg-teal-800 hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"><Mic className="size-5" aria-hidden="true" />{t('konusma.record.start')}</button>
               ) : (
                 <button type="button" onClick={() => deleteRecording(currentPart.key)} disabled={busy || submitted} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-teal-700 px-4 py-2.5 text-sm font-bold text-teal-800 hover:bg-teal-50 disabled:opacity-50 dark:border-teal-400 dark:text-teal-200 dark:hover:bg-teal-950/40"><RotateCcw className="size-4" aria-hidden="true" />{t('konusma.record.rerecord')}</button>
               )}
@@ -560,9 +612,9 @@ export default function KonusmaModule({ onComplete, profileId = 'local' }) {
                 <button type="button" onClick={() => goToStep(currentStep + 1)} disabled={!canContinue} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-400">{t('konusma.next')}<ArrowRight className="size-4" aria-hidden="true" /></button>
               ) : (
                 <div className="flex flex-col items-end gap-2">
-                  {hasAllRecordings
-                    ? <button type="button" onClick={submitExam} disabled={busy || submitted} className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-extrabold text-white hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"><Send className="size-4" aria-hidden="true" />{submitted ? t('konusma.submit.done') : t('konusma.submit')}</button>
-                    : <p className="text-xs text-slate-500 dark:text-slate-400">{t('konusma.submit.hint')}</p>}
+                  {hasAllRecordings && hasQualifiedRecordings
+                    ? <button type="button" onClick={submitExam} disabled={busy || submitted} className="inline-flex min-h-12 min-w-[44px] items-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition active:scale-95 active:bg-teal-800 hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-teal-500 dark:text-slate-950 dark:hover:bg-teal-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-400"><Send className="size-4" aria-hidden="true" />{submitted ? t('konusma.submit.done') : t('konusma.submit')}</button>
+                    : <p className="text-xs text-slate-500 dark:text-slate-400">{hasAllRecordings ? t('konusma.record.minimumDuration') : t('konusma.submit.hint')}</p>}
                 </div>
               )}
             </div>

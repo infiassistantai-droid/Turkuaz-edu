@@ -17,15 +17,17 @@ The publishable/anon key is intended for browser use only when Row Level Securit
 
 ## 2. Apply the database schema
 
-Open the Supabase project's **SQL Editor**, paste the complete [`schema.sql`](./schema.sql), and run it. The script is repeatable and preserves the existing `user_progress` table and leaderboard integration while adding the cloud profile and gamification tables below.
+Open the Supabase project's **SQL Editor**, paste the complete [`schema.sql`](./schema.sql), and run it. The script is repeatable and preserves the existing `user_progress` table and leaderboard integration while adding the cloud profile and gamification tables below. If the rest of the schema is already installed, run the focused [`profiles-xp.sql`](./profiles-xp.sql) migration instead. To enable the centralized, task-limited XP award RPC, run [`xp-awards.sql`](./xp-awards.sql) in the SQL Editor (also included in the current full schema and focused profiles-XP script). To enable the in-app Notifications dropdown and Postgres Changes updates, run [`notifications.sql`](./notifications.sql) in the SQL Editor.
 
 | Table | Per-user data |
 | --- | --- |
-| `profiles` | Full name, avatar URL, current streak, total XP, calculated level and stable rank ID (`rank_title`). |
+| `profiles` | Auth-linked profile (`id`), compatibility `user_id`, full name, avatar URL, total XP, rating tier, current streak, calculated level, and stable rank ID (`rank_title`). |
 | `user_streaks` | Current streak, last active date, unlocked streak-milestone values, and winter-season study-day progress. |
 | `user_achievements` | Earned trophy ID, unlock date, and reward/historical metadata. |
 | `user_vocabulary` | Saved Turkish word, Uzbek translation, and optional lesson ID. |
 | `user_progress` | Existing app counters and learning analytics, including XP, streak, weekly XP, lesson completions, per-test module scores, and quest state. |
+| `xp_awards` | Restricted server-side XP award ledger enforcing no more than two awards per user/task type per database day. |
+| `notifications` | Per-user notification title/message/type, read state, and creation time; client reads and updates are restricted by RLS. |
 
 Each table is keyed to `auth.users`; RLS is enabled and policies restrict each signed-in learner to their own rows. The existing leaderboard RPC continues to expose only its public ranking fields.
 
@@ -43,7 +45,7 @@ Without configured credentials, the app remains in local-only mode. No XP, strea
 
 ## 5. Notes
 
-- The app's XP and rank level are derived from the learner's actual XP (`500 XP` per level); `rank_title` stores the stable rank ID, not a localized label.
+- XP changes use the authenticated `award_profile_xp` RPC, which updates `profiles.total_xp` atomically and allows at most two awards per user/task type per database day. The legacy arbitrary-amount `add_profile_xp` RPC is revoked for browser roles. The profile's `rating_tier` is recalculated atomically: Bronze below 1,000 XP, Silver from 1,000 XP, and Gold from 2,500 XP. The app's learner level remains derived from XP (`500 XP` per level); `rank_title` stores the stable rank ID, not a localized label.
 - Trophy achievements are append-only unlock records. Historical unlocks remain marked as historical and are not granted retroactive XP.
-- Daily Quests remain local progress indicators; claiming them does not create cloud XP rewards.
-- Browser notification reminders are local and do not provide background push delivery while the browser is closed.
+- XP is awarded for completed learning actions, not personal-plan checkboxes. Daily vocabulary quest progress is credited only after a qualified vocabulary deck is completed; its separate claim remains tied to actual activity.
+- In-app notification rows are inserted only by trusted server-side code. The browser can select its own notifications, mark only `is_read`, and receives live inserts/updates while the app is connected. This is an in-app feed, not background push delivery while the browser is closed.

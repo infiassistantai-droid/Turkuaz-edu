@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { calculateCertificate, scoreSection, scoreSpeakingParts, scoreWritingTasks } from '../lib/multilevelScoring'
 import { generateMockExam } from '../data/mockExamBank'
+import { MOCK_01 } from '../data/mockDatabase'
 import ReadingMockExam from './MockExam.tsx'
 import MockExamEngine from './DatabaseMockExamEngine.tsx'
 import { cn } from '../lib/utils'
@@ -78,7 +79,7 @@ function evaluateWriting(text, prompt) {
   }
 }
 
-export default function MockExam({ sectionResults = {}, onSectionComplete, onExamComplete, initialMode = 'mixed', onExit }) {
+export default function MockExam({ sectionResults = {}, onSectionComplete, onExamComplete, initialMode = 'mixed', initialSection = null, onInitialSectionConsumed, onExit }) {
   const { t } = useI18n()
   const [mock, setMock] = useState(null)
   const [screen, setScreen] = useState('landing')
@@ -123,13 +124,31 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
           sectionResults: next,
           overallScore: certificate.average,
           level: certificate.level,
-          earnedXp: SECTION_KEYS.reduce((sum, key) => sum + next[key].earnedXp, 0),
+          timeSpentSeconds: SECTION_KEYS.reduce((sum, key) => sum + Math.max(0, Number(next[key].durationSeconds ?? next[key].timeUsedSeconds) || 0), 0),
+          correctAnswerCount: ['dinleme', 'okuma'].reduce((sum, key) => sum + Math.max(0, Number(next[key].rawScore) || 0), 0),
+          earnedXp: SECTION_KEYS.reduce((sum, key) => sum + Math.max(0, Number(next[key].durationSeconds ?? next[key].timeUsedSeconds) || 0), 0) >= 60
+            ? 50 + 10 * ['dinleme', 'okuma'].reduce((sum, key) => sum + Math.max(0, Number(next[key].rawScore) || 0), 0)
+            : 0,
+          examTaskType: 'exam:full-mock',
         })
       }
     }
     onSectionComplete?.(result)
     setScreen('result')
   }
+
+  useEffect(() => {
+    if (!initialSection || initialMode === 'reading') return
+    const generatedMock = { id: MOCK_01.id, generatedAt: MOCK_01.createdAt, ...MOCK_01.sections }
+    setReadingOnlyMode(false)
+    setMock(generatedMock)
+    setCompletedThisMock({})
+    setLastResult(null)
+    setActiveSection(initialSection)
+    setScreen('session')
+    reportedExamRef.current = false
+    onInitialSectionConsumed?.()
+  }, [])
 
   if (readingOnlyMode) {
     return <ReadingMockExam onComplete={handleSectionComplete} onExit={() => initialMode === 'reading' && onExit ? onExit() : setReadingOnlyMode(false)} />
@@ -164,7 +183,7 @@ export default function MockExam({ sectionResults = {}, onSectionComplete, onExa
           <div className="mt-7 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.rawScore')}</p><p className="mt-1 text-3xl font-extrabold">{lastResult.rawScore}<span className="text-base font-medium text-white/70"> / {lastResult.maxRawScore}</span></p></div>
             <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.result.scaled')}</p><p className="mt-1 text-3xl font-extrabold">{lastResult.scaledScore}<span className="text-base font-medium text-white/70"> / 75</span></p></div>
-            <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.cefrXp')}</p><p className="mt-1 text-2xl font-extrabold">{lastResult.level} <span className="text-sm text-white/80">· +{lastResult.earnedXp} XP</span></p></div>
+            <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.cefrXp')}</p><p className="mt-1 text-2xl font-extrabold">{lastResult.level} <span className="block text-xs font-semibold text-white/80">{t('mock.sectionXpPending')}</span></p></div>
           </div>
           <p className="mt-5 text-sm text-white/80">{t('mock.savedLocally')}</p>
         </section>
@@ -284,7 +303,8 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
     onComplete({
       ...scored,
       maxRawScore,
-      earnedXp: Math.round(scored.scaledScore),
+      earnedXp: 0,
+      durationSeconds: Math.max(0, section.durationMinutes * 60 - secondsLeft),
       examId: mock.id,
       completedAt: new Date().toISOString(),
       ...extra,
@@ -351,6 +371,10 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
       }
       return
     }
+    if (!window.isSecureContext) {
+      setRecordingError(t('konusma.record.secureContext'))
+      return
+    }
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
       setRecordingError(t('mock.record.unsupported'))
       return
@@ -384,11 +408,17 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
       }, { once: true })
       recorder.start()
       if (mountedRef.current) setRecording(true)
-    } catch {
+    } catch (error) {
       pendingStream?.getTracks().forEach((track) => track.stop())
       if (streamRef.current === pendingStream) streamRef.current = null
       recorderRef.current = null
-      if (mountedRef.current) setRecordingError(t('mock.record.denied'))
+      const errorName = error && typeof error === 'object' ? error.name : ''
+      const errorKey = ['NotAllowedError', 'PermissionDeniedError'].includes(errorName)
+        ? 'konusma.record.permissionDenied'
+        : errorName === 'SecurityError'
+          ? 'konusma.record.secureContext'
+          : 'mock.record.denied'
+      if (mountedRef.current) setRecordingError(t(errorKey))
     }
   }
 
@@ -431,11 +461,11 @@ function QuestionSession({ section, currentPart, currentQuestion, questions, que
       {currentPart.contextTitle && <h2 className="-mb-2 font-bold text-slate-800 dark:text-white">{currentPart.contextTitle}</h2>}
       {currentPart.planLocations && <div role="group" aria-label={t('mock.planLocations')} className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900 sm:grid-cols-4">{currentPart.planLocations.map((location, index) => <div key={`${index}-${location}`} className="flex min-h-14 items-center gap-2 rounded-xl border border-slate-200 bg-white p-2 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"><span className="grid size-7 shrink-0 place-items-center rounded-lg bg-teal-100 font-extrabold text-teal-800 dark:bg-teal-500/20 dark:text-teal-200">{String.fromCharCode(65 + index)}</span>{location}</div>)}</div>}
       {contextText && <article className="rounded-2xl border border-slate-200 bg-white/90 p-5 text-sm leading-7 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><p className="whitespace-pre-line">{contextText}</p></article>}
-      {(audioText || currentQuestion.audioText) && <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-teal-200 bg-teal-50 p-3 dark:border-teal-800 dark:bg-teal-950/30"><button type="button" onClick={() => { if (!speakTurkish(audioText)) window.alert(t('mock.speechUnavailable')) }} className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-3 py-2 text-sm font-bold text-white"><Volume2 className="size-4"/>{t('mock.listen')}</button><button type="button" onClick={() => setShowTranscript((value) => !value)} className="rounded-lg border border-teal-300 px-3 py-2 text-sm font-semibold text-teal-800 dark:text-teal-200">{showTranscript ? t('mock.transcript.hide') : t('mock.transcript.show')}</button>{showTranscript && <p className="w-full pt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{audioText}</p>}</div>}
+      {(audioText || currentQuestion.audioText) && <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-teal-200 bg-teal-50 p-3 dark:border-teal-800 dark:bg-teal-950/30"><button type="button" onClick={() => { if (!speakTurkish(audioText)) window.alert(t('mock.speechUnavailable')) }} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-lg bg-teal-700 px-3 py-2 text-sm font-bold text-white transition active:scale-95"><Volume2 className="size-4"/>{t('mock.listen')}</button><button type="button" onClick={() => setShowTranscript((value) => !value)} className="rounded-lg border border-teal-300 px-3 py-2 text-sm font-semibold text-teal-800 dark:text-teal-200">{showTranscript ? t('mock.transcript.hide') : t('mock.transcript.show')}</button>{showTranscript && <p className="w-full pt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-200">{audioText}</p>}</div>}
       <article className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7">
         <div className="flex items-start justify-between gap-3"><span className="rounded-lg bg-teal-50 px-2 py-1 text-xs font-bold text-teal-700 dark:bg-teal-500/10 dark:text-teal-300">Q{qNum}</span><span className="text-xs text-slate-500 dark:text-slate-400">{t(`mock.kind.${currentQuestion.kind === 'matching' ? 'matching' : currentQuestion.kind === 'boolean' ? 'boolean' : 'multiple'}`)}</span></div>
         <h2 className="mt-3 text-lg font-bold text-slate-900 dark:text-white">{currentQuestion.prompt}</h2>
-        {currentQuestion.kind === 'matching' ? <select value={answers[currentQuestion.id] || ''} onChange={(event) => setAnswers((previous) => ({ ...previous, [currentQuestion.id]: event.target.value }))} className="mt-5 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-white"><option value="">{t('mock.selectAnswer')}</option>{currentQuestion.options.map((option) => <option key={option.id} value={option.id} disabled={matchingChoicesInUse.has(option.id)}>{option.label}</option>)}</select> : <div className="mt-5 grid gap-2">{currentQuestion.options.map((option) => <button key={option.id} type="button" onClick={() => setAnswers((previous) => ({ ...previous, [currentQuestion.id]: option.id }))} className={cn('flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-colors', answers[currentQuestion.id] === option.id ? 'border-teal-500 bg-teal-50 text-teal-800 dark:bg-teal-500/10 dark:text-teal-200' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-teal-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200')}><span className="grid size-7 shrink-0 place-items-center rounded-lg border border-current text-xs">{option.id}</span><span>{option.label.replace(/^[A-J]\.\s*/, '')}</span>{answers[currentQuestion.id] === option.id && <Check className="ml-auto size-4"/>}</button>)}</div>}
+        {currentQuestion.kind === 'matching' ? <select value={answers[currentQuestion.id] || ''} onChange={(event) => setAnswers((previous) => ({ ...previous, [currentQuestion.id]: event.target.value }))} className="mt-5 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-white"><option value="">{t('mock.selectAnswer')}</option>{currentQuestion.options.map((option) => <option key={option.id} value={option.id} disabled={matchingChoicesInUse.has(option.id)}>{option.label}</option>)}</select> : <div className="mt-5 grid gap-2">{currentQuestion.options.map((option) => <button key={option.id} type="button" onClick={() => setAnswers((previous) => ({ ...previous, [currentQuestion.id]: option.id }))} className={cn('flex min-h-11 min-w-[44px] w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-colors active:scale-[.99]', answers[currentQuestion.id] === option.id ? 'border-teal-500 bg-teal-50 text-teal-800 dark:bg-teal-500/10 dark:text-teal-200' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-teal-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200')}><span className="grid size-7 shrink-0 place-items-center rounded-lg border border-current text-xs">{option.id}</span><span>{option.label.replace(/^[A-J]\.\s*/, '')}</span>{answers[currentQuestion.id] === option.id && <Check className="ml-auto size-4"/>}</button>)}</div>}
         <div className="mt-6 flex items-center justify-between gap-3"><button type="button" onClick={() => { setQuestionIndex((index) => Math.max(0, index - 1)); setShowTranscript(false) }} disabled={questionIndex === 0} className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300"><ArrowLeft className="size-4"/>{t('common.previous')}</button><span className="text-xs text-slate-500">{t('common.answered')}: {answeredCount}/{questions.length}</span><button type="button" onClick={() => { setQuestionIndex((index) => Math.min(questions.length - 1, index + 1)); setShowTranscript(false) }} disabled={questionIndex === questions.length - 1} className="inline-flex items-center gap-1 rounded-lg bg-teal-700 px-3 py-2 text-sm font-bold text-white disabled:opacity-40">{t('common.next')}<ArrowRight className="size-4"/></button></div>
         <div className="mt-5 grid grid-cols-7 gap-2 sm:grid-cols-10">{questions.map((question, index) => <button key={question.id} type="button" onClick={() => { setQuestionIndex(index); setShowTranscript(false) }} className={cn('h-9 rounded-lg border text-xs font-bold', questionIndex === index ? 'border-teal-700 bg-teal-700 text-white' : answers[question.id] ? 'border-emerald-400 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300' : 'border-slate-200 text-slate-500 dark:border-slate-700 dark:text-slate-400')}>{question.number}</button>)}</div>
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4 dark:border-slate-700"><span className="text-sm text-slate-500 dark:text-slate-400">{t('mock.emptyWarning')}</span><button type="button" onClick={() => { if (window.confirm(t('mock.confirmSubmit', { count: questions.length - answeredCount }))) onSubmit() }} className="rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-5 py-2.5 text-sm font-bold text-white">{t('common.submitSection')}</button></div>
@@ -464,7 +494,7 @@ function SpeakingSession({ section, currentPart, partIndex, done, scores, setSco
       <article className="glass premium-glass rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7"><h2 className="text-lg font-bold text-slate-900 dark:text-white">{currentPart.title}</h2><p className="mt-3 text-sm leading-7 text-slate-700 dark:text-slate-200">{currentPart.prompt}</p>
         {needsPreparation && <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30"><p className="font-bold text-amber-800 dark:text-amber-200">{t('mock.speaking.prep', { time: clock(prepSeconds) })}</p><button type="button" onClick={onStartPrep} disabled={prepStarted || prepSeconds === 0} className="mt-2 rounded-lg bg-amber-600 px-3 py-2 text-sm font-bold text-white disabled:opacity-50">{prepStarted ? t('mock.speaking.prep.running') : prepSeconds === 0 ? t('mock.speaking.prep.done') : t('mock.speaking.prep.start')}</button></div>}
         <textarea value={notes[currentPart.id] || ''} onChange={(event) => setNotes((previous) => ({ ...previous, [currentPart.id]: event.target.value }))} rows={3} placeholder={t('mock.speaking.notes')} className="mt-4 w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"/>
-        <div className="mt-4 flex flex-wrap gap-2"><button type="button" onClick={onToggleRecording} className={cn('inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white', recording ? 'bg-rose-600' : 'bg-teal-700')}>{recording ? <MicOff className="size-4"/> : <Mic className="size-4"/>}{recording ? t('mock.speaking.stop') : t('mock.speaking.record')}</button>{audioUrl && <audio controls src={audioUrl} className="h-10 max-w-full"/>}</div>
+        <div className="mt-4 flex flex-wrap gap-2"><button type="button" onClick={onToggleRecording} className={cn('inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition active:scale-95', recording ? 'bg-rose-600' : 'bg-teal-700')}>{recording ? <MicOff className="size-4"/> : <Mic className="size-4"/>}{recording ? t('mock.speaking.stop') : t('mock.speaking.record')}</button>{audioUrl && <audio controls src={audioUrl} className="h-10 max-w-full"/>}</div>
         {recordingError && <p role="status" className="mt-2 text-sm text-amber-700 dark:text-amber-300">{recordingError}</p>}
         <div className="mt-6 rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60"><div className="flex flex-wrap items-center justify-between gap-3"><label htmlFor={`speaking-score-${currentPart.id}`} className="font-semibold text-slate-800 dark:text-white">{t('mock.speaking.selfScore')}</label><span className="font-mono text-lg font-extrabold text-teal-700 dark:text-teal-300">{scores[partIndex]} / 12</span></div><p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{t('mock.speaking.criteria')}</p><input id={`speaking-score-${currentPart.id}`} type="range" min="0" max="12" step="1" value={scores[partIndex]} onChange={(event) => setScores((previous) => previous.map((value, index) => index === partIndex ? Number(event.target.value) : value))} className="mt-3 w-full accent-teal-600"/></div>
         <button type="button" onClick={onMarkDone} disabled={done[currentPart.id] || (needsPreparation && prepSeconds > 0)} className="mt-4 rounded-xl border border-teal-300 px-4 py-2.5 text-sm font-bold text-teal-800 disabled:opacity-40 dark:text-teal-200">{done[currentPart.id] ? t('mock.speaking.marked') : t('mock.speaking.markDone')}</button>

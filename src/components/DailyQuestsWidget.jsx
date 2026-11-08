@@ -1,85 +1,239 @@
-import { BookOpenText, CheckCircle, Headphones, Sparkles, Zap } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { ArrowRight, BookOpenText, CheckCircle2, Flame, Headphones, Sparkles, Trophy, Zap } from 'lucide-react'
+import { CORE_TROPHIES, getTrophyProgress, TROPHY_REWARD_XP } from '../lib/trophies'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
-const QUESTS = [
-  { id: 'words', titleKey: 'quests.words', target: 3, icon: BookOpenText, tone: 'violet' },
-  { id: 'listening', titleKey: 'quests.listening', target: 1, icon: Headphones, tone: 'emerald' },
-  { id: 'xp', titleKey: 'quests.xp', target: 50, icon: Zap, tone: 'amber' },
+const TABS = [
+  { id: 'daily', key: 'tasks.tabs.daily' },
+  { id: 'weekly', key: 'tasks.tabs.weekly' },
+  { id: 'achievements', key: 'tasks.tabs.achievements' },
 ]
 
-const TONES = {
-  violet: {
-    icon: 'bg-violet-500/10 text-violet-600 dark:text-violet-300',
-    bar: 'from-violet-600 to-fuchsia-400',
-    track: 'bg-violet-100 dark:bg-violet-950/60',
-    progress: 'text-violet-700 dark:text-violet-200',
-  },
-  emerald: {
-    icon: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300',
-    bar: 'from-emerald-600 to-teal-400',
-    track: 'bg-emerald-100 dark:bg-emerald-950/60',
-    progress: 'text-emerald-700 dark:text-emerald-200',
-  },
-  amber: {
-    icon: 'bg-amber-500/10 text-amber-600 dark:text-amber-300',
-    bar: 'from-amber-500 to-orange-400',
-    track: 'bg-amber-100 dark:bg-amber-950/60',
-    progress: 'text-amber-700 dark:text-amber-200',
-  },
+const DAILY_QUESTS = [
+  { id: 'words', titleKey: 'quests.words', descriptionKey: 'tasks.daily.wordsDescription', target: 3, icon: BookOpenText, navigate: 'lugat', reward: 25 },
+  { id: 'listening', titleKey: 'quests.listening', descriptionKey: 'tasks.daily.listeningDescription', target: 1, icon: Headphones, navigate: 'dinleme', reward: null },
+  { id: 'xp', titleKey: 'quests.xp', descriptionKey: 'tasks.daily.xpDescription', target: 50, icon: Zap, navigate: 'exams', reward: null },
+]
+
+const WEEKLY_GOALS = [
+  { id: 'tests', titleKey: 'tasks.weekly.tests', target: 3, icon: Trophy },
+  { id: 'lessons', titleKey: 'tasks.weekly.lessons', target: 5, icon: BookOpenText },
+  { id: 'words', titleKey: 'tasks.weekly.words', target: 50, icon: Sparkles },
+]
+
+function safeCount(value, target) {
+  return Math.min(target, Math.max(0, Number(value) || 0))
 }
 
-export default function DailyQuestsWidget({ progress = {}, onClaimReward, isPremium = false, dark = false }) {
-  const { t } = useI18n()
-  const premium = Boolean(isPremium)
-  const darkMode = Boolean(dark && !premium)
-  const safeProgress = progress && typeof progress === 'object' ? progress : {}
+function getTrophyPath(trophyId) {
+  if (trophyId === 'reading') return 'okuma'
+  if (trophyId === 'listening') return 'dinleme'
+  if (trophyId.startsWith('words-')) return 'lugat'
+  if (trophyId === 'tests-100') return 'exams'
+  return 'home'
+}
 
-  const claimReward = () => {
-    if (typeof onClaimReward !== 'function') return
-    onClaimReward()
+function getTrophyMetrics(stats = {}) {
+  const listeningPercent = Object.values(stats.moduleScores || {}).reduce((best, record) => (
+    Math.max(best, Number(record?.best ?? record?.bestScore) || 0)
+  ), 0)
+  return {
+    xp: stats.xp,
+    completedQuizzes: stats.completedQuizzes,
+    currentStreak: stats.streak,
+    streakMilestones: stats.streakMilestones,
+    readingCompletedCount: stats.readingCompletedCount,
+    readingPerfectExamAchieved: stats.readingPerfectExamAchieved,
+    listeningPercent,
+    savedWordsCount: stats.savedWordsCount,
+    flawlessQuizAchieved: stats.flawlessQuizAchieved,
+    speedBonusAchieved: stats.speedBonusAchieved,
   }
-  const values = {
+}
+
+const PANEL = 'rounded-2xl border border-slate-800 bg-[#0f172a] text-slate-100 shadow-xl shadow-slate-950/20'
+const MUTED = 'text-slate-400'
+const TRACK = 'bg-slate-800'
+const PROGRESS = 'bg-gradient-to-r from-violet-600 via-indigo-500 to-cyan-400'
+
+export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimReward, navigate, isPremium = false }) {
+  const { t } = useI18n()
+  const [activeTab, setActiveTab] = useState('daily')
+  const safeProgress = progress && typeof progress === 'object' ? progress : {}
+  const dailyValues = {
     words: Math.min(3, Math.max(0, Array.isArray(safeProgress.words) ? safeProgress.words.length : 0)),
     listening: Math.min(1, Math.max(0, Number(safeProgress.listening) || 0)),
     xp: Math.min(50, Math.max(0, Number(safeProgress.xp) || 0)),
   }
-  const claimed = Boolean(safeProgress.wordRewardClaimed)
-  const completedCount = QUESTS.filter((quest) => values[quest.id] >= quest.target).length
+  const completedDaily = DAILY_QUESTS.filter((quest) => dailyValues[quest.id] >= quest.target).length
+  const weeklyGoals = safeProgress.weeklyGoals && typeof safeProgress.weeklyGoals === 'object' ? safeProgress.weeklyGoals : {}
+  const trophies = useMemo(() => {
+    const metrics = getTrophyMetrics(stats)
+    const unlockedIds = new Set((Array.isArray(stats.trophyUnlocks) ? stats.trophyUnlocks : []).map((item) => item?.id).filter(Boolean))
+    return CORE_TROPHIES
+      .map((trophy) => ({ trophy, progress: getTrophyProgress(trophy, metrics) }))
+      .filter(({ trophy, progress: trophyProgress }) => !unlockedIds.has(trophy.id) && !trophyProgress.unlocked)
+      .sort((left, right) => right.progress.percent - left.progress.percent)
+      .slice(0, 3)
+  }, [stats])
 
-  return <section className={cn('rounded-3xl border p-5 sm:p-6', premium ? 'border-white/10 bg-black/35 text-white shadow-2xl backdrop-blur-2xl' : darkMode ? 'border-slate-700 bg-slate-900 text-slate-100 shadow-2xl shadow-black/25' : 'border-slate-100 bg-white text-slate-900 shadow-sm')}>
-    <div className="flex flex-wrap items-center gap-3">
-      <span className={cn('grid size-11 place-items-center rounded-2xl', premium ? 'border border-yellow-300/20 bg-yellow-300/10 text-yellow-200' : darkMode ? 'border border-teal-300/15 bg-teal-300/10 text-teal-200' : 'bg-teal-50 text-teal-700')}><Sparkles className="size-5" aria-hidden="true"/></span>
-      <div className="min-w-0 flex-1"><h2 className="text-lg font-extrabold tracking-tight">{t('quests.title')}</h2><p className={cn('mt-0.5 text-xs', premium ? 'text-white/55' : darkMode ? 'text-slate-400' : 'text-slate-500')}>{t('quests.subtitle')}</p></div>
-      <span className={cn('rounded-full px-3 py-1.5 text-[10px] font-extrabold', premium ? 'bg-white/[.07] text-yellow-100' : darkMode ? 'bg-slate-800 text-slate-200' : 'bg-slate-50 text-slate-600')}>{t('quests.completedCount', { count: completedCount, total: QUESTS.length })}</span>
-    </div>
+  const claimReward = () => {
+    if (typeof onClaimReward === 'function') onClaimReward()
+  }
 
-    <div className="mt-5 grid gap-3 lg:grid-cols-3">
-      {QUESTS.map((quest) => {
-        const Icon = quest.icon
-        const tone = TONES[quest.tone]
-        const current = values[quest.id]
-        const done = current >= quest.target
-        const percent = Math.min(100, Math.round((current / quest.target) * 100))
-        return <article key={quest.id} className={cn('group rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg', premium ? 'border-white/10 bg-black/30 text-white backdrop-blur-xl hover:border-yellow-300/25 hover:shadow-yellow-900/10' : darkMode ? 'border-slate-700 bg-slate-800/80 text-slate-100 shadow-sm shadow-black/15 hover:border-teal-400/25 hover:bg-slate-800' : 'border-slate-100 bg-white text-slate-900 shadow-sm hover:border-slate-200 hover:shadow-slate-900/5')}>
-          <div className="flex items-start gap-3">
-            <span className={`grid size-10 shrink-0 place-items-center rounded-xl ${tone.icon}`}><Icon className="size-5" aria-hidden="true"/></span>
-            <div className="min-w-0 flex-1"><h3 className="text-sm font-extrabold leading-snug">{t(quest.titleKey)}</h3><p className={`mt-1 text-xs font-bold tabular-nums ${tone.progress}`}>{current}/{quest.target} {t('quests.progressSuffix')}</p></div>
-            {done && <CheckCircle className={`mt-0.5 size-4 shrink-0 ${premium || darkMode ? 'text-emerald-300' : 'text-emerald-600'}`} aria-label={t('quests.complete')}/>}
+  return (
+    <section className={cn(PANEL, 'overflow-hidden p-4 sm:p-6', isPremium && 'border-amber-300/25 shadow-amber-950/20')} aria-labelledby="tasks-panel-heading">
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="grid size-11 shrink-0 place-items-center rounded-2xl border border-violet-400/20 bg-violet-400/10 text-violet-200">
+          <Sparkles className="size-5" aria-hidden="true" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2 id="tasks-panel-heading" className="text-lg font-extrabold tracking-tight">{t('tasks.title')}</h2>
+          <p className={cn('mt-0.5 text-xs', MUTED)}>{t('tasks.subtitle')}</p>
+        </div>
+        {activeTab === 'daily' && <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-bold tabular-nums text-slate-300">{t('quests.completedCount', { count: completedDaily, total: DAILY_QUESTS.length })}</span>}
+      </div>
+
+      <div role="tablist" aria-label={t('tasks.tabs.label')} className="mt-5 flex gap-2 overflow-x-auto pb-1">
+        {TABS.map((tab) => {
+          const active = activeTab === tab.id
+          return (
+            <button
+              key={tab.id}
+              id={`tasks-tab-${tab.id}`}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              aria-controls={`tasks-panel-${tab.id}`}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                'min-h-11 shrink-0 rounded-full border px-4 py-2 text-xs font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400',
+                active ? 'border-violet-400/40 bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-lg shadow-indigo-950/30' : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500 hover:text-white',
+              )}
+            >
+              {t(tab.key)}
+            </button>
+          )
+        })}
+      </div>
+
+      {activeTab === 'daily' && (
+        <div id="tasks-panel-daily" role="tabpanel" aria-labelledby="tasks-tab-daily" className="mt-4 space-y-3">
+          {DAILY_QUESTS.map((quest) => {
+            const Icon = quest.icon
+            const current = dailyValues[quest.id]
+            const done = current >= quest.target
+            const percent = Math.min(100, Math.round((current / quest.target) * 100))
+            const canClaim = quest.id === 'words' && done && !safeProgress.wordRewardClaimed
+            const claimed = quest.id === 'words' && Boolean(safeProgress.wordRewardClaimed)
+            return (
+              <article key={quest.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 transition-colors hover:border-slate-700 sm:p-5">
+                <div className="flex items-start gap-3">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-violet-400/15 bg-violet-400/10 text-violet-200">
+                    <Icon className="size-5" aria-hidden="true" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-extrabold leading-snug text-white">{t(quest.titleKey)}</h3>
+                    <p className="mt-1 text-xs leading-5 text-slate-400">{t(quest.descriptionKey)}</p>
+                  </div>
+                  <span className={cn(
+                    'shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-extrabold',
+                    quest.reward ? 'border-amber-300/25 bg-amber-300/10 text-amber-200' : 'border-slate-700 bg-slate-800 text-slate-300',
+                  )}>
+                    {quest.reward ? `+${quest.reward} XP` : t('tasks.goalBadge')}
+                  </span>
+                </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <div role="progressbar" aria-label={t(quest.titleKey)} aria-valuemin={0} aria-valuemax={quest.target} aria-valuenow={current} className={cn('h-2 min-w-0 flex-1 overflow-hidden rounded-full', TRACK)}>
+                    <div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${percent}%` }} />
+                  </div>
+                  <span className="w-12 shrink-0 text-right text-xs font-bold tabular-nums text-slate-300">{current}/{quest.target}</span>
+                </div>
+                <div className="mt-3 flex justify-end">
+                  {claimed ? (
+                    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.claimed')}</span>
+                  ) : canClaim ? (
+                    <button
+                      type="button"
+                      onClick={claimReward}
+                      className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 px-4 py-2 text-xs font-extrabold text-slate-950 transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+                    >
+                      {t('quests.claim')}<ArrowRight className="size-4" aria-hidden="true" />
+                    </button>
+                  ) : done ? (
+                    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.complete')}</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => navigate?.(quest.navigate)}
+                      className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-extrabold text-slate-100 transition-colors hover:border-violet-400/50 hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+                    >
+                      {t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      )}
+
+      {activeTab === 'weekly' && (
+        <section id="tasks-panel-weekly" role="tabpanel" aria-labelledby="tasks-tab-weekly" className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-5">
+          <div className="flex items-center gap-3">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-indigo-400/10 text-indigo-200"><Flame className="size-5" aria-hidden="true" /></span>
+            <div><h3 className="text-sm font-extrabold text-white">{t('tasks.weekly.title')}</h3><p className="mt-1 text-xs text-slate-400">{t('tasks.weekly.subtitle')}</p></div>
           </div>
-          <div role="progressbar" aria-label={t(quest.titleKey)} aria-valuemin={0} aria-valuemax={quest.target} aria-valuenow={current} className={`mt-4 h-2 overflow-hidden rounded-full ${tone.track}`}>
-            <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar} transition-[width] duration-700 ease-out`} style={{ width: `${percent}%` }}/>
+          <div className="mt-5 space-y-5">
+            {WEEKLY_GOALS.map((goal) => {
+              const Icon = goal.icon
+              const current = safeCount(weeklyGoals[goal.id], goal.target)
+              const percent = Math.min(100, Math.round((current / goal.target) * 100))
+              return (
+                <div key={goal.id}>
+                  <div className="mb-2 flex items-center gap-2">
+                    <Icon className="size-4 shrink-0 text-indigo-200" aria-hidden="true" />
+                    <span className="min-w-0 flex-1 text-xs font-bold text-slate-200">{t(goal.titleKey)}</span>
+                    <span className="text-xs font-extrabold tabular-nums text-slate-300">{current}/{goal.target}</span>
+                  </div>
+                  <div role="progressbar" aria-label={t(goal.titleKey)} aria-valuemin={0} aria-valuemax={goal.target} aria-valuenow={current} className={cn('h-2 overflow-hidden rounded-full', TRACK)}>
+                    <div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${percent}%` }} />
+                  </div>
+                </div>
+              )
+            })}
           </div>
-          {quest.id === 'words' && <div className="mt-3 flex min-h-9 items-center">
-            {claimed
-              ? <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500/10 px-3 py-2 text-xs font-extrabold text-emerald-600 dark:text-emerald-300"><CheckCircle className="size-4"/>{t('quests.claimed')}</span>
-              : done
-                ? <button type="button" onClick={claimReward} className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-black transition-all duration-300 hover:-translate-y-0.5 ${premium ? 'bg-gradient-to-r from-amber-500 to-yellow-300 text-slate-950 shadow-[0_0_22px_rgba(250,204,21,.38)] hover:shadow-[0_0_30px_rgba(250,204,21,.55)]' : 'bg-gradient-to-r from-teal-700 to-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,.26)] hover:shadow-[0_0_28px_rgba(16,185,129,.4)]'}`}><Sparkles className="size-3.5"/>{t('quests.claim')}<span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px]">+25 XP</span></button>
-                : <span className={`text-[11px] font-semibold ${premium ? 'text-white/45' : 'text-slate-400'}`}>{t('quests.wordHint')}</span>}
-          </div>}
-          {quest.id !== 'words' && <p className={`mt-3 min-h-9 text-[11px] leading-relaxed ${done ? premium || darkMode ? 'text-emerald-200' : 'text-emerald-700' : premium ? 'text-white/45' : darkMode ? 'text-slate-400' : 'text-slate-400'}`}>{done ? t('quests.complete') : quest.id === 'listening' ? t('quests.listeningHint') : t('quests.xpHint', { count: Math.max(0, quest.target - current) })}</p>}
-        </article>
-      })}
-    </div>
-  </section>
+        </section>
+      )}
+
+      {activeTab === 'achievements' && (
+        <div id="tasks-panel-achievements" role="tabpanel" aria-labelledby="tasks-tab-achievements" className="mt-4 space-y-3">
+          {trophies.length ? trophies.map(({ trophy, progress: trophyProgress }) => {
+            const title = t(trophy.titleKey)
+            return (
+              <article key={trophy.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-5">
+                <div className="flex items-start gap-3">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-amber-300/15 bg-amber-300/10 text-amber-200"><Trophy className="size-5" aria-hidden="true" /></span>
+                  <div className="min-w-0 flex-1"><h3 className="text-sm font-extrabold text-white">{title}</h3><p className="mt-1 text-xs leading-5 text-slate-400">{t(trophy.descriptionKey)}</p></div>
+                  <span className="shrink-0 rounded-full border border-amber-300/25 bg-amber-300/10 px-2.5 py-1 text-[10px] font-extrabold text-amber-200">+{TROPHY_REWARD_XP[trophy.id] || 0} XP</span>
+                </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <div role="progressbar" aria-label={title} aria-valuemin={0} aria-valuemax={trophyProgress.target} aria-valuenow={trophyProgress.current} className={cn('h-2 min-w-0 flex-1 overflow-hidden rounded-full', TRACK)}><div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${trophyProgress.percent}%` }} /></div>
+                  <span className="w-16 shrink-0 text-right text-xs font-bold tabular-nums text-slate-300">{t(trophy.progressKey, { count: trophyProgress.current, target: trophyProgress.target })}</span>
+                </div>
+                <div className="mt-3 flex justify-end"><button type="button" onClick={() => navigate?.(getTrophyPath(trophy.id))} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-extrabold text-white transition hover:border-violet-400/50 hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400">{t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" /></button></div>
+              </article>
+            )
+          }) : (
+            <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/60 p-6 text-center">
+              <CheckCircle2 className="mx-auto size-8 text-emerald-300" aria-hidden="true" />
+              <p className="mt-2 text-sm font-bold text-white">{t('tasks.achievements.completeAll')}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+    </section>
+  )
 }

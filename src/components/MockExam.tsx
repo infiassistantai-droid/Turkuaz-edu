@@ -11,6 +11,7 @@ type ReadingMockResult = ReturnType<typeof scoreReadingMock> & {
   examId: string
   completedAt: string
   earnedXp: number
+  timeUsedSeconds: number
   answered: number
   totalQuestions: 35
   partResults: Array<{ partId: string; title: string; rawScore: number; maxRawScore: number }>
@@ -86,7 +87,8 @@ export default function MockExam({ onComplete, onExit }: MockExamProps) {
       testType: 'reading-only',
       examId: `${readingMockExam.id}-${Date.now()}`,
       completedAt: new Date().toISOString(),
-      earnedXp: Math.round(scored.scaledScore),
+      earnedXp: Math.max(0, readingMockExam.durationMinutes * 60 - secondsLeft) >= 60 ? 50 + rawScore * 10 : 0,
+      timeUsedSeconds: Math.max(0, readingMockExam.durationMinutes * 60 - secondsLeft),
       answered: answeredCount,
       totalQuestions: questions.length,
       partResults,
@@ -150,7 +152,7 @@ export default function MockExam({ onComplete, onExit }: MockExamProps) {
           <div className="mt-7 grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.raw')}</p><p className="mt-1 text-3xl font-extrabold tabular-nums">{result.rawScore}<span className="text-base font-medium text-white/65"> / 35</span></p></div>
             <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.scaled')}</p><p className="mt-1 text-3xl font-extrabold tabular-nums">{result.scaledScore}<span className="text-base font-medium text-white/65"> / 75</span></p></div>
-            <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.level')}</p><p className="mt-1 flex flex-wrap items-center gap-2 text-2xl font-extrabold"><span>{result.level}</span><span className="text-sm text-amber-100">+{result.earnedXp} XP</span></p></div>
+            <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.level')}</p><p className="mt-1 flex flex-wrap items-center gap-2 text-2xl font-extrabold"><span>{result.level}</span><span className="text-sm text-amber-100">{result.earnedXp > 0 ? `+${result.earnedXp} XP` : t('mock.xp.notQualified')}</span></p></div>
           </div>
           <p className="mt-5 text-sm text-white/80">{t('mock.reading.answered', { count: result.answered })}</p>
         </section>
