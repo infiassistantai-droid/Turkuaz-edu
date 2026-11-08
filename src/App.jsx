@@ -19,22 +19,26 @@ import TurkchaDashboard from './components/TurkchaDashboard'
 import ProfileSetupModal from './components/ProfileSetupModal'
 import ProtectedRoute from './components/ProtectedRoute'
 import NotFound from './components/NotFound'
-import { deleteLearnerCloudData, fetchLearnerGamification, fetchLearnerProgress, isSupabaseConfigured, mergeCloudVocabularyIntoLocal, supabase, syncLearnerProgress } from './lib/supabase'
+import { awardXP, deleteLearnerCloudData, fetchLearnerGamification, fetchLearnerProgress, isSupabaseConfigured, mergeCloudVocabularyIntoLocal, supabase, syncLearnerProgress, syncProfileXpFloor, updateLearnerAvatar } from './lib/supabase'
 import { disableDailyReminder, enableDailyReminder, getReminderPreference, showDailyReminderIfDue } from './lib/dailyReminders'
 import { calculateCertificate } from './lib/multilevelScoring'
 import { useI18n } from './lib/i18n.jsx'
 import { DEFAULT_EQUIPPED_MEDAL, DEFAULT_UNLOCKED_MEDALS } from './lib/medals'
-import { getRankProgress } from './lib/ranks'
+import { getRankProgress, getRatingTier } from './lib/ranks'
 import { getStreakMilestonesUpTo, STREAK_MILESTONES } from './lib/streakMilestones'
 import { getTrophyProgress, TROPHIES, TROPHY_REWARD_XP } from './lib/trophies'
 import { getListeningCompletedCount } from './lib/listeningProgress'
 import { useWinterUpdate } from './features/winter/WinterUpdateContext'
 import { useAuth } from './context/AuthContext.jsx'
 import { getWinterStudyDayCount, normalizeWinterStudy, recordWinterStudyDay } from './features/winter/winterSeason'
+import { isPresetAvatarPath } from './lib/profileAvatar'
 
 const Dashboard = lazy(() => import('./components/Dashboard'))
 const ComingSoon = lazy(() => import('./components/ComingSoon'))
 const KunlikReja = lazy(() => import('./components/KunlikReja'))
+const JourneyMap = lazy(() => import('./components/JourneyMap'))
+const Shop = lazy(() => import('./components/Shop'))
+const AdminRoute = lazy(() => import('./components/AdminRoute'))
 const ReadingLibrary = lazy(() => import('./components/modules/ReadingLibrary'))
 const Dinleme = lazy(() => import('./components/modules/Dinleme'))
 const YazmaModule = lazy(() => import('./components/modules/YazmaModule'))
@@ -78,6 +82,17 @@ function localDateKey(date = new Date()) {
   return `${year}-${month}-${day}`
 }
 
+function claimLocalTaskXp(identity, taskType) {
+  const task = String(taskType || '')
+  if (!/^(?:vocabulary:deck|listening:|speaking:|exam:|daily-words:)/u.test(task)) return true
+  const key = `turkuaz-edu-xp-awards-v1:${encodeURIComponent(String(identity || 'local'))}:${localDateKey()}`
+  const awards = loadJSON(key, {})
+  const count = Math.max(0, Number(awards[task]) || 0)
+  if (count >= 2) return false
+  saveJSON(key, { ...awards, [task]: count + 1 })
+  return true
+}
+
 function previousDateKey(key) {
   const date = new Date(`${key}T12:00:00`)
   date.setDate(date.getDate() - 1)
@@ -106,7 +121,7 @@ function mergeTrophyRecords(...recordLists) {
 
 function getLearnerProfileFromAuth(user, targetLevel, hasExistingProgress = true, forceOnboarding = false, cloudProfile = null) {
   const metadata = user?.user_metadata || {}
-  const nameParts = String(cloudProfile?.full_name || metadata.full_name || metadata.name || '').trim().split(/\s+/u).filter(Boolean)
+  const nameParts = String(metadata.full_name || metadata.name || cloudProfile?.full_name || '').trim().split(/\s+/u).filter(Boolean)
   const email = user?.email || ''
   const firstNameFromFullName = nameParts.shift()
   const name = metadata.given_name || firstNameFromFullName || email.split('@')[0] || 'Learner'
@@ -116,6 +131,7 @@ function getLearnerProfileFromAuth(user, targetLevel, hasExistingProgress = true
     surname,
     email,
     avatarUrl: cloudProfile?.avatar_url || metadata.avatar_url || metadata.picture || null,
+    ratingTier: cloudProfile?.rating_tier || getRatingTier(cloudProfile?.total_xp || 0),
     targetLevel: targetLevel || metadata.target_level || 'B1',
     learningGoal: metadata.learning_goal || null,
     startingPath: metadata.starting_path || null,
@@ -125,18 +141,40 @@ function getLearnerProfileFromAuth(user, targetLevel, hasExistingProgress = true
   }
 }
 
-function preserveCachedProfileAvatar(profile, cachedProfile, matchesSession) {
+function preserveCachedProfileAvatar(profile, cachedProfile, matchesSession, allowCachedPreset = false) {
   if (!matchesSession || !cachedProfile) return profile
   const avatarField = Object.prototype.hasOwnProperty.call(cachedProfile, 'avatarUrl')
     ? 'avatarUrl'
     : Object.prototype.hasOwnProperty.call(cachedProfile, 'avatar_url')
       ? 'avatar_url'
       : null
-  return avatarField ? { ...profile, avatarUrl: cachedProfile[avatarField] || null } : profile
+  const cachedAvatar = avatarField ? String(cachedProfile[avatarField] || '') : ''
+  // Custom uploads are deliberately device-local. Preset paths follow the cloud profile.
+  if (/^data:image\/(?:webp|jpeg);base64,/u.test(cachedAvatar)) return { ...profile, avatarUrl: cachedAvatar }
+  if (allowCachedPreset && isPresetAvatarPath(cachedAvatar)) return { ...profile, avatarUrl: cachedAvatar }
+  return profile
+}
+
+function getWeekStartKey(dateKey = localDateKey()) {
+  const date = new Date(`${dateKey}T12:00:00`)
+  date.setDate(date.getDate() - ((date.getDay() + 6) % 7))
+  return localDateKey(date)
+}
+
+function getWeeklyGoalProgress(saved, dateKey = localDateKey()) {
+  const weekStart = getWeekStartKey(dateKey)
+  if (saved?.weekStart !== weekStart) return { weekStart, tests: 0, lessons: 0, words: 0 }
+  return {
+    weekStart,
+    tests: Math.max(0, Number(saved.tests) || 0),
+    lessons: Math.max(0, Number(saved.lessons) || 0),
+    words: Math.max(0, Number(saved.words) || 0),
+  }
 }
 
 function getDailyQuestProgress(stats, dateKey = localDateKey()) {
   const saved = stats?.dailyQuests
+  const weeklyGoals = getWeeklyGoalProgress(saved?.weeklyGoals, dateKey)
   if (saved?.date === dateKey) {
     return {
       date: dateKey,
@@ -144,10 +182,23 @@ function getDailyQuestProgress(stats, dateKey = localDateKey()) {
       listening: Math.max(0, Number(saved.listening) || 0),
       xp: Math.max(0, Number(saved.xp) || 0),
       wordRewardClaimed: Boolean(saved.wordRewardClaimed),
+      weeklyGoals,
     }
   }
   const recordedXp = Number(stats?.dailyXp?.[dateKey] ?? stats?.daily_xp?.[dateKey])
-  return { date: dateKey, words: [], listening: 0, xp: Number.isFinite(recordedXp) ? Math.max(0, recordedXp) : 0, wordRewardClaimed: false }
+  return { date: dateKey, words: [], listening: 0, xp: Number.isFinite(recordedXp) ? Math.max(0, recordedXp) : 0, wordRewardClaimed: false, weeklyGoals }
+}
+
+function incrementWeeklyGoal(stats, goal, amount = 1, dateKey = localDateKey()) {
+  const dailyQuests = getDailyQuestProgress(stats, dateKey)
+  const weeklyGoals = getWeeklyGoalProgress(dailyQuests.weeklyGoals, dateKey)
+  return {
+    ...stats,
+    dailyQuests: {
+      ...dailyQuests,
+      weeklyGoals: { ...weeklyGoals, [goal]: Math.max(0, Number(weeklyGoals[goal]) || 0) + Math.max(0, Number(amount) || 0) },
+    },
+  }
 }
 
 function getReadingCompletionCount(profile) {
@@ -274,14 +325,14 @@ function normalizeAppPath(pathname) {
 
 export default function App() {
   const { t } = useI18n()
-  const { session: authSession, loading: authStateLoading } = useAuth()
+  const { session: authSession, user: authUser, loading: authStateLoading } = useAuth()
   const { featureEnabled: winterFeatureEnabled } = useWinterUpdate()
   const pageFallback = (
-    <div role="status" aria-live="polite" className="grid min-h-[40vh] place-items-center text-sm font-semibold text-slate-600 dark:text-slate-300">
+    <div role="status" aria-live="polite" aria-busy="true" className="grid min-h-[40vh] place-items-center text-sm font-semibold text-slate-600 dark:text-slate-300">
       <span className="inline-flex items-center gap-2"><LoaderCircle className="size-5 animate-spin" aria-hidden="true" />{t('cloud.loading.status')}</span>
     </div>
   )
-  // The app uses protected in-place tabs, with only login/home as addressable routes.
+  // The app uses protected in-place tabs plus login/home and owner-gated admin routes.
   const [pathname, setPathname] = useState(() => normalizeAppPath(typeof window === 'undefined' ? '/' : window.location.pathname))
   const navigatePath = useCallback((nextPath, replace = false) => {
     const next = normalizeAppPath(nextPath)
@@ -331,12 +382,12 @@ export default function App() {
     }
   })
   const routeAuthenticated = isSupabaseConfigured
-    ? Boolean(authSession?.user && authenticated)
+    ? Boolean(authUser)
     : authenticated
   const [editingProfile, setEditingProfile] = useState(false)
 
   useEffect(() => {
-    if (authLoading || (pathname !== '/' && pathname !== '/login')) return
+    if (authLoading) return
     if (!routeAuthenticated && pathname !== '/login') {
       navigatePath('/login', true)
     } else if (routeAuthenticated && pathname === '/login') {
@@ -361,6 +412,7 @@ export default function App() {
   const claimedQuestRewards = useRef(new Set())
   const [progress, setProgress] = useState(() => isSupabaseConfigured ? DEFAULT_PROGRESS : loadLearnerProgress())
   const [sectionResults, setSectionResults] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelSectionResults || {})
+  const [mockLaunchTask, setMockLaunchTask] = useState(null)
   const [multilevelExamResult, setMultilevelExamResult] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelExamResult || null)
   const [unlockedMedals, setUnlockedMedals] = useState(() => {
     const saved = loadJSON(STORAGE_KEY, {})?.unlockedMedals
@@ -493,16 +545,15 @@ export default function App() {
       }
       const metadata = session.user.user_metadata || {}
       const forceOnboarding = hasPendingOnboarding(session.user.id)
-      let row = null
-      let cloudData = null
-      let progressLookupSucceeded = false
-      try {
-        row = await fetchLearnerProgress(session.user.id)
-        progressLookupSucceeded = true
-      } catch (error) { console.error('Could not load cloud progress:', error) }
-      try {
-        cloudData = await fetchLearnerGamification(session.user.id)
-      } catch (error) { console.warn('Could not load cloud profile, streak, achievements, or vocabulary. Apply the latest Supabase schema to enable full sync.', error) }
+      const [progressResult, gamificationResult] = await Promise.allSettled([
+        fetchLearnerProgress(session.user.id),
+        fetchLearnerGamification(session.user.id),
+      ])
+      const row = progressResult.status === 'fulfilled' ? progressResult.value : null
+      const cloudData = gamificationResult.status === 'fulfilled' ? gamificationResult.value : null
+      const progressLookupSucceeded = progressResult.status === 'fulfilled'
+      if (progressResult.status === 'rejected') console.error('Could not load cloud progress:', progressResult.reason)
+      if (gamificationResult.status === 'rejected') console.warn('Could not load cloud profile, streak, achievements, or vocabulary. Apply the latest Supabase schema to enable full sync.', gamificationResult.reason)
       if (!alive) return
       if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
       const cloudAchievementRecords = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
@@ -515,13 +566,15 @@ export default function App() {
         }))
       const cloudStreak = cloudData?.streak
       const cloudProfile = cloudData?.profile
+      const localSavedXp = cachedProfileMatchesSession ? Math.max(0, Number(loadLearnerStats(cachedProfile).xp) || 0) : 0
+      const restoredXp = Math.max(0, Number(row?.xp) || 0, Number(cloudProfile?.total_xp) || 0, localSavedXp)
       const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudProfile?.current_streak ?? 0)
       const cloudMilestones = Array.isArray(cloudStreak?.unlocked_milestones)
         ? cloudStreak.unlocked_milestones.map(Number).filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days))
         : []
       setStats((current) => ({
         ...current,
-        xp: Math.max(0, Number(row?.xp ?? cloudProfile?.total_xp ?? current.xp) || 0),
+        xp: restoredXp,
         streak: Math.max(0, Number(row?.streak ?? cloudStreak?.streak_count ?? cloudProfile?.current_streak ?? current.streak) || 0),
         streakMilestones: [...new Set([...(current.streakMilestones || []), ...cloudMilestones, ...getStreakMilestonesUpTo(streakCount)])].sort((a, b) => a - b),
         trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], cloudAchievementRecords),
@@ -538,21 +591,47 @@ export default function App() {
         questWordsCredited: row?.quest_words_credited || current.questWordsCredited || [],
         skillsCompleted: row?.completed_lessons || current.skillsCompleted || [],
       }))
+      void syncProfileXpFloor(session.user.id, restoredXp).catch((error) => {
+        console.warn('[Turkuaz Edu] Could not reconcile the saved XP total with the profile.', error)
+      })
+      if (!alive) return
       const hasExistingProgress = progressLookupSucceeded ? Boolean(row || cloudProfile || cloudStreak) : true
       const learnerProfile = getLearnerProfileFromAuth(session.user, row?.target_level || metadata.target_level, hasExistingProgress, forceOnboarding, cloudProfile)
-      setProfile(preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession))
+      setProfile({ ...preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession, !cloudProfile), ratingTier: getRatingTier(restoredXp) })
       setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures)
       setAuthLoading(false)
     }
-    const restoreLocalFallback = () => {
+    const restoreLocalFallback = (session) => {
       if (!alive) return
-      const localProfile = loadProfile()
-      setCloudSession(null)
+      const cachedProfile = loadProfile()
       setCloudReady(false)
-      setProfile(localProfile)
-      setAuthenticated(Boolean(localProfile))
-      setStats(loadLearnerStats(localProfile))
-      setProgress(loadLearnerProgress())
+
+      if (session?.user) {
+        const email = String(session.user.email || '').trim().toLowerCase()
+        const cachedEmail = String(cachedProfile?.email || '').trim().toLowerCase()
+        const cachedMatchesSession = Boolean(cachedProfile && (
+          cachedProfile.userId === session.user.id || (email && cachedEmail && email === cachedEmail)
+        ))
+        const metadata = session.user.user_metadata || {}
+        const learnerProfile = getLearnerProfileFromAuth(
+          session.user,
+          metadata.target_level,
+          true,
+          hasPendingOnboarding(session.user.id),
+        )
+        setCloudSession(session)
+        setAuthenticated(true)
+        setStats(cachedMatchesSession ? loadLearnerStats(cachedProfile) : DEFAULT_STATS)
+        setProgress(cachedMatchesSession ? loadLearnerProgress() : DEFAULT_PROGRESS)
+        setProfile(preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedMatchesSession, true))
+      } else {
+        setCloudSession(null)
+        setProfile(cachedProfile)
+        setAuthenticated(Boolean(cachedProfile))
+        setStats(loadLearnerStats(cachedProfile))
+        setProgress(loadLearnerProgress())
+      }
+
       setAuthLoading(false)
     }
 
@@ -561,7 +640,7 @@ export default function App() {
         await hydrateSession(session)
       } catch (error) {
         console.warn('[Turkuaz Edu] Cloud session hydration failed; continuing with cached local data.', error)
-        restoreLocalFallback()
+        restoreLocalFallback(session)
       }
     }
 
@@ -644,21 +723,25 @@ export default function App() {
       setStats(DEFAULT_STATS)
       setProgress(DEFAULT_PROGRESS)
     }
-    let row = null
-    let cloudData = null
-    let progressLookupSucceeded = false
-    try {
-      row = await fetchLearnerProgress(data.user.id)
-      progressLookupSucceeded = true
-    } catch (error) { console.error('Could not load cloud progress:', error) }
-    try {
-      cloudData = await fetchLearnerGamification(data.user.id)
-    } catch (error) { console.warn('Could not load cloud gamification data. Apply the latest Supabase schema to enable full sync.', error) }
+    const [progressResult, gamificationResult] = await Promise.allSettled([
+      fetchLearnerProgress(data.user.id),
+      fetchLearnerGamification(data.user.id),
+    ])
+    const row = progressResult.status === 'fulfilled' ? progressResult.value : null
+    const cloudData = gamificationResult.status === 'fulfilled' ? gamificationResult.value : null
+    const progressLookupSucceeded = progressResult.status === 'fulfilled'
+    if (progressResult.status === 'rejected') console.error('Could not load cloud progress:', progressResult.reason)
+    if (gamificationResult.status === 'rejected') console.warn('Could not load cloud gamification data. Apply the latest Supabase schema to enable full sync.', gamificationResult.reason)
     if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
     const metadata = data.user.user_metadata || {}
     const forceOnboarding = hasPendingOnboarding(data.user.id)
+    const localSavedXp = cachedProfileMatchesSession ? Math.max(0, Number(loadLearnerStats(cachedProfile).xp) || 0) : 0
+    const restoredXp = Math.max(0, Number(row?.xp) || 0, Number(cloudData?.profile?.total_xp) || 0, localSavedXp)
+    void syncProfileXpFloor(data.user.id, restoredXp).catch((syncError) => {
+      console.warn('[Turkuaz Edu] Could not reconcile the saved XP total with the profile.', syncError)
+    })
     const learnerProfile = getLearnerProfileFromAuth(data.user, row?.target_level || metadata.target_level, progressLookupSucceeded ? Boolean(row || cloudData?.profile || cloudData?.streak) : true, forceOnboarding, cloudData?.profile)
-    const learner = preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession)
+    const learner = { ...preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession, !cloudData?.profile), ratingTier: getRatingTier(restoredXp) }
     setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures); setAuthLoading(false)
     const remoteAchievements = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
       .filter((record) => record && typeof record === 'object' && typeof record.trophy_id === 'string')
@@ -667,7 +750,7 @@ export default function App() {
     const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? 0)
     if (row || cloudData) setStats((current) => ({
       ...current,
-      xp: Math.max(0, Number(row?.xp ?? cloudData?.profile?.total_xp ?? current.xp) || 0),
+      xp: restoredXp,
       streak: Math.max(0, Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? current.streak) || 0),
       streakMilestones: [...new Set([...(current.streakMilestones || []), ...(Array.isArray(cloudStreak?.unlocked_milestones) ? cloudStreak.unlocked_milestones.map(Number) : []), ...getStreakMilestonesUpTo(streakCount)])].filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days)).sort((a, b) => a - b),
       trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], remoteAchievements),
@@ -732,12 +815,12 @@ export default function App() {
       const credited = Array.isArray(current.questWordsCredited) ? current.questWordsCredited : []
       if (credited.includes(wordId)) return current
       const quests = getDailyQuestProgress(current, today)
-      if (quests.words.includes(wordId)) return { ...current, questWordsCredited: [...credited, wordId] }
-      return {
+      const nextStats = {
         ...current,
         questWordsCredited: [...credited, wordId],
-        dailyQuests: { ...quests, words: [...quests.words, wordId] },
+        dailyQuests: { ...quests, words: quests.words.includes(wordId) ? quests.words : [...quests.words, wordId] },
       }
+      return incrementWeeklyGoal(nextStats, 'words', 1, today)
     })
   }, [])
 
@@ -750,16 +833,21 @@ export default function App() {
   }, [])
 
   const addXp = useCallback(
-    (amount, { countTowardDailyXpQuest = true, markLessonActivity = true } = {}) => {
+    (amount, { countTowardDailyXpQuest = true, markLessonActivity = true, taskType } = {}) => {
       const today = localDateKey()
       const award = Math.max(0, Number(amount) || 0)
+      const xpTaskType = String(taskType || `activity:${Date.now()}:${Math.random().toString(36).slice(2)}`)
+      const cloudAwardEnabled = Boolean(award > 0 && isSupabaseConfigured && authUser?.id)
+      if (award > 0 && !cloudAwardEnabled && !claimLocalTaskXp(profile?.userId || profile?.email || 'local', xpTaskType)) return false
+      let nextXp = null
       if (award > 0) {
         const previousXp = Math.max(0, Number(xpForRankRef.current) || 0)
-        const nextXp = previousXp + award
+        nextXp = previousXp + award
         xpForRankRef.current = nextXp
+        setProfile((current) => current ? { ...current, ratingTier: getRatingTier(nextXp) } : current)
         const previousRank = getRankProgress(previousXp).rank
         const nextRankState = getRankProgress(nextXp)
-        if (nextRankState.rank.id !== previousRank.id) {
+        if (!cloudAwardEnabled && nextRankState.rank.id !== previousRank.id) {
           rankUpSequenceRef.current += 1
           setRankUpEvent({ id: rankUpSequenceRef.current, level: nextRankState.level, xp: nextXp })
         }
@@ -818,9 +906,40 @@ export default function App() {
           lastActivityDate: markLessonActivity ? today : s.lastActivityDate,
         }
       })
-      if (award > 0) showToast(`+${award} XP qoʻshildi! 🎉`, 'xp')
+      if (cloudAwardEnabled) {
+        void awardXP(authUser.id, award, xpTaskType)
+          .then((result) => {
+            const deniedAmount = Math.max(0, award - result.amountAwarded)
+            const reconciledXp = Math.max(result.totalXp, xpForRankRef.current - deniedAmount)
+            xpForRankRef.current = reconciledXp
+            if (deniedAmount > 0) {
+              setStats((current) => {
+                const dailyXp = { ...(current.dailyXp || {}) }
+                dailyXp[today] = Math.max(0, (Number(dailyXp[today]) || 0) - deniedAmount)
+                const weeklyXp = Math.max(0, (Number(current.weeklyXp) || 0) - deniedAmount)
+                const dailyQuests = getDailyQuestProgress(current, today)
+                if (countTowardDailyXpQuest) dailyQuests.xp = Math.max(0, dailyQuests.xp - deniedAmount)
+                return { ...current, xp: Math.max(reconciledXp, current.xp - deniedAmount), dailyXp, weeklyXp, dailyQuests }
+              })
+            } else {
+              setStats((current) => current.xp >= reconciledXp ? current : { ...current, xp: reconciledXp })
+            }
+            setProfile((current) => current ? { ...current, ratingTier: getRatingTier(reconciledXp) } : current)
+            if (result.amountAwarded > 0) {
+              const previousCanonicalRank = getRankProgress(Math.max(0, result.totalXp - result.amountAwarded)).rank
+              const nextCanonicalRank = getRankProgress(result.totalXp)
+              if (nextCanonicalRank.rank.id !== previousCanonicalRank.id) {
+                rankUpSequenceRef.current += 1
+                setRankUpEvent({ id: rankUpSequenceRef.current, level: nextCanonicalRank.level, xp: result.totalXp })
+              }
+              showToast(`+${result.amountAwarded} XP qoʻshildi! 🎉`, 'xp')
+            }
+          })
+          .catch((error) => console.error('[Turkuaz Edu] Could not add XP to the cloud profile.', error))
+      } else if (award > 0) showToast(`+${award} XP qoʻshildi! 🎉`, 'xp')
+      return true
     },
-    [showToast, winterFeatureEnabled],
+    [authUser?.id, isSupabaseConfigured, profile?.userId, profile?.email, showToast, winterFeatureEnabled],
   )
 
   const claimDailyWordReward = useCallback(() => {
@@ -833,12 +952,12 @@ export default function App() {
       if (quests.words.length < 3 || quests.wordRewardClaimed) return current
       return { ...current, dailyQuests: { ...quests, wordRewardClaimed: true } }
     })
-    addXp(25, { countTowardDailyXpQuest: false, markLessonActivity: false })
+    addXp(25, { countTowardDailyXpQuest: false, markLessonActivity: false, taskType: `daily-words:${today}` })
     return true
   }, [addXp, stats])
 
   const completeLevel = useCallback(
-    (skill, resultPercent, xpAward = 50) => {
+    (skill, resultPercent, xpAward = 50, taskType = `activity:${Date.now()}:${Math.random().toString(36).slice(2)}`) => {
       setProgress((p) => {
         const next = { ...p }
         if (skill && next[skill] !== undefined) {
@@ -851,7 +970,7 @@ export default function App() {
       setStats((s) => {
         const skillsCompleted = Array.isArray(s.skillsCompleted) ? s.skillsCompleted : []
         const isNewSkill = Boolean(skill && !skillsCompleted.includes(skill))
-        return {
+        const updated = {
           ...s,
           completedQuizzes: (Number(s.completedQuizzes) || 0) + 1,
           ...(isNewSkill ? {
@@ -859,16 +978,32 @@ export default function App() {
             completedLessons: [...new Set([...(s.completedLessons || []), skill])],
           } : {}),
         }
+        return String(taskType).startsWith('exam-section:') ? updated : incrementWeeklyGoal(updated, 'lessons')
       })
-      addXp(xpAward)
+      addXp(xpAward, { taskType })
     },
     [addXp]
   )
 
   const navigate = useCallback((id) => {
+    if (id === 'admin') {
+      navigatePath('/admin')
+      return
+    }
+    if (pathname.startsWith('/admin')) navigatePath('/', true)
     setActive(id)
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [])
+  }, [navigatePath, pathname])
+
+  const handleAdminHome = useCallback(() => {
+    setActive('home')
+    navigatePath('/', true)
+  }, [navigatePath])
+
+  const handleAdminDenied = useCallback((message) => {
+    handleAdminHome()
+    showToast(message || 'Ruxsat etilmagan hudud!', 'default')
+  }, [handleAdminHome, showToast])
 
   // Requested 0–75 scaled section results; unattempted sections remain at zero.
   const scores = useMemo(() => ({
@@ -970,6 +1105,16 @@ export default function App() {
     showToast(editingProfile ? 'Profil yangilandi! ✅' : 'Roʻyxatdan oʻtdingiz! 🎉', 'success')
   }
 
+  const handleSaveAvatar = async (avatarPath) => {
+    if (isSupabaseConfigured) {
+      const userId = cloudSession?.user?.id
+      if (!userId) throw new Error(t('profile.avatar.failure'))
+      await updateLearnerAvatar(userId, avatarPath, { ...profile, xp: stats.xp, streak: stats.streak })
+    }
+    setProfile((current) => current ? { ...current, avatarUrl: avatarPath, avatar_url: avatarPath } : current)
+    showToast(t('profile.avatar.saved'), 'success')
+  }
+
   const handleLogin = () => {
     setAuthenticated(true)
     showToast('Tekrar hoş geldiniz! ✅', 'success')
@@ -1008,10 +1153,17 @@ export default function App() {
       void (async () => {
         try { await deleteLearnerCloudData(cloudUserId) }
         catch (error) { console.error('Cloud learner data deletion failed:', error) }
-        finally { await supabase?.auth.signOut() }
+        finally {
+          try {
+            const { error } = await supabase.auth.signOut()
+            if (error) throw error
+          } catch (error) {
+            console.error('Supabase sign out after data deletion failed:', error)
+          }
+        }
       })()
-    } else if (isSupabaseConfigured) {
-      void supabase?.auth.signOut()
+    } else if (isSupabaseConfigured && supabase) {
+      void supabase.auth.signOut().catch((error) => console.error('[Turkuaz Edu] Supabase sign out failed:', error))
     }
     setCloudSession(null)
     setCloudReady(false)
@@ -1059,17 +1211,23 @@ export default function App() {
 
   const renderView = () => {
     // Keep only modules without an implementation behind the Coming Soon screen.
-    if (!['home', 'plan', 'analytics', 'leagues', 'okuma', 'dinleme', 'lugat', 'writing-practice', 'yazma', 'konusma', 'exams', 'full-mock', 'mixed-practice', 'quick-assessment', 'mock'].includes(active)) return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
+    if (!['home', 'plan', 'journey', 'shop', 'analytics', 'leagues', 'clans', 'okuma', 'dinleme', 'lugat', 'writing-practice', 'yazma', 'konusma', 'exams', 'full-mock', 'mixed-practice', 'quick-assessment', 'mock'].includes(active)) return <ComingSoon isPremium={isPremium} onBack={() => navigate('home')} />
 
     switch (active) {
       case 'home':
-        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
+        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
       case 'leagues':
         return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} isPremium={isPremium} />
+      case 'clans':
+        return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} initialTab="clans" />
       case 'analytics':
         return <Statistika profile={profile} stats={stats} progress={progress} isPremium={isPremium} dark={dark} navigate={navigate} />
       case 'plan':
-        return <KunlikReja stats={stats} navigate={navigate} addXp={addXp} isPremium={isPremium} />
+        return <KunlikReja stats={stats} sectionResults={sectionResults} targetLevel={profile?.targetLevel} navigate={navigate} isPremium={isPremium} />
+      case 'journey':
+        return <JourneyMap stats={stats} progress={progress} navigate={navigate} />
+      case 'shop':
+        return <Shop stats={stats} profile={profile} />
       case 'okuma':
         return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onPerfectReadingExam={recordPerfectReadingExam} onSpeedBonus={recordSpeedBonus} />
       case 'dinleme':
@@ -1105,7 +1263,7 @@ export default function App() {
               }
             })
             if (!shouldAwardProgress) return
-            completeLevel('dinleme', saved.best, xpAward)
+            completeLevel('dinleme', saved.best, xpAward, `listening:${testId}`)
             recordListeningQuest()
           }}
         />
@@ -1114,29 +1272,33 @@ export default function App() {
       case 'yazma':
         return <YazmaModule key={profile?.userId || profile?.email || 'local'} profileId={profile?.userId || profile?.email || 'local'} completeLevel={(percent, award) => completeLevel('yazma', percent, award)} />
       case 'konusma':
-        return <KonusmaModule key={profile?.userId || profile?.email || 'local'} profileId={profile?.userId || profile?.email || 'local'} onComplete={(xp = 35) => completeLevel('konusma', undefined, xp)} />
+        return <KonusmaModule key={profile?.userId || profile?.email || 'local'} profileId={profile?.userId || profile?.email || 'local'} onComplete={(xp = 40, taskType = 'speaking:exam') => completeLevel('konusma', undefined, xp, taskType)} />
       case 'lugat':
         return <Kelimeler
           key={profile?.userId || profile?.email || 'local'}
           onSavedWordsChange={updateSavedWordsCount}
-          onWordLearned={() => addXp(5)}
+          onBatchComplete={(xp, taskType) => addXp(xp, { taskType })}
+          onToast={showToast}
           onNewQuestWord={recordNewQuestWord}
           isPremium={isPremium}
           dark={dark}
         />
       case 'exams':
-        return <ImtihonlarHub onNavigate={navigate} />
+        return <ImtihonlarHub onNavigate={navigate} onStartTask={(task) => { setMockLaunchTask(task); navigate('mock') }} />
       case 'mixed-practice':
-        return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} onExit={() => navigate('exams')} />
+        return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} onExit={() => navigate('exams')} onComplete={() => setStats((current) => incrementWeeklyGoal(current, 'tests'))} />
       case 'full-mock':
-        return <MockExamEngine onExit={() => navigate('exams')} onExamComplete={() => {
-          setStats((current) => ({ ...current, completedMocks: (current.completedMocks || 0) + 1 }))
+        return <MockExamEngine onExit={() => navigate('exams')} onExamComplete={(result) => {
+          setStats((current) => incrementWeeklyGoal({ ...current, completedMocks: (current.completedMocks || 0) + 1 }, 'tests'))
+          if (result.earnedXp > 0) addXp(result.earnedXp, { taskType: 'exam:database-mock' })
         }} />
       case 'mock':
       case 'quick-assessment':
         return (
           <MockExam
             initialMode={active === 'quick-assessment' ? 'reading' : 'mixed'}
+            initialSection={active === 'mock' ? mockLaunchTask?.section : null}
+            onInitialSectionConsumed={() => setMockLaunchTask(null)}
             onExit={() => navigate('exams')}
             sectionResults={sectionResults}
             onSectionComplete={(result) => {
@@ -1146,20 +1308,25 @@ export default function App() {
                 return { ...previous, [result.section]: { ...result, attempts: (existing?.attempts || 0) + 1, history } }
               })
               if (result.testType === 'reading-only') {
-                setStats((current) => ({ ...current, completedMocks: (current.completedMocks || 0) + 1 }))
+                setStats((current) => incrementWeeklyGoal({ ...current, completedMocks: (current.completedMocks || 0) + 1 }, 'tests'))
               }
               if (result.section === 'dinleme') recordListeningQuest()
-              completeLevel(result.section, (result.scaledScore / 75) * 100, result.earnedXp)
+              completeLevel(result.section, (result.scaledScore / 75) * 100, 0, `exam-section:${result.examId}:${result.section}`)
+              if (result.testType === 'reading-only') {
+                const qualifiedXp = Number(result.timeUsedSeconds) >= 60 ? 50 + 10 * Math.max(0, Number(result.rawScore) || 0) : 0
+                if (qualifiedXp > 0) addXp(qualifiedXp, { taskType: 'exam:reading-only' })
+              }
               showToast(`${result.section.toLocaleUpperCase('tr-TR')} bo‘limi yakunlandi · ${result.scaledScore}/75 · ${result.level}`, 'success')
             }}
             onExamComplete={(result) => {
               setMultilevelExamResult(result)
-              setStats((current) => ({ ...current, examDone: true, completedMocks: (current.completedMocks || 0) + 1 }))
+              setStats((current) => incrementWeeklyGoal({ ...current, examDone: true, completedMocks: (current.completedMocks || 0) + 1 }, 'tests'))
+              if (result.earnedXp > 0) addXp(result.earnedXp, { taskType: result.examTaskType || 'exam:full-mock' })
             }}
           />
         )
       default:
-        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} addXp={addXp} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
+        return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
     }
   }
 
@@ -1172,6 +1339,7 @@ export default function App() {
       isPremium={isPremium}
       onClose={editingProfile ? () => setEditingProfile(false) : undefined}
       onSave={handleSaveProfile}
+      onSaveAvatar={handleSaveAvatar}
       onLogin={handleLogin}
       cloudEnabled={isSupabaseConfigured}
       onCloudRegister={handleCloudRegister}
@@ -1205,7 +1373,13 @@ export default function App() {
     )
   }
 
+  const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/')
+  if (isAdminPath && routeAuthenticated) {
+    return <Suspense fallback={pageFallback}><AdminRoute pathname={pathname} onNavigate={navigatePath} onHome={handleAdminHome} onUnauthorized={handleAdminDenied}/></Suspense>
+  }
+
   if (pathname !== '/' && pathname !== '/login') {
+    if (!routeAuthenticated) return <div role="status" aria-live="polite" className="grid min-h-[100dvh] place-items-center bg-slate-950 text-sm font-semibold text-slate-200"><span className="inline-flex items-center gap-2"><LoaderCircle className="size-5 animate-spin" aria-hidden="true" />{t('cloud.loading.status')}</span></div>
     return <NotFound onHome={() => { setActive('home'); navigatePath('/', false) }} />
   }
 

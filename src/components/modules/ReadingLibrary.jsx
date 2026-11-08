@@ -921,7 +921,7 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
                 <label
                   key={option.id}
                   className={cn(
-                    'flex cursor-pointer items-start gap-3 rounded-xl border px-3.5 py-3.5 text-sm leading-relaxed transition-all',
+                    'flex min-h-11 min-w-[44px] cursor-pointer items-start gap-3 rounded-xl border px-3.5 py-3.5 text-sm leading-relaxed transition-all active:scale-[.99]',
                     isCorrectOption
                       ? 'reading-quiz-option-correct'
                       : isWrongSelection
@@ -942,7 +942,7 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
                     className={cn('mt-1', premium ? 'accent-cyan-300' : 'accent-teal-700')}
                   />
                   {currentQuestion.type === 'multipleChoice' && <span className="grid size-6 shrink-0 place-items-center rounded-lg border border-current text-[10px] font-black">{option.id}</span>}
-                  <span className="font-semibold">{t(option.textKey)}</span>
+                  <span className="min-w-0 break-words font-semibold">{t(option.textKey)}</span>
                   {isCorrectOption && <CheckCircle2 className="ml-auto size-5 shrink-0 text-emerald-500" aria-hidden="true" />}
                 </label>
               )

@@ -1,0 +1,23 @@
+{
+  "demoOnly": true,
+  "persistence": "none",
+  "players": [
+    { "user_id": "demo-player-01", "display_name": "Sahro Yulduzi", "weekly_xp": 2440, "total_xp": 18750, "lessons_completed": 86, "clan_name": "Turkuaz Feniksi", "country": "Uzbekistan" },
+    { "user_id": "demo-player-02", "display_name": "Atlas Qanot", "weekly_xp": 2210, "total_xp": 14200, "lessons_completed": 79, "clan_name": "Samarqand Bilimdonlari", "country": "Uzbekistan" },
+    { "user_id": "demo-player-03", "display_name": "Ziyo Yo‘lboshchi", "weekly_xp": 1985, "total_xp": 9100, "lessons_completed": 73, "clan_name": "Turkuaz Feniksi", "country": "Uzbekistan" },
+    { "user_id": "demo-player-04", "display_name": "Lale Öğrenen", "weekly_xp": 1740, "total_xp": 8200, "lessons_completed": 66, "clan_name": "Anatolian Sparks", "country": "Türkiye" },
+    { "user_id": "demo-player-05", "display_name": "Nilufar Izlanuvchi", "weekly_xp": 1510, "total_xp": 6900, "lessons_completed": 61, "clan_name": "Samarqand Bilimdonlari", "country": "Uzbekistan" },
+    { "user_id": "demo-player-06", "display_name": "Deniz Ufuk", "weekly_xp": 1325, "total_xp": 5300, "lessons_completed": 55, "clan_name": "Anatolian Sparks", "country": "Türkiye" },
+    { "user_id": "demo-player-07", "display_name": "Shabnam Zukko", "weekly_xp": 1190, "total_xp": 4300, "lessons_completed": 48, "clan_name": "Toshkent Qaldirg‘ochlari", "country": "Uzbekistan" },
+    { "user_id": "demo-player-08", "display_name": "Mavi Yelken", "weekly_xp": 980, "total_xp": 2600, "lessons_completed": 42, "clan_name": "Anatolian Sparks", "country": "Türkiye" },
+    { "user_id": "demo-player-09", "display_name": "Kamola Bilim", "weekly_xp": 835, "total_xp": 1700, "lessons_completed": 36, "clan_name": "Toshkent Qaldirg‘ochlari", "country": "Uzbekistan" },
+    { "user_id": "demo-player-10", "display_name": "Arman Izlanish", "weekly_xp": 710, "total_xp": 900, "lessons_completed": 29, "clan_name": "Alatau Readers", "country": "Kazakhstan" }
+  ],
+  "clans": [
+    { "id": "demo-clan-01", "name": "Turkuaz Feniksi", "members": 42, "capacity": 50, "total_xp": 84250, "country": "Uzbekistan" },
+    { "id": "demo-clan-02", "name": "Samarqand Bilimdonlari", "members": 37, "capacity": 50, "total_xp": 71980, "country": "Uzbekistan" },
+    { "id": "demo-clan-03", "name": "Anatolian Sparks", "members": 45, "capacity": 50, "total_xp": 68940, "country": "Türkiye" },
+    { "id": "demo-clan-04", "name": "Toshkent Qaldirg‘ochlari", "members": 31, "capacity": 50, "total_xp": 51420, "country": "Uzbekistan" },
+    { "id": "demo-clan-05", "name": "Alatau Readers", "members": 28, "capacity": 50, "total_xp": 47800, "country": "Kazakhstan" }
+  ]
+}

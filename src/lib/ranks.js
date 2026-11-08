@@ -1,5 +1,12 @@
 export const XP_PER_LEVEL = 500
 
+export function getRatingTier(value) {
+  const xp = Math.max(0, Number(value) || 0)
+  if (xp >= 2500) return 'Gold'
+  if (xp >= 1000) return 'Silver'
+  return 'Bronze'
+}
+
 export const RANKS = [
   { id: 'cirak', minLevel: 1, maxLevel: 5, image: '/images/ranks/cirak.png', titleKey: 'rank.cirak' },
   { id: 'yolcu', minLevel: 6, maxLevel: 10, image: '/images/ranks/yolcu.png', titleKey: 'rank.yolcu' },

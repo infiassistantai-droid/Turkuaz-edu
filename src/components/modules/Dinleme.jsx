@@ -8,7 +8,7 @@ import { useI18n } from '../../lib/i18n.jsx'
 const STAGE_COUNT = 20
 const AUDIOS_PER_STAGE = 5
 const QUESTIONS_PER_AUDIO = 6
-const STAGE_MAX_XP = 100
+const STAGE_COMPLETION_XP = 40
 const examDataModules = import.meta.glob('../../data/dinlemaExamSection.json', { eager: true, import: 'default' })
 const bundledExamData = Object.values(examDataModules)[0] ?? null
 
@@ -161,7 +161,7 @@ const COPY = {
     stageDone: 'YAKUNLANDI', progress: 'audio yakunlandi', audio: 'audio', stageReady: 'OCHIQ',
     stageSubtitle: 'Bosqichni yakunlash uchun 5 audio testdagi barcha 30 savolga javob bering.',
     questionsTotal: 'savol', score: 'To‘g‘ri javob', stageScore: 'Bosqich natijasi',
-    noQuestions: 'Audio testda 6 ta yaroqli savol bo‘lishi kerak.', listenFirst: 'Javob berishdan oldin audioni oxirigacha tinglang.',
+    noQuestions: 'Audio testda 6 ta yaroqli savol bo‘lishi kerak.', listenFirst: 'Javob berishdan oldin audioning kamida 80 foizini tinglang.',
     dataMissing: 'dinlemaExamSection.json topilmadi yoki testlar mavjud emas.', invalidStage: 'Bu bosqichda 5 ta audio test va jami 30 ta savol bo‘lishi kerak.',
   },
   en: {
@@ -176,7 +176,7 @@ const COPY = {
     stageDone: 'COMPLETED', progress: 'audios completed', audio: 'audio', stageReady: 'UNLOCKED',
     stageSubtitle: 'Answer all 30 questions across the five audio tasks to complete this stage.',
     questionsTotal: 'questions', score: 'Correct answers', stageScore: 'Stage score',
-    noQuestions: 'Each audio task must contain six valid questions.', listenFirst: 'Listen to the full audio before answering.',
+    noQuestions: 'Each audio task must contain six valid questions.', listenFirst: 'Listen to at least 80% of the audio before answering.',
     dataMissing: 'dinlemaExamSection.json was not found or contains no tests.', invalidStage: 'This stage must have five audio tasks and 30 questions total.',
   },
   tr: {
@@ -191,7 +191,7 @@ const COPY = {
     stageDone: 'TAMAMLANDI', progress: 'ses tamamlandı', audio: 'ses', stageReady: 'AÇIK',
     stageSubtitle: 'Aşamayı tamamlamak için beş ses testindeki 30 sorunun tümünü cevaplayın.',
     questionsTotal: 'soru', score: 'Doğru cevap', stageScore: 'Aşama sonucu',
-    noQuestions: 'Her ses testinde altı geçerli soru bulunmalıdır.', listenFirst: 'Cevaplamadan önce sesin tamamını dinleyin.',
+    noQuestions: 'Her ses testinde altı geçerli soru bulunmalıdır.', listenFirst: 'Cevaplamadan önce sesin en az yüzde 80’ini dinleyin.',
     dataMissing: 'dinlemaExamSection.json bulunamadı veya test içermiyor.', invalidStage: 'Bu aşamada toplam beş ses testi ve 30 soru olmalıdır.',
   },
 }
@@ -237,6 +237,7 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
   const heardSecondsRef = useRef(0)
   const lastPositionRef = useRef(null)
   const lastProgressAtRef = useRef(0)
+  const completionReportedRef = useRef(false)
   const speechAvailable = typeof window !== 'undefined' && Boolean(window.speechSynthesis) && typeof window.SpeechSynthesisUtterance === 'function'
 
   useEffect(() => { finishedCallbackRef.current = onAudioFinished }, [onAudioFinished])
@@ -250,8 +251,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
       audioRef.current.onended = null
       audioRef.current.onerror = null
       audioRef.current.pause()
-      audioRef.current.src = ''
-      audioRef.current = null
+      audioRef.current.removeAttribute('src')
+      audioRef.current.load()
     }
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current)
@@ -263,6 +264,7 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     heardSecondsRef.current = 0
     lastPositionRef.current = null
     lastProgressAtRef.current = 0
+    completionReportedRef.current = false
   }
 
   const recordAudioProgress = (audio, playbackId) => {
@@ -282,18 +284,29 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     lastPositionRef.current = position
     lastProgressAtRef.current = now
     setCurrentTime(position)
+    const audioDuration = Number(audio.duration)
+    if (!completionReportedRef.current && Number.isFinite(audioDuration) && audioDuration > 0
+      && heardSecondsRef.current >= audioDuration * 0.8) {
+      completionReportedRef.current = true
+      setStatus('done')
+      audio.pause()
+      finishedCallbackRef.current?.(lesson.id)
+    }
   }
 
   const finishAudioPlayback = (audio, playbackId) => {
     if (playbackId !== playbackIdRef.current) return
     const audioDuration = Number(audio.duration)
-    if (!Number.isFinite(audioDuration) || audioDuration <= 0 || heardSecondsRef.current >= audioDuration - 1.25) {
+    if (Number.isFinite(audioDuration) && audioDuration > 0 && heardSecondsRef.current >= audioDuration * 0.8) {
+      if (!completionReportedRef.current) {
+        completionReportedRef.current = true
+        finishedCallbackRef.current?.(lesson.id)
+      }
       setStatus('done')
-      finishedCallbackRef.current?.(lesson.id)
       return
     }
-    // A seek-to-end is not considered a full listen; restart so the learner
-    // can actually hear the skipped portion before answering.
+    // Seeking to the end does not count as listening; restart the audio so the
+    // learner can hear enough of the duration before answering the quiz.
     audio.currentTime = 0
     heardSecondsRef.current = 0
     lastPositionRef.current = 0
@@ -304,8 +317,11 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
 
   const finishPlayback = (playbackId) => {
     if (playbackId !== playbackIdRef.current) return
-    setStatus('done')
-    finishedCallbackRef.current?.(lesson.id)
+    if (!completionReportedRef.current) {
+      completionReportedRef.current = true
+      setStatus('done')
+      finishedCallbackRef.current?.(lesson.id)
+    }
   }
 
   const startBrowserSpeech = (playbackId) => {
@@ -339,7 +355,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     if (playbackId !== playbackIdRef.current || !blob?.size) return
     const url = URL.createObjectURL(blob)
     objectUrlRef.current = url
-    const audio = new Audio(url)
+    const audio = audioRef.current
+    if (!audio) throw new Error('Audio player element is unavailable.')
     audio.preload = 'metadata'
     audio.playbackRate = speedRef.current
     audio.onloadedmetadata = () => {
@@ -349,7 +366,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     audio.ontimeupdate = () => recordAudioProgress(audio, playbackId)
     audio.onended = () => finishAudioPlayback(audio, playbackId)
     audio.onerror = () => startBrowserSpeech(playbackId)
-    audioRef.current = audio
+    audio.src = url
+    audio.load()
     sourceRef.current = 'elevenlabs'
     lastPositionRef.current = audio.currentTime || 0
     lastProgressAtRef.current = Date.now()
@@ -398,10 +416,10 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     setCurrentTime(0)
     setDuration(0)
 
-    if (lesson.audioUrl && typeof Audio !== 'undefined') {
+    if (lesson.audioUrl && audioRef.current) {
       setStatus('loading')
       try {
-        const audio = new Audio(lesson.audioUrl)
+        const audio = audioRef.current
         audio.preload = 'metadata'
         audio.playbackRate = speedRef.current
         audio.onloadedmetadata = () => {
@@ -415,7 +433,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
         audio.ontimeupdate = () => recordAudioProgress(audio, playbackId)
         audio.onended = () => finishAudioPlayback(audio, playbackId)
         audio.onerror = () => { void startFallback(playbackId) }
-        audioRef.current = audio
+        audio.src = lesson.audioUrl
+        audio.load()
         sourceRef.current = 'file'
         lastPositionRef.current = audio.currentTime || 0
         lastProgressAtRef.current = Date.now()
@@ -459,7 +478,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     const audio = audioRef.current
     if (audio && (sourceRef.current === 'file' || sourceRef.current === 'elevenlabs')) {
       const limit = Number.isFinite(audio.duration) ? audio.duration : Number.MAX_SAFE_INTEGER
-      audio.currentTime = Math.max(0, Math.min(limit, (audio.currentTime || 0) + delta))
+      const nextTime = Math.max(0, Math.min(limit, (audio.currentTime || 0) + delta))
+      audio.currentTime = nextTime
       lastPositionRef.current = audio.currentTime
       lastProgressAtRef.current = Date.now()
       setCurrentTime(audio.currentTime)
@@ -467,6 +487,9 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     }
     if (status === 'ready') pendingSeekRef.current = Math.max(0, pendingSeekRef.current + delta)
   }
+
+  const skipBackward = () => seekBy(-5)
+  const skipForward = () => seekBy(5)
 
   const seekTo = (value) => {
     const audio = audioRef.current
@@ -503,6 +526,7 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
 
   return (
     <section className={cn('min-w-0 rounded-2xl border p-3 sm:p-5', surface)} aria-label={copy.play}>
+      <audio ref={audioRef} preload="metadata" className="hidden" aria-hidden="true" />
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
         <button type="button" onClick={() => { void togglePlayback() }} disabled={status === 'loading'} aria-label={statusText} className="grid size-12 shrink-0 place-items-center rounded-full bg-teal-600 text-white transition hover:bg-teal-700 disabled:opacity-60">
           {status === 'playing' || status === 'fallback' ? <Pause className="size-5 fill-current" aria-hidden="true" /> : <Play className="size-5 fill-current" aria-hidden="true" />}
@@ -524,8 +548,8 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
         <span className="w-10 shrink-0 font-mono text-xs tabular-nums">{formatTime(duration)}</span>
       </div>
       <div className="mt-3 flex justify-center gap-2 sm:justify-start">
-        <button type="button" onClick={() => seekBy(-5)} aria-label={copy.rewind} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 dark:border-slate-700"><Rewind className="size-4" aria-hidden="true" />- 5s</button>
-        <button type="button" onClick={() => seekBy(5)} aria-label={copy.forward} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 dark:border-slate-700">+ 5s<FastForward className="size-4" aria-hidden="true" /></button>
+        <button type="button" onClick={skipBackward} aria-label={copy.rewind} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 active:scale-95 active:bg-slate-100 dark:border-slate-700 dark:active:bg-slate-800"><Rewind className="size-4" aria-hidden="true" />- 5s</button>
+        <button type="button" onClick={skipForward} aria-label={copy.forward} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 active:scale-95 active:bg-slate-100 dark:border-slate-700 dark:active:bg-slate-800">+ 5s<FastForward className="size-4" aria-hidden="true" /></button>
       </div>
       <button type="button" onClick={() => setTranscriptVisible((visible) => !visible)} aria-expanded={transcriptVisible} className="mt-4 text-sm font-bold text-teal-700 underline decoration-dotted underline-offset-4 dark:text-teal-300">
         {transcriptVisible ? copy.transcriptHide : copy.transcriptShow}
@@ -687,9 +711,8 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
     }, 0)
     const totalQuestions = AUDIOS_PER_STAGE * QUESTIONS_PER_AUDIO
     const stageScorePct = Math.round(totalCorrect / totalQuestions * 100)
-    // Preserve the previous module's maximum of 100 XP per five-audio unit,
-    // now weighted by the learner's correct answers out of all 30 questions.
-    const xpForStage = Math.round(totalCorrect / totalQuestions * STAGE_MAX_XP)
+    // Reward a qualified, fully completed listening stage with a fixed XP amount.
+    const xpForStage = STAGE_COMPLETION_XP
     const stageWasAlreadyComplete = completedStageIds.has(selectedStage.id)
     const completion = completeListeningLesson(identity, selectedStage.id, stageScorePct, {
       completionXp: stageWasAlreadyComplete ? 0 : xpForStage,
@@ -815,12 +838,12 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
                 {selectedAudio.quizQuestions.map((question, index) => (
                   <fieldset key={question.id} disabled={Boolean(selectedTaskResult)} className="rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
                     <legend className="px-1 text-sm font-extrabold">{copy.question} {index + 1}. {localized(question.prompt, language)}</legend>
-                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    <div className="mt-3 grid gap-2 md:grid-cols-2">
                       {question.options.map((option, optionIndex) => {
                         const picked = selectedAnswers[question.id] === optionIndex
                         const correctAnswer = selectedTaskResult && optionIndex === question.correctIndex
                         const wrongAnswer = selectedTaskResult && picked && optionIndex !== question.correctIndex
-                        return <button key={optionIndex} type="button" onClick={() => updateTaskProgress(selectedTaskKey, (previous) => ({ ...previous, answers: { ...(previous.answers || {}), [question.id]: optionIndex }, submitted: false, result: null }))} className={cn('rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition', correctAnswer ? 'border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200' : wrongAnswer ? 'border-rose-400 bg-rose-500/10 text-rose-800 dark:text-rose-200' : picked ? 'border-teal-500 bg-teal-500/10 text-teal-900 dark:text-teal-100' : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700')}>{localized(option, language)}</button>
+                        return <button key={optionIndex} type="button" onClick={() => updateTaskProgress(selectedTaskKey, (previous) => ({ ...previous, answers: { ...(previous.answers || {}), [question.id]: optionIndex }, submitted: false, result: null }))} className={cn('min-h-11 min-w-[44px] w-full rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition active:scale-[.99]', correctAnswer ? 'border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200' : wrongAnswer ? 'border-rose-400 bg-rose-500/10 text-rose-800 dark:text-rose-200' : picked ? 'border-teal-500 bg-teal-500/10 text-teal-900 dark:text-teal-100' : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700')}>{localized(option, language)}</button>
                       })}
                     </div>
                   </fieldset>
@@ -830,12 +853,12 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
               {selectedTaskResult && <div role="status" className={cn('mt-5 rounded-2xl border p-4', selectedTaskResult.scorePct === 100 ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-amber-500/30 bg-amber-500/10')}>
                 <p className="flex items-center gap-2 font-extrabold">{selectedTaskResult.scorePct === 100 ? <CheckCircle2 className="size-5 text-emerald-600" /> : <RotateCcw className="size-5 text-amber-600" />}{selectedTaskResult.correctCount}/{selectedTaskResult.questionCount} · {selectedTaskResult.scorePct}%</p>
                 <p className="mt-1 text-sm font-semibold">{selectedTaskResult.scorePct === 100 ? copy.perfect : copy.incorrect}</p>
-                {!stageIsComplete && <button type="button" onClick={resetAudioQuiz} className="mt-3 inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-bold text-white hover:bg-teal-700"><RotateCcw className="size-4" />{copy.retry}</button>}
+                {!stageIsComplete && <button type="button" onClick={resetAudioQuiz} className="mt-3 inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-bold text-white hover:bg-teal-700"><RotateCcw className="size-4" />{copy.retry}</button>}
               </div>}
 
               {!selectedTaskResult && <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                 <p className={cn('text-xs', muted)}>{listenedAudioIds.has(selectedAudio.id) ? copy.choose : copy.listenFirst}</p>
-                <button type="button" onClick={submitAudioQuiz} disabled={!stageStructureValid || !listenedAudioIds.has(selectedAudio.id) || selectedAudio.quizQuestions.length !== QUESTIONS_PER_AUDIO || Object.keys(selectedAnswers).length !== QUESTIONS_PER_AUDIO} className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><CheckCircle2 className="size-4" />{copy.submit}</button>
+                <button type="button" onClick={submitAudioQuiz} disabled={!stageStructureValid || !listenedAudioIds.has(selectedAudio.id) || selectedAudio.quizQuestions.length !== QUESTIONS_PER_AUDIO || Object.keys(selectedAnswers).length !== QUESTIONS_PER_AUDIO} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><CheckCircle2 className="size-4" />{copy.submit}</button>
               </div>}
             </div>
           </>}

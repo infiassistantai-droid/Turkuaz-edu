@@ -5,7 +5,7 @@ import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
 type SectionId = 'okuma' | 'dinleme' | 'yazma' | 'konusma'
-type SourceQuestion = { q_id: string; type: string; question: string; options: string[] }
+type SourceQuestion = { q_id: string; type: string; question: string; options: string[]; correct_answer?: string }
 type ReadingPassage = { id: string; title: string; content: string; questions: SourceQuestion[] }
 type ListeningItem = { id: string; title: string; transcript: string; questions: SourceQuestion[] }
 type WritingTask = { id: string; title: string; category?: string; prompt: string; key_points?: string[] }
@@ -34,8 +34,9 @@ type ExamStep =
   | { kind: 'writing'; id: string; task: WritingTask }
   | { kind: 'speaking'; id: string; partNumber: number; part: SpeakingPart }
 
+type ExamCompletionResult = { answers: ExamAnswers; timeSpentSeconds: number; correctAnswerCount: number; earnedXp: number; examId: string; examTaskType: string }
 type EngineProps = {
-  onExamComplete?: (answers: ExamAnswers) => void
+  onExamComplete?: (result: ExamCompletionResult) => void
   onExit?: () => void
 }
 
@@ -137,14 +138,14 @@ function ObjectiveQuestions({ questions, answers, onSelect, t }: {
                   aria-pressed={selected}
                   onClick={() => onSelect(question.q_id, option)}
                   className={cn(
-                    'flex w-full items-start gap-3 rounded-xl border px-3 py-3 text-left text-sm leading-5 transition-colors',
+                    'flex min-h-11 min-w-[44px] w-full items-start gap-3 rounded-xl border px-3 py-3 text-left text-sm leading-5 transition-colors active:scale-[.99]',
                     selected ? 'border-teal-500 bg-teal-500/10 text-teal-950 ring-1 ring-teal-500/35 dark:border-teal-400 dark:bg-teal-400/10 dark:text-teal-50' : 'border-slate-200/80 bg-white/70 text-slate-700 hover:border-teal-400/60 hover:bg-teal-50/60 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:border-teal-500/60 dark:hover:bg-teal-950/35',
                   )}
                 >
                   <span className={cn('mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border', selected ? 'border-teal-600 bg-teal-600 text-white dark:border-teal-300 dark:bg-teal-300 dark:text-slate-950' : 'border-slate-400 dark:border-slate-500')}>
                     {selected && <span className="size-1.5 rounded-full bg-current" />}
                   </span>
-                  <span>{option}</span>
+                  <span className="min-w-0 break-words">{option}</span>
                 </button>
               )
             })}
@@ -183,6 +184,7 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
   const phaseRef = useRef(phase)
   const transitionLockRef = useRef(false)
   const finishLockRef = useRef(false)
+  const examStartedAtRef = useRef<number | null>(null)
   const timeoutHandlerRef = useRef<() => void>(() => undefined)
   const timeoutDeadlineRef = useRef<number | null>(null)
   const previewUrlsRef = useRef(audioPreviewUrls)
@@ -212,12 +214,36 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
     setExamAnswers(next)
   }
 
+  function correctObjectiveAnswerCount(answers: ExamAnswers) {
+    const questions = [
+      ...EXAM.sections.okuma.texts.flatMap((passage) => passage.questions),
+      ...EXAM.sections.dinleme.audios.flatMap((audio) => audio.questions),
+    ]
+    return questions.reduce((total, question) => {
+      const selected = String(answers.okuma[question.q_id] ?? answers.dinleme[question.q_id] ?? '').trim().toLocaleLowerCase('tr-TR')
+      const correct = String(question.correct_answer ?? '').trim()
+      const letter = correct.match(/^([A-H])(?:[.)\s:]|$)/iu)
+      const correctOption = letter ? question.options[letter[1].toUpperCase().charCodeAt(0) - 65] : correct
+      return total + (selected && selected === String(correctOption).trim().toLocaleLowerCase('tr-TR') ? 1 : 0)
+    }, 0)
+  }
+
   function completeExam() {
     if (finishLockRef.current) return
     finishLockRef.current = true
     setPhase('submitted')
     setDeadline(null)
-    onExamComplete?.(answersRef.current)
+    const answers = answersRef.current
+    const timeSpentSeconds = examStartedAtRef.current === null ? 0 : Math.max(0, Math.floor((Date.now() - examStartedAtRef.current) / 1000))
+    const correctAnswerCount = correctObjectiveAnswerCount(answers)
+    onExamComplete?.({
+      answers,
+      timeSpentSeconds,
+      correctAnswerCount,
+      earnedXp: timeSpentSeconds >= 60 ? 50 + correctAnswerCount * 10 : 0,
+      examId: EXAM.exam_id,
+      examTaskType: 'exam:full-mock',
+    })
   }
 
   async function stopActiveRecording() {
@@ -297,6 +323,7 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
     answersRef.current = freshAnswers
     setExamAnswers(freshAnswers)
     setPhase('exam')
+    examStartedAtRef.current = Date.now()
     setSectionIndex(0)
     setStepIndex(0)
     setSubmittedSections([])
@@ -358,6 +385,10 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
       await stopActiveRecording()
       return
     }
+    if (!window.isSecureContext) {
+      setRecordingError(t('konusma.record.secureContext'))
+      return
+    }
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
       setRecordingError(t('fullExam.speak.unsupported'))
       return
@@ -396,8 +427,13 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
       streamRef.current?.getTracks().forEach((track) => track.stop())
       streamRef.current = null
       recorderRef.current = null
-      const name = error instanceof DOMException ? error.name : ''
-      if (mountedRef.current) setRecordingError(name === 'NotAllowedError' || name === 'SecurityError' ? t('fullExam.speak.permission') : t('fullExam.speak.failed'))
+      const name = error && typeof error === 'object' ? error.name : ''
+      const errorKey = ['NotAllowedError', 'PermissionDeniedError'].includes(name)
+        ? 'konusma.record.permissionDenied'
+        : name === 'SecurityError'
+          ? 'konusma.record.secureContext'
+          : 'fullExam.speak.failed'
+      if (mountedRef.current) setRecordingError(t(errorKey))
     } finally {
       if (mountedRef.current) setRequestingMicrophone(false)
     }
@@ -538,7 +574,7 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
           <section className="rounded-3xl border border-slate-200/80 bg-white/85 p-5 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-7">
             <div className="mb-4 flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-cyan-100 text-cyan-900 dark:bg-cyan-300/15 dark:text-cyan-100"><Headphones className="size-5" aria-hidden="true" /></span><div><p className="text-[10px] font-bold uppercase tracking-wider text-cyan-800 dark:text-cyan-300">{t('fullExam.listening.audio', { number: stepIndex + 1 })}</p><h2 className="mt-1 text-lg font-extrabold leading-6 text-slate-900 dark:text-white">{currentStep.item.title}</h2></div></div>
             <p className="mb-4 text-xs leading-5 text-slate-600 dark:text-slate-300">{t('fullExam.audio.info')}</p>
-            <button type="button" onClick={() => playListeningText(currentStep.item.transcript)} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-cyan-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
+            <button type="button" onClick={() => playListeningText(currentStep.item.transcript)} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-cyan-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
               {isPlaying ? <Square className="size-4" aria-hidden="true" /> : <Volume2 className="size-4" aria-hidden="true" />}{isPlaying ? t('fullExam.audio.stop') : t(audioFallback ? 'fullExam.audio.replay' : 'fullExam.audio.play')}
             </button>
             {audioFallback && <div className="mt-4 rounded-xl border border-amber-300/50 bg-amber-50/80 p-3 text-xs leading-5 text-amber-950 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">{t('fullExam.audio.fallback')}</div>}
@@ -567,7 +603,7 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
           <div className="mt-6 rounded-2xl border border-rose-200/70 bg-rose-50/65 p-4 dark:border-rose-300/20 dark:bg-rose-400/5">
             <p className="text-xs leading-5 text-slate-600 dark:text-slate-300">{t('fullExam.speak.privacy')}</p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button type="button" disabled={requestingMicrophone || isBusy} onClick={() => void toggleRecording(currentStep.id)} className={cn('inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900', recordingPart === currentStep.id ? 'bg-rose-700 hover:bg-rose-600 focus:ring-rose-400' : 'bg-teal-700 hover:bg-teal-600 focus:ring-teal-400', (requestingMicrophone || isBusy) && 'cursor-wait opacity-60')}>
+              <button type="button" disabled={requestingMicrophone || isBusy} onClick={() => void toggleRecording(currentStep.id)} className={cn('inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900', recordingPart === currentStep.id ? 'bg-rose-700 hover:bg-rose-600 focus:ring-rose-400' : 'bg-teal-700 hover:bg-teal-600 focus:ring-teal-400', (requestingMicrophone || isBusy) && 'cursor-wait opacity-60')}>
                 {recordingPart === currentStep.id ? <MicOff className="size-4" aria-hidden="true" /> : <Mic className="size-4" aria-hidden="true" />}{requestingMicrophone ? t('konusma.record.requesting') : recordingPart === currentStep.id ? t('fullExam.speak.stop') : t('fullExam.speak.record')}
               </button>
               {recordingPart === currentStep.id && <span className="inline-flex items-center gap-2 text-xs font-semibold text-rose-700 dark:text-rose-300"><span className="size-2 animate-pulse rounded-full bg-rose-500" />{t('fullExam.speak.recording')}</span>}

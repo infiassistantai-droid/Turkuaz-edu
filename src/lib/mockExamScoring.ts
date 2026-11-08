@@ -36,7 +36,7 @@ export function gradeObjectiveSection(
   }
   return {
     ...scored,
-    earnedXp: Math.round(scored.scaledScore),
+    earnedXp: 0,
     breakdown: [...grouped.entries()].map(([id, score]) => ({ id, title: partTitles[id] ?? id, ...score })),
   }
 }
@@ -97,7 +97,7 @@ export function gradeWritingSection(tasks: MockWritingTask[], responses: Record<
     maxRawScore: scored.maxRawScore,
     scaledScore: scored.scaledScore,
     level: scoreSection('yazma', scored.rawScore).level,
-    earnedXp: Math.round(scored.scaledScore),
+    earnedXp: 0,
     breakdown: tasks.map((task, index) => ({ id: task.id, title: task.rubricLabel, rawScore: evaluations[index].rawScore, maxRawScore: task.maxRaw })),
     tasks: evaluations,
   }
@@ -112,7 +112,7 @@ export function gradeSpeakingSection(partIds: string[], scores: Record<string, n
     maxRawScore: scored.maxRawScore,
     scaledScore: scored.scaledScore,
     level: scoreSection('konusma', scored.rawScore).level,
-    earnedXp: Math.round(scored.scaledScore),
+    earnedXp: 0,
     breakdown: partIds.map((id, index) => ({ id, title: `Konuşma ${index + 1}`, rawScore: partScores[index], maxRawScore: 12 })),
   }
 }
@@ -127,6 +127,6 @@ export function gradeFullMock(scores: Partial<Record<SkillKey, MockSectionScore>
     overallScore: certificate.average,
     level: certificate.level,
     completedSections: certificate.completedSections,
-    earnedXp: Object.values(scores).reduce((total, score) => total + (score?.earnedXp ?? 0), 0),
+    earnedXp: 0,
   }
 }

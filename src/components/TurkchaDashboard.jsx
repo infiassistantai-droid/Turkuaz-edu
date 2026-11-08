@@ -3,27 +3,35 @@ import {
   Activity,
   BookOpenText,
   CalendarCheck,
-  ChevronsLeft,
-  ChevronsRight,
   ChevronDown,
   Download,
+  Flame,
   Headphones,
   House,
   Library,
   Lock,
+  Map,
+  LogOut,
   Mic,
   Menu,
   PenLine,
   Snowflake,
+  ShoppingBag,
+  ShieldCheck,
   Sparkles,
   Target,
   Trophy,
+  UsersRound,
   X,
   Zap,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { useAuth } from '../context/AuthContext.jsx'
+import { supabase } from '../lib/supabase.js'
 import { getInitials } from '../lib/storage'
+import { getRatingTier } from '../lib/ranks'
 import { useI18n } from '../lib/i18n.jsx'
+import { isOwnerEmail } from '../config/admin'
 import { useWinterUpdate } from '../features/winter/WinterUpdateContext'
 import NotificationPopover from './NotificationPopover'
 import RankUpModal from './RankUpModal'
@@ -60,8 +68,15 @@ const NAV = [
     items: [
       { id: 'lugat', labelKey: 'nav.vocabulary', icon: Library },
       { id: 'exams', labelKey: 'nav.exams', icon: Trophy },
+      { id: 'journey', labelKey: 'nav.journey', icon: Map },
+      { id: 'shop', labelKey: 'nav.shop', icon: ShoppingBag },
       { id: 'leagues', labelKey: 'nav.leagues', icon: Trophy },
+      { id: 'clans', labelKey: 'nav.clans', icon: UsersRound },
     ],
+  },
+  {
+    sectionKey: 'nav.section.admin',
+    items: [{ id: 'admin', labelKey: 'nav.admin', icon: ShieldCheck, ownerOnly: true }],
   },
 ]
 
@@ -69,14 +84,16 @@ const NAV = [
 /*                                   Sidebar                                  */
 /* -------------------------------------------------------------------------- */
 
-function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, onCloseMobile, targetPct, level, profile, onOpenProfile, onInstallApp, showInstall, isPremium }) {
+function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, level, profile, onOpenProfile, onInstallApp, onLogout, showInstall, isPremium }) {
   const { t } = useI18n()
+  const { user: authUser } = useAuth()
+  const collapsed = false
   const { enabled: winterModeEnabled, featureEnabled: winterFeatureEnabled, toggle: toggleWinterMode } = useWinterUpdate()
   return (
     <>
       <div
         className={cn(
-          'fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm transition-opacity lg:hidden',
+          'fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden',
           mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
         onClick={onCloseMobile}
@@ -86,10 +103,8 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
         id="app-sidebar"
         aria-label={t('nav.aria')}
         className={cn(
-          'glass fixed inset-y-3 left-3 z-50 flex flex-col rounded-[26px] border border-slate-200/80 bg-white/90 shadow-2xl backdrop-blur-md transition-all duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/90',
-          'lg:sticky lg:inset-y-auto lg:left-auto lg:top-7 lg:my-0 lg:h-[calc(100vh-3.5rem)] lg:translate-x-0',
+          'glass fixed inset-y-0 left-0 z-50 flex w-[min(16rem,calc(100vw-1rem))] flex-col rounded-r-[26px] border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-md transition-transform duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/95 md:inset-y-5 md:left-5 md:w-64 md:translate-x-0 md:rounded-[26px]',
           mobileOpen ? 'translate-x-0' : '-translate-x-full',
-          collapsed ? 'w-72 lg:w-[84px]' : 'w-72',
         )}
       >
         <div className={cn('relative flex h-16 shrink-0 items-center gap-3 overflow-hidden px-5', collapsed && 'lg:justify-center lg:px-0')}>
@@ -107,7 +122,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
           <button
             type="button"
             onClick={onCloseMobile}
-            className="relative z-10 ml-auto grid size-8 place-items-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden dark:hover:bg-slate-800"
+            className="relative z-10 ml-auto grid size-11 place-items-center rounded-lg text-slate-500 transition active:scale-95 hover:bg-slate-100 md:hidden dark:hover:bg-slate-800"
             aria-label={t('header.menu.close')}
           >
             <X className="size-4" />
@@ -115,7 +130,7 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
-          {NAV.map((group) => (
+          {NAV.filter((group) => group.items.some((item) => !item.ownerOnly || isOwnerEmail(authUser?.email))).map((group) => (
             <div key={group.sectionKey} className="mt-5 first:mt-2">
               <p
                 className={cn(
@@ -127,24 +142,29 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               </p>
               {collapsed && <div className="mx-auto mb-2 hidden h-px w-8 bg-slate-200 lg:block dark:bg-slate-800" />}
               <ul className="space-y-0.5">
-                {group.items.map((item) => {
+                {group.items.filter((item) => !item.ownerOnly || isOwnerEmail(authUser?.email)).map((item) => {
                   const Icon = item.icon
-                  const isActive = active === item.id
-                  const isLocked = !['home', 'plan', 'analytics', 'okuma', 'dinleme', 'yazma', 'konusma', 'lugat', 'exams', 'leagues'].includes(item.id)
+                  const isDisabled = item.id === 'clans'
+                  const isActive = active === item.id && !isDisabled
+                  const isLocked = isDisabled || !['home', 'plan', 'journey', 'shop', 'analytics', 'okuma', 'dinleme', 'yazma', 'konusma', 'lugat', 'exams', 'leagues', 'admin'].includes(item.id)
                   return (
                     <li key={item.id}>
                       <button
                         type="button"
-                        onClick={() => onNavigate(item.id)}
+                        disabled={isDisabled}
+                        onClick={() => { if (!isDisabled) onNavigate(item.id) }}
                         title={isLocked ? `${t(item.labelKey)} · ${t('comingSoon.title')}` : collapsed ? t(item.labelKey) : undefined}
                         aria-label={isLocked ? `${t(item.labelKey)} · ${t('comingSoon.title')}` : undefined}
+                        aria-disabled={isDisabled || undefined}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
                           'nav-glow group relative flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm font-medium transition-all duration-200 active:scale-[0.98]',
                           collapsed && 'lg:justify-center lg:px-0',
-                          isActive
-                            ? 'bg-gradient-to-r from-teal-600 to-cyan-500 text-white shadow-md shadow-teal-600/20'
-                            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-white',
+                          isDisabled
+                            ? 'cursor-not-allowed opacity-60 text-slate-400 dark:text-slate-600'
+                            : isActive
+                              ? 'bg-gradient-to-r from-teal-600 to-cyan-500 font-bold text-white shadow-md shadow-teal-600/20'
+                              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-white',
                         )}
                       >
                         <Icon className="size-[18px] shrink-0" aria-hidden="true" />
@@ -267,18 +287,9 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
               </div>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            className={cn(
-              'mt-2 hidden w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 lg:flex dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white',
-              collapsed && 'justify-center px-0',
-            )}
-            aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
-          >
-            {collapsed ? <ChevronsRight className="size-4" /> : <ChevronsLeft className="size-4" />}
-            {!collapsed && <span>{t('nav.collapse')}</span>}
+          <button type="button" onClick={() => { onCloseMobile(); onLogout?.() }} className="mt-3 inline-flex min-h-11 w-full items-center gap-2 rounded-xl border border-rose-200/80 px-3 py-2.5 text-sm font-bold text-rose-700 transition hover:bg-rose-50 active:scale-[.98] dark:border-rose-400/20 dark:text-rose-300 dark:hover:bg-rose-400/10">
+            <LogOut className="size-4 shrink-0" aria-hidden="true" />
+            <span>{t('profile.logout')}</span>
           </button>
         </div>
       </aside>
@@ -290,19 +301,52 @@ function Sidebar({ active, onNavigate, collapsed, onToggleCollapse, mobileOpen, 
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function Header({ breadcrumb, isPremium, collapsed, mobileOpen, onToggleSidebar, xp, level, profile, onOpenProfile }) {
+function Header({ breadcrumb, isPremium, mobileOpen, onToggleSidebar, xp, level, currentStreak, profile, onOpenProfile }) {
   const { language, t } = useI18n()
-  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(min-width: 1024px)').matches))
-  const sidebarExpanded = isDesktop ? !collapsed : mobileOpen
+  const { user: authUser } = useAuth()
+  const [userProfile, setUserProfile] = useState(null)
+  const sidebarExpanded = mobileOpen
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return undefined
-    const breakpoint = window.matchMedia('(min-width: 1024px)')
-    const updateViewport = () => setIsDesktop(breakpoint.matches)
-    updateViewport()
-    breakpoint.addEventListener?.('change', updateViewport)
-    return () => breakpoint.removeEventListener?.('change', updateViewport)
-  }, [])
+    let active = true
+    const userId = authUser?.id
+    setUserProfile(null)
+    if (!supabase || !userId) {
+      setUserProfile(null)
+      return undefined
+    }
+
+    supabase.from('profiles')
+      .select('total_xp,rating_tier,current_streak')
+      .eq('user_id', userId)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!active) return
+        if (error) {
+          console.warn('[Turkuaz Edu] Could not load header profile statistics.', error)
+          setUserProfile(null)
+          return
+        }
+        setUserProfile(data || null)
+      })
+      .catch((error) => {
+        if (!active) return
+        console.warn('[Turkuaz Edu] Could not load header profile statistics.', error)
+        setUserProfile(null)
+      })
+
+    return () => { active = false }
+  }, [authUser?.id])
+
+  const cloudXp = userProfile?.total_xp == null ? null : Math.max(0, Number(userProfile.total_xp) || 0)
+  const displayedXp = Math.max(0, Number(xp) || 0, cloudXp || 0)
+  const validTiers = ['Bronze', 'Silver', 'Gold']
+  const cloudTierIsCurrent = cloudXp !== null && cloudXp >= Math.max(0, Number(xp) || 0)
+  const ratingTier = cloudTierIsCurrent && validTiers.includes(userProfile?.rating_tier)
+    ? userProfile.rating_tier
+    : validTiers.includes(profile?.ratingTier) ? profile.ratingTier : getRatingTier(displayedXp)
+  const ratingLabel = t(`rating.tier.${ratingTier.toLowerCase()}`)
+  const displayedStreak = Math.max(0, Number(currentStreak) || 0, Number(userProfile?.current_streak) || 0)
 
   return (
     <header className="glass rise-in sticky top-2 z-30 flex min-h-[60px] items-center rounded-[20px] bg-white/80 px-2.5 py-2.5 backdrop-blur-xl dark:bg-slate-950/80 sm:top-3 sm:min-h-[70px] sm:px-5 sm:py-3">
@@ -310,12 +354,12 @@ function Header({ breadcrumb, isPremium, collapsed, mobileOpen, onToggleSidebar,
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="grid size-9 shrink-0 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="grid size-11 shrink-0 place-items-center rounded-xl border border-slate-200/80 text-slate-600 transition-colors hover:bg-slate-100 active:scale-95 md:hidden dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
           aria-label={sidebarExpanded ? t('header.menu.close') : t('header.menu.open')}
           aria-expanded={sidebarExpanded}
           aria-controls="app-sidebar"
         >
-          <Menu className="size-4" aria-hidden="true" />
+          {mobileOpen ? <X className="size-4" aria-hidden="true" /> : <Menu className="size-4" aria-hidden="true" />}
         </button>
 
         <nav aria-label={t('breadcrumb.label')} className="min-w-0 flex-1 overflow-hidden">
@@ -329,9 +373,17 @@ function Header({ breadcrumb, isPremium, collapsed, mobileOpen, onToggleSidebar,
         </nav>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <span role="img" aria-label={`${xp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300 sm:px-3">
+          <span role="img" aria-label={`${displayedXp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-xs font-semibold tabular-nums text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300 sm:px-3">
             <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
-            <span className="hidden min-[480px]:inline">{xp.toLocaleString(language)} XP</span>
+            <span className="hidden min-[480px]:inline">{displayedXp.toLocaleString(language)} XP</span>
+          </span>
+          <span role="status" aria-label={t('rating.aria', { tier: ratingLabel })} title={t('rating.label')} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-teal-200/80 bg-teal-50 px-2 py-1.5 text-[10px] font-extrabold text-teal-800 dark:border-teal-500/20 dark:bg-teal-500/10 dark:text-teal-200 sm:gap-1.5 sm:px-2.5">
+            <Trophy className="size-3.5" aria-hidden="true" />
+            <span>{ratingLabel}</span>
+          </span>
+          <span role="status" aria-label={t('header.streak', { count: displayedStreak })} title={t('dashboard.stat.streak')} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-orange-200/80 bg-orange-50 px-2 py-1.5 text-[10px] font-extrabold tabular-nums text-orange-800 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-200 sm:gap-1.5 sm:px-2.5">
+            <Flame className="size-3.5" aria-hidden="true" />
+            <span>{displayedStreak}</span>
           </span>
           {profile && (
             <button
@@ -372,7 +424,6 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
   const { enabled: winterModeEnabled } = useWinterUpdate()
   const safeStreakMilestones = Array.isArray(streakMilestones) ? streakMilestones : []
   const safeTrophyUnlocks = Array.isArray(trophyUnlocks) ? trophyUnlocks : []
-  const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const level = Math.floor(Math.max(0, Number(xp) || 0) / 500) + 1
@@ -420,15 +471,7 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
     setMobileOpen(false)
   }
 
-  const toggleSidebar = () => {
-    const desktopViewport = window.matchMedia?.('(min-width: 1024px)').matches ?? window.innerWidth >= 1024
-    if (desktopViewport) {
-      setCollapsed((value) => !value)
-      setMobileOpen(false)
-    } else {
-      setMobileOpen((value) => !value)
-    }
-  }
+  const toggleSidebar = () => setMobileOpen((open) => !open)
 
   return (
     <div data-theme={isPremium ? 'premium' : dark ? 'night' : 'default'} data-winter={winterModeEnabled || undefined} className={cn('min-h-[100dvh] bg-slate-50 font-sans text-slate-900 antialiased selection:bg-teal-500/20 dark:bg-slate-950 dark:text-slate-100', isPremium ? 'theme-premium bg-gradient-to-br from-[#4a0000] via-[#E30A17] to-[#8a0000]' : dark ? 'theme-night' : 'theme-default', winterModeEnabled && 'winter-mode')}>
@@ -438,37 +481,36 @@ export default function TurkchaDashboard({ active, onNavigate, dark, onToggleDar
         <div className={`absolute -left-36 bottom-[-4rem] size-[32rem] rounded-full blur-[100px] ${isPremium ? 'bg-red-950/45' : 'bg-teal-900/10'}`} />
         <div className="absolute inset-0 opacity-[.035]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,.55) .65px, transparent .65px)', backgroundSize: '5px 5px' }} />
       </div>
-      <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-[1600px] gap-2 overflow-x-clip p-2 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
+      <div className="relative z-10 flex min-h-[100dvh] w-full gap-2 p-2 sm:gap-5 sm:p-5 lg:gap-5 lg:p-7">
         <Sidebar
           active={active}
           onNavigate={navigate}
-          collapsed={collapsed}
-          onToggleCollapse={() => setCollapsed((c) => !c)}
           mobileOpen={mobileOpen}
           onCloseMobile={() => setMobileOpen(false)}
           targetPct={targetPct}
           level={level}
           profile={profile}
-          onOpenProfile={() => setProfileOpen(true)}
+          onOpenProfile={() => { setProfileOpen(true); setMobileOpen(false) }}
           onInstallApp={onInstallApp}
+          onLogout={onLogout}
           showInstall={!isInstalled}
           isPremium={isPremium}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col md:ml-[17rem]">
           <Header
             breadcrumb={breadcrumb}
             isPremium={isPremium}
-            collapsed={collapsed}
             mobileOpen={mobileOpen}
             onToggleSidebar={toggleSidebar}
             xp={xp}
             level={level}
-              profile={profile}
+            currentStreak={currentStreak}
+            profile={profile}
             onOpenProfile={() => setProfileOpen(true)}
           />
 
-          <main className="mx-auto w-full max-w-[1320px] min-w-0 flex-1 pb-10 pt-4 sm:pt-6">
+          <main className="mx-auto w-full max-w-[1320px] min-w-0 flex-1 overflow-x-clip pb-10 pt-4 sm:pt-6">
             {children}
           </main>
         </div>

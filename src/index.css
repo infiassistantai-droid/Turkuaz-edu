@@ -19,6 +19,25 @@ html {
   background: rgba(120, 130, 140, 0.4);
   border-radius: 99px;
 }
+.notifications-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, .5) transparent;
+}
+.notifications-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.notifications-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(100, 116, 139, .5);
+}
+html.theme-night #root .notifications-scrollbar,
+:is(.premium-theme, .theme-premium) #root .notifications-scrollbar {
+  scrollbar-color: rgba(148, 163, 184, .4) transparent;
+}
+html.theme-night #root .notifications-scrollbar::-webkit-scrollbar-thumb,
+:is(.premium-theme, .theme-premium) #root .notifications-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, .4);
+}
 
 /* ---------- 3D flashcard flip ---------- */
 .flip-card {
@@ -944,4 +963,25 @@ html.theme-premium #root :where(button:focus-visible, a[href]:focus-visible, [ro
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+@keyframes shop-toast-pop {
+  0% { opacity: 0; transform: translate(-50%, 18px) scale(.92); }
+  70% { opacity: 1; transform: translate(-50%, -3px) scale(1.02); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+.shop-toast-pop { animation: shop-toast-pop 360ms cubic-bezier(.2, .85, .25, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-toast-pop { animation-duration: 1ms; }
+}
+
+@keyframes shop-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-float { animation: none !important; }
 }

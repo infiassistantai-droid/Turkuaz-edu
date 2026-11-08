@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   ArrowRight,
   BookOpenText,
-  CalendarCheck,
   Check,
   Headphones,
   Mic,
@@ -14,11 +13,9 @@ import {
   Trophy,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
-import { loadJSON, saveJSON } from '../lib/storage'
 import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
 import DailyQuestsWidget from './DailyQuestsWidget'
-import PersonalPlanCard from './PersonalPlanCard'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -62,29 +59,6 @@ const SKILLS = [
     score: 0,
   },
 ]
-
-const INITIAL_TASKS = [
-  { id: 't1', titleKey: 'daily.task1', metaKey: 'daily.task1.meta', xp: 40, done: false },
-  { id: 't2', titleKey: 'daily.task2', metaKey: 'daily.task2.meta', xp: 60, done: false },
-  { id: 't3', titleKey: 'daily.task3', metaKey: 'daily.task3.meta', xp: 90, done: false },
-  { id: 't4', titleKey: 'daily.task4', metaKey: 'daily.task4.meta', xp: 70, done: false },
-]
-
-const WEEKDAY_KEYS = ['weekday.sun', 'weekday.mon', 'weekday.tue', 'weekday.wed', 'weekday.thu', 'weekday.fri', 'weekday.sat']
-const WEEK = (() => {
-  const today = new Date()
-  const mondayOffset = (today.getDay() + 6) % 7
-  return Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(today)
-    date.setDate(today.getDate() - mondayOffset + index)
-    return {
-      dayKey: WEEKDAY_KEYS[date.getDay()],
-      min: 0, // No fabricated study time: populate only when real duration tracking exists.
-      today: date.toDateString() === today.toDateString(),
-    }
-  })
-})()
-
 
 /* -------------------------------------------------------------------------- */
 /*                                   Helpers                                  */
@@ -618,124 +592,10 @@ function CertificateCalculator({ initial, dark = false, isPremium = false }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                              Daily plan card                               */
-/* -------------------------------------------------------------------------- */
-
-function DailyPlanCard({ addXp }) {
-  const { t } = useI18n()
-  const today = new Date().toLocaleDateString('en-CA')
-  const storageKey = `turkish-marathon-dashboard-plan-${today}`
-  const savedPlan = loadJSON(storageKey, {})
-  const [tasks, setTasks] = useState(() => INITIAL_TASKS.map((task) => ({ ...task, done: !!savedPlan.done?.[task.id] })))
-  const [rewarded, setRewarded] = useState(() => savedPlan.rewarded || [])
-
-  useEffect(() => {
-    saveJSON(storageKey, {
-      done: Object.fromEntries(tasks.map((task) => [task.id, task.done])),
-      rewarded,
-    })
-  }, [storageKey, tasks, rewarded])
-
-  function toggleTask(taskId) {
-    const task = tasks.find((item) => item.id === taskId)
-    if (!task) return
-    setTasks((previous) => previous.map((item) => item.id === taskId ? { ...item, done: !item.done } : item))
-    if (!task.done && !rewarded.includes(taskId)) {
-      addXp?.(task.xp)
-      setRewarded((previous) => [...previous, taskId])
-    }
-  }
-  const doneCount = tasks.filter((t) => t.done).length
-  const maxMin = Math.max(1, ...WEEK.map((w) => w.min))
-
-  return (
-    <Card className="flex flex-col p-6">
-      <CardHeader
-        icon={CalendarCheck}
-        title={t('daily.title')}
-        subtitle={t('daily.done', { done: doneCount, total: tasks.length })}
-        right={
-          <span className="rounded-full bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700 ring-1 ring-amber-600/15 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-400/20">
-            +{tasks.reduce((a, t) => a + t.xp, 0)} XP
-          </span>
-        }
-      />
-
-      <ul className="mt-5 space-y-1.5">
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={task.done}
-              onClick={() => toggleTask(task.id)}
-              className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition-colors hover:bg-slate-50 active:scale-[0.99] dark:hover:bg-slate-800/50"
-            >
-              <span
-                className={cn(
-                  'grid size-5 shrink-0 place-items-center rounded-md border transition-all',
-                  task.done
-                    ? 'border-emerald-500 bg-emerald-500 text-white'
-                    : 'border-slate-300 dark:border-slate-600',
-                )}
-              >
-                {task.done && <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span
-                  className={cn(
-                    'block truncate text-sm font-medium',
-                    task.done ? 'text-slate-400 line-through dark:text-slate-500' : 'text-slate-800 dark:text-slate-100',
-                  )}
-                >
-                  {t(task.titleKey)}
-                </span>
-                <span className="block text-xs text-slate-400 dark:text-slate-500">{t(task.metaKey)}</span>
-              </span>
-              <span className="text-xs font-medium tabular-nums text-slate-400 dark:text-slate-500">+{task.xp}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-auto border-t border-slate-200/80 pt-5 dark:border-slate-800/80">
-        <div className="mb-3 flex items-center justify-between text-xs">
-          <span className="font-medium text-slate-700 dark:text-slate-200">{t('daily.weekly')}</span>
-          <span className="tabular-nums text-slate-500 dark:text-slate-400">
-{t('daily.minutes', { count: WEEK.reduce((a, w) => a + w.min, 0) })}
-          </span>
-        </div>
-        <div className="flex items-end gap-2">
-          {WEEK.map((w) => (
-            <div key={t(w.dayKey)} className="flex flex-1 flex-col items-center gap-1.5">
-              <div className="flex h-16 w-full items-end">
-                <div
-                  className={cn(
-                    'w-full rounded-md transition-all',
-                    w.today
-                      ? 'bg-gradient-to-t from-rose-500 to-rose-400'
-                      : 'bg-gradient-to-t from-teal-600/80 to-cyan-400/80',
-                  )}
-                  style={{ height: `${w.min === 0 ? 3 : (w.min / maxMin) * 100}%`, opacity: w.min === 0 ? 0.35 : 1 }}
-                  title={w.min === 0 ? t('daily.noActivity') : t('daily.minutes', { count: w.min })}
-                />
-              </div>
-              <span className={cn('text-[10px] font-medium', w.today ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500')}>
-                {t(w.dayKey)}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Card>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, addXp, dailyQuests, onClaimDailyReward, isPremium = false, dark = false }) {
+export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, dailyQuests, onClaimDailyReward, isPremium = false, dark = false }) {
   const { language, t } = useI18n()
   const locale = { uz: 'uz-UZ', tr: 'tr-TR', en: 'en-US' }[language] || 'tr-TR'
   const todayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
@@ -790,7 +650,7 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
           </div>
           <span className="rounded-lg border border-slate-200 bg-white/80 px-2.5 py-1 text-[10px] font-semibold text-slate-500 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-400">{SKILLS.length}</span>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 sm:gap-6 xl:grid-cols-4">
           {SKILLS.map((skill) => (
             <SkillCard
               key={skill.id}
@@ -801,11 +661,10 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
         </div>
       </section>
 
-      <DailyQuestsWidget progress={dailyQuests} onClaimReward={onClaimDailyReward} isPremium={isPremium} dark={dark} />
+      <DailyQuestsWidget progress={dailyQuests} stats={stats} navigate={navigate} onClaimReward={onClaimDailyReward} isPremium={isPremium} />
 
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
         <CertificateCalculator initial={initialScores} dark={dark} isPremium={isPremium} />
-        <PersonalPlanCard navigate={navigate} />
       </div>
 
       <footer className="pb-2 pt-2 text-center text-xs text-slate-400 dark:text-slate-500">

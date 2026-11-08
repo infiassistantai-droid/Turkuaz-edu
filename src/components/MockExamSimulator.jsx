@@ -65,7 +65,7 @@ function getCefr(score) {
   return 'A2'
 }
 
-export default function MockExamSimulator({ profile, isPremium = false, onToast, onExit }) {
+export default function MockExamSimulator({ profile, isPremium = false, onToast, onExit, onComplete }) {
   const { t, language } = useI18n()
   const [screen, setScreen] = useState('intro')
   const [secondsLeft, setSecondsLeft] = useState(EXAM_SECONDS)
@@ -86,9 +86,11 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
     const expired = timedOut || (deadline !== null && Date.now() >= deadline)
     const correct = QUESTIONS.reduce((sum, question) => sum + (answers[question.id] === question.answer ? 1 : 0), 0)
     const score = Math.round((correct / QUESTIONS.length) * 100)
-    setResult({ correct, score, level: getCefr(score), submittedAt: new Date(), timedOut: expired })
+    const completedResult = { correct, score, level: getCefr(score), submittedAt: new Date(), timedOut: expired }
+    setResult(completedResult)
     setScreen('results')
-  }, [answers, deadline])
+    onComplete?.(completedResult)
+  }, [answers, deadline, onComplete])
 
   useEffect(() => {
     if (screen !== 'exam' || !deadline) return undefined
