@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AudioLines, FilePlus2, Headphones, Mic, PenLine, Plus, Trash2 } from 'lucide-react'
 import { useI18n } from '../../lib/i18n.jsx'
-import { AdminCard, AdminPageHeader, Field, INPUT_CLASS, PrimaryButton, SessionDraftTag, UploadInput } from './AdminShared'
+import { AdminCard, AdminPageHeader, EmptyAdminState, Field, INPUT_CLASS, PrimaryButton, SessionDraftTag, UploadInput } from './AdminShared'
 
 const EXAM_TABS = [
   { id: 'quiz', icon: FilePlus2 },
@@ -47,7 +47,6 @@ export default function AdminExams({ notify }) {
 
   return <div className="mx-auto max-w-7xl">
     <AdminPageHeader eyebrow={t('admin.exams.eyebrow')} title={t('admin.exams.title')} description={t('admin.exams.description')} actions={<SessionDraftTag>{t('admin.draft.localTag')}</SessionDraftTag>}/>
-    <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-5 text-amber-900">{t('admin.draft.sessionOnly')}</div>
     <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(280px,.9fr)]">
       <AdminCard>
         <div role="tablist" aria-label={t('admin.exams.tabs.label')} className="flex gap-1 overflow-x-auto border-b border-slate-100 p-2">
@@ -73,7 +72,7 @@ export default function AdminExams({ notify }) {
       </AdminCard>
 
       <AdminCard title={t('admin.exams.drafts.title')} description={t('admin.exams.drafts.description')}>
-        {drafts.length ? <div className="divide-y divide-slate-100">{drafts.map((draft) => { const Icon = EXAM_TABS.find((item) => item.id === draft.type)?.icon || AudioLines; return <div key={draft.id} className="flex items-start gap-3 px-4 py-4"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-indigo-50 text-indigo-600"><Icon className="size-4" aria-hidden="true"/></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className="line-clamp-2 text-xs font-bold text-slate-800">{draft.title}</p><SessionDraftTag>{t('admin.draft.localTag')}</SessionDraftTag></div>{draft.audio && <p className="mt-1 truncate text-[10px] text-slate-500">{draft.audio}</p>}</div><button type="button" onClick={() => setDrafts((previous) => previous.filter((item) => item.id !== draft.id))} aria-label={t('admin.common.removeDraft')} className="grid size-9 place-items-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600"><Trash2 className="size-4" aria-hidden="true"/></button></div>})}</div> : <div className="p-3"><p className="sr-only">{t('admin.exams.drafts.title')}</p><p className="px-4 py-8 text-center text-xs leading-5 text-slate-500">{t('admin.exams.drafts.empty')}</p></div>}
+        {drafts.length ? <div className="divide-y divide-slate-100">{drafts.map((draft) => { const Icon = EXAM_TABS.find((item) => item.id === draft.type)?.icon || AudioLines; return <div key={draft.id} className="flex items-start gap-3 px-4 py-4"><span className="grid size-9 shrink-0 place-items-center rounded-lg bg-indigo-50 text-indigo-600"><Icon className="size-4" aria-hidden="true"/></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><p className="line-clamp-2 text-xs font-bold text-slate-800">{draft.title}</p><SessionDraftTag>{t('admin.draft.localTag')}</SessionDraftTag></div>{draft.audio && <p className="mt-1 truncate text-[10px] text-slate-500">{draft.audio}</p>}</div><button type="button" onClick={() => setDrafts((previous) => previous.filter((item) => item.id !== draft.id))} aria-label={t('admin.common.removeDraft')} className="grid size-9 place-items-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600"><Trash2 className="size-4" aria-hidden="true"/></button></div>})}</div> : <EmptyAdminState icon={FilePlus2} title={t('admin.exams.drafts.empty')} description={t('admin.exams.drafts.description')}/>}
       </AdminCard>
     </div>
   </div>

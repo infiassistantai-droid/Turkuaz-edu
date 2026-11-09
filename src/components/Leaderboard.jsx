@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Crown, FlaskConical, Globe2, MapPin, Medal, RefreshCw, Shield, Sparkles, Trophy, UsersRound } from 'lucide-react'
 import { useI18n } from '../lib/i18n.jsx'
-import { fetchWeeklyLeaderboard, isSupabaseConfigured } from '../lib/supabase'
+import { fetchTopPlayers, isSupabaseConfigured } from '../lib/supabase'
 import leaderboardDemoData from '../data/leaderboardDemoData.json'
 
 const LEAGUES = [
@@ -12,6 +12,8 @@ const LEAGUES = [
   { id: 'diamond', minimum: 20000, badge: '/images/league-medals/diamond.png', tone: 'from-sky-400/20 to-blue-950/30', border: 'border-sky-300/30', glow: 'shadow-sky-400/10' },
   { id: 'legend', minimum: 50000, badge: '/images/league-medals/legend.png', tone: 'from-rose-500/20 to-violet-950/30', border: 'border-rose-300/30', glow: 'shadow-rose-400/10' },
 ]
+
+const DEFAULT_PLAYER_AVATAR = '/images/avatars/avatar-1.png'
 
 const TABS = [
   { id: 'leagues', key: 'leaderboard.tabs.leagues', icon: Trophy },
@@ -25,10 +27,6 @@ function getActiveLeague(xp) {
 
 function formatNumber(value) {
   return Math.max(0, Number(value) || 0).toLocaleString()
-}
-
-function initials(value) {
-  return String(value || '?').trim().split(/\s+/u).slice(0, 2).map((part) => part[0]?.toLocaleUpperCase()).join('') || '?'
 }
 
 function RegionToggle({ value, onChange, t }) {
@@ -77,7 +75,7 @@ export default function Leaderboard({ userId, profile, stats, initialTab = 'leag
     setBusy(true)
     setError(false)
     try {
-      const nextRows = await fetchWeeklyLeaderboard()
+      const nextRows = await fetchTopPlayers()
       if (requestVersion.current === requestId) setRows(nextRows)
     } catch {
       if (requestVersion.current === requestId) setError(true)
@@ -96,8 +94,7 @@ export default function Leaderboard({ userId, profile, stats, initialTab = 'leag
   const activeLeague = useMemo(() => getActiveLeague(stats?.xp), [stats?.xp])
   const nextLeague = LEAGUES[LEAGUES.findIndex((league) => league.id === activeLeague.id) + 1] || null
   const profileName = [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.fullName || profile?.full_name || ''
-  const avatarUrl = profile?.avatarUrl || profile?.avatar_url || ''
-  const weeklyXp = Math.max(0, Number(stats?.weeklyXp) || 0)
+  const avatarUrl = profile?.avatarUrl || profile?.avatar_url || DEFAULT_PLAYER_AVATAR
   const totalXp = Math.max(0, Number(stats?.xp) || 0)
   const filteredRows = playerRegion === 'global' ? rows : []
   const previewPlayers = playerRegion === 'global' ? leaderboardDemoData.players : leaderboardDemoData.players.filter((row) => row.country === 'Uzbekistan')
@@ -161,30 +158,31 @@ export default function Leaderboard({ userId, profile, stats, initialTab = 'leag
         <div className="flex flex-wrap items-center gap-2"><RegionToggle value={playerRegion} onChange={setPlayerRegion} t={t}/><DemoToggle enabled={demoMode} onChange={() => setDemoMode((value) => !value)} t={t}/></div>
       </div>
       {profileName && !demoMode && <div className="flex items-center gap-3 rounded-2xl border border-cyan-200/15 bg-gradient-to-r from-cyan-300/[.09] to-transparent px-4 py-3.5">
-        {avatarUrl ? <img src={avatarUrl} alt="" className="size-11 rounded-xl border border-white/10 object-cover"/> : <span className="grid size-11 place-items-center rounded-xl border border-white/10 bg-white/[.06] text-sm font-black text-cyan-100">{initials(profileName)}</span>}
-        <div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold">{profileName}<span className="ml-2 text-xs font-semibold text-cyan-100">{t('leaderboard.players.you')}</span></p><p className="mt-0.5 text-xs text-slate-400">{t('leaderboard.players.currentXp')}</p></div>
-        <span className="shrink-0 text-lg font-black tabular-nums text-cyan-100">{formatNumber(weeklyXp)} <span className="text-xs">XP</span></span>
+        <img src={avatarUrl} alt="" className="size-11 rounded-xl border border-white/10 object-cover"/>
+        <div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold">{profileName}<span className="ml-2 text-xs font-semibold text-cyan-100">{t('leaderboard.players.you')}</span></p><p className="mt-0.5 text-xs text-slate-400">{t('leaderboard.players.totalXp')}</p></div>
+        <span className="shrink-0 text-lg font-black tabular-nums text-cyan-100">{formatNumber(totalXp)} <span className="text-xs">XP</span></span>
       </div>}
       {!demoMode && error ? <div role="alert" className="rounded-2xl border border-rose-300/15 bg-rose-500/[.08] p-5 text-sm text-rose-200">{t('leaderboard.error')}</div> : !demoMode && busy && rows.length === 0 ? <div role="status" aria-busy="true" className="flex min-h-40 items-center justify-center gap-3 rounded-3xl border border-white/10 bg-slate-950/40 text-sm font-semibold text-slate-300"><RefreshCw className="size-4 animate-spin text-cyan-200"/>{t('leaderboard.players.fetching')}</div> : !demoMode && playerRegion === 'uzbekistan' ? <EmptyState icon={MapPin} title={t('leaderboard.filter.uzbekistan')} description={t('leaderboard.players.uzEmpty')}/> : !demoMode && !isSupabaseConfigured ? <EmptyState icon={Globe2} title={t('leaderboard.tabs.players')} description={t('leaderboard.players.localOnly')}/> : !demoMode && filteredRows.length === 0 ? <EmptyState icon={Trophy} title={t('leaderboard.players.heading')} description={t('leaderboard.players.globalEmpty')}/> : <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/45 shadow-xl">
-        <div className="hidden grid-cols-[58px_minmax(0,1fr)_150px] items-center gap-4 border-b border-white/[.07] px-5 py-3 text-[10px] font-black uppercase tracking-[.15em] text-slate-500 sm:grid"><span>#</span><span>{t('leaderboard.players.heading')}</span><span className="text-right">{t('leaderboard.players.weeklyXp')}</span></div>
+        <div className="hidden grid-cols-[58px_minmax(0,1fr)_150px] items-center gap-4 border-b border-white/[.07] px-5 py-3 text-[10px] font-black uppercase tracking-[.15em] text-slate-500 sm:grid"><span>#</span><span>{t('leaderboard.players.heading')}</span><span className="text-right">{t('leaderboard.players.totalXp')}</span></div>
         {playersToShow.map((row, index) => {
           const isCurrentUser = row.user_id === userId
           const name = row.display_name || t('examSimulator.learnerFallback')
-          const rowAvatar = isCurrentUser ? avatarUrl : row.avatar_url || ''
-          const rowLeague = row.total_xp != null ? getActiveLeague(row.total_xp) : null
+          const rowAvatar = (isCurrentUser ? avatarUrl : row.avatar_url) || DEFAULT_PLAYER_AVATAR
+          const rowTotalXp = Math.max(0, Number(row.total_xp ?? row.xp) || 0)
+          const rowLeague = getActiveLeague(rowTotalXp)
           const podium = index < 3
           const podiumTone = index === 0 ? 'border-amber-300/20 bg-gradient-to-r from-amber-300/[.10] to-transparent' : index === 1 ? 'border-slate-200/15 bg-gradient-to-r from-slate-200/[.07] to-transparent' : 'border-orange-300/15 bg-gradient-to-r from-orange-300/[.07] to-transparent'
           return <div key={row.user_id || `${name}-${index}`} className={`grid grid-cols-[42px_minmax(0,1fr)_auto] items-center gap-3 border-b border-white/[.06] px-3 py-3.5 transition last:border-0 sm:grid-cols-[58px_minmax(0,1fr)_150px] sm:gap-4 sm:px-5 ${podium ? podiumTone : 'hover:bg-white/[.025]'} ${isCurrentUser ? 'ring-1 ring-inset ring-cyan-200/30' : ''}`}>
             <span className={`grid size-10 place-items-center rounded-xl border text-xs font-black tabular-nums sm:size-11 ${index === 0 ? 'border-amber-300/25 bg-amber-300/10 text-amber-200' : index === 1 ? 'border-slate-200/20 bg-slate-200/[.08] text-slate-100' : index === 2 ? 'border-orange-300/20 bg-orange-300/[.08] text-orange-200' : 'border-white/[.07] bg-white/[.035] text-slate-400'}`}>{index < 3 ? <span className="flex flex-col items-center leading-none"><Medal className="size-4" aria-hidden="true"/><span className="mt-0.5 text-[9px]">{index + 1}</span></span> : index + 1}</span>
             <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-              {rowAvatar ? <img src={rowAvatar} alt="" className="size-9 shrink-0 rounded-xl border border-white/10 object-cover sm:size-10"/> : <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-white/[.08] bg-white/[.045] text-[11px] font-black text-slate-300 sm:size-10">{initials(name)}</span>}
+              <img src={rowAvatar} alt="" className="size-9 shrink-0 rounded-xl border border-white/10 object-cover sm:size-10"/>
               <div className="min-w-0">
                 <p className="flex min-w-0 items-center gap-1.5 truncate text-sm font-extrabold text-white sm:text-base"><span className="truncate">{name}</span>{isCurrentUser && <span className="shrink-0 rounded-full bg-cyan-300/10 px-2 py-0.5 text-[9px] font-black text-cyan-100">{t('leaderboard.players.you')}</span>}</p>
-                <p className="mt-0.5 truncate text-[10px] text-slate-500 sm:text-xs">{demoMode ? t('leaderboard.players.demoMeta', { lessons: formatNumber(row.lessons_completed), clan: row.clan_name }) : t('leaderboard.players.weeklyXp')}</p>
-                {demoMode && rowLeague && <span className="mt-1 inline-flex rounded-full border border-cyan-200/10 bg-cyan-200/[.06] px-2 py-0.5 text-[9px] font-bold text-cyan-100/80">{t(`leaderboard.league.${rowLeague.id}`)}</span>}
+                {demoMode && <p className="mt-0.5 truncate text-[10px] text-slate-500 sm:text-xs">{t('leaderboard.players.demoMeta', { lessons: formatNumber(row.lessons_completed), clan: row.clan_name })}</p>}
+                <span className="mt-1 inline-flex items-center gap-1 rounded-full border border-cyan-200/10 bg-cyan-200/[.06] px-2 py-0.5 text-[9px] font-bold text-cyan-100/80"><img src={rowLeague.badge} alt="" className="size-3 object-contain"/>{t(`leaderboard.league.${rowLeague.id}`)}</span>
               </div>
             </div>
-            <div className="text-right"><p className={`text-sm font-black tabular-nums sm:text-base ${podium ? 'text-amber-100' : 'text-cyan-100'}`}>{formatNumber(row.weekly_xp)} <span className="text-[10px]">XP</span></p></div>
+            <div className="text-right"><p className={`text-sm font-black tabular-nums sm:text-base ${podium ? 'text-amber-100' : 'text-cyan-100'}`}>{formatNumber(rowTotalXp)} <span className="text-[10px]">XP</span></p></div>
           </div>
         })}
         {!demoMode && currentUserIndex >= 0 && <p className="border-t border-white/[.07] px-4 py-2 text-[10px] text-slate-500">{t('leaderboard.players.rank', { count: currentUserIndex + 1 })}</p>}

@@ -335,3 +335,80 @@ export async function fetchWeeklyLeaderboard() {
   throwQueryError(error)
   return Array.isArray(data) ? data.filter((row) => row && typeof row === 'object') : []
 }
+
+/** Fetch aggregate admin metrics via an RPC restricted to trusted admin app_metadata. */
+export async function fetchAdminDashboardStats() {
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { data, error } = await withReadTimeout(
+    supabase.rpc('get_admin_dashboard_stats'),
+    'admin dashboard stats',
+  )
+  throwQueryError(error)
+  const row = Array.isArray(data) ? data[0] : null
+  if (!row) throw new Error('Admin dashboard stats are unavailable.')
+  return {
+    totalUsers: Math.max(0, Math.floor(Number(row.total_users) || 0)),
+    averageXp: Math.max(0, Math.round(Number(row.average_xp) || 0)),
+  }
+}
+
+/** Fetch admin-only learner rows using a trusted app_metadata role claim. */
+export async function fetchAdminUsers() {
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { data, error } = await withReadTimeout(supabase.rpc('get_admin_users'), 'admin users')
+  throwQueryError(error)
+  if (!Array.isArray(data)) return []
+  return data.filter((row) => row && typeof row === 'object').map((row) => ({
+    id: String(row.id || ''),
+    name: String(row.name || 'Learner'),
+    email: String(row.email || ''),
+    avatar_url: typeof row.avatar_url === 'string' && row.avatar_url.trim() ? row.avatar_url.trim() : null,
+    league: String(row.league || ''),
+    total_xp: Math.max(0, Math.floor(Number(row.total_xp) || 0)),
+    gold: Math.max(0, Math.floor(Number(row.gold) || 0)),
+    gems: Math.max(0, Math.floor(Number(row.gems) || 0)),
+  })).filter((row) => row.id)
+}
+
+/** Update balances via the admin-claim-gated RPC; profiles RLS remains private. */
+export async function updateAdminUserBalance(profileId, balances) {
+  if (!supabase || !profileId) throw new Error('An admin session and profile are required.')
+  const values = {
+    p_profile_id: profileId,
+    p_total_xp: Math.max(0, Math.floor(Number(balances?.totalXp) || 0)),
+    p_gold: Math.max(0, Math.floor(Number(balances?.gold) || 0)),
+    p_gems: Math.max(0, Math.floor(Number(balances?.gems) || 0)),
+  }
+  const { data, error } = await withReadTimeout(
+    supabase.rpc('update_admin_user_balance', values),
+    'admin balance update',
+  )
+  throwQueryError(error)
+  const row = Array.isArray(data) ? data[0] : null
+  if (!row?.id) throw new Error('Balance update did not return a profile.')
+  return {
+    id: String(row.id),
+    total_xp: Math.max(0, Math.floor(Number(row.total_xp) || 0)),
+    gold: Math.max(0, Math.floor(Number(row.gold) || 0)),
+    gems: Math.max(0, Math.floor(Number(row.gems) || 0)),
+  }
+}
+
+/** Fetch the public ranking fields from profiles through an authenticated RPC.
+ * The profiles table itself stays private under RLS; the RPC clamps to 50 rows.
+ */
+export async function fetchTopPlayers() {
+  if (!supabase) return []
+  const { data, error } = await withReadTimeout(
+    supabase.rpc('get_top_profiles', { p_limit: 50 }),
+    'top profiles leaderboard',
+  )
+  throwQueryError(error)
+  if (!Array.isArray(data)) return []
+  return data.filter((row) => row && typeof row === 'object').map((row) => ({
+    user_id: String(row.user_id || ''),
+    display_name: String(row.display_name || 'Learner'),
+    avatar_url: typeof row.avatar_url === 'string' && row.avatar_url.trim() ? row.avatar_url.trim() : null,
+    total_xp: Math.max(0, Math.floor(Number(row.total_xp) || 0)),
+  })).filter((row) => row.user_id)
+}

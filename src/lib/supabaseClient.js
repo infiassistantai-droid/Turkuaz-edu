@@ -3,6 +3,9 @@ export {
   deleteLearnerCloudData,
   fetchLearnerGamification,
   fetchLearnerProgress,
+  fetchAdminDashboardStats,
+  fetchAdminUsers,
+  fetchTopPlayers,
   fetchWeeklyLeaderboard,
   isCloudSyncAvailable,
   isSupabaseConfigured,
@@ -10,4 +13,5 @@ export {
   supabase,
   supabaseUrl,
   syncLearnerProgress,
+  updateAdminUserBalance,
 } from './supabase.js'

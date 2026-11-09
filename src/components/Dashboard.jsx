@@ -71,7 +71,7 @@ function masteryTone(score, t, isEvaluated) {
       stroke: 'stroke-slate-300 dark:stroke-slate-600',
       bar: 'from-slate-400 to-slate-300',
       text: 'text-slate-500 dark:text-slate-400',
-      chip: 'bg-slate-100 text-slate-600 ring-1 ring-slate-300/40 dark:bg-white/5 dark:text-slate-300 dark:ring-white/10',
+      chip: 'bg-slate-100 text-slate-700 ring-1 ring-slate-300/70 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700',
     }
   if (score >= 65)
     return {
@@ -176,7 +176,7 @@ function CardHeader({ icon: Icon, title, subtitle, right }) {
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex items-center gap-3">
-        <span className="grid size-9 place-items-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-200">
+        <span className="luxury-card-header-orb grid size-9 place-items-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-200">
           <Icon className="size-4" aria-hidden="true" />
         </span>
         <div>
@@ -200,19 +200,10 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore, hasResults 
   const pct = threshold ? Math.min(100, Math.round((totalScore / threshold) * 100)) : 0
 
   return (
-    <section className="premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl shadow-teal-900/15 sm:p-8 lg:col-span-2">
+    <section style={{ backgroundImage: 'radial-gradient(circle at 85% 20%, rgba(212, 175, 55, 0.4) 0%, transparent 50%), linear-gradient(135deg, #042f2e 0%, #0f172a 50%, #1c1917 100%)', border: '1px solid rgba(212, 175, 55, 0.4)' }} className="premium-hero luxury-dashboard-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl shadow-teal-900/15 sm:p-8 lg:col-span-2">
       <div className="pointer-events-none absolute -right-16 -top-24 -z-10 size-72 rounded-full bg-cyan-300/20 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-28 left-1/3 -z-10 size-72 rounded-full bg-rose-500/20 blur-3xl" aria-hidden="true" />
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12]"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)',
-          backgroundSize: '18px 18px',
-          maskImage: 'linear-gradient(to bottom left, black, transparent 70%)',
-          WebkitMaskImage: 'linear-gradient(to bottom left, black, transparent 70%)',
-        }}
-        aria-hidden="true"
-      />
+      <div className="luxury-hero-sheen pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
 
       <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div className="max-w-md">
@@ -230,7 +221,8 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore, hasResults 
           <button
             type="button"
             onClick={onStart}
-            className="gold-button premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-teal-800 shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-50 hover:shadow-xl active:scale-95"
+            style={{ backgroundImage: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)', color: '#1a1205', fontWeight: 'bold' }}
+            className="luxury-gold-cta gold-button premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-teal-800 shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-50 hover:shadow-xl active:scale-95"
           >
             {t('dashboard.start')}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
@@ -245,8 +237,8 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore, hasResults 
               {hasResults && threshold ? `${pct}%` : '—'}
             </span>
           </div>
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
-            <div className="h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 transition-[width] duration-700" style={{ width: `${pct}%` }} />
+          <div className="luxury-progress-track mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
+            <div className="luxury-progress-fill h-full rounded-full bg-gradient-to-r from-amber-300 to-yellow-100 transition-[width] duration-700" style={{ width: `${pct}%` }} />
           </div>
         </div>
       </div>
@@ -268,7 +260,7 @@ function ReadinessCard({ total, targetLevel, hasResults }) {
   const remaining = threshold ? Math.max(0, threshold - total) : null
 
   return (
-    <Card className="flex flex-col p-6">
+    <Card className="luxury-readiness-card flex flex-col p-6">
       <CardHeader
         icon={Trophy}
         title={t('dashboard.readiness')}
@@ -282,15 +274,20 @@ function ReadinessCard({ total, targetLevel, hasResults }) {
       <div className="mt-6 flex items-end gap-2">
         <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{hasResults ? Number(total).toFixed(2) : '—'}</span>
         <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">{t('dashboard.scoreAverage')}</span>
-        <span className="mb-1.5 ml-auto rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-900">
+        <span className={cn(
+          'mb-1.5 ml-auto rounded-lg px-2 py-1 text-xs font-semibold',
+          hasResults
+            ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+            : 'bg-slate-100 text-slate-700 ring-1 ring-slate-300/70 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700',
+        )}>
           {hasResults ? t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`) : t('dashboard.notEvaluated')}
         </span>
       </div>
 
       <div className="relative mt-5">
-        <div className="h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+        <div className="luxury-progress-track h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500 transition-[width] duration-1000 ease-out"
+            className="luxury-progress-fill h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500 transition-[width] duration-1000 ease-out"
             style={{ width: mounted ? `${pct}%` : '0%' }}
           />
         </div>
@@ -371,10 +368,10 @@ function SkillCard({ skill, onOpen }) {
   const pct = skill.isEvaluated ? Math.round((skill.score / 75) * 100) : null
 
   return (
-    <Card className="group flex flex-col p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300/80 hover:shadow-lg dark:hover:border-slate-700">
+    <Card className={`luxury-skill-card luxury-skill-${skill.id} group flex flex-col p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300/80 hover:shadow-lg dark:hover:border-slate-700`}>
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-teal-600/10 to-cyan-500/10 text-teal-700 ring-1 ring-teal-600/15 dark:text-teal-300 dark:ring-teal-400/20">
+          <span className={`luxury-skill-orb luxury-orb-${skill.id} grid size-10 place-items-center rounded-xl bg-gradient-to-br from-teal-600/10 to-cyan-500/10 text-teal-700 ring-1 ring-teal-600/15 dark:text-teal-300 dark:ring-teal-400/20`}>
             <Icon className="size-5" aria-hidden="true" />
           </span>
           <div>
@@ -393,8 +390,8 @@ function SkillCard({ skill, onOpen }) {
             </span>
             {skill.isEvaluated && <span className="text-sm text-slate-500 dark:text-slate-400">{t('skill.scoreUnit')}</span>}
           </div>
-          <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400">
-            <TrendingUp className="size-3" aria-hidden="true" />
+          <p className={cn('mt-1 flex items-center gap-1 text-xs', skill.isEvaluated ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400')}>
+            {skill.isEvaluated && <TrendingUp className="size-3" aria-hidden="true" />}
             {skill.isEvaluated ? t('dashboard.skillEvaluated', { level: skill.level || getCefrLevel(skill.score) }) : t('dashboard.notEvaluated')}
           </p>
         </div>
@@ -629,8 +626,8 @@ export default function Dashboard({ scores, sectionResults = {}, overallScore, n
           { label: t('dashboard.stat.quizzes'), value: stats?.completedQuizzes ?? 0, icon: Check, hint: t('dashboard.stat.quizzes.hint') },
           { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
         ].map(({ label, value, icon: Icon, hint }) => (
-          <Card key={label} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-amber-300/20 bg-amber-300/10 text-amber-300 shadow-inner shadow-white/10">
+          <Card key={label} className="luxury-dashboard-stat premium-stat flex items-center gap-3 p-4 sm:p-5">
+            <span className="luxury-stat-orb grid size-10 shrink-0 place-items-center rounded-xl border border-amber-300/20 bg-amber-300/10 text-amber-300 shadow-inner shadow-white/10">
               <Icon className="size-5" aria-hidden="true" />
             </span>
             <div className="min-w-0">

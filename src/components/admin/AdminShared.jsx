@@ -1,7 +1,7 @@
 import { useId } from 'react'
-import { AlertCircle, CheckCircle2, FileAudio2, ImagePlus, Plus, X } from 'lucide-react'
+import { Inbox, FileText, FileAudio2, ImagePlus, Plus, X } from 'lucide-react'
 
-export const INPUT_CLASS = 'min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10'
+export const INPUT_CLASS = 'min-h-11 w-full rounded-md border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
 export const LABEL_CLASS = 'mb-1.5 block text-xs font-bold text-slate-700'
 
 export function AdminPageHeader({ eyebrow, title, description, actions }) {
@@ -19,26 +19,26 @@ export function AdminCard({ title, description, action, children, className = ''
 }
 
 export function PrimaryButton({ children, className = '', ...props }) {
-  return <button {...props} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 ${className}`}>{children}</button>
+  return <button {...props} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 ${className}`}>{children}</button>
 }
 
 export function SecondaryButton({ children, className = '', ...props }) {
-  return <button {...props} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 ${className}`}>{children}</button>
+  return <button {...props} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 ${className}`}>{children}</button>
 }
 
 export function Field({ label, hint, children, className = '' }) {
   return <div className={className}><label className={LABEL_CLASS}>{label}</label>{children}{hint && <p className="mt-1.5 text-[11px] leading-4 text-slate-500">{hint}</p>}</div>
 }
 
-export function EmptyAdminState({ title, description, icon: Icon = AlertCircle, action }) {
+export function EmptyAdminState({ title, description, icon: Icon = Inbox, action }) {
   return <div className="flex min-h-48 flex-col items-center justify-center px-5 py-10 text-center">
-    <span className="grid size-12 place-items-center rounded-2xl bg-slate-100 text-slate-500"><Icon className="size-5" aria-hidden="true"/></span>
-    <h3 className="mt-3 font-extrabold text-slate-800">{title}</h3><p className="mt-1 max-w-md text-xs leading-5 text-slate-500">{description}</p>{action && <div className="mt-4">{action}</div>}
+    <span className="grid size-12 place-items-center rounded-full bg-slate-50 text-slate-300"><Icon className="size-5" aria-hidden="true"/></span>
+    <h3 className="mt-3 text-sm font-semibold text-slate-700">{title}</h3><p className="mt-1 max-w-md text-xs leading-5 text-slate-500">{description}</p>{action && <div className="mt-4">{action}</div>}
   </div>
 }
 
 export function SessionDraftTag({ children = 'Local draft' }) {
-  return <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-bold text-amber-800"><CheckCircle2 className="size-3" aria-hidden="true"/>{children}</span>
+  return <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold text-slate-600"><FileText className="size-3 text-slate-400" aria-hidden="true"/>{children}</span>
 }
 
 export function AdminModal({ open, title, onClose, children, footer, closeLabel = 'Close' }) {
