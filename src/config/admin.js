@@ -1,7 +1,7 @@
 // Replace this placeholder with the exact email used by the Supabase owner account.
 export const OWNER_EMAIL = 'infiassistant.ai@gmail.com'
 
-const PLACEHOLDER_OWNER_EMAIL = 'infiassistant.ai@gmail.com'
+const PLACEHOLDER_OWNER_EMAIL = 'your_email@gmail.com'
 
 export function isOwnerEmail(email) {
   const ownerEmail = String(OWNER_EMAIL || '').trim().toLocaleLowerCase('en-US')
