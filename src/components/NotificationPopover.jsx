@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Bell, BookOpenText, Check, CheckCheck, Clock3, X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
@@ -33,6 +34,7 @@ export default function NotificationPopover({ isPremium = false }) {
   const { user } = useAuth()
   const userId = user?.id
   const [open, setOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches)
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(Boolean(supabase && userId))
   const [loadError, setLoadError] = useState(false)
@@ -43,6 +45,14 @@ export default function NotificationPopover({ isPremium = false }) {
   const closeButtonRef = useRef(null)
   const wasOpenRef = useRef(false)
   const unreadCount = notifications.reduce((count, notification) => count + (notification.is_read ? 0 : 1), 0)
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined
+    const query = window.matchMedia('(max-width: 639px)')
+    const updateViewport = (event) => setIsMobile(event.matches)
+    query.addEventListener?.('change', updateViewport)
+    return () => query.removeEventListener?.('change', updateViewport)
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -129,7 +139,9 @@ export default function NotificationPopover({ isPremium = false }) {
     wasOpenRef.current = true
     closeButtonRef.current?.focus()
     const onPointerDown = (event) => {
-      if (!wrapperRef.current?.contains(event.target)) setOpen(false)
+      const clickedTrigger = wrapperRef.current?.contains(event.target)
+      const clickedPanel = panelRef.current?.contains(event.target)
+      if (!clickedTrigger && !clickedPanel) setOpen(false)
     }
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -196,28 +208,7 @@ export default function NotificationPopover({ isPremium = false }) {
     ? 'border-white/10 bg-black/85 text-white'
     : 'border-slate-200/80 bg-white text-slate-800 dark:border-white/10 dark:bg-slate-900 dark:text-white'
 
-  return (
-    <div className="relative" ref={wrapperRef}>
-      <button
-        ref={bellButtonRef}
-        type="button"
-        onClick={() => setOpen((value) => !value)}
-        className={cn(
-          'relative grid size-11 place-items-center rounded-xl border transition-all hover:-translate-y-0.5 active:translate-y-0',
-          isPremium
-            ? 'border-white/10 bg-black/25 text-white/80 hover:bg-white/10'
-            : 'border-slate-200/80 bg-white/70 text-slate-600 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:bg-slate-800',
-        )}
-        aria-label={unreadCount ? `${t('header.notifications')} (${unreadCount})` : t('header.notifications')}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls="notification-popover"
-      >
-        <Bell className="size-4" aria-hidden="true" />
-        {unreadCount > 0 && <span className="absolute -right-1 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full border-2 border-white bg-rose-500 px-0.5 text-[9px] font-extrabold leading-none text-white shadow-[0_0_10px_rgba(244,63,94,.75)] dark:border-slate-950" aria-hidden="true">{unreadCount}</span>}
-      </button>
-
-      {open && (
+  const notificationPanel = open ? (
         <>
           <button type="button" tabIndex={-1} aria-label={t('notifications.close')} onClick={() => setOpen(false)} className="fixed inset-0 z-[90] cursor-default bg-slate-950/45 backdrop-blur-[1px] sm:hidden" />
           <section
@@ -309,7 +300,30 @@ export default function NotificationPopover({ isPremium = false }) {
             </div>
           </section>
         </>
-      )}
+  ) : null
+
+  return (
+    <div className="relative" ref={wrapperRef}>
+      <button
+        ref={bellButtonRef}
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        className={cn(
+          'relative grid size-11 place-items-center rounded-xl border transition-all hover:-translate-y-0.5 active:translate-y-0',
+          isPremium
+            ? 'border-white/10 bg-black/25 text-white/80 hover:bg-white/10'
+            : 'border-slate-200/80 bg-white/70 text-slate-600 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:bg-slate-800',
+        )}
+        aria-label={unreadCount ? `${t('header.notifications')} (${unreadCount})` : t('header.notifications')}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls="notification-popover"
+      >
+        <Bell className="size-4" aria-hidden="true" />
+        {unreadCount > 0 && <span className="absolute -right-1 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full border-2 border-white bg-rose-500 px-0.5 text-[9px] font-extrabold leading-none text-white shadow-[0_0_10px_rgba(244,63,94,.75)] dark:border-slate-950" aria-hidden="true">{unreadCount}</span>}
+      </button>
+
+      {notificationPanel && (isMobile && typeof document !== 'undefined' ? createPortal(notificationPanel, document.body) : notificationPanel)}
     </div>
   )
 }

@@ -372,6 +372,8 @@ export default function App() {
   const [cloudSession, setCloudSession] = useState(null)
   const [cloudReady, setCloudReady] = useState(false)
   const [authLoading, setAuthLoading] = useState(isSupabaseConfigured)
+  const [loadingScreenVisible, setLoadingScreenVisible] = useState(isSupabaseConfigured)
+  const [loadingScreenExiting, setLoadingScreenExiting] = useState(false)
   const [remindersEnabled, setRemindersEnabled] = useState(getReminderPreference)
   const [authenticated, setAuthenticated] = useState(() => {
     if (isSupabaseConfigured || !loadProfile()) return false
@@ -385,6 +387,21 @@ export default function App() {
     ? Boolean(authUser)
     : authenticated
   const [editingProfile, setEditingProfile] = useState(false)
+
+  useEffect(() => {
+    if (authLoading) {
+      setLoadingScreenVisible(true)
+      setLoadingScreenExiting(false)
+      return undefined
+    }
+    if (!loadingScreenVisible) return undefined
+    setLoadingScreenExiting(true)
+    const timeout = window.setTimeout(() => {
+      setLoadingScreenVisible(false)
+      setLoadingScreenExiting(false)
+    }, 220)
+    return () => window.clearTimeout(timeout)
+  }, [authLoading, loadingScreenVisible])
 
   useEffect(() => {
     if (authLoading) return
@@ -1349,25 +1366,16 @@ export default function App() {
     />
   )
 
-  if (authLoading) {
-    const loadingSurface = isPremium
-      ? 'border-white/10 bg-black/30 text-white shadow-2xl shadow-black/30 backdrop-blur-xl'
-      : dark
-        ? 'border-slate-800 bg-slate-900 text-slate-100 shadow-2xl shadow-black/30'
-        : 'border-white bg-white text-slate-900 shadow-2xl shadow-teal-950/10'
-    const skeletonTone = isPremium ? 'bg-white/10' : dark ? 'bg-slate-700' : 'bg-slate-200'
+  if (authLoading || loadingScreenVisible) {
     return (
-      <main className={cn('grid min-h-screen place-items-center px-4 py-10', isPremium ? 'bg-[#061617]' : dark ? 'bg-slate-950' : 'bg-gradient-to-br from-teal-50 via-white to-cyan-50')}>
-        <section role="status" aria-live="polite" aria-busy="true" className={cn('w-full max-w-md rounded-3xl border p-6 sm:p-8', loadingSurface)}>
-          <span className={cn('mb-5 block h-1.5 w-16 animate-pulse rounded-full bg-gradient-to-r from-teal-400 to-cyan-400')} />
-          <h1 className="text-xl font-black tracking-tight">{t('cloud.loading.title')}</h1>
-          <p className={cn('mt-2 text-sm leading-relaxed', isPremium ? 'text-white/60' : dark ? 'text-slate-400' : 'text-slate-500')}>{t('cloud.loading.subtitle')}</p>
-          <div className="mt-6 space-y-3" aria-hidden="true">
-            <div className={cn('h-12 animate-pulse rounded-2xl', skeletonTone)} />
-            <div className="grid grid-cols-2 gap-3"><div className={cn('h-20 animate-pulse rounded-2xl', skeletonTone)} /><div className={cn('h-20 animate-pulse rounded-2xl', skeletonTone)} /></div>
-            <div className={cn('h-10 animate-pulse rounded-2xl', skeletonTone)} />
-          </div>
-          <p className={cn('mt-5 text-xs font-semibold', isPremium ? 'text-teal-200/75' : dark ? 'text-teal-300' : 'text-teal-800')}>{t('cloud.loading.status')}</p>
+      <main className={`grid min-h-[100dvh] w-full place-items-center bg-[#0f172a] transition-opacity duration-200 ease-out ${loadingScreenExiting ? 'opacity-0' : 'opacity-100'}`}>
+        <section role="status" aria-live="polite" aria-busy="true" aria-label={t('cloud.loading.status')} className="flex flex-col items-center gap-4">
+          <span className="relative grid size-16 place-items-center" aria-hidden="true">
+            <span className="absolute -inset-3 rounded-full bg-cyan-500/10 blur-xl" />
+            <span className="absolute inset-0 rounded-full border-4 border-b-transparent border-l-transparent border-r-cyan-400 border-t-cyan-400 shadow-[0_0_30px_rgba(6,182,212,0.4)] animate-spin" />
+            <span className="size-3 rotate-45 rounded-[3px] bg-cyan-100 shadow-[0_0_18px_rgba(103,232,249,0.9)] animate-pulse" />
+          </span>
+          <p className="text-[10px] font-semibold tracking-[.32em] text-slate-500 animate-pulse">TURKUAZ</p>
         </section>
       </main>
     )

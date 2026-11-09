@@ -65,6 +65,8 @@ create table if not exists public.profiles (
   avatar_url text,
   current_streak integer not null default 0 check (current_streak >= 0),
   total_xp integer not null default 0 check (total_xp >= 0),
+  gold integer not null default 0 constraint profiles_gold_nonnegative check (gold >= 0),
+  gems integer not null default 0 constraint profiles_gems_nonnegative check (gems >= 0),
   level integer not null default 1 check (level >= 1),
   rank_title text not null default 'cirak',
   created_at timestamptz not null default now(),
@@ -76,6 +78,8 @@ alter table public.profiles add column if not exists full_name text not null def
 alter table public.profiles add column if not exists avatar_url text;
 alter table public.profiles add column if not exists current_streak integer not null default 0;
 alter table public.profiles add column if not exists total_xp integer not null default 0;
+alter table public.profiles add column if not exists gold integer not null default 0;
+alter table public.profiles add column if not exists gems integer not null default 0;
 alter table public.profiles add column if not exists level integer not null default 1;
 alter table public.profiles add column if not exists rank_title text not null default 'cirak';
 alter table public.profiles add column if not exists created_at timestamptz not null default now();
@@ -147,6 +151,8 @@ create table if not exists public.profiles (
   full_name text,
   avatar_url text,
   total_xp integer not null default 0,
+  gold integer not null default 0,
+  gems integer not null default 0,
   rating_tier text not null default 'Bronze',
   current_streak integer not null default 0,
   level integer not null default 1,
@@ -162,6 +168,8 @@ alter table public.profiles add column if not exists user_id uuid;
 alter table public.profiles add column if not exists full_name text;
 alter table public.profiles add column if not exists avatar_url text;
 alter table public.profiles add column if not exists total_xp integer not null default 0;
+alter table public.profiles add column if not exists gold integer not null default 0;
+alter table public.profiles add column if not exists gems integer not null default 0;
 alter table public.profiles add column if not exists rating_tier text not null default 'Bronze';
 alter table public.profiles add column if not exists current_streak integer not null default 0;
 alter table public.profiles add column if not exists level integer not null default 1;
@@ -350,6 +358,18 @@ revoke all on function public.sync_profile_xp_floor(uuid, integer) from public, 
 grant execute on function public.add_profile_xp(uuid, integer) to authenticated;
 grant execute on function public.sync_profile_xp_floor(uuid, integer) to authenticated;
 
+-- Add non-negative checks when upgrading an existing profiles table.
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'profiles_gold_nonnegative' and conrelid = 'public.profiles'::regclass) then
+    alter table public.profiles add constraint profiles_gold_nonnegative check (gold >= 0);
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'profiles_gems_nonnegative' and conrelid = 'public.profiles'::regclass) then
+    alter table public.profiles add constraint profiles_gems_nonnegative check (gems >= 0);
+  end if;
+end;
+$$;
+
 -- Profiles are private to their owner. Upserts are permitted only for a row
 -- whose id and compatibility user_id both match the signed-in auth user.
 alter table public.profiles enable row level security;
@@ -362,6 +382,130 @@ on public.profiles for all to authenticated
 using (auth.uid() = id and auth.uid() = user_id)
 with check (auth.uid() = id and auth.uid() = user_id);
 
+-- Admin dashboard aggregates require a trusted Auth app_metadata role claim.
+-- Keep profile records private; expose only total users and average XP.
+create or replace function public.get_admin_dashboard_stats()
+returns table (total_users bigint, average_xp integer)
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+begin
+  if auth.uid() is null or coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '') <> 'admin' then
+    raise exception 'Admin access required' using errcode = '42501';
+  end if;
+  return query
+    select count(*)::bigint, coalesce(round(avg(profile.total_xp))::integer, 0)
+    from public.profiles as profile;
+end;
+$$;
+revoke all on function public.get_admin_dashboard_stats() from public, anon;
+grant execute on function public.get_admin_dashboard_stats() to authenticated;
+
+-- Only trusted admin app_metadata claims can list profiles or edit balances.
+create or replace function public.get_admin_users()
+returns table (
+  id uuid,
+  name text,
+  email text,
+  avatar_url text,
+  league text,
+  total_xp integer,
+  gold integer,
+  gems integer
+)
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+begin
+  if auth.uid() is null or coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '') <> 'admin' then
+    raise exception 'Admin access required' using errcode = '42501';
+  end if;
+
+  return query
+    select
+      profile.id,
+      coalesce(nullif(profile.full_name, ''), 'Learner'),
+      account.email::text,
+      profile.avatar_url,
+      coalesce(nullif(profile.rating_tier, ''), profile.rank_title, 'Bronze'),
+      profile.total_xp,
+      profile.gold,
+      profile.gems
+    from public.profiles as profile
+    left join auth.users as account on account.id = profile.user_id
+    order by profile.total_xp desc, profile.id asc;
+end;
+$$;
+
+create or replace function public.update_admin_user_balance(
+  p_profile_id uuid,
+  p_total_xp integer,
+  p_gold integer,
+  p_gems integer
+)
+returns table (id uuid, total_xp integer, gold integer, gems integer)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  updated_profile public.profiles%rowtype;
+begin
+  if auth.uid() is null or coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '') <> 'admin' then
+    raise exception 'Admin access required' using errcode = '42501';
+  end if;
+  if p_profile_id is null or p_total_xp is null or p_gold is null or p_gems is null
+    or p_total_xp < 0 or p_gold < 0 or p_gems < 0 then
+    raise exception 'Balances must be non-negative integers' using errcode = '22023';
+  end if;
+
+  update public.profiles as profile
+  set total_xp = p_total_xp, gold = p_gold, gems = p_gems, updated_at = now()
+  where profile.id = p_profile_id
+  returning profile.* into updated_profile;
+
+  if not found then
+    raise exception 'Profile not found' using errcode = 'P0002';
+  end if;
+  return query select updated_profile.id, updated_profile.total_xp, updated_profile.gold, updated_profile.gems;
+end;
+$$;
+
+revoke all on function public.get_admin_users() from public, anon;
+revoke all on function public.update_admin_user_balance(uuid, integer, integer, integer) from public, anon;
+grant execute on function public.get_admin_users() to authenticated;
+grant execute on function public.update_admin_user_balance(uuid, integer, integer, integer) to authenticated;
+
+-- Expose only ranking fields through an authenticated, capped RPC; keep profiles
+-- itself private to each learner under the policy above.
+create or replace function public.get_top_profiles(p_limit integer default 50)
+returns table (
+  user_id uuid,
+  display_name text,
+  avatar_url text,
+  total_xp integer
+)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select
+    profile.user_id,
+    profile.full_name as display_name,
+    profile.avatar_url,
+    profile.total_xp
+  from public.profiles as profile
+  where auth.uid() is not null
+  order by profile.total_xp desc, profile.user_id asc
+  limit greatest(1, least(coalesce(p_limit, 50), 50));
+$$;
+revoke all on function public.get_top_profiles(integer) from public, anon;
+grant execute on function public.get_top_profiles(integer) to authenticated;
 
 -- Centralized, per-user XP awards with a two-per-task daily limit.
 -- Run this migration in the Supabase SQL Editor after the profile XP schema.
