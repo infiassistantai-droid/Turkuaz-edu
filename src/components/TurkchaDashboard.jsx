@@ -69,7 +69,7 @@ const NAV = [
       { id: 'lugat', labelKey: 'nav.vocabulary', icon: Library },
       { id: 'exams', labelKey: 'nav.exams', icon: Trophy },
       { id: 'journey', labelKey: 'nav.journey', icon: Map },
-      { id: 'shop', labelKey: 'nav.shop', icon: ShoppingBag },
+      { id: 'shop', labelKey: 'nav.shop', icon: ShoppingBag, adminOnly: true },
       { id: 'leagues', labelKey: 'nav.leagues', icon: Trophy },
       { id: 'clans', labelKey: 'nav.clans', icon: UsersRound },
     ],
@@ -130,7 +130,7 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
-          {NAV.filter((group) => group.items.some((item) => !item.ownerOnly || isOwnerEmail(authUser?.email))).map((group) => (
+          {NAV.filter((group) => group.items.some((item) => (!item.ownerOnly || isOwnerEmail(authUser?.email)) && (!item.adminOnly || authUser?.app_metadata?.role === 'admin' || isOwnerEmail(authUser?.email)))).map((group) => (
             <div key={group.sectionKey} className="mt-5 first:mt-2">
               <p
                 className={cn(
@@ -142,7 +142,7 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
               </p>
               {collapsed && <div className="mx-auto mb-2 hidden h-px w-8 bg-slate-200 lg:block dark:bg-slate-800" />}
               <ul className="space-y-0.5">
-                {group.items.filter((item) => !item.ownerOnly || isOwnerEmail(authUser?.email)).map((item) => {
+                {group.items.filter((item) => (!item.ownerOnly || isOwnerEmail(authUser?.email)) && (!item.adminOnly || authUser?.app_metadata?.role === 'admin' || isOwnerEmail(authUser?.email))).map((item) => {
                   const Icon = item.icon
                   const isDisabled = item.id === 'clans'
                   const isActive = active === item.id && !isDisabled

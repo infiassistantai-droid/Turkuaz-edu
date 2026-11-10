@@ -52,6 +52,42 @@ export const supabase = client
 export const isSupabaseConfigured = Boolean(supabase)
 export const isCloudSyncAvailable = Boolean(supabase)
 
+export async function fetchLeagueTiers() {
+  if (!supabase) return []
+  const { data, error } = await withReadTimeout(
+    supabase.from('league_tiers').select('tier_key,minimum_xp,sort_order,badge_path,active').order('sort_order', { ascending: true }),
+    'league tiers',
+  )
+  throwQueryError(error)
+  return Array.isArray(data) ? data.map((row) => ({
+    tier_key: String(row.tier_key),
+    minimum_xp: Math.max(0, Math.floor(Number(row.minimum_xp) || 0)),
+    sort_order: Math.max(0, Math.floor(Number(row.sort_order) || 0)),
+    badge_path: typeof row.badge_path === 'string' ? row.badge_path : '',
+    active: row.active !== false,
+  })) : []
+}
+
+export async function saveLeagueTiers(tiers) {
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { data: authData, error: authError } = await supabase.auth.getUser()
+  throwQueryError(authError)
+  const userId = authData?.user?.id
+  if (!userId || authData.user.app_metadata?.role !== 'admin') throw new Error('Admin access required.')
+  const rows = (Array.isArray(tiers) ? tiers : []).map((tier) => ({
+    tier_key: String(tier.tier_key),
+    minimum_xp: Math.max(0, Math.floor(Number(tier.minimum_xp) || 0)),
+    sort_order: Math.max(0, Math.floor(Number(tier.sort_order) || 0)),
+    badge_path: String(tier.badge_path || ''),
+    active: Boolean(tier.active),
+    updated_by: userId,
+    updated_at: new Date().toISOString(),
+  }))
+  const { error } = await supabase.from('league_tiers').upsert(rows, { onConflict: 'tier_key' })
+  throwQueryError(error)
+  return fetchLeagueTiers()
+}
+
 const CLOUD_READ_TIMEOUT_MS = 10_000
 function withReadTimeout(request, label) {
   let timeoutId

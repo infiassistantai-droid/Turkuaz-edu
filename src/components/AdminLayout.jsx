@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, Bell, BookOpen, BookText, ChevronDown, LayoutDashboard, Search, ShieldCheck, Users } from 'lucide-react'
+import { ArrowLeft, Bell, BookOpen, BookText, ChevronDown, LayoutDashboard, Search, ShieldCheck, Trophy, Users } from 'lucide-react'
 import { useI18n } from '../lib/i18n.jsx'
 import AdminDashboard from './admin/AdminDashboard'
 import AdminUsers from './admin/AdminUsers'
@@ -7,6 +7,7 @@ import AdminCourses from './admin/AdminCourses'
 import AdminVocabulary from './admin/AdminVocabulary'
 import AdminExams from './admin/AdminExams'
 import AdminNotifications from './admin/AdminNotifications'
+import AdminLeagues from './admin/AdminLeagues'
 
 const ADMIN_ROUTES = [
   { id: 'dashboard', path: '/admin/dashboard', titleKey: 'admin.dashboard.title', icon: LayoutDashboard },
@@ -15,6 +16,7 @@ const ADMIN_ROUTES = [
   { id: 'vocabulary', path: '/admin/vocabulary', titleKey: 'admin.vocabulary.title', icon: BookText },
   { id: 'exams', path: '/admin/exams', titleKey: 'admin.exams.title', icon: ShieldCheck },
   { id: 'notifications', path: '/admin/notifications', titleKey: 'admin.notifications.title', icon: Bell },
+  { id: 'leagues', path: '/admin/leagues', titleKey: 'admin.leagues.title', icon: Trophy },
 ]
 
 function AdminNavItem({ route, pathname, onNavigate, t, compact = false, onSelect }) {
@@ -98,7 +100,7 @@ export default function AdminLayout({ pathname = '/admin/dashboard', user, onNav
       </header>
 
       <nav aria-label={t('admin.nav.label')} className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white px-3 py-2 lg:hidden">{ADMIN_ROUTES.map((item) => <AdminNavItem key={item.id} route={item} pathname={pathname} onNavigate={goToRoute} t={t} compact/>)}</nav>
-      <main className="mx-auto max-w-[1500px] p-4 sm:p-6 lg:p-8">{Object.entries({ dashboard: <AdminDashboard active={route.id === 'dashboard'} onNavigate={goToRoute}/>, users: <AdminUsers active={route.id === 'users'} notify={notify}/>, courses: <AdminCourses notify={notify}/>, vocabulary: <AdminVocabulary notify={notify}/>, exams: <AdminExams notify={notify}/>, notifications: <AdminNotifications notify={notify}/> }).map(([id, content]) => <div key={id} hidden={route.id !== id}>{content}</div>)}</main>
+      <main className="mx-auto max-w-[1500px] p-4 sm:p-6 lg:p-8">{Object.entries({ dashboard: <AdminDashboard active={route.id === 'dashboard'} onNavigate={goToRoute}/>, users: <AdminUsers active={route.id === 'users'} notify={notify}/>, courses: <AdminCourses notify={notify}/>, vocabulary: <AdminVocabulary notify={notify}/>, exams: <AdminExams notify={notify}/>, notifications: <AdminNotifications notify={notify}/>, leagues: <AdminLeagues active={route.id === 'leagues'} notify={notify}/> }).map(([id, content]) => <div key={id} hidden={route.id !== id}>{content}</div>)}</main>
     </div>
 
     {toast && <div role="status" aria-live="polite" className="fixed bottom-5 right-4 z-[100] max-w-sm rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-xl sm:right-6">{toast}</div>}
