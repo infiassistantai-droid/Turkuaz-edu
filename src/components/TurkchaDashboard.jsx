@@ -301,29 +301,6 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
 /*                                    Header                                  */
 /* -------------------------------------------------------------------------- */
 
-function StatBadge({ icon: Icon, children, className, ...props }) {
-  return (
-    <span
-      className={cn(
-        'inline-flex shrink-0 items-center gap-2.5 rounded-full border border-[#d4af37]/40 bg-[#0a0f1c] px-2.5 py-1.5 shadow-[inset_0_1px_4px_rgba(212,175,55,0.1)] transition-colors sm:px-3',
-        className,
-      )}
-      {...props}
-    >
-      <span
-        aria-hidden="true"
-        className="flex size-7 items-center justify-center rounded-full border-[1.5px] border-[#d4af37] shadow-[inset_0_2px_4px_rgba(255,255,255,0.5),0_2px_5px_rgba(0,0,0,0.8)]"
-        style={{ background: 'radial-gradient(circle at 50% 10%, #5eead4 0%, #0f766e 40%, #042f2e 100%)' }}
-      >
-        <Icon className="size-3.5 text-[#fde047]" strokeWidth={2.5} aria-hidden="true" />
-      </span>
-      <span className="pr-1 text-xs font-extrabold tracking-wide text-[#fde047] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] sm:text-sm">
-        {children}
-      </span>
-    </span>
-  )
-}
-
 function Header({ isPremium, mobileOpen, onToggleSidebar, xp, currentStreak, profile, onOpenProfile }) {
   const { language, t } = useI18n()
   const { user: authUser } = useAuth()
@@ -381,26 +358,18 @@ function Header({ isPremium, mobileOpen, onToggleSidebar, xp, currentStreak, pro
         </button>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <StatBadge icon={Zap} role="img" aria-label={`${displayedXp.toLocaleString(language)} XP`}>
-            {displayedXp.toLocaleString(language)} XP
-          </StatBadge>
-          <StatBadge
-            icon={Trophy}
-            role="status"
-            aria-label={t(`leaderboard.league.${displayedLeague}`)}
-            title={t(`leaderboard.league.${displayedLeague}`)}
-            className="hidden sm:inline-flex"
-          >
-            {t(`leaderboard.league.${displayedLeague}`)}
-          </StatBadge>
-          <StatBadge
-            icon={Flame}
-            role="status"
-            aria-label={t('header.streak', { count: displayedStreak })}
-            title={t('dashboard.stat.streak')}
-          >
-            {displayedStreak}
-          </StatBadge>
+          <span role="img" aria-label={`${displayedXp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-[10px] font-bold tabular-nums text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200 sm:gap-1.5 sm:px-3 sm:text-xs">
+            <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
+            <span>{displayedXp.toLocaleString(language)} XP</span>
+          </span>
+          <span role="status" aria-label={t(`leaderboard.league.${displayedLeague}`)} title={t(`leaderboard.league.${displayedLeague}`)} className="hidden shrink-0 items-center gap-1.5 rounded-full border border-teal-200/80 bg-teal-50 px-2.5 py-1.5 text-[10px] font-extrabold text-teal-800 dark:border-teal-500/20 dark:bg-teal-500/10 dark:text-teal-200 sm:inline-flex">
+            <Trophy className="size-3.5" aria-hidden="true" />
+            <span>{t(`leaderboard.league.${displayedLeague}`)}</span>
+          </span>
+          <span role="status" aria-label={t('header.streak', { count: displayedStreak })} title={t('dashboard.stat.streak')} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-orange-200/80 bg-orange-50 px-2 py-1.5 text-[10px] font-extrabold tabular-nums text-orange-800 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-200 sm:gap-1.5 sm:px-2.5">
+            <Flame className="size-3.5" aria-hidden="true" />
+            <span>{displayedStreak}</span>
+          </span>
           {profile && (
             <button
               type="button"
