@@ -4,9 +4,6 @@ import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 import { CORE_TROPHIES, getTrophyProgress, SEASONAL_TROPHIES, TROPHY_SHELVES } from '../lib/trophies'
 
-// Display-only showcase override: it must never be written to learner progress or award XP.
-const FORCE_CORE_TROPHY_SHOWCASE_UNLOCKED = true
-
 function progressLabel(trophy, progress, language, t) {
   let current = progress.current
   let target = progress.target
@@ -37,15 +34,14 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
   const selectedTrophy = [...CORE_TROPHIES, ...SEASONAL_TROPHIES].find(({ id }) => id === selectedId) || null
   const selectedRecord = selectedTrophy ? recordById.get(selectedTrophy.id) : null
   const selectedProgress = selectedTrophy ? getTrophyProgress(selectedTrophy, metrics) : null
-  const selectedPreview = Boolean(selectedTrophy && CORE_TROPHIES.includes(selectedTrophy) && FORCE_CORE_TROPHY_SHOWCASE_UNLOCKED)
+  const unlockedCoreCount = CORE_TROPHIES.filter((trophy) => recordById.has(trophy.id) || getTrophyProgress(trophy, metrics).unlocked).length
 
   const renderTrophy = (trophy) => {
     const record = recordById.get(trophy.id)
     const progress = getTrophyProgress(trophy, metrics)
-    const isPreviewUnlock = CORE_TROPHIES.includes(trophy) && FORCE_CORE_TROPHY_SHOWCASE_UNLOCKED
-    const unlocked = isPreviewUnlock || Boolean(record) || progress.unlocked
+    const unlocked = Boolean(record) || progress.unlocked
     const isSelected = selectedId === trophy.id
-    const shownPercent = isPreviewUnlock ? 100 : progress.percent
+    const shownPercent = progress.percent
     const requirement = t(trophy.descriptionKey)
     const actualDate = unlockDate(record, language)
     const rewardXp = Number(record?.rewardXp) || 0
@@ -103,7 +99,7 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
             {t(trophy.titleKey)}
           </span>
           <span className={cn('relative mt-1 shrink-0 text-[9px] font-bold leading-tight', unlocked ? isPremium ? 'text-emerald-200' : 'text-emerald-700 dark:text-emerald-300' : isPremium ? 'text-white/50' : 'text-slate-500 dark:text-slate-400')}>
-            {isPreviewUnlock ? t('trophy.cabinet.previewBadge') : unlocked ? t('trophy.status.unlocked') : progressLabel(trophy, progress, language, t)}
+            {unlocked ? t('trophy.status.unlocked') : progressLabel(trophy, progress, language, t)}
           </span>
           <span className={cn('relative mt-2 h-1.5 w-full shrink-0 overflow-hidden rounded-full', isPremium ? 'bg-white/10' : 'bg-slate-100 dark:bg-slate-800')}>
             <span className={cn('block h-full rounded-full transition-[width] duration-500', unlocked ? isPremium ? 'bg-gradient-to-r from-amber-300 to-teal-300 shadow-[0_0_10px_rgba(45,212,191,.5)]' : 'bg-gradient-to-r from-amber-500 to-yellow-300' : isPremium ? 'bg-gradient-to-r from-amber-300/70 to-teal-300/70' : 'bg-gradient-to-r from-amber-400 to-teal-500')} style={{ width: `${shownPercent}%` }} />
@@ -119,11 +115,7 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
         >
           <strong className="block text-[11px]">{t(trophy.titleKey)}</strong>
           <span className="mt-1 block">{requirement}</span>
-          {isPreviewUnlock ? (
-            <span className={cn('mt-1.5 block font-black', isPremium ? 'text-amber-100' : 'text-amber-700 dark:text-amber-200')}>{t('trophy.cabinet.previewBadge')}</span>
-          ) : (
-            <span className={cn('mt-1.5 block font-bold', isPremium ? 'text-amber-100' : 'text-amber-700 dark:text-amber-200')}>{progressLabel(trophy, progress, language, t)}</span>
-          )}
+          <span className={cn('mt-1.5 block font-bold', isPremium ? 'text-amber-100' : 'text-amber-700 dark:text-amber-200')}>{progressLabel(trophy, progress, language, t)}</span>
           {record && actualDate && <span className="mt-1 block">{t('trophy.tooltip.date', { date: actualDate })}</span>}
           {record && <span className="mt-0.5 block">{rewardCopy}</span>}
         </span>
@@ -133,7 +125,7 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
 
   return (
     <section
-      data-trophy-preview="display-only"
+      data-trophy-cabinet="earned-progress"
       className={cn(
         'rounded-3xl border p-3 shadow-sm sm:p-5',
         isPremium
@@ -158,13 +150,9 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
           </div>
         </div>
         <span className={cn('rounded-full border px-2.5 py-1 text-[10px] font-extrabold', isPremium ? 'border-white/10 bg-white/5 text-amber-100' : 'border-amber-100 bg-amber-50 text-amber-800 dark:border-amber-200/15 dark:bg-amber-300/10 dark:text-amber-200')}>
-          {t('trophy.cabinet.count', { count: CORE_TROPHIES.length })}
+          {t('trophy.cabinet.count', { count: unlockedCoreCount })}
         </span>
       </header>
-
-      <p className={cn('mb-4 rounded-xl px-3 py-2 text-[10px] font-semibold leading-relaxed', isPremium ? 'border border-amber-200/10 bg-amber-100/[.04] text-amber-100/75' : 'border border-amber-100 bg-amber-50/70 text-amber-900/75 dark:border-amber-200/10 dark:bg-amber-300/[.04] dark:text-amber-100/70')}>
-        {t('trophy.cabinet.previewNote')}
-      </p>
 
       <div className="space-y-3">
         {TROPHY_SHELVES.map((shelf, shelfIndex) => (
@@ -203,20 +191,19 @@ export default function TrophyCabinet({ metrics, unlockRecords = [], isPremium =
       {selectedTrophy && selectedProgress && (
         <div className={cn('mt-4 rounded-2xl border p-3 sm:p-4', isPremium ? 'border-white/10 bg-black/30' : 'border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-950/40')}>
           <div className="flex items-start gap-3">
-            <img src={selectedTrophy.image} alt="" className={cn('size-16 shrink-0 object-contain', selectedPreview || selectedRecord || selectedProgress.unlocked ? 'drop-shadow-[0_0_12px_rgba(250,204,21,.3)]' : 'grayscale opacity-35')} />
+            <img src={selectedTrophy.image} alt="" className={cn('size-16 shrink-0 object-contain', selectedRecord || selectedProgress.unlocked ? 'drop-shadow-[0_0_12px_rgba(250,204,21,.3)]' : 'grayscale opacity-35')} />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className={cn('text-xs font-black sm:text-sm', isPremium ? 'text-white' : 'text-slate-900 dark:text-white')}>{t(selectedTrophy.titleKey)}</h4>
-                <span className={cn('rounded-full px-2 py-0.5 text-[9px] font-black uppercase', selectedPreview || selectedRecord || selectedProgress.unlocked ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : isPremium ? 'bg-white/10 text-white/55' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300')}>
-                  {t(selectedPreview || selectedRecord || selectedProgress.unlocked ? 'trophy.status.unlocked' : 'trophy.status.locked')}
+                <span className={cn('rounded-full px-2 py-0.5 text-[9px] font-black uppercase', selectedRecord || selectedProgress.unlocked ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : isPremium ? 'bg-white/10 text-white/55' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300')}>
+                  {t(selectedRecord || selectedProgress.unlocked ? 'trophy.status.unlocked' : 'trophy.status.locked')}
                 </span>
               </div>
               <p className={cn('mt-1 text-[10px] leading-relaxed sm:text-xs', isPremium ? 'text-white/60' : 'text-slate-500 dark:text-slate-400')}>{t(selectedTrophy.descriptionKey)}</p>
-              {selectedPreview && <p className={cn('mt-2 text-[10px] font-bold', isPremium ? 'text-amber-100/80' : 'text-amber-800 dark:text-amber-200')}>{t('trophy.cabinet.previewNote')}</p>}
               <div className={cn('mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-bold', isPremium ? 'text-amber-100/80' : 'text-amber-800 dark:text-amber-200')}>
                 {selectedRecord && <span>{selectedRecord.unlockedAt ? t('trophy.tooltip.date', { date: unlockDate(selectedRecord, language) }) : t('trophy.tooltip.dateUnknown')}</span>}
                 {selectedRecord && <span>{selectedRecord.historical ? t('trophy.tooltip.historical') : t('trophy.tooltip.reward', { xp: (Number(selectedRecord.rewardXp) || 0).toLocaleString(language) })}</span>}
-                {!selectedPreview && !selectedRecord && <span>{progressLabel(selectedTrophy, selectedProgress, language, t)}</span>}
+                {!selectedRecord && <span>{progressLabel(selectedTrophy, selectedProgress, language, t)}</span>}
               </div>
             </div>
           </div>

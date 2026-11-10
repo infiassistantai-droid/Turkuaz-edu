@@ -593,3 +593,31 @@ revoke all on function public.award_profile_xp(uuid, integer, text) from public,
 grant execute on function public.award_profile_xp(uuid, integer, text) to authenticated;
 -- Close the old arbitrary-amount RPC to authenticated browser clients.
 revoke all on function public.add_profile_xp(uuid, integer) from public, anon, authenticated;
+
+-- Configurable league thresholds for the admin-managed leaderboard.
+create table if not exists public.league_tiers (
+  tier_key text primary key check (tier_key ~ '^[a-z0-9_-]+$'),
+  minimum_xp integer not null default 0 check (minimum_xp >= 0),
+  sort_order integer not null default 0,
+  badge_path text not null default '',
+  active boolean not null default true,
+  updated_at timestamptz not null default now(),
+  updated_by uuid references auth.users(id) on delete set null
+);
+insert into public.league_tiers (tier_key, minimum_xp, sort_order, badge_path) values
+  ('bronze', 0, 1, '/images/league-medals/bronze.png'),
+  ('silver', 1000, 2, '/images/league-medals/silver.png'),
+  ('gold', 5000, 3, '/images/league-medals/gold.png'),
+  ('platinum', 10000, 4, '/images/league-medals/platinum.png'),
+  ('diamond', 20000, 5, '/images/league-medals/diamond.png'),
+  ('legend', 50000, 6, '/images/league-medals/legend.png')
+on conflict (tier_key) do nothing;
+alter table public.league_tiers enable row level security;
+revoke all on public.league_tiers from anon, public;
+grant select, insert, update, delete on public.league_tiers to authenticated;
+drop policy if exists "Authenticated users can read league tiers" on public.league_tiers;
+create policy "Authenticated users can read league tiers" on public.league_tiers for select to authenticated using (true);
+drop policy if exists "Admins can manage league tiers" on public.league_tiers;
+create policy "Admins can manage league tiers" on public.league_tiers for all to authenticated
+using (coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '') = 'admin')
+with check (coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '') = 'admin');

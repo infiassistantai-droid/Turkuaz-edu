@@ -222,7 +222,6 @@ export default function UserProfileModal({
               isPremium={isPremium}
               winterStudy={winterStudy}
               winterChampionUnlocked={winterChampionUnlocked}
-              showcaseUnlocked
               showHeader
             />
           </TabsContent>

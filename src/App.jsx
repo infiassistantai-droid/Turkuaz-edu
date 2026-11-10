@@ -1003,6 +1003,11 @@ export default function App() {
   )
 
   const navigate = useCallback((id) => {
+    if (id === 'shop' && authUser?.app_metadata?.role !== 'admin' && !isOwnerEmail(authUser?.email)) {
+      setActive('home')
+      showToast('Ruxsat etilmagan hudud!', 'default')
+      return
+    }
     if (id === 'admin') {
       navigatePath('/admin')
       return
@@ -1010,7 +1015,7 @@ export default function App() {
     if (pathname.startsWith('/admin')) navigatePath('/', true)
     setActive(id)
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [navigatePath, pathname])
+  }, [authUser?.app_metadata?.role, authUser?.email, navigatePath, pathname, showToast])
 
   const handleAdminHome = useCallback(() => {
     setActive('home')
@@ -1244,7 +1249,7 @@ export default function App() {
       case 'journey':
         return <JourneyMap stats={stats} progress={progress} navigate={navigate} />
       case 'shop':
-        return <Shop stats={stats} profile={profile} />
+        return (authUser?.app_metadata?.role === 'admin' || isOwnerEmail(authUser?.email)) ? <Shop stats={stats} profile={profile} /> : <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
       case 'okuma':
         return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onPerfectReadingExam={recordPerfectReadingExam} onSpeedBonus={recordSpeedBonus} />
       case 'dinleme':

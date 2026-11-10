@@ -6,7 +6,7 @@ import { getNextStreakMilestone, STREAK_MILESTONES } from '../lib/streakMileston
 import { useWinterUpdate } from '../features/winter/WinterUpdateContext'
 import { getWinterStudyDayCount, WINTER_CHAMPION_DAYS } from '../features/winter/winterSeason'
 
-export default function StreakMilestones({ currentStreak = 0, unlockedMilestones = [], isPremium = false, compact = false, showHeader = true, winterStudy = null, winterChampionUnlocked = false, showcaseUnlocked = false }) {
+export default function StreakMilestones({ currentStreak = 0, unlockedMilestones = [], isPremium = false, compact = false, showHeader = true, winterStudy = null, winterChampionUnlocked = false }) {
   const { language, t } = useI18n()
   const { featureEnabled: winterFeatureEnabled } = useWinterUpdate()
   const winterDays = getWinterStudyDayCount(winterStudy)
@@ -65,16 +65,10 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
         </header>
       )}
 
-      {showcaseUnlocked && (
-        <p className={cn('mx-3 mt-3 rounded-xl border px-3 py-2 text-[10px] font-semibold leading-relaxed sm:mx-4', isPremium ? 'border-amber-200/10 bg-amber-100/[.04] text-amber-100/75' : 'border-amber-100 bg-amber-50/70 text-amber-900/75 dark:border-amber-200/10 dark:bg-amber-300/[.04] dark:text-amber-100/70')}>
-          {t('streak.showcase.previewNote')}
-        </p>
-      )}
-
       <div className={cn('grid grid-cols-4 gap-2.5 p-3 sm:grid-cols-6 sm:gap-3 sm:p-4', compact && 'xl:grid-cols-12')}>
         {STREAK_MILESTONES.map((milestone) => {
           const unlocked = unlockedSet.has(milestone.days)
-          const visuallyUnlocked = unlocked || showcaseUnlocked
+          const visuallyUnlocked = unlocked
           const selected = selectedMilestone.days === milestone.days
           return (
             <button
@@ -82,13 +76,11 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
               type="button"
               onClick={() => setSelectedDays(milestone.days)}
               aria-pressed={selected}
-              aria-label={t(showcaseUnlocked ? 'streak.badge.showcaseAria' : 'streak.badge.aria', {
+              aria-label={t('streak.badge.aria', {
                 days: milestone.days.toLocaleString(language),
                 status: t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked'),
               })}
-              title={showcaseUnlocked
-                ? t('streak.badge.showcaseAria', { days: milestone.days.toLocaleString(language), status: t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked') })
-                : `${t('streak.milestone.title', { days: milestone.days.toLocaleString(language) })} · ${t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked')}`}
+              title={`${t('streak.milestone.title', { days: milestone.days.toLocaleString(language) })} · ${t(unlocked ? 'streak.status.unlocked' : 'streak.status.locked')}`}
               className={cn(
                 'group relative flex min-w-0 flex-col items-center rounded-xl border p-1.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2',
                 isPremium

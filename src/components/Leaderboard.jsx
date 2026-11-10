@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Crown, FlaskConical, Globe2, MapPin, Medal, RefreshCw, Shield, Sparkles, Trophy, UsersRound } from 'lucide-react'
 import { useI18n } from '../lib/i18n.jsx'
-import { fetchTopPlayers, isSupabaseConfigured } from '../lib/supabase'
+import { fetchLeagueTiers, fetchTopPlayers, isSupabaseConfigured } from '../lib/supabase'
 import leaderboardDemoData from '../data/leaderboardDemoData.json'
 
 const LEAGUES = [
@@ -21,8 +21,8 @@ const TABS = [
   { id: 'clans', key: 'leaderboard.tabs.clans', icon: Shield },
 ]
 
-function getActiveLeague(xp) {
-  return [...LEAGUES].reverse().find((league) => xp >= league.minimum) || LEAGUES[0]
+function getActiveLeague(xp, leagues = LEAGUES) {
+  return [...leagues].reverse().find((league) => xp >= league.minimum) || leagues[0]
 }
 
 function formatNumber(value) {
@@ -61,6 +61,7 @@ export default function Leaderboard({ userId, profile, stats, initialTab = 'leag
   const [clanRegion, setClanRegion] = useState('global')
   const [demoMode, setDemoMode] = useState(false)
   const [rows, setRows] = useState([])
+  const [leagueSettings, setLeagueSettings] = useState(null)
   const [busy, setBusy] = useState(isSupabaseConfigured)
   const [error, setError] = useState(false)
   const requestVersion = useRef(0)
@@ -90,9 +91,25 @@ export default function Leaderboard({ userId, profile, stats, initialTab = 'leag
     return () => { requestVersion.current += 1 }
   }, [refresh])
 
+  useEffect(() => {
+    let alive = true
+    fetchLeagueTiers().then((settings) => {
+      if (alive && settings.length) setLeagueSettings(settings)
+    }).catch(() => {})
+    return () => { alive = false }
+  }, [])
+
+  const leagues = useMemo(() => {
+    if (!leagueSettings?.length) return LEAGUES
+    const configured = leagueSettings.filter((item) => item.active).map((item) => {
+      const visual = LEAGUES.find((league) => league.id === item.tier_key)
+      return visual ? { ...visual, minimum: item.minimum_xp, badge: item.badge_path || visual.badge, sortOrder: item.sort_order } : null
+    }).filter(Boolean).sort((a, b) => a.sortOrder - b.sortOrder)
+    return configured.length ? configured : LEAGUES
+  }, [leagueSettings])
   const currentUserIndex = userId ? rows.findIndex((row) => row.user_id === userId) : -1
-  const activeLeague = useMemo(() => getActiveLeague(stats?.xp), [stats?.xp])
-  const nextLeague = LEAGUES[LEAGUES.findIndex((league) => league.id === activeLeague.id) + 1] || null
+  const activeLeague = useMemo(() => getActiveLeague(stats?.xp, leagues), [stats?.xp, leagues])
+  const nextLeague = leagues[leagues.findIndex((league) => league.id === activeLeague.id) + 1] || null
   const profileName = [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.fullName || profile?.full_name || ''
   const avatarUrl = profile?.avatarUrl || profile?.avatar_url || DEFAULT_PLAYER_AVATAR
   const totalXp = Math.max(0, Number(stats?.xp) || 0)
@@ -138,7 +155,7 @@ export default function Leaderboard({ userId, profile, stats, initialTab = 'leag
         <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.04] px-3 py-2 text-xs font-bold text-slate-300"><Crown className="size-4 text-amber-300"/>{t('leaderboard.leagues.yourXp', { count: formatNumber(totalXp) })}</span>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-6">
-        {LEAGUES.map((league) => {
+        {leagues.map((league) => {
           const active = league.id === activeLeague.id
           return <article key={league.id} aria-current={active ? 'step' : undefined} className={`group relative isolate flex min-h-52 flex-col items-center overflow-hidden rounded-3xl border bg-gradient-to-br p-3 text-center transition duration-200 sm:min-h-64 sm:p-4 ${league.border} ${league.tone} ${active ? `ring-2 ring-cyan-200/60 shadow-2xl ${league.glow} sm:-translate-y-1` : 'hover:-translate-y-1 hover:border-white/25 hover:shadow-xl'}`}>
             <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
