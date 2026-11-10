@@ -587,7 +587,7 @@ html.theme-default #root .premium-hero {
   background-image: linear-gradient(135deg, #115e59 0%, #0f766e 48%, #0e7490 100%) !important;
 }
 
-html.theme-night #root .premium-hero:not(.luxury-dashboard-hero) {
+html.theme-night #root .premium-hero {
   background-image: linear-gradient(135deg, #0b3038 0%, #0f5e62 52%, #164e63 100%) !important;
 }
 
@@ -1055,159 +1055,35 @@ html.theme-premium #root :where(button:focus-visible, a[href]:focus-visible, [ro
   .shop-float { animation: none !important; }
 }
 
-/* Luxury jewel-tone dashboard: satin teal, polished gold, and glossy orbs. */
-html.theme-night #root .luxury-dashboard-hero {
-  border: 1px solid rgba(212, 175, 55, .4);
-  background-color: #0f172a;
+/* Keep the dashboard welcome card and primary action in Turkuaz teal—no gold. */
+.dashboard-home-hero,
+html.theme-default #root .dashboard-home-hero,
+html.theme-night #root .dashboard-home-hero,
+:is(.premium-theme, .theme-premium) #root .dashboard-home-hero {
+  border: 1px solid rgba(45, 212, 191, .52) !important;
+  background-color: #0b2630 !important;
   background-image:
-    radial-gradient(circle at 85% 20%, rgba(212, 175, 55, .35) 0%, transparent 45%),
-    radial-gradient(circle at 15% 80%, rgba(20, 184, 166, .4) 0%, transparent 55%),
-    linear-gradient(135deg, #042f2e 0%, #0f172a 50%, #1c1917 100%);
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .3), 0 20px 40px -15px rgba(0, 0, 0, .7);
+    radial-gradient(circle at 82% 18%, rgba(34, 211, 238, .22), transparent 38%),
+    radial-gradient(circle at 12% 88%, rgba(20, 184, 166, .24), transparent 48%),
+    linear-gradient(135deg, #073b43 0%, #0f3344 54%, #10283d 100%) !important;
+  box-shadow: 0 18px 42px rgba(3, 32, 45, .38), inset 0 1px rgba(207, 250, 254, .14) !important;
 }
-
-html.theme-night #root .luxury-hero-sheen {
-  z-index: 1;
-  background-image: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, .08) 40%, rgba(212, 175, 55, .15) 48%, transparent 60%);
-  opacity: .95;
-  mix-blend-mode: screen;
+.dashboard-start-cta,
+html.theme-night #root .dashboard-start-cta,
+:is(.premium-theme, .theme-premium) #root .dashboard-start-cta {
+  border: 1px solid rgba(165, 243, 252, .72) !important;
+  background-color: #0f766e !important;
+  background-image: linear-gradient(120deg, #0f766e 0%, #14b8a6 52%, #0891b2 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(8, 145, 178, .24), inset 0 1px rgba(255, 255, 255, .25) !important;
 }
-
-html.theme-night #root .luxury-dashboard-hero .luxury-gold-cta {
-  border: 1px solid rgba(255, 246, 186, .72);
-  border-bottom: 4px solid #785109;
-  background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
-  color: #1a1205;
-  box-shadow: 0 0 25px rgba(212, 175, 55, .4), inset 0 1px 1px rgba(255, 255, 255, .62);
-  text-shadow: 0 1px rgba(255, 255, 255, .28);
+.dashboard-start-cta:hover,
+html.theme-night #root .dashboard-start-cta:hover,
+:is(.premium-theme, .theme-premium) #root .dashboard-start-cta:hover {
+  background-image: linear-gradient(120deg, #0d9488 0%, #06b6d4 100%) !important;
+  box-shadow: 0 10px 28px rgba(8, 145, 178, .32), inset 0 1px rgba(255, 255, 255, .32) !important;
 }
-
-html.theme-night #root .luxury-dashboard-hero .luxury-gold-cta:hover {
-  filter: brightness(1.08);
-  box-shadow: 0 0 34px rgba(212, 175, 55, .52), inset 0 1px 1px rgba(255, 255, 255, .72);
+.dashboard-home-hero .dashboard-home-progress {
+  background: linear-gradient(90deg, #2dd4bf 0%, #67e8f9 100%) !important;
+  box-shadow: 0 0 12px rgba(34, 211, 238, .24);
 }
-
-html.theme-night #root .luxury-progress-track {
-  background: rgba(2, 6, 12, .65);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .7), 0 0 0 1px rgba(212, 175, 55, .18);
-}
-
-html.theme-night #root .luxury-progress-fill {
-  background: linear-gradient(90deg, #AA771C 0%, #FCF6BA 48%, #f59e0b 100%);
-  box-shadow: 0 0 12px rgba(252, 246, 186, .42), 0 0 22px rgba(212, 175, 55, .22);
-}
-
-html.theme-night #root .luxury-readiness-card,
-html.theme-night #root .luxury-dashboard-stat {
-  border-color: rgba(179, 135, 40, .38);
-  background: linear-gradient(145deg, rgba(10, 18, 26, .96), rgba(13, 37, 38, .92) 58%, rgba(28, 25, 23, .95));
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .12), 0 14px 30px rgba(0, 0, 0, .32);
-}
-
-html.theme-night #root .luxury-skill-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, .4);
-  color: #fff;
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .22), 0 14px 32px rgba(0, 0, 0, .44);
-  backdrop-filter: blur(14px);
-}
-
-html.theme-night #root .luxury-skill-okuma {
-  background-image: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.10) 43%, rgba(212,175,55,.13) 50%, transparent 65%), linear-gradient(135deg, #450a0a 0%, #991b1b 45%, #dc2626 50%, #450a0a 100%);
-}
-html.theme-night #root .luxury-skill-dinleme {
-  background-image: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.10) 43%, rgba(212,175,55,.13) 50%, transparent 65%), linear-gradient(135deg, #022c22 0%, #065f46 45%, #10b981 50%, #022c22 100%);
-}
-html.theme-night #root .luxury-skill-yazma {
-  background-image: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.10) 43%, rgba(212,175,55,.13) 50%, transparent 65%), linear-gradient(135deg, #091336 0%, #1e3a8a 45%, #2563eb 50%, #091336 100%);
-}
-html.theme-night #root .luxury-skill-konusma {
-  background-image: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.10) 43%, rgba(212,175,55,.13) 50%, transparent 65%), linear-gradient(135deg, #2e1065 0%, #581c87 45%, #9333ea 50%, #1e0936 100%);
-}
-
-html.theme-night #root .luxury-skill-card h3 { color: #fff9e6; }
-html.theme-night #root .luxury-skill-card p,
-html.theme-night #root .luxury-skill-card .text-slate-500,
-html.theme-night #root .luxury-skill-card .text-slate-400 { color: rgba(255, 250, 235, .76); }
-html.theme-night #root .luxury-skill-card .mt-4.rounded-xl {
-  border: 1px solid rgba(255, 246, 186, .14);
-  background: rgba(3, 8, 18, .28);
-  color: rgba(255, 250, 235, .84);
-}
-html.theme-night #root .luxury-skill-card > button { color: #fce9a8; }
-
-html.theme-night #root .luxury-skill-orb,
-html.theme-night #root .luxury-stat-orb,
-html.theme-night #root .luxury-card-header-orb,
-html.theme-night #root .luxury-header-orb {
-  display: inline-grid;
-  flex: none;
-  place-items: center;
-  overflow: hidden;
-  border: 2px solid #d4af37;
-  border-radius: 9999px;
-  background-image: radial-gradient(circle at 30% 22%, rgba(255,255,255,.72), rgba(255,255,255,.08) 25%, transparent 42%), linear-gradient(145deg, #46645a 0%, #173a36 44%, #07121b 100%);
-  box-shadow: inset 0 2px 6px rgba(255,255,255,.4), 0 4px 12px rgba(0,0,0,.6), 0 0 10px rgba(212,175,55,.18);
-}
-html.theme-night #root .luxury-skill-orb { width: 44px; height: 44px; }
-html.theme-night #root .luxury-stat-orb { width: 46px; height: 46px; }
-html.theme-night #root .luxury-card-header-orb { width: 40px; height: 40px; }
-html.theme-night #root .luxury-header-orb { width: 25px; height: 25px; }
-
-html.theme-night #root .luxury-orb-okuma { background-image: radial-gradient(circle at 30% 22%, rgba(255,255,255,.72), transparent 36%), linear-gradient(145deg, #ef4444, #7f1d1d 60%, #2a0808); }
-html.theme-night #root .luxury-orb-dinleme { background-image: radial-gradient(circle at 30% 22%, rgba(255,255,255,.72), transparent 36%), linear-gradient(145deg, #34d399, #065f46 60%, #022c22); }
-html.theme-night #root .luxury-orb-yazma { background-image: radial-gradient(circle at 30% 22%, rgba(255,255,255,.72), transparent 36%), linear-gradient(145deg, #60a5fa, #1e3a8a 60%, #091336); }
-html.theme-night #root .luxury-orb-konusma { background-image: radial-gradient(circle at 30% 22%, rgba(255,255,255,.72), transparent 36%), linear-gradient(145deg, #c084fc, #581c87 60%, #1e0936); }
-html.theme-night #root .luxury-stat-orb { background-image: radial-gradient(circle at 30% 22%, rgba(255,255,255,.72), rgba(255,255,255,.08) 25%, transparent 42%), linear-gradient(145deg, #d6aa43, #704d15 56%, #24180a); }
-
-html.theme-night #root .luxury-header {
-  border: 1px solid rgba(179, 135, 40, .38);
-  background: linear-gradient(115deg, rgba(7, 13, 22, .96), rgba(13, 22, 31, .92) 58%, rgba(34, 28, 17, .92));
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .12), 0 12px 30px rgba(0, 0, 0, .42);
-}
-html.theme-night #root .luxury-header-pill {
-  border-color: rgba(179, 135, 40, .52);
-  background: linear-gradient(145deg, #12171c, #090d16 72%);
-  color: #f8e9b0;
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .15), 0 5px 12px rgba(0, 0, 0, .38);
-}
-html.theme-night #root .luxury-header-profile {
-  border-color: rgba(179, 135, 40, .5);
-  background: linear-gradient(145deg, rgba(18, 23, 28, .98), rgba(9, 13, 22, .96));
-  color: #f8e9b0;
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .12), 0 5px 14px rgba(0, 0, 0, .42);
-}
-html.theme-night #root .luxury-profile-orb {
-  border: 2px solid #d4af37;
-  box-shadow: inset 0 2px 6px rgba(255,255,255,.35), 0 0 0 2px rgba(8,13,22,.9), 0 0 12px rgba(212,175,55,.25);
-}
-
-html.theme-night #root .luxury-sidebar {
-  border-color: rgba(179, 135, 40, .34);
-  background: linear-gradient(165deg, rgba(8, 16, 25, .99) 0%, rgba(6, 27, 29, .98) 53%, rgba(19, 19, 18, .99) 100%);
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .11), 15px 0 40px rgba(0, 0, 0, .42);
-}
-html.theme-night #root .luxury-sidebar .luxury-nav-active {
-  position: relative;
-  overflow: hidden;
-  border-left: 4px solid #FCF6BA;
-  background: linear-gradient(112deg, #073c38 0%, #126b60 42%, #7a5a1b 100%);
-  color: #fff6d0;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .17), 0 8px 22px rgba(4, 47, 46, .34), 0 0 18px rgba(212, 175, 55, .12);
-  text-shadow: 0 0 12px rgba(252, 246, 186, .3);
-}
-html.theme-night #root .luxury-sidebar .luxury-nav-active::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background: linear-gradient(115deg, transparent 22%, rgba(255,255,255,.1) 43%, rgba(252,246,186,.15) 50%, transparent 66%);
-}
-html.theme-night #root .luxury-sidebar .luxury-sidebar-profile {
-  border-color: rgba(179, 135, 40, .34);
-  background: linear-gradient(145deg, rgba(15, 23, 32, .94), rgba(18, 27, 27, .91) 60%, rgba(28, 25, 23, .9));
-  box-shadow: inset 0 1px 1px rgba(255, 246, 186, .1), 0 8px 20px rgba(0, 0, 0, .26);
-}
-html.theme-night #root .luxury-sidebar .luxury-sidebar-profile .luxury-progress-track { background: rgba(1, 6, 12, .75); }
-html.theme-night #root .luxury-sidebar .luxury-sidebar-profile .luxury-progress-fill { background: linear-gradient(90deg, #AA771C, #FCF6BA, #f59e0b); }

@@ -103,7 +103,7 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
         id="app-sidebar"
         aria-label={t('nav.aria')}
         className={cn(
-          'luxury-sidebar glass fixed inset-y-0 left-0 z-50 flex w-[min(16rem,calc(100vw-1rem))] flex-col rounded-r-[26px] border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-md transition-transform duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/95 md:inset-y-5 md:left-5 md:w-64 md:translate-x-0 md:rounded-[26px]',
+          'glass fixed inset-y-0 left-0 z-50 flex w-[min(16rem,calc(100vw-1rem))] flex-col rounded-r-[26px] border border-slate-200/80 bg-white/95 shadow-2xl backdrop-blur-md transition-transform duration-300 ease-out dark:border-slate-800/80 dark:bg-slate-950/95 md:inset-y-5 md:left-5 md:w-64 md:translate-x-0 md:rounded-[26px]',
           mobileOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -163,7 +163,7 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
                           isDisabled
                             ? 'cursor-not-allowed opacity-60 text-slate-400 dark:text-slate-600'
                             : isActive
-                              ? 'luxury-nav-active bg-gradient-to-r from-teal-600 to-cyan-500 font-bold text-white shadow-md shadow-teal-600/20'
+                              ? 'bg-gradient-to-r from-teal-600 to-cyan-500 font-bold text-white shadow-md shadow-teal-600/20'
                               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/70 dark:hover:text-white',
                         )}
                       >
@@ -239,7 +239,7 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
               }
             }}
             className={cn(
-              'luxury-sidebar-profile cursor-pointer rounded-2xl border p-3 transition-all hover:shadow-md active:scale-[0.98]',
+              'cursor-pointer rounded-2xl border p-3 transition-all hover:shadow-md active:scale-[0.98]',
               isPremium
                 ? collapsed ? 'border-transparent bg-transparent text-white' : 'premium-profile-card border-yellow-300/35 bg-black/70 text-white shadow-lg'
                 : 'border-slate-200/80 bg-gradient-to-b from-slate-50 to-white dark:border-slate-800 dark:from-slate-900 dark:to-slate-900/60',
@@ -253,8 +253,7 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
                     profile={profile}
                     fallbackText={profile ? getInitials(profile.name, profile.surname) : t('nav.profile').slice(0, 2).toLocaleUpperCase()}
                     sizeClass="size-9"
-                    className="luxury-profile-orb"
-                  />
+                      />
                   <span className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-900" aria-hidden="true" />
                 </div>
                 <span
@@ -283,8 +282,8 @@ function Sidebar({ active, onNavigate, mobileOpen, onCloseMobile, targetPct, lev
                 <span>{t('sidebar.progress')}</span>
                 <span className="tabular-nums text-slate-700 dark:text-slate-200">{targetPct}%</span>
               </div>
-              <div className="luxury-progress-track h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800">
-                <div className="luxury-progress-fill h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500" style={{ width: `${targetPct}%` }} />
+              <div className="h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800">
+                <div className="h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500" style={{ width: `${targetPct}%` }} />
               </div>
             </div>
           </div>
@@ -345,7 +344,7 @@ function Header({ isPremium, mobileOpen, onToggleSidebar, xp, currentStreak, pro
   const displayedLeague = getRatingTier(displayedXp).toLowerCase()
 
   return (
-    <header className="luxury-header glass rise-in sticky top-2 z-30 flex min-h-[60px] items-center rounded-[20px] bg-white/80 px-2.5 py-2.5 backdrop-blur-xl dark:bg-slate-950/80 sm:top-3 sm:min-h-[70px] sm:px-5 sm:py-3">
+    <header className="glass rise-in sticky top-2 z-30 flex min-h-[60px] items-center rounded-[20px] bg-white/80 px-2.5 py-2.5 backdrop-blur-xl dark:bg-slate-950/80 sm:top-3 sm:min-h-[70px] sm:px-5 sm:py-3">
       <div className="flex w-full min-w-0 items-center gap-2 sm:gap-3">
         <button
           type="button"
@@ -359,16 +358,16 @@ function Header({ isPremium, mobileOpen, onToggleSidebar, xp, currentStreak, pro
         </button>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <span role="img" aria-label={`${displayedXp.toLocaleString(language)} XP`} className="luxury-header-pill inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-[10px] font-bold tabular-nums text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200 sm:gap-1.5 sm:px-3 sm:text-xs">
-            <span className="luxury-header-orb"><Zap className="size-3.5 fill-amber-300 text-amber-100" aria-hidden="true" /></span>
+          <span role="img" aria-label={`${displayedXp.toLocaleString(language)} XP`} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-200/80 bg-amber-50 px-2 py-1.5 text-[10px] font-bold tabular-nums text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200 sm:gap-1.5 sm:px-3 sm:text-xs">
+            <Zap className="size-3.5 fill-amber-400 text-amber-500" aria-hidden="true" />
             <span>{displayedXp.toLocaleString(language)} XP</span>
           </span>
-          <span role="status" aria-label={t(`leaderboard.league.${displayedLeague}`)} title={t(`leaderboard.league.${displayedLeague}`)} className="luxury-header-pill hidden shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[10px] font-extrabold sm:inline-flex">
-            <span className="luxury-header-orb"><Trophy className="size-3.5 text-amber-100" aria-hidden="true" /></span>
+          <span role="status" aria-label={t(`leaderboard.league.${displayedLeague}`)} title={t(`leaderboard.league.${displayedLeague}`)} className="hidden shrink-0 items-center gap-1.5 rounded-full border border-teal-200/80 bg-teal-50 px-2.5 py-1.5 text-[10px] font-extrabold text-teal-800 dark:border-teal-500/20 dark:bg-teal-500/10 dark:text-teal-200 sm:inline-flex">
+            <Trophy className="size-3.5" aria-hidden="true" />
             <span>{t(`leaderboard.league.${displayedLeague}`)}</span>
           </span>
-          <span role="status" aria-label={t('header.streak', { count: displayedStreak })} title={t('dashboard.stat.streak')} className="luxury-header-pill inline-flex shrink-0 items-center gap-1 rounded-full border border-orange-200/80 bg-orange-50 px-2 py-1.5 text-[10px] font-extrabold tabular-nums text-orange-800 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-200 sm:gap-1.5 sm:px-2.5">
-            <span className="luxury-header-orb"><Flame className="size-3.5 text-amber-100" aria-hidden="true" /></span>
+          <span role="status" aria-label={t('header.streak', { count: displayedStreak })} title={t('dashboard.stat.streak')} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-orange-200/80 bg-orange-50 px-2 py-1.5 text-[10px] font-extrabold tabular-nums text-orange-800 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-200 sm:gap-1.5 sm:px-2.5">
+            <Flame className="size-3.5" aria-hidden="true" />
             <span>{displayedStreak}</span>
           </span>
           {profile && (
@@ -378,14 +377,13 @@ function Header({ isPremium, mobileOpen, onToggleSidebar, xp, currentStreak, pro
               aria-label={`${profile.name || t('nav.profile')} · ${t('profile.settings')}`}
               aria-haspopup="dialog"
               className={cn(
-                'luxury-header-profile flex min-h-11 min-w-[60px] shrink-0 items-center justify-center gap-2 rounded-xl border px-2 py-1.5 transition-all hover:-translate-y-0.5 active:translate-y-0 min-[380px]:min-w-[88px] min-[380px]:justify-start min-[380px]:px-2.5 sm:gap-2.5 sm:px-3',
+                'flex min-h-11 min-w-[60px] shrink-0 items-center justify-center gap-2 rounded-xl border px-2 py-1.5 transition-all hover:-translate-y-0.5 active:translate-y-0 min-[380px]:min-w-[88px] min-[380px]:justify-start min-[380px]:px-2.5 sm:gap-2.5 sm:px-3',
                 isPremium ? 'border-white/10 bg-black/30 text-white hover:bg-white/10' : 'border-slate-200/80 bg-white/80 text-slate-700 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200',
               )}
             >
               <ProfileAvatar
                 profile={profile}
                 sizeClass="size-9"
-                className="luxury-profile-orb"
               />
               <span className="hidden max-w-14 truncate text-xs font-bold min-[380px]:inline sm:max-w-20 sm:text-sm">{profile.name || t('nav.profile')}</span>
               <ChevronDown className="hidden size-3.5 shrink-0 opacity-60 sm:block" aria-hidden="true" />
