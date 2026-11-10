@@ -16,7 +16,6 @@ import { cn } from '../lib/utils'
 import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
 import DailyQuestsWidget from './DailyQuestsWidget'
-import PremiumButton from './PremiumButton'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -228,13 +227,14 @@ function HeroCard({ onStart, name, weakest, targetLevel, totalScore, hasResults 
           <p className="mt-2 text-pretty text-sm leading-relaxed text-white/80">
             {weakest ? t('dashboard.weakest', { skill: weakest }) : t('dashboard.noScores')}
           </p>
-          <PremiumButton
+          <button
+            type="button"
             onClick={onStart}
-            icon={ArrowRight}
-            className="mt-6 min-h-14 px-5 text-sm"
+            className="dashboard-start-cta premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
           >
             {t('dashboard.start')}
-          </PremiumButton>
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </button>
         </div>
 
         <div className="w-full max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-xl">
@@ -420,13 +420,14 @@ function SkillCard({ skill, onOpen }) {
         </p>
       )}
 
-      <PremiumButton
+      <button
+        type="button"
         onClick={() => onOpen(skill.id)}
-        icon={Icon}
-        className="mt-3 min-h-11 self-start px-3 text-xs"
+        className="mt-3 inline-flex items-center gap-1 self-start text-sm font-medium text-teal-700 transition-colors hover:text-teal-900 active:scale-95 dark:text-teal-300 dark:hover:text-teal-100"
       >
         {t(skill.actionKey)}
-      </PremiumButton>
+        <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+      </button>
     </Card>
   )
 }
@@ -502,13 +503,14 @@ function CertificateCalculator({ initial, dark = false, isPremium = false }) {
         title={t('certificate.calculator')}
         subtitle={t('certificate.subtitle')}
         right={
-          <PremiumButton
+          <button
+            type="button"
             onClick={() => setScores(initial)}
-            icon={RotateCcw}
-            className="min-h-11 px-3 text-xs"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/80 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
           >
+            <RotateCcw className="size-3.5" aria-hidden="true" />
             {t('certificate.reset')}
-          </PremiumButton>
+          </button>
         }
       />
 

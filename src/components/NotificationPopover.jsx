@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Bell, BookOpenText, Check, CheckCheck, Clock3, RotateCcw, X } from 'lucide-react'
+import { Bell, BookOpenText, Check, CheckCheck, Clock3, X } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { supabase } from '../lib/supabase.js'
-import PremiumButton from './PremiumButton'
 
 const MAX_NOTIFICATIONS = 100
 
@@ -211,7 +210,7 @@ export default function NotificationPopover({ isPremium = false }) {
 
   const notificationPanel = open ? (
         <>
-          <div aria-hidden="true" onClick={() => setOpen(false)} className="fixed inset-0 z-[90] cursor-default bg-slate-950/45 backdrop-blur-[1px] sm:hidden" />
+          <button type="button" tabIndex={-1} aria-label={t('notifications.close')} onClick={() => setOpen(false)} className="fixed inset-0 z-[90] cursor-default bg-slate-950/45 backdrop-blur-[1px] sm:hidden" />
           <section
             ref={panelRef}
             id="notification-popover"
@@ -234,7 +233,9 @@ export default function NotificationPopover({ isPremium = false }) {
                 <span className={cn('grid size-9 place-items-center rounded-xl', isPremium ? 'bg-yellow-300/10 text-yellow-200' : 'bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300')}>
                   <Bell className="size-4" aria-hidden="true" />
                 </span>
-                <PremiumButton ref={closeButtonRef} icon={X} iconOnly onClick={() => setOpen(false)} aria-label={t('notifications.close')} />
+                <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="grid size-11 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100 active:scale-95 dark:text-slate-300 dark:hover:bg-white/10" aria-label={t('notifications.close')}>
+                  <X className="size-4" aria-hidden="true" />
+                </button>
               </div>
             </div>
 
@@ -242,7 +243,7 @@ export default function NotificationPopover({ isPremium = false }) {
               {loading ? (
                 <p role="status" className={cn('px-3 py-8 text-center text-sm', isPremium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('notifications.loading')}</p>
               ) : loadError ? (
-                <div className="px-3 py-8 text-center"><p role="alert" className={cn('text-sm', isPremium ? 'text-amber-100/75' : 'text-amber-700 dark:text-amber-300')}>{t('notifications.loadError')}</p><PremiumButton icon={RotateCcw} onClick={() => setReloadVersion((version) => version + 1)} className="mt-3 min-h-11 px-3 text-xs">{t('notifications.retry')}</PremiumButton></div>
+                <div className="px-3 py-8 text-center"><p role="alert" className={cn('text-sm', isPremium ? 'text-amber-100/75' : 'text-amber-700 dark:text-amber-300')}>{t('notifications.loadError')}</p><button type="button" onClick={() => setReloadVersion((version) => version + 1)} className="mt-3 min-h-11 rounded-xl px-4 py-2 text-xs font-bold text-teal-700 transition hover:bg-teal-50 active:scale-95 dark:text-teal-200 dark:hover:bg-white/10">{t('notifications.retry')}</button></div>
               ) : notifications.length === 0 ? (
                 <p className={cn('px-3 py-8 text-center text-sm', isPremium ? 'text-white/55' : 'text-slate-500 dark:text-slate-400')}>{t('notifications.empty')}</p>
               ) : (
@@ -252,22 +253,30 @@ export default function NotificationPopover({ isPremium = false }) {
                     const Icon = notificationIcon(notification.type)
                     return (
                       <li key={notification.id}>
-                        <PremiumButton
-                          icon={Icon}
+                        <button
+                          type="button"
                           onClick={() => { void markAsRead(notification.id) }}
-                          className={cn('min-h-14 w-full items-start justify-start px-1.5 py-2.5 text-left text-xs', isRead && 'opacity-65')}
+                          className={cn(
+                            'flex min-h-11 w-full items-start gap-3 rounded-xl p-3 text-left transition-colors active:scale-[.99]',
+                            isPremium
+                              ? isRead ? 'text-white/45 hover:bg-slate-800' : 'bg-white/[.055] text-white hover:bg-slate-800'
+                              : isRead ? 'text-slate-400 hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-800' : 'bg-teal-50/70 text-slate-800 hover:bg-slate-100 dark:bg-teal-500/[.08] dark:text-white dark:hover:bg-slate-800',
+                          )}
                           aria-label={`${notification.title} · ${isRead ? t('notifications.read') : t('notifications.unreadStatus')}`}
                         >
+                          <span className={cn('mt-0.5 grid size-9 shrink-0 place-items-center rounded-xl', isPremium ? 'bg-yellow-300/10 text-yellow-200' : 'bg-white text-teal-700 shadow-sm dark:bg-slate-800 dark:text-teal-300')}>
+                            <Icon className="size-4" aria-hidden="true" />
+                          </span>
                           <span className="min-w-0 flex-1">
                             <span className="block break-words text-xs font-bold leading-relaxed">{notification.title}</span>
-                            {notification.message && <span className="mt-0.5 block break-words text-xs leading-relaxed text-cyan-100/70">{notification.message}</span>}
-                            <span className="mt-1 flex items-center gap-1 text-[10px] text-cyan-100/55">
+                            {notification.message && <span className={cn('mt-0.5 block break-words text-xs leading-relaxed', isPremium ? isRead ? 'text-white/40' : 'text-white/65' : isRead ? 'text-slate-400 dark:text-slate-500' : 'text-slate-600 dark:text-slate-300')}>{notification.message}</span>}
+                            <span className={cn('mt-1 flex items-center gap-1 text-[10px]', isPremium ? 'text-white/35' : 'text-slate-400 dark:text-slate-500')}>
                               <Clock3 className="size-3" aria-hidden="true" />{formatCreatedAt(notification.created_at, language)}
                             </span>
                           </span>
-                          {!isRead && <span className="mt-1.5 size-2 shrink-0 animate-pulse rounded-full bg-teal-300 shadow-[0_0_10px_rgba(20,184,166,.9)]" aria-hidden="true" />}
-                          {isRead && <Check className="mt-1 size-3.5 shrink-0 text-cyan-100/55" aria-hidden="true" />}
-                        </PremiumButton>
+                          {!isRead && <span className="mt-1.5 size-2 shrink-0 animate-pulse rounded-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,.9)]" aria-hidden="true" />}
+                          {isRead && <Check className={cn('mt-1 size-3.5 shrink-0', isPremium ? 'text-white/35' : 'text-slate-400')} aria-hidden="true" />}
+                        </button>
                       </li>
                     )
                   })}
@@ -276,14 +285,18 @@ export default function NotificationPopover({ isPremium = false }) {
             </div>
 
             <div className={cn('shrink-0 border-t p-2', isPremium ? 'border-white/10' : 'border-slate-100 dark:border-white/10')}>
-              <PremiumButton
-                icon={CheckCheck}
+              <button
+                type="button"
                 onClick={() => { void markAllAsRead() }}
                 disabled={unreadCount === 0 || loading || !userId}
-                className="min-h-11 w-full justify-center px-3 text-xs"
+                className={cn(
+                  'flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-bold transition-colors disabled:cursor-default disabled:opacity-50',
+                  isPremium ? 'text-yellow-100 hover:bg-white/10' : 'text-teal-700 hover:bg-teal-50 dark:text-teal-300 dark:hover:bg-white/5',
+                )}
               >
+                <CheckCheck className="size-4" aria-hidden="true" />
                 {t('notifications.markAll')}
-              </PremiumButton>
+              </button>
             </div>
           </section>
         </>
@@ -291,19 +304,24 @@ export default function NotificationPopover({ isPremium = false }) {
 
   return (
     <div className="relative" ref={wrapperRef}>
-      <PremiumButton
+      <button
         ref={bellButtonRef}
-        icon={Bell}
-        iconOnly
-        className="relative"
+        type="button"
         onClick={() => setOpen((value) => !value)}
+        className={cn(
+          'relative grid size-11 place-items-center rounded-xl border transition-all hover:-translate-y-0.5 active:translate-y-0',
+          isPremium
+            ? 'border-white/10 bg-black/25 text-white/80 hover:bg-white/10'
+            : 'border-slate-200/80 bg-white/70 text-slate-600 hover:bg-white dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:bg-slate-800',
+        )}
         aria-label={unreadCount ? `${t('header.notifications')} (${unreadCount})` : t('header.notifications')}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls="notification-popover"
       >
-        {unreadCount > 0 && <span className="absolute -right-1 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full border-2 border-[#0a0f1c] bg-rose-500 px-0.5 text-[9px] font-extrabold leading-none text-white shadow-[0_0_10px_rgba(244,63,94,.75)]" aria-hidden="true">{unreadCount}</span>}
-      </PremiumButton>
+        <Bell className="size-4" aria-hidden="true" />
+        {unreadCount > 0 && <span className="absolute -right-1 -top-1 grid min-h-4 min-w-4 place-items-center rounded-full border-2 border-white bg-rose-500 px-0.5 text-[9px] font-extrabold leading-none text-white shadow-[0_0_10px_rgba(244,63,94,.75)] dark:border-slate-950" aria-hidden="true">{unreadCount}</span>}
+      </button>
 
       {notificationPanel && (isMobile && typeof document !== 'undefined' ? createPortal(notificationPanel, document.body) : notificationPanel)}
     </div>

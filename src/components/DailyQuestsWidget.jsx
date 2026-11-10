@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
-import { BookOpenText, CheckCircle2, Flame, Headphones, Sparkles, Trophy, Zap } from 'lucide-react'
+import { ArrowRight, BookOpenText, CheckCircle2, Flame, Headphones, Sparkles, Trophy, Zap } from 'lucide-react'
 import { CORE_TROPHIES, getTrophyProgress, TROPHY_REWARD_XP } from '../lib/trophies'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
-import PremiumButton from './PremiumButton'
 
 const TABS = [
   { id: 'daily', key: 'tasks.tabs.daily' },
@@ -100,17 +99,21 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
         {TABS.map((tab) => {
           const active = activeTab === tab.id
           return (
-            <PremiumButton
+            <button
               key={tab.id}
               id={`tasks-tab-${tab.id}`}
+              type="button"
               role="tab"
               aria-selected={active}
               aria-controls={`tasks-panel-${tab.id}`}
               onClick={() => setActiveTab(tab.id)}
-              className={cn('min-h-11 shrink-0 px-4 py-2 text-xs', active && 'border-[#d4af37]/80 shadow-[0_0_16px_rgba(212,175,55,0.18)]')}
+              className={cn(
+                'min-h-11 shrink-0 rounded-full border px-4 py-2 text-xs font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400',
+                active ? 'border-violet-400/40 bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-lg shadow-indigo-950/30' : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500 hover:text-white',
+              )}
             >
               {t(tab.key)}
-            </PremiumButton>
+            </button>
           )
         })}
       </div>
@@ -151,15 +154,23 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
                   {claimed ? (
                     <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.claimed')}</span>
                   ) : canClaim ? (
-                    <PremiumButton onClick={claimReward} icon={Icon} className="min-h-11 px-3 text-xs">
-                      {t('quests.claim')}
-                    </PremiumButton>
+                    <button
+                      type="button"
+                      onClick={claimReward}
+                      className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 px-4 py-2 text-xs font-extrabold text-slate-950 transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+                    >
+                      {t('quests.claim')}<ArrowRight className="size-4" aria-hidden="true" />
+                    </button>
                   ) : done ? (
                     <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.complete')}</span>
                   ) : (
-                    <PremiumButton onClick={() => navigate?.(quest.navigate)} icon={Icon} className="min-h-11 px-3 text-xs">
-                      {t('tasks.doTask')}
-                    </PremiumButton>
+                    <button
+                      type="button"
+                      onClick={() => navigate?.(quest.navigate)}
+                      className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-extrabold text-slate-100 transition-colors hover:border-violet-400/50 hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+                    >
+                      {t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" />
+                    </button>
                   )}
                 </div>
               </article>
@@ -211,7 +222,7 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
                   <div role="progressbar" aria-label={title} aria-valuemin={0} aria-valuemax={trophyProgress.target} aria-valuenow={trophyProgress.current} className={cn('h-2 min-w-0 flex-1 overflow-hidden rounded-full', TRACK)}><div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${trophyProgress.percent}%` }} /></div>
                   <span className="w-16 shrink-0 text-right text-xs font-bold tabular-nums text-slate-300">{t(trophy.progressKey, { count: trophyProgress.current, target: trophyProgress.target })}</span>
                 </div>
-                <div className="mt-3 flex justify-end"><PremiumButton icon={Trophy} onClick={() => navigate?.(getTrophyPath(trophy.id))} className="min-h-11 px-3 text-xs">{t('tasks.doTask')}</PremiumButton></div>
+                <div className="mt-3 flex justify-end"><button type="button" onClick={() => navigate?.(getTrophyPath(trophy.id))} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-extrabold text-white transition hover:border-violet-400/50 hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400">{t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" /></button></div>
               </article>
             )
           }) : (
