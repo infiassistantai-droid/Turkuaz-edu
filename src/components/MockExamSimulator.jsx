@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Award, Clock3, Download, FileCheck2, Share2, Shield, Sparkles, Trophy } from 'lucide-react'
+import { Award, Clock3, Download, Share2, Shield, Sparkles, Trophy } from 'lucide-react'
+import { SectionBanner } from './BosforArtwork'
 import { useI18n } from '../lib/i18n.jsx'
 
 const EXAM_SECONDS = 60 * 60
@@ -27,10 +28,10 @@ function escapeXml(value) {
     .replace(/"/gu, '&quot;')
 }
 
-function makeCertificateSvg({ name, date, level, score }) {
+function makeCertificateSvg({ name, date, correct, score }) {
   const safeName = escapeXml(name)
   const safeDate = escapeXml(date)
-  const safeLevel = escapeXml(level)
+  const safeCorrect = escapeXml(correct)
   const safeScore = escapeXml(score)
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="848" viewBox="0 0 1200 848">
@@ -43,29 +44,21 @@ function makeCertificateSvg({ name, date, level, score }) {
   <rect x="25" y="25" width="1150" height="798" rx="12" fill="none" stroke="url(#gold)" stroke-width="12"/><rect x="49" y="49" width="1102" height="750" rx="8" fill="none" stroke="#8c6a2a" stroke-opacity=".62" stroke-width="2"/><rect x="65" y="65" width="1070" height="718" rx="5" fill="none" stroke="#c69a3a" stroke-opacity=".35" stroke-width="1"/>
   <text x="600" y="145" text-anchor="middle" fill="#9a762d" font-family="Georgia,serif" font-size="20" letter-spacing="8">TURKUAZ EDU</text>
   <path d="M430 172h340" stroke="#c69a3a" stroke-width="2"/><circle cx="600" cy="172" r="5" fill="#c69a3a"/>
-  <text x="600" y="245" text-anchor="middle" fill="#28333b" font-family="Georgia,serif" font-size="48" font-weight="700" letter-spacing="2">BAŞARI SERTİFİKASI</text>
-  <text x="600" y="302" text-anchor="middle" fill="#69747a" font-family="Georgia,serif" font-size="20">Bu belge, aşağıdaki katılımcının deneme sınavını tamamladığını onaylar.</text>
+  <text x="600" y="245" text-anchor="middle" fill="#28333b" font-family="Georgia,serif" font-size="48" font-weight="700" letter-spacing="2">ALIŞTIRMA SONUCU</text>
+  <text x="600" y="302" text-anchor="middle" fill="#69747a" font-family="Georgia,serif" font-size="20">Turkuaz Edu dil bilgisi ve kelime testi</text>
   <text x="600" y="390" text-anchor="middle" fill="#876720" font-family="Georgia,serif" font-size="42" font-style="italic">${safeName}</text>
   <path d="M280 412h640" stroke="#c69a3a" stroke-opacity=".75" stroke-width="2"/>
-  <text x="600" y="468" text-anchor="middle" fill="#69747a" font-family="Georgia,serif" font-size="19">Türkçe Çok Düzeyli Deneme Sınavı</text>
-  <text x="600" y="532" text-anchor="middle" fill="#28333b" font-family="Georgia,serif" font-size="28" font-weight="700">CEFR Düzeyi: ${safeLevel}</text>
-  <text x="600" y="573" text-anchor="middle" fill="#69747a" font-family="Georgia,serif" font-size="18">Sınav puanı: ${safeScore}/100</text>
+  <text x="600" y="532" text-anchor="middle" fill="#28333b" font-family="Georgia,serif" font-size="28" font-weight="700">Doğru cevaplar: ${safeCorrect}/${QUESTIONS.length}</text>
+  <text x="600" y="573" text-anchor="middle" fill="#69747a" font-family="Georgia,serif" font-size="18">Alıştırma puanı: %${safeScore}</text>
   <text x="600" y="626" text-anchor="middle" fill="#69747a" font-family="Georgia,serif" font-size="18">${safeDate}</text>
   <g transform="translate(600 704)"><circle r="48" fill="url(#gold)"/><circle r="38" fill="none" stroke="#fff7d9" stroke-width="2"/><path d="M0-25 7-7 26-7 11 5 17 24 0 13-17 24-11 5-26-7-7-7Z" fill="#fffaf0" stroke="#96702a" stroke-width="1.5"/><circle r="58" fill="none" stroke="#b89143" stroke-width="2" stroke-dasharray="3 5"/></g>
   <path d="M175 704h225M800 704h225" stroke="#9c7a38" stroke-width="1.5"/>
   <text x="288" y="688" text-anchor="middle" fill="#4a4b46" font-family="Georgia,serif" font-size="23" font-style="italic">Turkuaz Edu</text><text x="288" y="735" text-anchor="middle" fill="#78736a" font-family="Georgia,serif" font-size="14">Eğitim Platformu</text>
-  <text x="912" y="688" text-anchor="middle" fill="#4a4b46" font-family="Georgia,serif" font-size="22" font-style="italic">Sınav Kurulu</text><text x="912" y="735" text-anchor="middle" fill="#78736a" font-family="Georgia,serif" font-size="14">Yetkili İmza</text>
+  <text x="912" y="714" text-anchor="middle" fill="#4a4b46" font-family="Georgia,serif" font-size="19">Alıştırma sonucu</text>
 </svg>`
 }
 
-function getCefr(score) {
-  if (score >= 87) return 'C1'
-  if (score >= 75) return 'B2'
-  if (score >= 50) return 'B1'
-  return 'A2'
-}
-
-export default function MockExamSimulator({ profile, isPremium = false, onToast, onExit, onComplete }) {
+export default function MockExamSimulator({ profile, isPremium = false, dark = false, onToast, onExit, onComplete }) {
   const { t, language } = useI18n()
   const [screen, setScreen] = useState('intro')
   const [secondsLeft, setSecondsLeft] = useState(EXAM_SECONDS)
@@ -73,11 +66,10 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
   const [answers, setAnswers] = useState({})
   const [result, setResult] = useState(null)
   const submitted = useRef(false)
-  const premium = Boolean(isPremium)
+  const premium = Boolean(isPremium || dark)
   const locale = { uz: 'uz-UZ', tr: 'tr-TR', en: 'en-US' }[language] || 'tr-TR'
   const learnerName = [profile?.name, profile?.surname].filter(Boolean).join(' ') || profile?.fullName || t('examSimulator.learnerFallback')
   const date = result?.submittedAt ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(result.submittedAt) : ''
-  const levelName = result ? t(`examSimulator.level.${result.level}`) : ''
   const timerWarning = secondsLeft <= 5 * 60
 
   const submitExam = useCallback((timedOut = false) => {
@@ -86,7 +78,7 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
     const expired = timedOut || (deadline !== null && Date.now() >= deadline)
     const correct = QUESTIONS.reduce((sum, question) => sum + (answers[question.id] === question.answer ? 1 : 0), 0)
     const score = Math.round((correct / QUESTIONS.length) * 100)
-    const completedResult = { correct, score, level: getCefr(score), submittedAt: new Date(), timedOut: expired }
+    const completedResult = { correct, score, submittedAt: new Date(), timedOut: expired }
     setResult(completedResult)
     setScreen('results')
     onComplete?.(completedResult)
@@ -123,7 +115,7 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
   }
 
   function certificateSvg() {
-    return makeCertificateSvg({ name: learnerName, date, level: levelName, score: result?.score || 0 })
+    return makeCertificateSvg({ name: learnerName, date, correct: result?.correct || 0, score: result?.score || 0 })
   }
 
   function downloadCertificate() {
@@ -142,11 +134,11 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
 
   async function shareCertificate() {
     if (!result) return
-    const shareText = t('examSimulator.shareText', { name: learnerName, level: levelName, score: result.score })
+    const shareText = t('examsHub.mixed.share', { name: learnerName, score: result.score })
     try {
       if (navigator.share) {
         const file = new File([certificateSvg()], `turkuaz-edu-sertifika.svg`, { type: 'image/svg+xml' })
-        const shareData = { title: t('examSimulator.certificateTitle'), text: shareText }
+        const shareData = { title: t('examsHub.mixed.result'), text: shareText }
         if (navigator.canShare?.({ files: [file] })) shareData.files = [file]
         await navigator.share(shareData)
       }
@@ -161,38 +153,31 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
     }
   }
 
-  const shell = premium ? 'border border-yellow-500/25 bg-black/35 text-white shadow-2xl backdrop-blur-xl' : 'border border-slate-200 bg-white text-slate-900 shadow-sm'
-  const muted = premium ? 'text-white/60' : 'text-slate-500'
+  const shell = 'bosfor-panel'
+  const muted = 'exam-muted'
 
-  if (screen === 'intro') return <section className="mx-auto max-w-4xl space-y-5">
-    <div className={`overflow-hidden rounded-3xl border p-6 sm:p-9 ${shell}`}>
-      <div className="flex flex-wrap items-start gap-4">
-        <span className={`grid size-14 place-items-center rounded-2xl ${premium ? 'bg-yellow-300/10 text-yellow-200' : 'bg-teal-50 text-teal-700'}`}><Trophy className="size-7"/></span>
-        <div className="min-w-0 flex-1"><p className={`text-xs font-bold uppercase tracking-[.16em] ${premium ? 'text-yellow-300' : 'text-teal-700'}`}>{t('examSimulator.eyebrow')}</p><h1 className="mt-1 text-2xl font-black sm:text-3xl">{t('examSimulator.title')}</h1><p className={`mt-2 max-w-2xl text-sm leading-relaxed ${muted}`}>{t('examSimulator.intro')}</p></div>
+  if (screen === 'intro') return (
+    <section className="exam-center mx-auto max-w-6xl space-y-4">
+      <SectionBanner name="quests" title={t('examsHub.mixed.title')} description={t('examsHub.mixed.description')}>
+        <span>{t('examsHub.mixed.detail')}</span>
+      </SectionBanner>
+      <div className="bosfor-panel flex flex-wrap gap-2 rounded-2xl border p-4 sm:p-5">
+        <button type="button" onClick={startExam} className="bosfor-action exam-action"><Sparkles className="size-4" aria-hidden="true" />{t('examSimulator.start')}</button>
+        {onExit && <button type="button" onClick={onExit} className="bosfor-control exam-action">{t('examsHub.back')}</button>}
       </div>
-      <div className="mt-7 grid gap-3 sm:grid-cols-3">
-        {[
-          { icon: Clock3, title: t('examSimulator.duration'), detail: t('examSimulator.durationValue') },
-          { icon: FileCheck2, title: t('examSimulator.questions'), detail: t('examSimulator.questionCount', { count: QUESTIONS.length }) },
-          { icon: Shield, title: t('examSimulator.certificate'), detail: t('examSimulator.certificateDetail') },
-        ].map(({ icon: Icon, title, detail }) => <div key={title} className={`rounded-2xl border p-4 ${premium ? 'border-white/10 bg-white/[.04]' : 'border-slate-100 bg-slate-50'}`}><Icon className={`size-5 ${premium ? 'text-yellow-300' : 'text-teal-700'}`}/><p className="mt-3 text-sm font-extrabold">{title}</p><p className={`mt-1 text-xs ${muted}`}>{detail}</p></div>)}
-      </div>
-      <div className="mt-7 flex flex-wrap items-center gap-3">
-        <button type="button" onClick={startExam} className={`inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5 ${premium ? 'bg-gradient-to-r from-yellow-600 to-amber-500 shadow-[0_0_28px_rgba(234,179,8,.25)]' : 'bg-gradient-to-r from-teal-700 to-cyan-600 shadow-[0_8px_24px_rgba(13,148,136,.22)]'}`}><Sparkles className="size-4"/>{t('examSimulator.start')}</button>
-        {onExit && <button type="button" onClick={onExit} className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${premium ? 'border-white/15 bg-white/5 text-white/80 hover:bg-white/10' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}`}>{t('examsHub.back')}</button>}
-      </div>
-    </div>
-  </section>
+    </section>
+  )
 
-  if (screen === 'exam') return <section className="mx-auto max-w-4xl space-y-5">
-    <div className={`sticky top-16 z-20 flex flex-wrap items-center gap-3 rounded-2xl border p-3 shadow-lg backdrop-blur-xl sm:px-5 ${premium ? 'border-yellow-500/30 bg-black/85 text-white' : 'border-slate-200 bg-white/95 text-slate-900'}`}>
+
+  if (screen === 'exam') return <section className="exam-center mx-auto max-w-4xl space-y-5">
+    <div className="bosfor-panel sticky top-16 z-20 flex flex-wrap items-center gap-3 rounded-2xl border p-3 sm:px-5">
       <Clock3 className={`size-5 ${timerWarning ? 'text-rose-500' : premium ? 'text-yellow-300' : 'text-teal-700'}`}/>
       <div className="min-w-0 flex-1"><p className={`text-xs font-bold uppercase tracking-wider ${muted}`}>{t('examSimulator.timeRemaining')}</p><p role="timer" aria-live="polite" className={`font-mono text-xl font-black tabular-nums ${timerWarning ? 'animate-pulse text-rose-500' : premium ? 'text-yellow-100' : 'text-slate-900'}`}>{formatTime(secondsLeft)}</p></div>
       <span className={`rounded-full px-3 py-1.5 text-xs font-extrabold ${premium ? 'bg-white/10 text-white/80' : 'bg-slate-100 text-slate-600'}`}>{t('examSimulator.answered', { count: Object.keys(answers).length, total: QUESTIONS.length })}</span>
       <button type="button" onClick={() => submitExam(false)} className={`rounded-xl px-4 py-2.5 text-xs font-extrabold text-white ${premium ? 'bg-yellow-600 hover:bg-yellow-500' : 'bg-teal-700 hover:bg-teal-800'}`}>{t('examSimulator.submit')}</button>
     </div>
 
-    <header className={`rounded-2xl border p-5 ${shell}`}><h1 className="text-xl font-extrabold">{t('examSimulator.examTitle')}</h1><p className={`mt-1 text-sm ${muted}`}>{t('examSimulator.examHelp')}</p></header>
+    <header className={`rounded-2xl border p-5 ${shell}`}><h1 className="text-xl font-extrabold">{t('examsHub.mixed.title')}</h1><p className={`mt-1 text-sm ${muted}`}>{t('examSimulator.examHelp')}</p></header>
     <div className="space-y-4">
       {QUESTIONS.map((question, index) => <fieldset key={question.id} className={`rounded-2xl border p-5 sm:p-6 ${shell}`}>
         <legend className="sr-only">{t('examSimulator.questionLabel', { count: index + 1 })}</legend>
@@ -208,7 +193,6 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
 
   if (!result) return null
 
-  const level = t(`examSimulator.level.${result.level}`)
   const certificateFrame = premium ? 'border-yellow-500/35 bg-black/35 p-3 shadow-[0_0_35px_rgba(234,179,8,.1)] backdrop-blur-xl' : 'border-slate-200 bg-white/80 p-3 shadow-xl'
   const certificatePaper = 'relative isolate overflow-hidden border-[10px] border-double border-amber-500/75 bg-gradient-to-br from-[#fffdf5] via-[#fffaf0] to-[#f8f0d8] px-5 py-8 text-slate-800 shadow-inner sm:px-10 sm:py-10'
 
@@ -225,20 +209,19 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
         <div className="relative flex flex-col items-center text-center">
           <span className="text-[10px] font-bold uppercase tracking-[.35em] text-amber-800 sm:text-xs">Turkuaz Edu · {t('examSimulator.certificateLabel')}</span>
           <span className="my-3 h-px w-36 bg-gradient-to-r from-transparent via-amber-600 to-transparent"/>
-          <h2 className="font-serif text-2xl font-black tracking-wide text-slate-800 sm:text-4xl">{t('examSimulator.certificateTitle')}</h2>
-          <p className="mt-3 max-w-2xl font-serif text-xs leading-relaxed text-slate-600 sm:text-base">{t('examSimulator.certificateIntro')}</p>
+          <h2 className="font-serif text-2xl font-black tracking-wide text-slate-800 sm:text-4xl">{t('examsHub.mixed.result')}</h2>
+          <p className="mt-3 max-w-2xl font-serif text-xs leading-relaxed text-slate-600 sm:text-base">{t('examsHub.mixed.title')}</p>
           <p className="mt-7 font-serif text-xs italic text-slate-500 sm:mt-9 sm:text-base">{t('examSimulator.presentedTo')}</p>
           <p className="mt-2 max-w-full break-words font-serif text-2xl font-bold italic text-amber-800 sm:text-4xl">{learnerName}</p>
           <span className="mt-3 h-px w-4/5 max-w-xl bg-gradient-to-r from-transparent via-amber-600/70 to-transparent"/>
-          <p className="mt-4 font-serif text-xs text-slate-600 sm:text-base">{t('examSimulator.certificateAchievement')}</p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-            <span className="rounded-full border border-amber-500/40 bg-amber-100/70 px-4 py-2 font-serif text-lg font-bold text-amber-900 sm:text-2xl">{level}</span>
+            <span className="rounded-full border border-amber-500/40 bg-amber-100/70 px-4 py-2 font-serif text-lg font-bold text-amber-900 sm:text-2xl">{result.correct}/{QUESTIONS.length}</span>
             <span className="rounded-full border border-slate-300 bg-white/70 px-4 py-2 text-sm font-bold text-slate-700">{result.score}/100</span>
           </div>
           <p className="mt-4 text-xs font-semibold tracking-wide text-slate-500 sm:text-sm">{date}</p>
 
           <div className="mt-7 grid w-full grid-cols-1 items-end gap-6 sm:mt-9 sm:grid-cols-[1fr_auto_1fr] sm:gap-4">
-            <div className="order-2 flex flex-col items-center sm:order-1"><div className="font-serif text-lg italic text-slate-700">Türkçe Eğitim Kurulu</div><div className="mt-1 h-px w-40 bg-amber-800/60"/><span className="mt-1 text-[9px] font-bold uppercase tracking-widest text-slate-500">{t('examSimulator.signatureLeft')}</span></div>
+            <div className="order-2 flex flex-col items-center sm:order-1"><span className="text-xs font-bold text-slate-600">{t('examsHub.mixed.result')}</span></div>
             <div className="order-1 flex justify-center sm:order-2"><div className="relative grid size-20 place-items-center rounded-full border-4 border-double border-amber-600 bg-gradient-to-br from-amber-100 to-yellow-300 text-amber-900 shadow-lg shadow-amber-900/20"><Award className="size-10"/><Shield className="absolute -bottom-2 -right-2 size-7 rounded-full border-2 border-amber-600 bg-[#fff8e7] p-1 text-amber-800"/></div></div>
             <div className="order-3 flex flex-col items-center"><div className="font-serif text-lg italic text-slate-700">Turkuaz Edu</div><div className="mt-1 h-px w-40 bg-amber-800/60"/><span className="mt-1 text-[9px] font-bold uppercase tracking-widest text-slate-500">{t('examSimulator.signatureRight')}</span></div>
           </div>
@@ -254,3 +237,4 @@ export default function MockExamSimulator({ profile, isPremium = false, onToast,
     </div>
   </section>
 }
+

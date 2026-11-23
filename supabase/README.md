@@ -4,7 +4,7 @@ Turkuaz Edu supports local-only operation when Supabase is not configured, and a
 
 ## 1. Configure environment variables
 
-Copy `.env.example` to `.env.local`, then set:
+Create an ignored `.env.local` file, then set:
 
 ```dotenv
 VITE_SUPABASE_URL=https://<project-ref>.supabase.co
@@ -43,6 +43,10 @@ After sign-in, the app loads the legacy progress row and normalized profile, str
 Cloud writes are debounced briefly during normal activity. If a request fails, the app remains usable and logs a non-blocking sync warning; it does not crash the UI. Apply the schema before expecting all new tables to sync.
 
 Without configured credentials, the app remains in local-only mode. No XP, streak, completion, test result, or trophy is seeded by the Supabase integration.
+
+After the base schema, run [learning state and clans](./20261122120000_learning_state_and_clans.sql). This adds private, per-account sync for study plans, reading and listening attempts, writing drafts and results, speaking completions, assessment results, and vocabulary. A device keeps pending changes while an upload is unavailable and retries them after a successful account restore. Speaking audio stays in the current browser session. A saved document is synchronized per module; simultaneous edits of the same module use the last saved version.
+
+The clan ranking reads active clans and membership from `league_clans` and `league_clan_members` and sums members’ profile XP. Add real clans and memberships through the Supabase dashboard. Until then the leaderboard shows an empty state. The migration also adds `reset_learner_progress`, which clears only the signed-in learner's progress in one transaction. Verify the setup by signing into the same learner account on two browsers, completing an exercise or changing the daily plan in the first, and reopening the section in the second. Use a separate test learner to confirm private progress stays isolated and test the reset.
 
 ## 5. Notes
 

@@ -1,5 +1,11 @@
 export const readingExamTranslations = {
   uz: {
+    'reading.sections.format': 'Turkcha matnlarni o‘qing va har bo‘limdagi {questions} ta savolga javob bering.',
+    'reading.sections.completed': '{completed} / {total} bo‘lim yakunlandi',
+    'reading.sections.nextSection': 'Navbatdagi mashq · {number}-bo‘lim',
+    'reading.sections.all': 'Barcha bo‘limlar',
+    'reading.sections.unlockHint': 'Har bir mashqni yakunlaganingizda navbatdagi tayyor bo‘lim ochiladi.',
+    'reading.exam.previous': 'Oldingi savol',
     'reading.sections.title': 'O‘qib tushunish bo‘limlari',
     'reading.sections.subtitle': '{active} ta faol bo‘lim / {total} ta bo‘lim · Har birida {questions} tadan savol',
     'reading.sections.section': 'Bo‘lim {number}',
@@ -29,6 +35,12 @@ export const readingExamTranslations = {
     'reading.exam.selectionRequired': 'Davom etish uchun bitta javobni tanlang.',
   },
   tr: {
+    'reading.sections.format': 'Türkçe metinleri oku ve her bölümdeki {questions} soruyu yanıtla.',
+    'reading.sections.completed': '{total} bölümün {completed} tanesi tamamlandı',
+    'reading.sections.nextSection': 'Sıradaki alıştırma · Bölüm {number}',
+    'reading.sections.all': 'Tüm bölümler',
+    'reading.sections.unlockHint': 'Her alıştırmayı bitirdiğinde sıradaki hazır bölüm açılır.',
+    'reading.exam.previous': 'Önceki soru',
     'reading.sections.title': 'Okuma bölümleri',
     'reading.sections.subtitle': '{total} bölümün {active} tanesi etkin · Her bölümde {questions} soru',
     'reading.sections.section': 'Bölüm {number}',
@@ -58,6 +70,12 @@ export const readingExamTranslations = {
     'reading.exam.selectionRequired': 'Devam etmek için bir seçenek belirleyin.',
   },
   en: {
+    'reading.sections.format': 'Read Turkish passages and answer {questions} questions per section.',
+    'reading.sections.completed': '{completed} of {total} sections completed',
+    'reading.sections.nextSection': 'Next practice · Section {number}',
+    'reading.sections.all': 'All sections',
+    'reading.sections.unlockHint': 'Finish each practice section to unlock the next available section.',
+    'reading.exam.previous': 'Previous question',
     'reading.sections.title': 'Reading sections',
     'reading.sections.subtitle': '{active} of {total} sections available · {questions} questions per section',
     'reading.sections.section': 'Section {number}',

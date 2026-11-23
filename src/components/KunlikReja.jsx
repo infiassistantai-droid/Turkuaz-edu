@@ -1,208 +1,204 @@
-import { useMemo } from 'react'
-import { ArrowRight, BookOpenText, CalendarDays, Circle, ClipboardCheck, Flame, Headphones, Mic, Pencil, RotateCcw } from 'lucide-react'
-import { cn } from '../lib/utils'
+import { useEffect, useState } from 'react'
+import { ArrowRight, CalendarDays, Check, Clock3 } from 'lucide-react'
+import { ModelAsset, PanelHeading, SectionBanner } from './BosforArtwork'
+import { loadJSON, saveJSON } from '../lib/storage'
 import { useI18n } from '../lib/i18n.jsx'
+import { buildStudyPlan, studyDateKey } from '../lib/studyPlan'
 
-const ASSESSABLE_SKILLS = [
-  { id: 'okuma', titleKey: 'plan.skill.okuma', icon: BookOpenText },
-  { id: 'dinleme', titleKey: 'plan.skill.dinleme', icon: Headphones },
-  { id: 'yazma', titleKey: 'plan.skill.yazma', icon: Pencil },
-  { id: 'konusma', titleKey: 'plan.skill.konusma', icon: Mic },
-]
+const DURATIONS = { 15: [7, 5, 3], 30: [14, 9, 7], 45: [20, 15, 10] }
+const UZ_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr']
+const UZ_WEEKDAYS = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan']
 
-function formatToday(language) {
-  return new Intl.DateTimeFormat(language === 'tr' ? 'tr-TR' : language === 'en' ? 'en-US' : 'uz-UZ', {
-    day: 'numeric',
-    month: 'long',
-  }).format(new Date())
-}
-
-function getLatestAssessedSkills(sectionResults = {}) {
-  return ASSESSABLE_SKILLS
-    .map((skill) => {
-      const rawScore = sectionResults?.[skill.id]?.scaledScore
-      if (rawScore === null || rawScore === undefined || rawScore === '') return null
-      const score = Number(rawScore)
-      return Number.isFinite(score) && score >= 0
-        ? { ...skill, score: Math.min(75, score) }
-        : null
-    })
-    .filter(Boolean)
-    .sort((left, right) => left.score - right.score)
-}
-
-function buildDailyPlan(sectionResults, targetLevel) {
-  const level = String(targetLevel || 'B1').toUpperCase()
-  const assessedSkills = getLatestAssessedSkills(sectionResults)
-  const focusSkill = assessedSkills[0]
-  if (focusSkill) {
-    const runnerUp = assessedSkills[1]
-    const tasks = [
-      {
-        id: `focus-${focusSkill.id}`,
-        titleKey: focusSkill.titleKey,
-        detailKey: 'plan.task.focusDetail',
-        detailValues: { score: Math.round(focusSkill.score), level },
-        icon: focusSkill.icon,
-        minutes: 20,
-        target: focusSkill.id,
-      },
-      {
-        id: 'vocabulary-support',
-        titleKey: 'plan.task.vocabularySupport.title',
-        detailKey: 'plan.task.vocabularySupport.detail',
-        detailValues: { level },
-        icon: RotateCcw,
-        minutes: 15,
-        target: 'lugat',
-      },
-      runnerUp
-        ? {
-            id: `review-${runnerUp.id}`,
-            titleKey: runnerUp.titleKey,
-            detailKey: 'plan.task.reviewDetail',
-            detailValues: { score: Math.round(runnerUp.score), level },
-            icon: runnerUp.icon,
-            minutes: 12,
-            target: runnerUp.id,
-          }
-        : {
-            id: 'check-another-skill',
-            titleKey: 'plan.task.checkSkills.title',
-            detailKey: 'plan.task.checkSkills.detail',
-            detailValues: { level },
-            icon: ClipboardCheck,
-            minutes: 12,
-            target: 'exams',
-          },
-    ]
-    return {
-      level,
-      focusSkill,
-      assessedSkills,
-      reasonKey: 'plan.reason.assessed',
-      reasonValues: { skill: focusSkill.titleKey, score: Math.round(focusSkill.score), level },
-      basisKey: 'plan.basis.results',
-      tasks,
-    }
+function formatDate(date, language, weekday = false, includeYear = false) {
+  if (language === 'uz') {
+    if (weekday) return UZ_WEEKDAYS[date.getDay()]
+    const label = date.getDate() + '-' + UZ_MONTHS[date.getMonth()]
+    return includeYear ? label + ' ' + date.getFullYear() : label
   }
-
-  return {
-    level,
-    focusSkill: null,
-    assessedSkills,
-    reasonKey: 'plan.reason.noAssessment',
-    reasonValues: { level },
-    basisKey: 'plan.basis.goal',
-    tasks: [
-      { id: 'starter-vocabulary', titleKey: 'plan.task.vocabulary', detailKey: 'plan.task.vocabularyStarter', detailValues: { level }, icon: RotateCcw, minutes: 15, target: 'lugat' },
-      { id: 'starter-listening', titleKey: 'plan.task.listening', detailKey: 'plan.task.listeningStarter', detailValues: { level }, icon: Headphones, minutes: 20, target: 'dinleme' },
-      { id: 'starter-speaking', titleKey: 'plan.task.speaking', detailKey: 'plan.task.speakingStarter', detailValues: { level }, icon: Mic, minutes: 12, target: 'konusma' },
-    ],
-  }
+  return new Intl.DateTimeFormat(language === 'tr' ? 'tr-TR' : 'en-US', weekday
+    ? { weekday: 'short' }
+    : { day: 'numeric', month: 'long', year: includeYear ? 'numeric' : undefined }).format(date)
 }
 
-function CircularProgress({ value, label }) {
-  const radius = 23
-  const circumference = 2 * Math.PI * radius
-  const offset = circumference * (1 - value / 100)
-  return (
-    <div className="relative grid size-[68px] shrink-0 place-items-center" role="img" aria-label={label}>
-      <svg viewBox="0 0 56 56" className="size-[68px] -rotate-90" aria-hidden="true">
-        <circle cx="28" cy="28" r={radius} fill="none" stroke="currentColor" strokeWidth="4" className="text-slate-800" />
-        <circle cx="28" cy="28" r={radius} fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} className="text-violet-400 transition-[stroke-dashoffset] duration-500" />
-      </svg>
-      <span className="absolute text-sm font-extrabold tabular-nums text-white">{value}%</span>
-    </div>
-  )
+function readPlan(key, fallback = {}) {
+  const saved = loadJSON(key, fallback)
+  const budget = Object.hasOwn(DURATIONS, saved?.budget) ? Number(saved.budget) : null
+  return { budget, days: saved?.days && typeof saved.days === 'object' ? saved.days : {} }
 }
 
-export default function KunlikReja({ stats = {}, sectionResults = {}, targetLevel = 'B1', navigate, isPremium = false }) {
+function detailsFor(plan, target, t) {
+  const { level, focus, review, phase } = plan
+  const values = { level }
+  if (target === focus?.id) return t('plan.task.focusDetail', { ...values, score: Math.round(focus.score) })
+  if (target === review?.id) return t('plan.task.reviewDetail', { ...values, score: Math.round(review.score) })
+  if (target === 'quick-assessment') return t('plan.personal.diagnosticDetail')
+  if (phase === 'foundation' && ['lugat', 'okuma', 'dinleme'].includes(target)) return t('plan.personal.foundation.' + target, { level: plan.startingLevel || 'A1' })
+  if (target === 'lugat') return t('plan.task.vocabularySupport.detail', values)
+  if (target === 'exams') return t('plan.task.checkSkills.detail', values)
+  return t('plan.activity.' + target, values)
+}
+
+export default function KunlikReja({ stats = {}, sectionResults = {}, profile, navigate, learnerId, onEditProfile }) {
   const { t, language } = useI18n()
-  const streak = Math.max(0, Number(stats?.streak) || 0)
-  const plan = useMemo(() => buildDailyPlan(sectionResults, targetLevel), [sectionResults, targetLevel])
-  const totalMinutes = plan.tasks.reduce((sum, task) => sum + task.minutes, 0)
-  const progressPercent = 0 // Plan rows are suggestions, not user-markable completion state.
+  const accessKey = 'turkuaz-daily-plan-v1:' + encodeURIComponent(learnerId || 'local')
+
+  return <StudyPlan key={accessKey} accessKey={accessKey} stats={stats} sectionResults={sectionResults} profile={profile} navigate={navigate} t={t} language={language} onEditProfile={onEditProfile} />
+}
+
+function StudyPlan({ accessKey, stats, sectionResults, profile, navigate, t, language, onEditProfile }) {
+  const [date, setDate] = useState(() => new Date())
+  const [saved, setSaved] = useState(() => readPlan(accessKey))
+  const today = studyDateKey(date)
+  const dailyRecord = saved.days[today]
+  const storedPlan = dailyRecord?.plan
+  const generated = buildStudyPlan(profile || {}, sectionResults, date)
+  const matchesProfile = storedPlan?.profileKey === generated.profileKey
+    || (!storedPlan?.profileKey && !profile?.startingPath && !generated.examDate && storedPlan?.level === generated.level)
+  const plan = matchesProfile && Array.isArray(storedPlan?.targets) && storedPlan.targets.length === 3
+    ? { ...generated, ...storedPlan }
+    : generated
+  const budget = saved.budget ?? plan.recommendedBudget
+  const completed = Array.isArray(dailyRecord?.completed) ? dailyRecord.completed : []
+  const completedCount = plan.targets.filter((id) => completed.includes(id)).length
+  const percent = Math.round(completedCount / plan.targets.length * 100)
+  const next = plan.targets.find((id) => !completed.includes(id))
+
+  useEffect(() => {
+    function refreshDay() {
+      const now = new Date()
+      setDate((previous) => studyDateKey(previous) === studyDateKey(now) ? previous : now)
+    }
+    function sync(event) {
+      if (event.key === accessKey || event.key === null) setSaved(readPlan(accessKey))
+    }
+    const timer = window.setInterval(refreshDay, 30000)
+    window.addEventListener('focus', refreshDay)
+    window.addEventListener('storage', sync)
+    return () => {
+      window.clearInterval(timer)
+      window.removeEventListener('focus', refreshDay)
+      window.removeEventListener('storage', sync)
+    }
+  }, [accessKey])
+
+  function updatePlan(budget, target) {
+    const now = new Date()
+    const currentDay = studyDateKey(now)
+    if (currentDay !== today) {
+      setDate(now)
+      return
+    }
+    const latest = readPlan(accessKey, saved)
+    const record = latest.days[currentDay] || { plan, completed: [] }
+    const marks = Array.isArray(record.completed) ? record.completed : []
+    const currentMarks = marks.filter((id) => plan.targets.includes(id))
+    const nextMarks = !target ? currentMarks : currentMarks.includes(target) ? currentMarks.filter((id) => id !== target) : [...currentMarks, target]
+    const days = { ...latest.days, [currentDay]: { plan, completed: nextMarks } }
+    const recent = Object.entries(days).sort(([a], [b]) => a.localeCompare(b)).slice(-31)
+    const updated = { budget: budget ?? latest.budget, days: Object.fromEntries(recent) }
+    saveJSON(accessKey, updated)
+    setSaved(updated)
+  }
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-5 pb-10 sm:space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-3 px-1">
-        <div className="flex min-w-0 items-center gap-3">
-          <span className="grid size-11 shrink-0 place-items-center rounded-2xl border border-violet-400/20 bg-violet-400/10 text-violet-200">
-            <CalendarDays className="size-5" aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-[10px] font-extrabold uppercase tracking-[.18em] text-violet-300">{t('plan.today', { date: formatToday(language) })}</p>
-            <h1 className="mt-1 truncate text-xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-2xl">{t('plan.title')}</h1>
-          </div>
-        </div>
-        <div className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
-          <Flame className="size-4 text-orange-400" aria-hidden="true" />
-          <span className="text-sm font-extrabold tabular-nums">{streak}</span>
-          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t('plan.streak')}</span>
-        </div>
-      </header>
+    <div className="bosfor-plan mx-auto w-full max-w-6xl space-y-5">
+      <SectionBanner name="plan" title={t('plan.title')} description={t('plan.today', { date: formatDate(date, language) })}>
+        <span><ModelAsset name="streak" className="size-6" />{Math.max(0, Number(stats.streak) || 0)} {t('plan.streak')}</span>
+        <span>{t('plan.targetLevel', { level: plan.level })}</span>
+      </SectionBanner>
 
-      <section className={cn('overflow-hidden rounded-3xl border bg-[#0b1220] p-4 text-white shadow-2xl shadow-slate-950/20 sm:p-6', isPremium ? 'border-amber-300/25 shadow-amber-950/10' : 'border-slate-800')} aria-labelledby="today-plan-heading">
-        <div className="flex items-center gap-4 sm:gap-5">
-          <span className="hidden size-12 shrink-0 place-items-center rounded-2xl border border-violet-300/15 bg-violet-400/10 text-violet-200 sm:grid">
-            <BookOpenText className="size-5" aria-hidden="true" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-extrabold uppercase tracking-[.2em] text-violet-300">{t('plan.todayLabel')}</p>
-            <h2 id="today-plan-heading" className="mt-1 text-lg font-black tracking-tight sm:text-xl">{t('plan.tasks.title')}</h2>
-            <p className="mt-1 text-xs font-medium text-slate-400 sm:text-sm">{t('plan.estimate', { minutes: totalMinutes, steps: plan.tasks.length })}</p>
-          </div>
-          <CircularProgress value={progressPercent} label={t('plan.progress', { percent: progressPercent })} />
+      <section className="bosfor-panel bosfor-plan-preparation rounded-2xl border p-4 sm:p-5" aria-labelledby="plan-personal-heading">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="plan-personal-heading" className="text-base font-extrabold">{t('plan.personal.title')}</h2>
+          {onEditProfile && <button type="button" className="bosfor-control min-h-10 rounded-xl px-3 text-xs font-bold" onClick={onEditProfile}>{t('plan.personal.edit')}</button>}
         </div>
-
-        <aside className="mt-5 rounded-2xl border border-indigo-300/15 bg-gradient-to-r from-indigo-400/[.09] to-violet-400/[.04] p-3.5 sm:p-4">
-          <div className="mb-1.5 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-indigo-300/20 bg-indigo-300/10 px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[.13em] text-indigo-200">{t(plan.basisKey)}</span>
-            <span className="text-[10px] font-bold text-slate-400">{t('plan.targetLevel', { level: plan.level })}</span>
-          </div>
-          <p className="text-xs leading-5 text-slate-200 sm:text-sm">{t(plan.reasonKey, { ...plan.reasonValues, skill: plan.reasonValues.skill ? t(plan.reasonValues.skill) : '' })}</p>
-        </aside>
-
-        <ol className="mt-4 space-y-2.5 sm:mt-5 sm:space-y-3">
-          {plan.tasks.map(({ id, titleKey, detailKey, detailValues = {}, icon: Icon, minutes, target }, index) => {
-            const isFirst = index === 0
-            return (
-              <li key={id} className="grid grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-3 sm:gap-4 sm:p-4">
-                <span className="text-[10px] font-bold tabular-nums text-slate-500" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-indigo-300/15 bg-gradient-to-br from-violet-500/15 to-indigo-500/10 text-indigo-200 sm:size-11">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <div className="min-w-0">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <Circle className="size-4 shrink-0 text-slate-600" aria-hidden="true" />
-                    <h3 className="truncate text-sm font-extrabold text-white sm:text-[15px]">{t(titleKey)}</h3>
-                  </div>
-                  <p className="mt-1 truncate pl-6 text-xs text-slate-400">{t(detailKey, detailValues)}</p>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <span className="whitespace-nowrap text-[10px] font-bold tabular-nums text-slate-400 sm:text-xs">{t('plan.minutes', { minutes })}</span>
-                  <button
-                    type="button"
-                    onClick={() => navigate?.(target)}
-                    className={cn(
-                      'inline-flex min-h-11 min-w-[44px] items-center justify-center gap-1.5 rounded-xl px-3 text-xs font-extrabold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 sm:px-4',
-                      isFirst
-                        ? 'bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-lg shadow-indigo-950/40 hover:brightness-110 active:scale-[.98]'
-                        : 'border border-slate-700 bg-slate-800 text-slate-200 hover:border-slate-500 hover:bg-slate-700',
-                    )}
-                  >
-                    {t('plan.start')}<ArrowRight className="size-3.5" aria-hidden="true" />
-                  </button>
-                </div>
-              </li>
-            )
-          })}
-        </ol>
-        <p className="mt-4 flex items-center gap-2 text-[11px] leading-5 text-slate-500">
-          <Circle className="size-3 shrink-0" aria-hidden="true" />{t('plan.suggestionsOnly')}
+        <dl>
+          <div><dt>{t('setup.level.current')}</dt><dd>{plan.startingLevel || t('plan.personal.unknownLevel')}</dd></div>
+          <div><dt>{t('setup.target.title')}</dt><dd>{plan.level}</dd></div>
+          <div><dt><CalendarDays size={13} aria-hidden="true" />{t('setup.exam.label')}</dt><dd>{plan.examDate ? <time dateTime={plan.examDate}>{formatDate(new Date(plan.examDate + 'T12:00:00'), language, false, true)}</time> : t('plan.personal.noDate')}</dd></div>
+        </dl>
+        <p className="text-xs leading-relaxed text-[var(--studio-muted)]">
+          {plan.daysLeft === null ? null : t(plan.daysLeft < 0 ? 'plan.personal.past' : plan.daysLeft === 0 ? 'plan.personal.today' : 'plan.personal.remaining', { count: plan.daysLeft }) + ' '}
+          {t('plan.personal.phase.' + plan.phase)}
         </p>
       </section>
+
+      <div className="bosfor-plan-layout grid items-start gap-4">
+        <section className="bosfor-plan-progress-card bosfor-panel rounded-2xl border p-4 sm:p-5" aria-labelledby="plan-progress-heading">
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="plan-progress-heading" className="font-extrabold">{t('plan.checklist.progressTitle')}</h2>
+            <span className="bosfor-badge px-2 py-1 text-xs font-bold tabular-nums" aria-live="polite">{t('quests.completedCount', { count: completedCount, total: plan.targets.length })}</span>
+          </div>
+          <progress className="bosfor-plan-progress mt-3" max={100} value={percent} aria-label={t('plan.progress', { percent })} />
+          <p className="mt-2 text-xs text-[var(--studio-muted)]">{t(next ? 'plan.checklist.keepGoing' : 'plan.checklist.finished')}</p>
+          <div className="bosfor-tabs mt-4" role="group" aria-label={t('plan.time.title')}>
+            {[15, 30, 45].map((minutes) => <button key={minutes} type="button" className="bosfor-tab" aria-pressed={budget === minutes} onClick={() => updatePlan(minutes)}>{t('plan.minutes', { minutes })}</button>)}
+          </div>
+          <p className="mt-2 flex items-center gap-1.5 text-xs text-[var(--studio-muted)]"><Clock3 size={14} aria-hidden="true" />{t('plan.time.title')}</p>
+        </section>
+
+
+        <section className="bosfor-plan-checklist bosfor-panel rounded-2xl border p-4 sm:p-6" aria-labelledby="today-plan-heading">
+          <PanelHeading name="quests" titleId="today-plan-heading" title={t('plan.tasks.title')} description={t('plan.estimate', { minutes: budget, steps: plan.targets.length })} />
+          <p className="mt-4 text-xs text-[var(--studio-muted)]">{t('plan.checklist.note')}</p>
+          <ol className="mt-3 space-y-2.5">
+            {plan.targets.map((target, index) => {
+              const done = completed.includes(target)
+              const label = t(target === 'lugat' ? 'nav.vocabulary' : target === 'exams' ? 'nav.exams' : target === 'quick-assessment' ? 'plan.personal.diagnostic' : 'plan.skill.' + target)
+              return (
+                <li key={target} className="bosfor-plan-task bosfor-inset grid items-center gap-3 rounded-xl border p-3 sm:p-4" data-done={done}>
+                  <label className="bosfor-plan-check" title={t('plan.checklist.mark', { task: label })}>
+                    <input type="checkbox" checked={done} onChange={() => updatePlan(undefined, target)} aria-label={t('plan.checklist.mark', { task: label })} />
+                    <Check size={16} aria-hidden="true" />
+                  </label>
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <ModelAsset name={target === 'quick-assessment' ? 'exams' : target} className="size-10 sm:size-12" />
+                    <div className="min-w-0">
+                      <h3 className="break-words text-sm font-extrabold sm:text-base">{label}</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-[var(--studio-muted)]">{detailsFor(plan, target, t)}</p>
+                    </div>
+                  </div>
+                  <div className="bosfor-plan-task-action flex items-center justify-between gap-2 sm:flex-col sm:items-end">
+                    <span className="whitespace-nowrap text-xs font-bold tabular-nums text-[var(--studio-muted)]">{t('plan.minutes', { minutes: DURATIONS[budget][index] })}</span>
+                    <button type="button" onClick={() => { updatePlan(); navigate?.(target) }} className={(next === target ? 'bosfor-action' : 'bosfor-control') + ' inline-flex min-h-10 items-center gap-1.5 rounded-xl px-3 text-xs font-bold'} aria-label={t('plan.openActivity', { task: label })}>
+                      {t(done ? 'plan.checklist.review' : 'plan.start')} <ArrowRight size={14} aria-hidden="true" />
+                    </button>
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
+        </section>
+
+        <section className="bosfor-plan-history-card bosfor-panel rounded-2xl border p-4 sm:p-5" aria-labelledby="plan-history-heading">
+          <h2 id="plan-history-heading" className="font-extrabold">{t('plan.history.title')}</h2>
+          <ul className="mt-3 grid grid-cols-7 gap-1.5">
+            {Array.from({ length: 7 }, (_, index) => {
+              const day = new Date(date.getFullYear(), date.getMonth(), date.getDate() - (6 - index))
+              const key = studyDateKey(day)
+              const record = saved.days[key]
+              const count = Array.isArray(record?.completed) ? record.completed.length : 0
+              const total = record?.plan?.targets?.length || 3
+              return (
+                <li key={key} className="bosfor-plan-day" data-today={key === today} data-done={count === total} title={formatDate(day, language) + ' · ' + count + '/' + total}>
+                  <span>{formatDate(day, language, true)}</span>
+                  <span className="tabular-nums">{count}/{total}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+
+        <section className="bosfor-plan-reason-card bosfor-panel rounded-2xl border p-4 sm:p-5" aria-labelledby="plan-reason-heading">
+          <h2 id="plan-reason-heading" className="font-extrabold">{t('plan.why.title')}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--studio-muted)]">
+            {plan.focus
+              ? t('plan.reason.assessed', { level: plan.level, skill: t('plan.skill.' + plan.focus.id), score: Math.round(plan.focus.score) })
+              : t('plan.reason.noAssessment', { level: plan.level })}
+          </p>
+        </section>
+      </div>
     </div>
   )
 }
+

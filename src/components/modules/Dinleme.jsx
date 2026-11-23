@@ -1,9 +1,10 @@
+import { PanelHeading, SectionBanner } from '../BosforArtwork'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, CheckCircle2, ChevronRight, FastForward, Headphones, LockKeyhole, Pause, Play, RotateCcw, Rewind, Volume2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpenText, Check, CheckCircle2, CircleX, FastForward, Headphones, LockKeyhole, Pause, Play, RotateCcw, Rewind } from 'lucide-react'
 import { completeListeningLesson, loadListeningProgress } from '../../lib/listeningProgress'
 import { loadJSON, saveJSON } from '../../lib/storage'
-import { cn } from '../../lib/utils'
 import { useI18n } from '../../lib/i18n.jsx'
+import '../../bosfor-listening.css'
 
 const STAGE_COUNT = 20
 const AUDIOS_PER_STAGE = 5
@@ -150,64 +151,57 @@ function formatTime(value) {
 
 const COPY = {
   uz: {
-    eyebrow: 'TINGLAB TUSHUNISH', title: 'Dinleme', subtitle: '20 bosqich · har birida 5 audio va 30 savol.', completed: 'bosqich yakunlandi',
+    title: 'Tinglab tushunish', subtitle: 'Har bir bosqichda 5 ta audio va 30 ta savol bor.', completed: 'bosqich yakunlandi',
+    nextStage: 'Navbatdagi bosqich', openStage: 'Boshlash', allStages: 'Barcha bosqichlar', unlock: 'Beshta audio mashqni yakunlaganingizda keyingi bosqich ochiladi.',
+    nextAudio: 'Keyingi audio', back: 'Bosqichlarga qaytish', answered: 'javob tanlandi', quizReady: 'Savollarni topshirish uchun yetarlicha tingladingiz.', wrongAnswer: 'Noto‘g‘ri javob',
     play: 'Tinglash', pause: 'Pauza', resume: 'Davom ettirish', loading: 'Audio yuklanmoqda…', done: 'Audio tugadi',
     fallback: 'Brauzer ovozi ishlatilmoqda', audioError: 'Audio ishga tushmadi. Qayta urinib ko‘ring.', speed: 'Tezlik',
     playerProgress: 'Audio ijrosi', rewind: '5 soniya orqaga qaytarish', forward: '5 soniya oldinga o‘tkazish',
     transcriptShow: 'Matnni ko‘rsatish', transcriptHide: 'Matnni yashirish', transcript: 'Matn', quiz: 'Savollar',
     question: 'Savol', submit: 'Javoblarni tekshirish', choose: 'Har bir savolga javob tanlang.', retry: 'Qayta urinish',
     perfect: 'Ajoyib! Barcha javoblar to‘g‘ri.', passed: 'Audio test yakunlandi', already: 'Bosqich avval yakunlangan — XP qayta berilmaydi.',
-    incorrect: 'Javoblaringiz saqlandi. Keyingi audio testga o‘tishingiz mumkin.', earned: 'XP', stage: 'BOSQICH', locked: 'Qulflangan',
-    stageDone: 'YAKUNLANDI', progress: 'audio yakunlandi', audio: 'audio', stageReady: 'OCHIQ',
-    stageSubtitle: 'Bosqichni yakunlash uchun 5 audio testdagi barcha 30 savolga javob bering.',
-    questionsTotal: 'savol', score: 'To‘g‘ri javob', stageScore: 'Bosqich natijasi',
-    noQuestions: 'Audio testda 6 ta yaroqli savol bo‘lishi kerak.', listenFirst: 'Javob berishdan oldin audioning kamida 80 foizini tinglang.',
-    dataMissing: 'dinlemaExamSection.json topilmadi yoki testlar mavjud emas.', invalidStage: 'Bu bosqichda 5 ta audio test va jami 30 ta savol bo‘lishi kerak.',
+    incorrect: 'Javoblaringiz saqlandi.', stage: 'Bosqich', locked: 'Qulflangan',
+    stageDone: 'Yakunlandi', progress: 'audio yakunlandi', audio: 'Audio',
+    score: 'To‘g‘ri javob', stageScore: 'Bosqich natijasi',
+    noQuestions: 'Bu audio uchun savollar to‘liq yuklanmadi.', listenFirst: 'Javoblarni topshirish uchun audioning kamida 80 foizini tinglang.',
+    dataMissing: 'Tinglash mashqlari yuklanmadi. Sahifani yangilab ko‘ring.', invalidStage: 'Bu bosqichdagi audio yoki savollar to‘liq yuklanmadi.',
   },
   en: {
-    eyebrow: 'LISTENING COMPREHENSION', title: 'Listening', subtitle: '20 stages · 5 audio tasks and 30 questions each.', completed: 'stages completed',
+    title: 'Listening comprehension', subtitle: 'Each stage has 5 audio tasks and 30 questions.', completed: 'stages completed',
+    nextStage: 'Next stage', openStage: 'Start', allStages: 'All stages', unlock: 'Complete all five audio tasks to unlock the next stage.',
+    nextAudio: 'Next audio', back: 'Back to stages', answered: 'answered', quizReady: 'You have listened long enough to submit your answers.', wrongAnswer: 'Incorrect answer',
     play: 'Play', pause: 'Pause', resume: 'Resume', loading: 'Loading audio…', done: 'Audio finished',
     fallback: 'Browser speech fallback', audioError: 'Audio could not be played. Try again.', speed: 'Speed',
     playerProgress: 'Audio progress', rewind: 'Rewind 5 seconds', forward: 'Forward 5 seconds',
     transcriptShow: 'Show transcript', transcriptHide: 'Hide transcript', transcript: 'Transcript', quiz: 'Questions',
     question: 'Question', submit: 'Submit answers', choose: 'Choose an answer for every question.', retry: 'Try again',
     perfect: 'Great! Every answer is correct.', passed: 'Audio task submitted', already: 'This stage was already completed — XP is not awarded again.',
-    incorrect: 'Your answers are recorded. You can continue to the next audio task.', earned: 'XP', stage: 'STAGE', locked: 'Locked',
-    stageDone: 'COMPLETED', progress: 'audios completed', audio: 'audio', stageReady: 'UNLOCKED',
-    stageSubtitle: 'Answer all 30 questions across the five audio tasks to complete this stage.',
-    questionsTotal: 'questions', score: 'Correct answers', stageScore: 'Stage score',
-    noQuestions: 'Each audio task must contain six valid questions.', listenFirst: 'Listen to at least 80% of the audio before answering.',
-    dataMissing: 'dinlemaExamSection.json was not found or contains no tests.', invalidStage: 'This stage must have five audio tasks and 30 questions total.',
+    incorrect: 'Your answers are recorded.', stage: 'Stage', locked: 'Locked',
+    stageDone: 'Completed', progress: 'audio tasks completed', audio: 'Audio',
+    score: 'Correct answers', stageScore: 'Stage score',
+    noQuestions: 'The questions for this audio task did not fully load.', listenFirst: 'Listen to at least 80% of the audio before submitting.',
+    dataMissing: 'Listening exercises could not load. Try refreshing the page.', invalidStage: 'Some audio or questions did not load for this stage.',
   },
   tr: {
-    eyebrow: 'DİNLEME', title: 'Dinleme', subtitle: '20 aşama · her birinde 5 ses ve 30 soru.', completed: 'aşama tamamlandı',
+    title: 'Dinlediğini anlama', subtitle: 'Her aşamada 5 ses kaydı ve 30 soru var.', completed: 'aşama tamamlandı',
+    nextStage: 'Sıradaki aşama', openStage: 'Başla', allStages: 'Tüm aşamalar', unlock: 'Sonraki aşamayı açmak için beş ses alıştırmasını tamamla.',
+    nextAudio: 'Sonraki ses', back: 'Aşamalara dön', answered: 'cevaplandı', quizReady: 'Cevaplarını göndermek için yeterince dinledin.', wrongAnswer: 'Yanlış cevap',
     play: 'Dinle', pause: 'Duraklat', resume: 'Devam et', loading: 'Ses yükleniyor…', done: 'Ses tamamlandı',
     fallback: 'Tarayıcı sesi kullanılıyor', audioError: 'Ses oynatılamadı. Yeniden deneyin.', speed: 'Hız',
     playerProgress: 'Ses ilerlemesi', rewind: '5 saniye geri sar', forward: '5 saniye ileri sar',
     transcriptShow: 'Metni göster', transcriptHide: 'Metni gizle', transcript: 'Metin', quiz: 'Sorular',
     question: 'Soru', submit: 'Cevapları gönder', choose: 'Her soru için bir cevap seçin.', retry: 'Tekrar dene',
     perfect: 'Harika! Tüm cevaplar doğru.', passed: 'Ses testi tamamlandı', already: 'Bu aşama tamamlandı — XP tekrar verilmez.',
-    incorrect: 'Cevaplarınız kaydedildi. Sonraki ses testine geçebilirsiniz.', earned: 'XP', stage: 'AŞAMA', locked: 'Kilitli',
-    stageDone: 'TAMAMLANDI', progress: 'ses tamamlandı', audio: 'ses', stageReady: 'AÇIK',
-    stageSubtitle: 'Aşamayı tamamlamak için beş ses testindeki 30 sorunun tümünü cevaplayın.',
-    questionsTotal: 'soru', score: 'Doğru cevap', stageScore: 'Aşama sonucu',
-    noQuestions: 'Her ses testinde altı geçerli soru bulunmalıdır.', listenFirst: 'Cevaplamadan önce sesin en az yüzde 80’ini dinleyin.',
-    dataMissing: 'dinlemaExamSection.json bulunamadı veya test içermiyor.', invalidStage: 'Bu aşamada toplam beş ses testi ve 30 soru olmalıdır.',
+    incorrect: 'Cevapların kaydedildi.', stage: 'Aşama', locked: 'Kilitli',
+    stageDone: 'Tamamlandı', progress: 'ses alıştırması tamamlandı', audio: 'Ses',
+    score: 'Doğru cevap', stageScore: 'Aşama sonucu',
+    noQuestions: 'Bu ses alıştırmasının soruları tam yüklenmedi.', listenFirst: 'Cevapları göndermeden önce sesin en az yüzde 80’ini dinle.',
+    dataMissing: 'Dinleme alıştırmaları yüklenemedi. Sayfayı yenilemeyi dene.', invalidStage: 'Bu aşamanın bazı sesleri veya soruları yüklenmedi.',
   },
 }
 
 function getCopy(language) {
-  const localized = COPY[language] || COPY.uz
-  return {
-    ...localized,
-    loading: COPY.uz.loading,
-    audioError: COPY.uz.audioError,
-    choose: COPY.uz.choose,
-    noQuestions: COPY.uz.noQuestions,
-    listenFirst: COPY.uz.listenFirst,
-    dataMissing: COPY.uz.dataMissing,
-    invalidStage: COPY.uz.invalidStage,
-  }
+  return COPY[language] || COPY.uz
 }
 
 const API_KEY = typeof import.meta.env?.VITE_ELEVENLABS_API_KEY === 'string'
@@ -217,7 +211,7 @@ const VOICE_ID = typeof import.meta.env?.VITE_ELEVENLABS_VOICE_ID === 'string'
   ? import.meta.env.VITE_ELEVENLABS_VOICE_ID.trim() || '21m00Tcm4TlvDq8ikWAM'
   : '21m00Tcm4TlvDq8ikWAM'
 
-function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
+function AudioPlayer({ lesson, language, qualified, onAudioFinished, playerRef }) {
   const copy = getCopy(language)
   const [status, setStatus] = useState('ready')
   const [currentTime, setCurrentTime] = useState(0)
@@ -231,7 +225,6 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
   const controllerRef = useRef(null)
   const playbackIdRef = useRef(0)
   const fallbackStartedRef = useRef(0)
-  const pendingSeekRef = useRef(0)
   const speedRef = useRef(1)
   const finishedCallbackRef = useRef(onAudioFinished)
   const heardSecondsRef = useRef(0)
@@ -242,17 +235,17 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
 
   useEffect(() => { finishedCallbackRef.current = onAudioFinished }, [onAudioFinished])
 
-  const releaseCurrentPlayback = () => {
+  const releaseCurrentPlayback = (audio = audioRef.current) => {
     controllerRef.current?.abort()
     controllerRef.current = null
-    if (audioRef.current) {
-      audioRef.current.onloadedmetadata = null
-      audioRef.current.ontimeupdate = null
-      audioRef.current.onended = null
-      audioRef.current.onerror = null
-      audioRef.current.pause()
-      audioRef.current.removeAttribute('src')
-      audioRef.current.load()
+    if (audio) {
+      audio.onloadedmetadata = null
+      audio.ontimeupdate = null
+      audio.onended = null
+      audio.onerror = null
+      audio.pause()
+      audio.removeAttribute('src')
+      audio.load()
     }
     if (objectUrlRef.current) {
       URL.revokeObjectURL(objectUrlRef.current)
@@ -288,8 +281,6 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     if (!completionReportedRef.current && Number.isFinite(audioDuration) && audioDuration > 0
       && heardSecondsRef.current >= audioDuration * 0.8) {
       completionReportedRef.current = true
-      setStatus('done')
-      audio.pause()
       finishedCallbackRef.current?.(lesson.id)
     }
   }
@@ -378,6 +369,9 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
   const startFallback = async (playbackId) => {
     if (playbackId !== playbackIdRef.current || fallbackStartedRef.current === playbackId) return
     fallbackStartedRef.current = playbackId
+    releaseCurrentPlayback()
+    setCurrentTime(0)
+    setDuration(0)
     if (API_KEY && typeof Audio !== 'undefined' && lesson.transcript) {
       const controller = new AbortController()
       controllerRef.current = controller
@@ -411,7 +405,6 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     const playbackId = playbackIdRef.current + 1
     playbackIdRef.current = playbackId
     fallbackStartedRef.current = 0
-    pendingSeekRef.current = 0
     releaseCurrentPlayback()
     setCurrentTime(0)
     setDuration(0)
@@ -425,10 +418,6 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
         audio.onloadedmetadata = () => {
           if (playbackId !== playbackIdRef.current) return
           setDuration(Number.isFinite(audio.duration) ? audio.duration : 0)
-          if (pendingSeekRef.current > 0 && Number.isFinite(audio.duration)) {
-            audio.currentTime = Math.min(pendingSeekRef.current, audio.duration)
-            pendingSeekRef.current = 0
-          }
         }
         audio.ontimeupdate = () => recordAudioProgress(audio, playbackId)
         audio.onended = () => finishAudioPlayback(audio, playbackId)
@@ -485,7 +474,6 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
       setCurrentTime(audio.currentTime)
       return
     }
-    if (status === 'ready') pendingSeekRef.current = Math.max(0, pendingSeekRef.current + delta)
   }
 
   const skipBackward = () => seekBy(-5)
@@ -507,9 +495,12 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     if (utteranceRef.current) utteranceRef.current.rate = speedRef.current
   }
 
-  useEffect(() => () => {
-    playbackIdRef.current += 1
-    releaseCurrentPlayback()
+  useEffect(() => {
+    const audio = audioRef.current
+    return () => {
+      playbackIdRef.current += 1
+      releaseCurrentPlayback(audio)
+    }
   }, [lesson.id])
 
   const statusText = {
@@ -521,49 +512,61 @@ function AudioPlayer({ lesson, language, dark, isPremium, onAudioFinished }) {
     done: copy.done,
     error: copy.audioError,
   }[status]
-  const surface = isPremium ? 'border-yellow-500/20 bg-black/35 text-white' : dark ? 'border-slate-700 bg-slate-900 text-slate-100' : 'border-slate-200 bg-white text-slate-900'
-  const progressValue = duration > 0 ? Math.min(currentTime, duration) : 0
+  const playing = status === 'playing' || status === 'fallback'
+  const playbackLabel = playing ? copy.pause : status === 'paused' ? copy.resume : copy.play
+  const seekable = duration > 0 && sourceRef.current !== 'speech'
+  const progressValue = seekable ? Math.min(currentTime, duration) : 0
 
   return (
-    <section className={cn('min-w-0 rounded-2xl border p-3 sm:p-5', surface)} aria-label={copy.play}>
+    <section ref={playerRef} tabIndex={-1} className="bosfor-panel listening-player min-w-0 rounded-2xl border p-4 sm:p-5" aria-labelledby="listening-player-heading">
       <audio ref={audioRef} preload="metadata" className="hidden" aria-hidden="true" />
-      <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
-        <button type="button" onClick={() => { void togglePlayback() }} disabled={status === 'loading'} aria-label={statusText} className="grid size-12 shrink-0 place-items-center rounded-full bg-teal-600 text-white transition hover:bg-teal-700 disabled:opacity-60">
-          {status === 'playing' || status === 'fallback' ? <Pause className="size-5 fill-current" aria-hidden="true" /> : <Play className="size-5 fill-current" aria-hidden="true" />}
-        </button>
-        <div className="min-w-0">
-          <div className="flex min-w-0 items-center gap-2 text-sm font-extrabold"><Volume2 className="size-4 shrink-0 text-teal-500" /><span className="truncate">{statusText}</span></div>
-          <p className="mt-1 truncate text-xs text-slate-500">{lesson.audioUrl ? `MP3 · ${lesson.audioUrl}` : copy.fallback}</p>
+      <PanelHeading name="dinleme" titleId="listening-player-heading" title={localized(lesson.title, language)} description={[lesson.level, lesson.category].filter(Boolean).join(' · ')} />
+      <div className="bosfor-inset mt-4 rounded-xl border p-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" onClick={() => { void togglePlayback() }} disabled={status === 'loading'} aria-label={playbackLabel} className="bosfor-action listening-play grid size-12 shrink-0 place-items-center rounded-full">
+            {playing ? <Pause className="size-5 fill-current" aria-hidden="true" /> : <Play className="size-5 fill-current" aria-hidden="true" />}
+          </button>
+          <button type="button" onClick={skipBackward} disabled={!seekable} aria-label={copy.rewind} className="bosfor-control listening-action px-2"><Rewind className="size-4" aria-hidden="true" />5s</button>
+          <button type="button" onClick={skipForward} disabled={!seekable} aria-label={copy.forward} className="bosfor-control listening-action px-2">5s<FastForward className="size-4" aria-hidden="true" /></button>
+          <label className="bosfor-control ml-auto inline-flex min-h-11 items-center gap-1 rounded-xl px-2 text-xs font-bold">
+            <span className="sr-only">{copy.speed}</span>
+            <select value={speed} onChange={(event) => changeSpeed(event.target.value)} className="listening-speed bg-transparent font-bold">
+              <option value="0.75">0.75×</option><option value="1">1×</option>
+            </select>
+          </label>
         </div>
-        <label className="col-span-2 inline-flex min-h-11 items-center justify-self-end gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold dark:border-slate-700 sm:col-span-1">
-          {copy.speed}
-          <select value={speed} onChange={(event) => changeSpeed(event.target.value)} aria-label={copy.speed} className="bg-transparent font-extrabold outline-none">
-            <option value="0.75">0.75×</option><option value="1">1×</option>
-          </select>
-        </label>
+        <div className="mt-3 flex min-w-0 items-center gap-2">
+          <span className="listening-muted text-xs tabular-nums">{formatTime(progressValue)}</span>
+          <input type="range" min="0" max={duration || 1} step="0.1" value={progressValue} onChange={(event) => seekTo(event.target.value)} disabled={!seekable} aria-label={copy.playerProgress} className="listening-range h-6 min-w-0 flex-1" />
+          <span className="listening-muted text-xs tabular-nums">{formatTime(duration)}</span>
+        </div>
       </div>
-      <div className="mt-4 flex min-w-0 items-center gap-2 sm:gap-3">
-        <span className="w-10 shrink-0 text-right font-mono text-xs tabular-nums">{formatTime(progressValue)}</span>
-        <input type="range" min="0" max={duration || 0} step="0.1" value={Math.min(progressValue, duration || 0)} onChange={(event) => seekTo(event.target.value)} disabled={!duration || sourceRef.current === 'speech'} aria-label={copy.playerProgress} className="h-2 min-w-0 flex-1 cursor-pointer accent-teal-600 disabled:cursor-not-allowed disabled:opacity-50" />
-        <span className="w-10 shrink-0 font-mono text-xs tabular-nums">{formatTime(duration)}</span>
-      </div>
-      <div className="mt-3 flex justify-center gap-2 sm:justify-start">
-        <button type="button" onClick={skipBackward} aria-label={copy.rewind} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 active:scale-95 active:bg-slate-100 dark:border-slate-700 dark:active:bg-slate-800"><Rewind className="size-4" aria-hidden="true" />- 5s</button>
-        <button type="button" onClick={skipForward} aria-label={copy.forward} className="inline-flex min-h-11 min-w-24 items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-extrabold transition hover:border-teal-500 active:scale-95 active:bg-slate-100 dark:border-slate-700 dark:active:bg-slate-800">+ 5s<FastForward className="size-4" aria-hidden="true" /></button>
-      </div>
-      <button type="button" onClick={() => setTranscriptVisible((visible) => !visible)} aria-expanded={transcriptVisible} className="mt-4 text-sm font-bold text-teal-700 underline decoration-dotted underline-offset-4 dark:text-teal-300">
-        {transcriptVisible ? copy.transcriptHide : copy.transcriptShow}
-      </button>
-      {transcriptVisible && <p className="mt-3 whitespace-pre-line rounded-xl bg-slate-50 p-4 text-sm leading-7 text-slate-800 dark:bg-slate-800 dark:text-slate-100">{lesson.transcript}</p>}
+      <p className="listening-muted mt-3 flex min-h-5 items-start gap-2 text-xs font-semibold" role="status">
+        {qualified && <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />}
+        {qualified && status === 'playing' ? copy.quizReady : statusText}
+      </p>
+      {lesson.transcript && (
+        <div className="mt-2">
+          <button type="button" onClick={() => setTranscriptVisible((visible) => !visible)} aria-expanded={transcriptVisible} aria-controls="listening-transcript" className="bosfor-control listening-action">
+            <BookOpenText className="size-4" aria-hidden="true" />{transcriptVisible ? copy.transcriptHide : copy.transcriptShow}
+          </button>
+          <p id="listening-transcript" hidden={!transcriptVisible} lang="tr" className="bosfor-inset mt-3 whitespace-pre-line rounded-xl border p-3 text-sm leading-7">{lesson.transcript}</p>
+        </div>
+      )}
     </section>
   )
 }
 
-export default function Dinleme({ profile, moduleScores = {}, isPremium = false, dark = false, onLessonComplete }) {
+
+export default function Dinleme({ profile, moduleScores = {}, onLessonComplete }) {
   const { language } = useI18n()
   const copy = getCopy(language)
   const identity = profile?.userId || profile?.email || 'local'
   const stagePanelRef = useRef(null)
+  const playerRef = useRef(null)
+  const overviewRef = useRef(null)
+  const summaryRef = useRef(null)
+  const [stageOpen, setStageOpen] = useState(false)
   const [tests, setTests] = useState(bundledListeningTests)
   const [loadingTests, setLoadingTests] = useState(!bundledListeningTests.length)
   const [dataMissing, setDataMissing] = useState(false)
@@ -596,14 +599,12 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
   const selectedTaskState = selectedTaskKey ? taskProgress[selectedTaskKey] || { answers: {}, result: null, submitted: false } : { answers: {}, result: null, submitted: false }
   const selectedAnswers = selectedTaskState.answers || {}
   const selectedTaskResult = selectedTaskState.result || null
+  const answerCount = selectedAudio?.quizQuestions.filter(({ id, options }) => Number.isInteger(selectedAnswers[id]) && selectedAnswers[id] >= 0 && selectedAnswers[id] < options.length).length || 0
   const stageQuestionCount = selectedStage?.audioTasks.reduce((sum, audio) => sum + audio.quizQuestions.length, 0) || 0
   const stageStructureValid = selectedStage?.audioTasks.length === AUDIOS_PER_STAGE
     && selectedStage.audioTasks.every((audio) => audio.quizQuestions.length === QUESTIONS_PER_AUDIO)
     && stageQuestionCount === AUDIOS_PER_STAGE * QUESTIONS_PER_AUDIO
   const stageIsComplete = Boolean(selectedStage && completedStageIds.has(selectedStage.id))
-  const muted = isPremium ? 'text-white/60' : dark ? 'text-slate-400' : 'text-slate-500'
-  const pageCard = isPremium ? 'border-yellow-500/20 bg-black/30 text-white' : dark ? 'border-slate-700 bg-slate-900 text-slate-100' : 'border-slate-200 bg-white text-slate-900'
-
   useEffect(() => {
     saveJSON(stageTaskStorageKey(identity), taskProgress)
   }, [identity, taskProgress])
@@ -652,19 +653,24 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
 
   const selectStage = (index) => {
     const stage = stages[index]
-    if (!stage || index >= unlockedStageCount) return
+    if (!stage?.audioTasks.length || index >= unlockedStageCount) return
     setSelectedStageIndex(index)
     const nextAudio = stage.audioTasks.find((audio) => !taskIsSubmitted(stage, audio)) || stage.audioTasks[0]
     setSelectedAudioId(nextAudio?.id || null)
     setStageSummary(null)
-    if (typeof window !== 'undefined') {
-      window.requestAnimationFrame(() => stagePanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
-    }
+    setStageOpen(true)
+    window.requestAnimationFrame(() => stagePanelRef.current?.focus())
   }
 
-  const selectAudio = (audio) => {
+  const showStages = () => {
+    setStageOpen(false)
+    window.requestAnimationFrame(() => overviewRef.current?.focus())
+  }
+
+  const selectAudio = (audio, focusPlayer = false) => {
     if (!selectedStage?.audioTasks.some((item) => item.id === audio.id)) return
     setSelectedAudioId(audio.id)
+    if (focusPlayer) window.requestAnimationFrame(() => playerRef.current?.focus())
   }
 
   const updateTaskProgress = (key, updater) => {
@@ -685,7 +691,7 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
 
   const submitAudioQuiz = () => {
     if (!selectedStage || !selectedAudio || selectedAudio.quizQuestions.length !== QUESTIONS_PER_AUDIO) return
-    if (!listenedAudioIds.has(selectedAudio.id) || Object.keys(selectedAnswers).length !== QUESTIONS_PER_AUDIO) return
+    if (!stageStructureValid || !listenedAudioIds.has(selectedAudio.id) || answerCount !== QUESTIONS_PER_AUDIO) return
     const correctCount = selectedAudio.quizQuestions.reduce((count, question) => count + (selectedAnswers[question.id] === question.correctIndex ? 1 : 0), 0)
     const audioScore = {
       submitted: true,
@@ -723,6 +729,7 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
 
     setProgressVersion((version) => version + 1)
     setStageSummary({ stageId: selectedStage.id, correctCount: totalCorrect, questionCount: totalQuestions, scorePct: stageScorePct, xpAward, firstCompletion })
+    window.requestAnimationFrame(() => summaryRef.current?.focus())
     onLessonComplete?.({
       testId: selectedStage.id,
       scorePct: stageScorePct,
@@ -738,138 +745,151 @@ export default function Dinleme({ profile, moduleScores = {}, isPremium = false,
     setStageSummary(null)
   }
 
-  const stageProgressText = (stage) => `${completedAudioCount(stage)}/${AUDIOS_PER_STAGE} ${copy.progress}`
+  const stageProgressText = (stage) => completedAudioCount(stage) + '/' + AUDIOS_PER_STAGE + ' ' + copy.progress
+  const nextStage = stages.find((stage) => stage.index < unlockedStageCount && stage.audioTasks.length && !completedStageIds.has(stage.id))
+  const nextAudio = selectedStage?.audioTasks.find((audio) => !taskIsSubmitted(selectedStage, audio))
+  const listened = selectedAudio && listenedAudioIds.has(selectedAudio.id)
+  const questionCount = selectedAudio?.quizQuestions.length || 0
+  const summary = stageSummary?.stageId === selectedStage?.id ? stageSummary : null
+
+  if (!stageOpen || !selectedStage) {
+    return (
+      <section ref={overviewRef} tabIndex={-1} className="bosfor-listening listening-workspace mx-auto w-full max-w-6xl space-y-4" aria-labelledby="listening-title">
+        <SectionBanner name="dinleme" titleId="listening-title" title={copy.title} description={copy.subtitle}>
+          <span>{completedStageCount}/{STAGE_COUNT} {copy.completed}</span>
+        </SectionBanner>
+
+        {loadingTests && <p role="status" className="bosfor-panel rounded-2xl border p-4 text-sm font-bold">{copy.loading}</p>}
+        {dataMissing && <p role="alert" className="listening-note rounded-xl border p-4 text-sm font-semibold">{copy.dataMissing}</p>}
+        {nextStage && (
+          <section className="bosfor-panel rounded-2xl border p-4 sm:p-6" aria-labelledby="listening-next-stage">
+            <PanelHeading name="plan" titleId="listening-next-stage" title={copy.nextStage + ' · ' + nextStage.number} description={stageProgressText(nextStage)}>
+              <button type="button" onClick={() => selectStage(nextStage.index)} className="bosfor-action listening-action">
+                {copy.openStage} <ArrowRight className="size-4" aria-hidden="true" />
+              </button>
+            </PanelHeading>
+          </section>
+        )}
+
+        {tests.length > 0 && (
+          <section className="bosfor-panel rounded-2xl border p-4 sm:p-6" aria-labelledby="listening-all-stages">
+            <PanelHeading name="exams" titleId="listening-all-stages" title={copy.allStages} description={copy.unlock} />
+            <ul className="mt-4 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+              {stages.map((stage) => {
+                const locked = stage.index >= unlockedStageCount || stage.audioTasks.length === 0
+                const done = completedStageIds.has(stage.id)
+                const badge = done ? <Check className="size-5" /> : stage.number
+                const label = (
+                  <>
+                    <span className="listening-stage-number" aria-hidden="true">{badge}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-extrabold">{copy.stage} {stage.number}</span>
+                      <span className="listening-muted mt-0.5 block text-xs">{locked ? copy.locked : done ? copy.stageDone : stageProgressText(stage)}</span>
+                    </span>
+                    {locked ? <LockKeyhole className="size-4 shrink-0" aria-hidden="true" /> : <ArrowRight className="size-4 shrink-0" aria-hidden="true" />}
+                  </>
+                )
+                return (
+                  <li key={stage.id}>
+                    {locked ? <div className="listening-stage-card bosfor-inset" data-locked="true">{label}</div> : (
+                      <button type="button" className="listening-stage-card bosfor-inset" data-current={stage === nextStage} onClick={() => selectStage(stage.index)}>{label}</button>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )}
+      </section>
+    )
+  }
 
   return (
-    <main className="mx-auto w-full max-w-6xl space-y-4 px-3 pb-10 sm:space-y-5 sm:px-4 lg:px-6">
-      <header className={cn('relative overflow-hidden rounded-3xl border p-5 shadow-sm sm:p-7', pageCard)}>
-        <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-24 size-72 rounded-full bg-teal-500/10 blur-3xl" />
-        <div className="relative">
-          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[.2em] text-teal-600 dark:text-teal-300"><Headphones className="size-4" />{copy.eyebrow}</p>
-          <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-            <div><h1 className="text-3xl font-black tracking-tight">{copy.title}</h1><p className={cn('mt-2 max-w-xl text-sm leading-relaxed', muted)}>{copy.subtitle}</p></div>
-            <div className="flex items-center gap-2 rounded-2xl border border-teal-500/20 bg-teal-500/10 px-4 py-3 text-xs font-extrabold text-teal-800 dark:text-teal-100">
-              <CheckCircle2 className="size-4" /><span className="tabular-nums">{completedStageCount}/{STAGE_COUNT}</span> {copy.completed}
-            </div>
-          </div>
+    <section ref={stagePanelRef} tabIndex={-1} className="bosfor-listening listening-workspace mx-auto max-w-6xl space-y-4" aria-labelledby="listening-stage-title">
+      <header className="bosfor-panel rounded-2xl border p-4 sm:p-5">
+        <PanelHeading name="dinleme" titleId="listening-stage-title" title={copy.stage + ' ' + selectedStage.number} description={stageProgressText(selectedStage)}>
+          <button type="button" className="bosfor-control listening-action" onClick={showStages}><ArrowLeft className="size-4" aria-hidden="true" />{copy.back}</button>
+        </PanelHeading>
+        <div className="bosfor-track mt-4 h-2 overflow-hidden rounded-full" role="progressbar" aria-label={copy.progress} aria-valuemin={0} aria-valuemax={AUDIOS_PER_STAGE} aria-valuenow={completedAudioCount(selectedStage)}>
+          <div className="bosfor-progress-fill h-full rounded-full" style={{ width: (completedAudioCount(selectedStage) / AUDIOS_PER_STAGE) * 100 + '%' }} />
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5" role="group" aria-label={copy.audio}>
+          {selectedStage.audioTasks.map((audio, index) => (
+            <button key={audio.id} type="button" aria-pressed={selectedAudio?.id === audio.id} onClick={() => selectAudio(audio)} className="listening-audio-tab bosfor-inset flex min-h-14 min-w-0 items-center gap-2 rounded-xl border p-2 text-start">
+              {taskIsSubmitted(selectedStage, audio) ? <CheckCircle2 className="size-4 shrink-0" aria-label={copy.stageDone} /> : <Headphones className="size-4 shrink-0" aria-hidden="true" />}
+              <span className="min-w-0">
+                <span className="block text-xs font-extrabold">{copy.audio} {index + 1} · {audio.level}</span>
+                <span className="listening-muted block text-xs">{localized(audio.title, language)}</span>
+              </span>
+            </button>
+          ))}
         </div>
       </header>
 
-      {loadingTests && <div role="status" className={cn('rounded-2xl border p-4 text-sm font-bold', pageCard)}>{copy.loading}</div>}
-      {(dataMissing || (!loadingTests && !tests.length)) && <div role="alert" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm font-semibold text-amber-800 dark:text-amber-100">{copy.dataMissing}</div>}
+      {!stageStructureValid && <p role="alert" className="listening-note rounded-xl border p-4 text-sm font-semibold">{copy.invalidStage}</p>}
+      {summary && (
+        <section ref={summaryRef} tabIndex={-1} className="bosfor-panel listening-workspace rounded-2xl border p-4 sm:p-5" role="status">
+          <PanelHeading name="medal" title={copy.stageScore + ' · ' + summary.scorePct + '%'} description={summary.correctCount + '/' + summary.questionCount + ' · ' + (summary.firstCompletion ? '+' + summary.xpAward + ' XP' : copy.already)}>
+            {selectedStage.index + 1 < unlockedStageCount && (
+              <button type="button" className="bosfor-action listening-action" onClick={() => selectStage(selectedStage.index + 1)}>{copy.nextStage} <ArrowRight className="size-4" aria-hidden="true" /></button>
+            )}
+          </PanelHeading>
+        </section>
+      )}
 
-      <section aria-label={copy.subtitle} className="grid grid-cols-1 gap-2 min-[520px]:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 sm:gap-3">
-        {stages.map((stage) => {
-          const locked = stage.index >= unlockedStageCount
-          const done = completedStageIds.has(stage.id)
-          const selected = selectedStageIndex === stage.index
-          const cefr = [...new Set(stage.audioTasks.map((audio) => audio.level))].join(' · ')
-          return (
-            <button
-              key={stage.id}
-              type="button"
-              disabled={locked}
-              aria-disabled={locked}
-              aria-pressed={!locked && selected}
-              onClick={() => selectStage(stage.index)}
-              className={cn(
-                'relative flex min-h-[84px] min-w-0 items-center gap-3 rounded-2xl border p-3 text-left transition sm:min-h-28 sm:p-4',
-                locked
-                  ? 'cursor-not-allowed border-slate-300 bg-slate-100 dark:border-slate-700 dark:bg-slate-800'
-                  : isPremium
-                    ? 'border-white/10 bg-slate-950/80 text-white hover:border-teal-400/50'
-                    : dark
-                      ? 'border-slate-700 bg-slate-900 text-slate-100 hover:border-teal-500/60'
-                      : 'border-slate-200 bg-white text-slate-900 hover:border-teal-500/60 hover:shadow-md',
-                selected && !locked && 'ring-2 ring-teal-500/50',
-              )}
-            >
-              <span className={cn('grid size-10 shrink-0 place-items-center rounded-xl font-black tabular-nums sm:size-12', locked ? 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300' : done ? 'bg-emerald-500 text-white' : 'bg-gradient-to-br from-teal-500 to-cyan-600 text-white')}>
-                {locked ? <LockKeyhole className="size-5" /> : done ? <Check className="size-5" /> : String(stage.number).padStart(2, '0')}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className={cn('block text-[10px] font-black uppercase tracking-[.16em]', locked ? 'text-slate-600 dark:text-slate-300' : 'text-teal-600 dark:text-teal-300')}>{copy.stage} {String(stage.number).padStart(2, '0')} · {cefr || '—'}</span>
-                <span className={cn('mt-2 block text-[10px] font-black uppercase tracking-wider', locked ? 'text-slate-600 dark:text-slate-300' : done ? 'text-emerald-600 dark:text-emerald-300' : 'text-slate-700 dark:text-slate-300')}>
-                  {locked ? copy.locked : done ? copy.stageDone : stageProgressText(stage)}
-                </span>
-              </span>
-              {!locked && <ChevronRight className="size-4 shrink-0 text-slate-400" />}
-            </button>
-          )
-        })}
-      </section>
-
-      {selectedStage && <section ref={stagePanelRef} className={cn('scroll-mt-4 min-w-0 overflow-hidden rounded-2xl border shadow-sm sm:rounded-3xl', pageCard)}>
-        <div className="border-b border-slate-200/70 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 px-4 py-4 text-white dark:border-slate-700 sm:px-6 sm:py-5 lg:px-7">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[.18em] text-teal-300 sm:tracking-[.22em]">{copy.stage} {String(selectedStage.number).padStart(2, '0')} · {completedAudioCount(selectedStage)}/{AUDIOS_PER_STAGE} {copy.progress}</p>
-              <h2 className="mt-1 text-xl font-black sm:text-2xl">{copy.stage} {String(selectedStage.number).padStart(2, '0')}</h2>
-              <p className="mt-1 text-sm text-white/70">{copy.stageSubtitle}</p>
-            </div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-2 text-xs font-black text-emerald-200"><span className="size-2 animate-pulse rounded-full bg-emerald-400" />{stageIsComplete ? copy.stageDone : copy.stageReady}</span>
-          </div>
-        </div>
-
-        <div className="min-w-0 p-3 sm:p-5 lg:p-7">
-          {!stageStructureValid && <p role="alert" className="mb-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm font-semibold text-amber-800 dark:text-amber-100">{copy.invalidStage}</p>}
-          <div className="mb-4 grid grid-cols-2 gap-2 min-[520px]:grid-cols-3 xl:grid-cols-5 sm:mb-5" aria-label={copy.audio}>
-            {selectedStage.audioTasks.map((audio, index) => {
-              const submitted = taskIsSubmitted(selectedStage, audio)
-              const selected = selectedAudio?.id === audio.id
-              return (
-                <button key={audio.id} type="button" aria-pressed={selected} onClick={() => selectAudio(audio)} className={cn('flex min-h-14 min-w-0 items-center gap-2 rounded-xl border p-2 text-left transition sm:p-3', selected ? 'border-teal-500 bg-teal-500/10 text-teal-800 dark:text-teal-100' : 'border-slate-200 hover:border-teal-500 dark:border-slate-700', submitted && 'border-emerald-500/50')}>
-                  {submitted ? <CheckCircle2 className="size-4 shrink-0 text-emerald-500" /> : <span className="grid size-6 shrink-0 place-items-center rounded-md bg-slate-100 text-[10px] font-black dark:bg-slate-800">{String(index + 1).padStart(2, '0')}</span>}
-                  <span className="min-w-0"><span className="block text-[10px] font-black uppercase tracking-wider">{audio.level} · {copy.audio} {index + 1}</span><span className="block truncate text-xs font-bold">{localized(audio.title, language)}</span></span>
-                </button>
-              )
-            })}
-          </div>
-
-          {selectedAudio && <>
-            <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2 sm:mb-4">
-              <div className="min-w-0 flex-1"><p className="text-[10px] font-black uppercase tracking-widest text-teal-600 dark:text-teal-300">{selectedAudio.level} · {selectedAudio.category}</p><h3 className="mt-1 break-words text-base font-black sm:text-lg">{localized(selectedAudio.title, language)}</h3></div>
-              <span className="shrink-0 rounded-full border border-teal-500/20 bg-teal-500/10 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-teal-700 dark:text-teal-200 sm:px-3">{selectedAudio.quizQuestions.length}/{QUESTIONS_PER_AUDIO} {copy.questionsTotal}</span>
-            </div>
-            <AudioPlayer key={selectedAudio.id} lesson={selectedAudio} language={language} isPremium={isPremium} dark={dark} onAudioFinished={markAudioFinished} />
-            <div className="mt-6">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className="text-lg font-black">{copy.quiz}</h3><span className="rounded-full border border-teal-500/20 bg-teal-500/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-teal-700 dark:text-teal-200">{selectedAudio.quizQuestions.length} · {copy.question}</span></div>
-              {selectedAudio.quizQuestions.length !== QUESTIONS_PER_AUDIO ? <p className={cn('rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm font-semibold', muted)}>{copy.noQuestions}</p> : <div className="space-y-4">
+      {selectedAudio && (
+        <div className="listening-layout grid items-start gap-4">
+          <AudioPlayer key={selectedAudio.id} lesson={selectedAudio} language={language} playerRef={playerRef} qualified={listened} onAudioFinished={markAudioFinished} />
+          <section className="bosfor-panel min-w-0 rounded-2xl border p-4 sm:p-5" aria-labelledby="listening-questions">
+            <PanelHeading name="quests" titleId="listening-questions" title={copy.quiz}>
+              <span className="bosfor-badge px-2.5 py-1.5 text-xs font-bold tabular-nums">{answerCount}/{questionCount} {copy.answered}</span>
+            </PanelHeading>
+            {questionCount !== QUESTIONS_PER_AUDIO ? <p className="listening-note mt-4 rounded-xl border p-4 text-sm font-semibold">{copy.noQuestions}</p> : (
+              <div className="mt-4 space-y-4">
                 {selectedAudio.quizQuestions.map((question, index) => (
-                  <fieldset key={question.id} disabled={Boolean(selectedTaskResult)} className="rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+                  <fieldset key={question.id} disabled={Boolean(selectedTaskResult)} className="listening-question min-w-0 rounded-xl border p-3">
                     <legend className="px-1 text-sm font-extrabold">{copy.question} {index + 1}. {localized(question.prompt, language)}</legend>
-                    <div className="mt-3 grid gap-2 md:grid-cols-2">
+                    <div className="mt-1 grid gap-2">
                       {question.options.map((option, optionIndex) => {
                         const picked = selectedAnswers[question.id] === optionIndex
-                        const correctAnswer = selectedTaskResult && optionIndex === question.correctIndex
-                        const wrongAnswer = selectedTaskResult && picked && optionIndex !== question.correctIndex
-                        return <button key={optionIndex} type="button" onClick={() => updateTaskProgress(selectedTaskKey, (previous) => ({ ...previous, answers: { ...(previous.answers || {}), [question.id]: optionIndex }, submitted: false, result: null }))} className={cn('min-h-11 min-w-[44px] w-full rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition active:scale-[.99]', correctAnswer ? 'border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200' : wrongAnswer ? 'border-rose-400 bg-rose-500/10 text-rose-800 dark:text-rose-200' : picked ? 'border-teal-500 bg-teal-500/10 text-teal-900 dark:text-teal-100' : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700')}>{localized(option, language)}</button>
+                        const correct = selectedTaskResult && optionIndex === question.correctIndex
+                        const wrong = selectedTaskResult && picked && !correct
+                        return (
+                          <label key={optionIndex} data-result={correct ? 'correct' : wrong ? 'wrong' : undefined} data-picked={picked} className="listening-option bosfor-inset flex min-h-11 items-start gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold">
+                            <input type="radio" className="mt-0.5 size-4 shrink-0" name={question.id} value={optionIndex} checked={picked} onChange={() => updateTaskProgress(selectedTaskKey, (previous) => ({ ...previous, answers: { ...(previous.answers || {}), [question.id]: optionIndex }, submitted: false, result: null }))} />
+                            <span className="min-w-0 flex-1">{localized(option, language)}</span>
+                            {correct && <CheckCircle2 className="size-4 shrink-0" aria-label={copy.score} />}
+                            {wrong && <CircleX className="size-4 shrink-0" aria-label={copy.wrongAnswer} />}
+                          </label>
+                        )
                       })}
                     </div>
                   </fieldset>
                 ))}
-              </div>}
+              </div>
+            )}
 
-              {selectedTaskResult && <div role="status" className={cn('mt-5 rounded-2xl border p-4', selectedTaskResult.scorePct === 100 ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-amber-500/30 bg-amber-500/10')}>
-                <p className="flex items-center gap-2 font-extrabold">{selectedTaskResult.scorePct === 100 ? <CheckCircle2 className="size-5 text-emerald-600" /> : <RotateCcw className="size-5 text-amber-600" />}{selectedTaskResult.correctCount}/{selectedTaskResult.questionCount} · {selectedTaskResult.scorePct}%</p>
-                <p className="mt-1 text-sm font-semibold">{selectedTaskResult.scorePct === 100 ? copy.perfect : copy.incorrect}</p>
-                {!stageIsComplete && <button type="button" onClick={resetAudioQuiz} className="mt-3 inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-bold text-white hover:bg-teal-700"><RotateCcw className="size-4" />{copy.retry}</button>}
-              </div>}
-
-              {!selectedTaskResult && <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                <p className={cn('text-xs', muted)}>{listenedAudioIds.has(selectedAudio.id) ? copy.choose : copy.listenFirst}</p>
-                <button type="button" onClick={submitAudioQuiz} disabled={!stageStructureValid || !listenedAudioIds.has(selectedAudio.id) || selectedAudio.quizQuestions.length !== QUESTIONS_PER_AUDIO || Object.keys(selectedAnswers).length !== QUESTIONS_PER_AUDIO} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><CheckCircle2 className="size-4" />{copy.submit}</button>
-              </div>}
-            </div>
-          </>}
-
-          {stageSummary?.stageId === selectedStage.id && <div role="status" className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-            <p className="font-extrabold">{copy.stageScore}: {stageSummary.correctCount}/{stageSummary.questionCount} · {stageSummary.scorePct}%</p>
-            <p className="mt-1 text-sm font-bold text-emerald-700 dark:text-emerald-200">{stageSummary.firstCompletion ? `${copy.passed} · +${stageSummary.xpAward} ${copy.earned}` : copy.already}</p>
-            {selectedStage.number < STAGE_COUNT && <p className="mt-1 text-xs font-semibold text-emerald-700 dark:text-emerald-200">{copy.stage} {String(selectedStage.number + 1).padStart(2, '0')} · {copy.stageReady}</p>}
-          </div>}
+            {selectedTaskResult ? (
+              <div className="bosfor-inset mt-4 rounded-xl border p-4" role="status">
+                <p className="text-sm font-extrabold">{copy.score} · {selectedTaskResult.correctCount}/{selectedTaskResult.questionCount} · {selectedTaskResult.scorePct}%</p>
+                <p className="listening-muted mt-1 text-sm">{selectedTaskResult.scorePct === 100 ? copy.perfect : copy.incorrect}</p>
+                {!stageIsComplete && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {nextAudio && <button type="button" onClick={() => selectAudio(nextAudio, true)} className="bosfor-action listening-action">{copy.nextAudio}<ArrowRight className="size-4" aria-hidden="true" /></button>}
+                    <button type="button" onClick={resetAudioQuiz} className="bosfor-control listening-action"><RotateCcw className="size-4" aria-hidden="true" />{copy.retry}</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                <p className="listening-muted text-xs font-semibold">{listened ? copy.choose : copy.listenFirst}</p>
+                <button type="button" onClick={submitAudioQuiz} disabled={!stageStructureValid || !listened || answerCount !== QUESTIONS_PER_AUDIO} className="bosfor-action listening-action"><CheckCircle2 className="size-4" aria-hidden="true" />{copy.submit}</button>
+              </div>
+            )}
+          </section>
         </div>
-      </section>}
-    </main>
+      )}
+    </section>
   )
 }
+

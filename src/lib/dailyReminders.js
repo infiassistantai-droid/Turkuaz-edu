@@ -24,10 +24,10 @@ export async function showDailyReminderIfDue(copy = {}) {
   const today = new Date().toLocaleDateString('en-CA')
   try { if (window.localStorage.getItem(LAST_SHOWN_KEY) === today) return } catch { /* continue */ }
   try {
-    const registration = await navigator.serviceWorker?.ready
+    const registration = await navigator.serviceWorker?.getRegistration()
     const options = { body: copy.body || 'A short Turkish practice session keeps your learning streak going.', icon: '/icons/turkish-education.svg', tag: `daily-practice-${today}` }
     const title = copy.title || 'Turkuaz Edu · Daily practice'
-    if (registration?.showNotification) await registration.showNotification(title, options)
+    if (registration?.active && registration.showNotification) await registration.showNotification(title, options)
     else new Notification(title, options)
     try { window.localStorage.setItem(LAST_SHOWN_KEY, today) } catch { /* ignore */ }
   } catch { /* unsupported or blocked notification contexts */ }

@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
-import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON } from './storage.js'
+import { loadJSON, READING_VOCABULARY_KEY, SAVED_KEY, saveJSON, vocabularyStorageKey } from './storage.js'
 import { getRankProgress } from './ranks.js'
 import { normalizeWinterStudy } from '../features/winter/winterSeason.js'
 import { translations } from './i18n.jsx'
 import { isPresetAvatarPath } from './profileAvatar.js'
+import { isPublicSupabaseKey, normalizeSupabaseUrl } from './supabasePublicConfig.js'
 
 const configuredUrl = typeof import.meta.env.VITE_SUPABASE_URL === 'string'
   ? import.meta.env.VITE_SUPABASE_URL.trim()
@@ -11,25 +12,6 @@ const configuredUrl = typeof import.meta.env.VITE_SUPABASE_URL === 'string'
 const configuredAnonKey = typeof import.meta.env.VITE_SUPABASE_ANON_KEY === 'string'
   ? import.meta.env.VITE_SUPABASE_ANON_KEY.trim()
   : ''
-
-function normalizeSupabaseUrl(value) {
-  const raw = String(value ?? '').trim().replace(/\/rest\/v1\/?$/iu, '').replace(/\/+$/u, '')
-  if (!raw) return ''
-  try {
-    const parsed = new URL(raw)
-    const localHttp = parsed.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname)
-    if (!['http:', 'https:'].includes(parsed.protocol) || (!parsed.hostname || parsed.username || parsed.password) || (parsed.protocol !== 'https:' && !localHttp)) return ''
-    if (parsed.pathname !== '/' || parsed.search || parsed.hash) return ''
-    return parsed.origin
-  } catch {
-    return ''
-  }
-}
-
-function isPublicSupabaseKey(value) {
-  // Supabase supports legacy anon JWTs and the newer publishable-key format.
-  return /^eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/u.test(value) || value.startsWith('sb_publishable_')
-}
 
 export const supabaseUrl = normalizeSupabaseUrl(configuredUrl)
 const hasSupabaseConfiguration = Boolean(supabaseUrl && isPublicSupabaseKey(configuredAnonKey))
@@ -177,8 +159,8 @@ export async function fetchLearnerGamification(userId) {
 }
 
 function collectVocabularyRows(userId) {
-  const savedWords = loadJSON(SAVED_KEY, [])
-  const glossaryWords = loadJSON(READING_VOCABULARY_KEY, [])
+  const savedWords = loadJSON(vocabularyStorageKey(userId, SAVED_KEY), [])
+  const glossaryWords = loadJSON(vocabularyStorageKey(userId, READING_VOCABULARY_KEY), [])
   const rows = new Map()
   const add = (item) => {
     const word = typeof item === 'string' ? item.trim() : String(item?.term || item?.word || '').trim()
@@ -351,15 +333,15 @@ export async function syncLearnerProgress(userId, profile, stats) {
   if (vocabularyRows.length) {
     writes.push(supabase.from('user_vocabulary').upsert(vocabularyRows, { onConflict: 'user_id,word' }))
   }
-  const results = await Promise.all(writes)
+  const controller = AbortSignal.timeout(8000)
+  const results = await Promise.all(writes.map((write) => write.abortSignal(controller)))
   for (const result of results) throwQueryError(result.error)
 }
 
 export async function deleteLearnerCloudData(userId) {
-  if (!supabase || !userId) return
-  const tables = ['user_vocabulary', 'user_achievements', 'user_streaks', 'profiles', 'user_progress']
-  const results = await Promise.all(tables.map((table) => supabase.from(table).delete().eq('user_id', userId)))
-  for (const result of results) throwQueryError(result.error)
+  if (!supabase || !userId) throw new Error('Cloud reset unavailable')
+  const { error } = await supabase.rpc('reset_learner_progress', { expected_user_id: userId }).abortSignal(AbortSignal.timeout(8000))
+  throwQueryError(error)
 }
 
 export async function fetchWeeklyLeaderboard() {
@@ -447,4 +429,16 @@ export async function fetchTopPlayers() {
     avatar_url: typeof row.avatar_url === 'string' && row.avatar_url.trim() ? row.avatar_url.trim() : null,
     total_xp: Math.max(0, Math.floor(Number(row.total_xp) || 0)),
   })).filter((row) => row.user_id)
+}
+
+export async function fetchTopClans() {
+  if (!supabase) return []
+  const { data, error } = await withReadTimeout(supabase.rpc('get_top_clans', { p_limit: 50 }), 'clan leaderboard')
+  throwQueryError(error)
+  return Array.isArray(data) ? data.map((row) => ({
+    id: String(row.id),
+    name: String(row.name),
+    members: Math.max(0, Number(row.members) || 0),
+    total_xp: Math.max(0, Number(row.total_xp) || 0),
+  })) : []
 }

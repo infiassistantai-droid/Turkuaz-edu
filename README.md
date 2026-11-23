@@ -5,12 +5,13 @@ A mobile-first Turkish language learning dashboard for the Uzbekistan Milliy Ser
 ## Run locally
 
 ```bash
-npm install
-cp .env.example .env.local
+npm ci
 npm run dev
 ```
 
-Build the static frontend bundle with `npm run build`. Netlify deployments also include the protected `netlify/functions/evaluate-writing` endpoint used by the real Yazma AI grader.
+Create an ignored `.env.local` file to enable optional integrations. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` there for cloud accounts and progress.
+
+Build with `npm run build` and publish `dist`. Cloudflare Pages and Netlify both expose the protected Writing endpoint at `/api/evaluate-writing`. For Cloudflare Pages, deploy with Git integration or Wrangler so the root `functions/` directory is deployed alongside `dist`.
 
 ## Real AI writing evaluation
 
@@ -23,9 +24,11 @@ GEMINI_API_KEY=your_gemini_api_key
 GEMINI_MODEL=gemini-2.5-flash
 ```
 
-Restart `npm run dev` after changing environment variables. The Vite development middleware reads the secret on the server side. **Do not use `VITE_GEMINI_API_KEY` or commit a real key.** No SDK installation is needed; the server uses Node's built-in `fetch`.
+Restart Vite after changing environment variables. The development and preview middleware reads the secret on the server side. Keep provider keys out of all browser variables and add only the public Supabase URL and publishable/anon key to the frontend configuration. Listening plays the bundled recordings, with browser speech available as a fallback.
 
-For Netlify production, add `GEMINI_API_KEY` and `GEMINI_MODEL` in the site's environment-variable settings. Also configure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for the frontend and server function: production essay grading requires an authenticated Supabase session. The function validates that session before calling Gemini. XP is awarded from the returned score through the app's existing completion flow and is synced to Supabase when cloud configuration is enabled; local-first mode keeps the XP locally.
+For production, configure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` at build time. Set the same values as `SUPABASE_URL` and `SUPABASE_ANON_KEY` for the function, plus the server-only `GEMINI_API_KEY` and optional `GEMINI_MODEL`. Writing evaluation requires an authenticated learner session before contacting Gemini.
+
+Before releasing Beta, apply the [learning-state and clans migration](supabase/20261122120000_learning_state_and_clans.sql) after the base schema, then verify email and Google sign-in, cross-device progress, clan rankings, and the deployed Writing endpoint using a test learner. The migration also enables transactional learner-progress reset.
 
 ## Dashboard and learning modules
 

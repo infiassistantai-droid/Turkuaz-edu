@@ -1,69 +1,53 @@
+import { Readable } from 'node:stream'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
-import { EssayEvaluatorError, evaluateEssayWithGemini } from './server/essayEvaluator.js'
+import { handleWritingRequest } from './server/writingHttp.js'
+import { isPublicSupabaseKey, normalizeSupabaseUrl } from './src/lib/supabasePublicConfig.js'
 
-function writeJson(response, statusCode, payload) {
-  response.statusCode = statusCode
-  response.setHeader('Content-Type', 'application/json; charset=utf-8')
-  response.setHeader('Cache-Control', 'no-store')
-  response.end(JSON.stringify(payload))
-}
-
-async function readJsonBody(request) {
-  const chunks = []
-  let size = 0
-  for await (const chunk of request) {
-    size += chunk.length
-    if (size > 65_536) throw new EssayEvaluatorError('INVALID_REQUEST', 413)
-    chunks.push(chunk)
-  }
-  try {
-    return JSON.parse(Buffer.concat(chunks).toString('utf8'))
-  } catch {
-    throw new EssayEvaluatorError('INVALID_REQUEST', 400)
-  }
-}
-
-function localAiEvaluator(env) {
-  return {
-    name: 'local-server-side-ai-evaluator',
-    configureServer(server) {
-      // Development-only endpoint. The GEMINI_API_KEY is read by Vite's Node process,
-      // never added to import.meta.env or the browser bundle.
-      server.middlewares.use('/api/evaluate-writing', async (request, response) => {
-        if (request.method !== 'POST') {
-          writeJson(response, 405, { code: 'METHOD_NOT_ALLOWED' })
-          return
-        }
-        try {
-          const input = await readJsonBody(request)
-          const result = await evaluateEssayWithGemini(input, {
-            apiKey: env.GEMINI_API_KEY,
-            model: env.GEMINI_MODEL,
-            debug: true,
-          })
-          writeJson(response, 200, result)
-        } catch (error) {
-          const status = error instanceof EssayEvaluatorError ? error.status : 500
-          const code = error instanceof EssayEvaluatorError ? error.code : 'AI_SERVICE_ERROR'
-          const payload = { code }
-          if (error instanceof EssayEvaluatorError && error.debugResponse) payload.rawResponse = error.debugResponse
-          writeJson(response, status, payload)
-        }
+function localWritingEvaluator(env) {
+  function install(server) {
+    server.middlewares.use(async (request, response, next) => {
+      const path = request.url?.split('?')[0]
+      if (path !== '/api/evaluate-writing' && path !== '/api/evaluate-writing/') return next()
+      const headers = Object.entries(request.headers).flatMap(([key, value]) =>
+        value == null ? [] : [[key, Array.isArray(value) ? value.join(', ') : value]])
+      const incoming = new Request('http://localhost/api/evaluate-writing', {
+        method: request.method,
+        headers,
+        ...(request.method === 'POST' ? { body: Readable.toWeb(request), duplex: 'half' } : {}),
       })
-    },
+      const result = await handleWritingRequest(incoming, env)
+      response.writeHead(result.status, Object.fromEntries(result.headers))
+      response.end(await result.text())
+    })
+  }
+
+  return {
+    name: 'local-writing-evaluator',
+    configureServer: install,
+    configurePreviewServer: install,
   }
 }
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const key = String(env.VITE_SUPABASE_ANON_KEY || '').trim()
+  if ((key.startsWith('sb_secret_') || key.startsWith('eyJ')) && !isPublicSupabaseKey(key)) {
+    throw new Error('VITE_SUPABASE_ANON_KEY must be a publishable key or an anon JWT.')
+  }
+
+  const publicEnv = {
+    VITE_SUPABASE_URL: normalizeSupabaseUrl(env.VITE_SUPABASE_URL),
+    VITE_SUPABASE_ANON_KEY: isPublicSupabaseKey(key) ? key : '',
+    VITE_WINTER_UPDATE_ENABLED: env.VITE_WINTER_UPDATE_ENABLED || '',
+    VITE_WINTER_UPDATE_AUTO: env.VITE_WINTER_UPDATE_AUTO || '',
+  }
+
   return {
-    plugins: [react(), localAiEvaluator(env)],
-    server: {
-      host: true,
-      port: 5173,
-      allowedHosts: true,
-    },
+    plugins: [react(), localWritingEvaluator(env)],
+    envPrefix: [],
+    define: Object.fromEntries(Object.entries(publicEnv).map(([key, value]) => ['import.meta.env.' + key, JSON.stringify(value)])),
+    server: { host: true, port: 5173 },
     build: {
       outDir: 'dist',
       sourcemap: false,
@@ -78,3 +62,4 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
+

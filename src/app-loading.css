@@ -1,0 +1,60 @@
+body:has(#root > .brand-loading--bootstrap) { margin: 0; }
+
+.brand-loading {
+  --loader-bg: #eef3fb;
+  --loader-accent: #3f62bd;
+  --loader-track: #d5e0f4;
+  --loader-halo: #dce8fb;
+  --loader-ink: #172b56;
+  --loader-muted: #556b92;
+  display: grid;
+  box-sizing: border-box;
+  place-items: center;
+  padding: 1.5rem;
+  color: var(--loader-ink);
+  font-family: Geist, Inter, system-ui, sans-serif;
+}
+
+html[data-loading-theme="night"] .brand-loading--bootstrap,
+.brand-loading[data-loading-theme="night"] {
+  --loader-bg: #07142e;
+  --loader-accent: #ff9389;
+  --loader-track: #243e6b;
+  --loader-halo: #192f5d;
+  --loader-ink: #f7f9ff;
+  --loader-muted: #aebfdd;
+}
+
+html[data-loading-theme="premium"] .brand-loading--bootstrap,
+.brand-loading[data-loading-theme="premium"] {
+  --loader-bg: #2f1414;
+  --loader-accent: #ffcd91;
+  --loader-track: #70413a;
+  --loader-halo: #61342c;
+  --loader-ink: #fff3e3;
+  --loader-muted: #ead0bf;
+}
+
+.brand-loading--screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(ellipse at 50% 40%, var(--loader-halo), transparent 62%), var(--loader-bg);
+}
+
+.brand-loading--section { min-height: 40vh; }
+.brand-loading-inner { display: grid; justify-items: center; gap: .55rem; text-align: center; }
+.brand-loading-icon { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 10px 24px #06152c36; }
+.brand-loading--section .brand-loading-icon { width: 44px; height: 44px; border-radius: 11px; }
+.brand-loading-inner strong { margin-top: .35rem; font-size: clamp(1.15rem, 4vw, 1.5rem); font-weight: 800; letter-spacing: -.04em; }
+.brand-loading-inner p { margin: 0; color: var(--loader-muted); font-size: .8rem; }
+.brand-loading-track { display: block; width: min(8rem, 65vw); height: 4px; overflow: hidden; margin-top: .3rem; border-radius: 999px; background: var(--loader-track); }
+.brand-loading-track::before { display: block; width: 38%; height: 100%; border-radius: inherit; background: var(--loader-accent); content: ""; animation: brand-loading-slide 1.55s ease-in-out infinite; }
+
+@keyframes brand-loading-slide {
+  from { transform: translateX(-105%); }
+  to { transform: translateX(270%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-loading-track::before { margin-inline: auto; animation: none; }
+}

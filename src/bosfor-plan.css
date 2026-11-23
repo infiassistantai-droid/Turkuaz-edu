@@ -1,0 +1,138 @@
+.bosfor-plan-task { grid-template-columns: 44px minmax(0, 1fr) auto; }
+
+.bosfor-plan-check {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  cursor: pointer;
+}
+
+.bosfor-plan-check input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.bosfor-plan-check svg {
+  width: 25px;
+  height: 25px;
+  padding: 4px;
+  border: 1px solid var(--studio-line);
+  border-radius: 7px;
+  background: var(--studio-surface);
+  color: transparent;
+  pointer-events: none;
+}
+
+.bosfor-plan-check input:checked + svg {
+  border-color: var(--studio-fill);
+  background: var(--studio-fill);
+  color: var(--studio-surface);
+}
+
+.bosfor-plan-check input:focus-visible + svg {
+  outline: 2px solid var(--studio-accent);
+  outline-offset: 3px;
+}
+
+.bosfor-plan-task[data-done="true"] { border-color: var(--studio-fill); }
+
+.bosfor-plan-progress {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 99px;
+  background: var(--studio-track);
+}
+
+.bosfor-plan-progress::-webkit-progress-bar { background: var(--studio-track); }
+.bosfor-plan-progress::-webkit-progress-value { background: var(--studio-fill); }
+.bosfor-plan-progress::-moz-progress-bar { background: var(--studio-fill); }
+
+.bosfor-plan [aria-pressed="true"].bosfor-tab {
+  border-color: var(--studio-line);
+  background: var(--studio-selection);
+  color: var(--studio-accent);
+}
+
+.bosfor-plan-day {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  gap: .15rem;
+  padding: .4rem 0;
+  border: 1px solid var(--studio-line);
+  border-radius: 8px;
+  background: var(--studio-inset);
+  color: var(--studio-muted);
+  font-size: clamp(.56rem, 1.35vw, .7rem);
+}
+
+.bosfor-plan-day[data-today="true"],
+.bosfor-plan-day[data-done="true"] {
+  border-color: var(--studio-fill);
+  background: var(--studio-selection);
+  color: var(--studio-ink);
+  font-weight: 750;
+}
+
+.studio-shell[data-theme="default"] .bosfor-plan .bosfor-section-banner {
+  border-color: var(--studio-line);
+  background: radial-gradient(ellipse at 86% 54%, #d7e6fb, transparent 60%), linear-gradient(110deg, #fff8ed, #eef5fd);
+  box-shadow: none;
+}
+
+.studio-shell[data-theme="default"] .bosfor-plan .bosfor-banner-copy :is(h1, p) { color: var(--studio-ink); }
+.studio-shell[data-theme="default"] .bosfor-plan .bosfor-banner-details > span {
+  border-color: var(--studio-line);
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+}
+
+.studio-shell[data-theme="default"] .bosfor-plan .bosfor-banner-scene > span {
+  background: #afc6ea;
+  box-shadow: 0 5px 0 #94add6, 0 11px 23px #6d81a24a;
+}
+
+@media (min-width: 1000px) {
+  .bosfor-plan-layout {
+    grid-template-columns: minmax(0, 1.55fr) minmax(17rem, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "checklist progress" "checklist history" "checklist reason";
+  }
+
+  .bosfor-plan-checklist { grid-area: checklist; }
+  .bosfor-plan-progress-card { grid-area: progress; }
+  .bosfor-plan-history-card { grid-area: history; }
+  .bosfor-plan-reason-card { grid-area: reason; }
+}
+
+@media (max-width: 639px) {
+  .bosfor-plan-task { grid-template-columns: 36px minmax(0, 1fr); column-gap: .45rem; }
+  .bosfor-plan-check { width: 36px; }
+  .bosfor-plan-task-action { grid-column: 2; }
+}
+.bosfor-plan-preparation dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+  margin-block: .65rem;
+}
+.bosfor-plan-preparation dl > div { padding: .5rem .6rem; border: 1px solid var(--studio-line); border-radius: 10px; background: var(--studio-inset); }
+.bosfor-plan-preparation dt { display: flex; align-items: center; gap: .25rem; color: var(--studio-muted); font-size: .68rem; }
+.bosfor-plan-preparation dd { margin-top: .13rem; color: var(--studio-ink); font-size: .82rem; font-weight: 750; overflow-wrap: anywhere; }
+.bosfor-plan-preparation dl > :last-child { grid-column: 1 / -1; }
+
+@media (min-width: 560px) {
+  .bosfor-plan-preparation dl { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .bosfor-plan-preparation dl > :last-child { grid-column: auto; }
+}
+

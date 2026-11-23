@@ -6,6 +6,17 @@ import { WinterUpdateProvider } from './features/winter/WinterUpdateContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import './index.css'
 import './features/winter/winter.css'
+import './studio.css'
+import './bosfor.css'
+import './bosfor-models.css'
+import './bosfor-panels.css'
+import './bosfor-plan.css'
+
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch((error) => {
+    console.warn('[Turkuaz Edu] Service worker registration failed:', error)
+  })
+}
 
 const ROOT_ERROR_COPY = {
   title: 'Sahifa ochilmadi',

@@ -8,3 +8,7 @@ export function isOwnerEmail(email) {
   const candidate = String(email || '').trim().toLocaleLowerCase('en-US')
   return ownerEmail !== PLACEHOLDER_OWNER_EMAIL && Boolean(candidate) && candidate === ownerEmail
 }
+
+export function canAccessShop(user) {
+  return Boolean(user && (isOwnerEmail(user.email) || user.app_metadata?.role === 'admin'))
+}

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
-import { ArrowLeft, BookOpenText, CheckCircle2, LockKeyhole, RotateCcw } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { PanelHeading, SectionBanner } from '../BosforArtwork'
+import { ArrowLeft, ArrowRight, CheckCircle2, CircleX, LockKeyhole, RotateCcw } from 'lucide-react'
 import { readingExamSections, READING_SECTION_COUNT, QUESTIONS_PER_READING_SECTION } from '../../data/mockExamData'
-import { loadJSON, saveJSON } from '../../lib/storage'
+import { loadJSON, readingSectionProgressKey, saveJSON } from '../../lib/storage'
 import { useI18n } from '../../lib/i18n.jsx'
-import { cn } from '../../lib/utils'
+import '../../bosfor-reading.css'
 
 function isSectionReady(section) {
   return section?.status === 'active' &&
@@ -13,6 +14,8 @@ function isSectionReady(section) {
       Number.isInteger(question.correctOption) && question.correctOption >= 0 && question.correctOption < question.options.length,
     )
 }
+
+const readySections = readingExamSections.filter(isSectionReady)
 
 export function getUnlockedReadingSectionNumber(sectionScores = {}) {
   let unlockedSectionNumber = 1
@@ -38,15 +41,18 @@ export function scoreReadingExam(answers, questions = []) {
   }
 }
 
-export default function OkumaModule({ completeLevel, onPerfectScore, premium = false, profile }) {
+export default function OkumaModule({ completeLevel, onPerfectScore, profile }) {
   const { t } = useI18n()
-  const learnerId = String(profile?.userId || profile?.email || 'local').trim().toLowerCase()
-  const sectionProgressKey = `turkuaz-edu-reading-section-progress-v1:${encodeURIComponent(learnerId)}`
+  const sectionProgressKey = readingSectionProgressKey(profile?.userId || profile?.email)
   const [selectedSectionId, setSelectedSectionId] = useState(null)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [selectedOption, setSelectedOption] = useState(null)
   const [answers, setAnswers] = useState([])
   const [result, setResult] = useState(null)
+  const headingRef = useRef(null)
+  const questionRef = useRef(null)
+  const previousPassage = useRef(null)
+  const hasStarted = useRef(false)
   const [sectionScores, setSectionScores] = useState(() => {
     const stored = loadJSON(sectionProgressKey, {})
     return stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {}
@@ -61,13 +67,9 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
   const currentQuestion = section?.questions?.[questionIndex]
   const sectionQuestionCount = section?.questions?.length || 0
   const progress = sectionQuestionCount ? Math.round(((questionIndex + 1) / sectionQuestionCount) * 100) : 0
-  const surface = premium
-    ? 'border-slate-700 bg-slate-900 text-slate-100'
-    : 'border-slate-200 bg-white text-slate-900'
-  const muted = premium ? 'text-slate-300' : 'text-slate-600'
-
   function startSection(sectionToStart) {
     if (!isSectionReady(sectionToStart) || sectionToStart.sectionNumber > unlockedSectionNumber) return
+    hasStarted.current = true
     setSelectedSectionId(sectionToStart.id)
     setQuestionIndex(0)
     setSelectedOption(null)
@@ -108,7 +110,16 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
 
     setAnswers(nextAnswers)
     setQuestionIndex((current) => current + 1)
-    setSelectedOption(null)
+    setSelectedOption(nextAnswers[questionIndex + 1])
+  }
+
+  function goToPreviousQuestion() {
+    if (questionIndex === 0) return
+    const nextAnswers = [...answers]
+    nextAnswers[questionIndex] = selectedOption
+    setAnswers(nextAnswers)
+    setQuestionIndex((current) => current - 1)
+    setSelectedOption(nextAnswers[questionIndex - 1])
   }
 
   function restartSection() {
@@ -119,46 +130,31 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
     setResult(null)
   }
 
+
+  const focusKey = result ? 'result' : section ? section.id + ':' + questionIndex : 'overview'
+  const passage = result ? null : currentQuestion?.passage
+  useEffect(() => {
+    if (focusKey === 'overview' && !hasStarted.current) return
+    const focusTarget = passage && passage === previousPassage.current ? questionRef : headingRef
+    previousPassage.current = passage
+    focusTarget.current?.focus()
+  }, [focusKey, passage])
+
   if (result && section) {
     return (
-      <section className={cn('mx-auto max-w-3xl rounded-2xl border p-6 sm:p-8', surface)} aria-labelledby="reading-exam-result-title">
-        <div className="mx-auto flex max-w-xl flex-col items-center text-center">
-          <CheckCircle2 className={cn('size-10', result.percent === 100 ? 'text-emerald-600 dark:text-emerald-400' : 'text-teal-700 dark:text-teal-400')} aria-hidden="true" />
-          <h2 id="reading-exam-result-title" className="mt-4 text-2xl font-bold">{t('reading.exam.result.title')}</h2>
-          <p className={cn('mt-2 text-sm font-semibold', muted)}>{t('reading.sections.section', { number: section.sectionNumber })}</p>
-          <p className="mt-3 text-4xl font-bold tabular-nums">{t('reading.exam.result.percentage', { percent: result.percent })}</p>
-          <div className={cn('mt-3 flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm', muted)}>
-            <span>{t('reading.exam.result.correct', { correct: result.correctCount, total: section.questions.length })}</span>
-            <span>{t('reading.exam.result.incorrect', { count: result.incorrectCount })}</span>
+      <section ref={headingRef} tabIndex={-1} className="bosfor-reading reading-focus mx-auto max-w-3xl space-y-4" aria-labelledby="reading-exam-result-title">
+        <SectionBanner name={result.percent === 100 ? 'medal' : 'readiness'} titleId="reading-exam-result-title" title={t('reading.exam.result.title')} description={t('reading.sections.section', { number: section.sectionNumber })}>
+          <span>{t('reading.exam.result.percentage', { percent: result.percent })}</span>
+        </SectionBanner>
+        <div className="bosfor-panel rounded-2xl border p-4 sm:p-6">
+          <div className="grid grid-cols-2 gap-2.5">
+            <p className="bosfor-inset rounded-xl border p-3 text-sm font-bold"><CheckCircle2 className="mb-2 size-5" aria-hidden="true" />{t('reading.exam.result.correct', { correct: result.correctCount, total: result.totalQuestions })}</p>
+            <p className="bosfor-inset rounded-xl border p-3 text-sm font-bold"><CircleX className="mb-2 size-5" aria-hidden="true" />{t('reading.exam.result.incorrect', { count: result.incorrectCount })}</p>
           </div>
-          {result.percent === 100 && (
-            <p className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
-              {t('reading.exam.result.perfect')}
-            </p>
-          )}
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <button
-              type="button"
-              onClick={restartSection}
-              className={cn(
-                'inline-flex min-h-10 items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2',
-                premium ? 'border-slate-600 bg-slate-800 text-slate-100 hover:bg-slate-700' : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-50',
-              )}
-            >
-              <RotateCcw className="size-4" aria-hidden="true" />
-              {t('reading.exam.result.retry')}
-            </button>
-            <button
-              type="button"
-              onClick={returnToSections}
-              className={cn(
-                'inline-flex min-h-10 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2',
-                premium ? 'bg-teal-400 text-slate-950 hover:bg-teal-300' : 'bg-teal-700 text-white hover:bg-teal-800',
-              )}
-            >
-              <ArrowLeft className="size-4" aria-hidden="true" />
-              {t('reading.sections.return')}
-            </button>
+          {result.percent === 100 && <p className="bosfor-reward-badge mt-4 rounded-xl border p-3 text-sm font-bold">{t('reading.exam.result.perfect')}</p>}
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <button type="button" onClick={returnToSections} className="bosfor-action reading-action"><ArrowLeft className="size-4" aria-hidden="true" />{t('reading.sections.return')}</button>
+            <button type="button" onClick={restartSection} className="bosfor-control reading-action"><RotateCcw className="size-4" aria-hidden="true" />{t('reading.exam.result.retry')}</button>
           </div>
         </div>
       </section>
@@ -166,178 +162,106 @@ export default function OkumaModule({ completeLevel, onPerfectScore, premium = f
   }
 
   if (section && currentQuestion) {
+    const questionTitle = t('reading.exam.progress', { current: questionIndex + 1, total: sectionQuestionCount })
+    const isLastQuestion = questionIndex === sectionQuestionCount - 1
     return (
-      <section className="mx-auto max-w-4xl space-y-4" aria-labelledby="reading-exam-title">
-        <button
-          type="button"
-          onClick={returnToSections}
-          className={cn(
-            'inline-flex min-h-10 items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2',
-            premium ? 'border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50',
-          )}
-        >
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          {t('reading.sections.return')}
-        </button>
-
-        <header className={cn('rounded-2xl border p-5 sm:p-6', surface)}>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <BookOpenText className="mt-0.5 size-5 shrink-0 text-teal-700 dark:text-teal-400" aria-hidden="true" />
-              <div>
-                <h2 id="reading-exam-title" className="text-xl font-bold">{t('reading.sections.section', { number: section.sectionNumber })}</h2>
-                <p className={cn('mt-1 text-sm', muted)}>{currentQuestion.sourceTitle} · {currentQuestion.level}</p>
-              </div>
-            </div>
-            <span className="shrink-0 rounded-md border border-slate-200 px-3 py-1.5 text-sm font-semibold tabular-nums dark:border-slate-700">
-              {t('reading.exam.progress', { current: questionIndex + 1, total: section.questions.length })}
-            </span>
+      <section className="bosfor-reading mx-auto max-w-6xl space-y-4" aria-labelledby="reading-exam-title">
+        <header className="bosfor-panel rounded-2xl border p-4 sm:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <PanelHeading name="okuma" titleId="reading-exam-title" title={t('reading.sections.section', { number: section.sectionNumber })} description={questionTitle} />
+            <button type="button" onClick={returnToSections} className="bosfor-control reading-action"><ArrowLeft className="size-4" aria-hidden="true" />{t('reading.sections.return')}</button>
           </div>
-          <div
-            className={cn('mt-5 h-2 overflow-hidden rounded-full', premium ? 'bg-slate-700' : 'bg-slate-100')}
-            role="progressbar"
-            aria-label={t('reading.exam.progress', { current: questionIndex + 1, total: section.questions.length })}
-            aria-valuemin={1}
-            aria-valuemax={section.questions.length}
-            aria-valuenow={questionIndex + 1}
-          >
-            <div className="h-full rounded-full bg-teal-700 transition-[width] duration-200 dark:bg-teal-400" style={{ width: `${progress}%` }} />
+          <div className="bosfor-track mt-4 h-2 overflow-hidden rounded-full" role="progressbar" aria-label={questionTitle} aria-valuemin={0} aria-valuemax={sectionQuestionCount} aria-valuenow={questionIndex + 1}>
+            <div className="bosfor-progress-fill h-full rounded-full" style={{ width: progress + '%' }} />
           </div>
         </header>
 
-        <article className={cn('rounded-2xl border p-5 sm:p-6', surface)}>
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h3 className={cn('text-xs font-bold uppercase tracking-wide', muted)}>{t('reading.exam.passage')}</h3>
-            <span className={cn('text-xs font-medium', muted)}>{t('reading.sections.passageCount', { count: section.passages.length })}</span>
-          </div>
-          <p lang="tr" className="mt-3 whitespace-pre-line text-sm leading-7 sm:text-base">{currentQuestion.passage}</p>
-        </article>
+        <div className="reading-exam-layout grid items-start gap-4">
+          <article className="bosfor-panel min-w-0 rounded-2xl border p-4 sm:p-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="bosfor-badge px-2.5 py-1 text-xs font-bold">{currentQuestion.level}</span>
+              <span className="reading-muted text-xs font-semibold">{t('reading.exam.passage')}</span>
+            </div>
+            <h3 ref={headingRef} tabIndex={-1} lang="tr" className="reading-focus mt-3 text-lg font-extrabold">{currentQuestion.sourceTitle}</h3>
+            <p lang="tr" className="reading-passage mt-3 whitespace-pre-line text-[.95rem] leading-7 sm:text-base sm:leading-8">{currentQuestion.passage}</p>
+          </article>
 
-        <fieldset className={cn('rounded-2xl border p-5 sm:p-6', surface)}>
-          <legend className="sr-only">{t('reading.exam.question')}</legend>
-          <p lang="tr" className="text-base font-semibold leading-relaxed sm:text-lg">
-            <span className={cn('mb-2 block text-xs font-bold uppercase tracking-wide', muted)}>{t('reading.exam.question')}</span>
-            {currentQuestion.question}
-          </p>
-          <div className="mt-5 space-y-2.5">
-            {currentQuestion.options.map((option, optionIndex) => {
-              const isSelected = selectedOption === optionIndex
-              return (
-                <label
-                  key={`${currentQuestion.id}-option-${optionIndex}`}
-                  className={cn(
-                    'flex cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 text-sm leading-relaxed focus-within:ring-2 focus-within:ring-teal-600 focus-within:ring-offset-2',
-                    isSelected
-                      ? premium ? 'border-teal-400 bg-teal-950/40' : 'border-teal-700 bg-teal-50'
-                      : premium ? 'border-slate-700 hover:bg-slate-800' : 'border-slate-200 hover:bg-slate-50',
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name={`reading-exam-question-${section.id}-${questionIndex}`}
-                    value={optionIndex}
-                    checked={isSelected}
-                    onChange={() => setSelectedOption(optionIndex)}
-                    className="mt-0.5 size-4 accent-teal-700"
-                    aria-label={t('reading.exam.option', { number: optionIndex + 1 })}
-                  />
-                  <span lang="tr">{option}</span>
-                </label>
-              )
-            })}
+          <div className="reading-question-panel bosfor-panel min-w-0 rounded-2xl border p-4 sm:p-6">
+            <fieldset className="min-w-0">
+              <legend className="reading-muted text-xs font-bold">{t('reading.exam.question')}</legend>
+              <p ref={questionRef} tabIndex={-1} id="reading-question-text" lang="tr" className="reading-focus mt-2 break-words font-extrabold leading-relaxed">{currentQuestion.question}</p>
+              <div className="mt-4 space-y-2" role="radiogroup" aria-labelledby="reading-question-text">
+                {currentQuestion.options.map((option, optionIndex) => (
+                  <label key={optionIndex} className="reading-option bosfor-inset flex min-h-12 cursor-pointer items-start gap-3 rounded-xl border px-3 py-3 text-sm leading-relaxed" data-selected={selectedOption === optionIndex}>
+                    <input type="radio" name={currentQuestion.id} value={optionIndex} checked={selectedOption === optionIndex} onChange={() => setSelectedOption(optionIndex)} className="mt-0.5 size-4 shrink-0" />
+                    <span lang="tr" className="min-w-0 break-words">{option}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <div className="mt-4 flex flex-wrap justify-between gap-2">
+              <button type="button" onClick={goToPreviousQuestion} disabled={questionIndex === 0} className="bosfor-control reading-action"><ArrowLeft className="size-4" aria-hidden="true" />{t('reading.exam.previous')}</button>
+              <button type="button" onClick={goToNextQuestion} disabled={selectedOption === null} className="bosfor-action reading-action">
+                {t(isLastQuestion ? 'reading.exam.finish' : 'reading.exam.next')}<ArrowRight className="size-4" aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        </fieldset>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={goToNextQuestion}
-            disabled={selectedOption === null}
-            className={cn(
-              'inline-flex min-h-10 items-center justify-center rounded-lg px-5 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-              premium ? 'bg-teal-400 text-slate-950 hover:bg-teal-300' : 'bg-teal-700 text-white hover:bg-teal-800',
-            )}
-          >
-            {questionIndex === section.questions.length - 1 ? t('reading.exam.finish') : t('reading.exam.next')}
-          </button>
         </div>
       </section>
     )
   }
 
+  const completedCount = readySections.filter(({ id }) => Object.hasOwn(sectionScores, id)).length
+  const nextSection = readySections.find(({ id, sectionNumber }) => sectionNumber <= unlockedSectionNumber && !Object.hasOwn(sectionScores, id))
   return (
-    <section className="mx-auto max-w-5xl space-y-5" aria-labelledby="reading-sections-title">
-      <header className={cn('flex flex-wrap items-start justify-between gap-4 rounded-2xl border p-5 sm:p-6', surface)}>
-        <div>
-          <h2 id="reading-sections-title" className="flex items-center gap-2 text-xl font-bold">
-            <BookOpenText className="size-5 text-teal-700 dark:text-teal-400" aria-hidden="true" />
-            {t('reading.sections.title')}
-          </h2>
-          <p className={cn('mt-2 max-w-2xl text-sm leading-relaxed', muted)}>
-            {t('reading.sections.subtitle', { active: unlockedSectionNumber, total: READING_SECTION_COUNT, questions: QUESTIONS_PER_READING_SECTION })}
-          </p>
-        </div>
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          className={cn(
-            'inline-flex min-h-10 cursor-not-allowed items-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold opacity-70',
-            premium ? 'border-slate-700 text-slate-300' : 'border-slate-300 text-slate-500',
-          )}
-        >
-          <LockKeyhole className="size-4" aria-hidden="true" />
-          {t('reading.sections.libraryLocked')}
-        </button>
-      </header>
+    <section className="bosfor-reading mx-auto max-w-6xl space-y-4" aria-labelledby="reading-sections-title">
+      <SectionBanner name="okuma" titleId="reading-sections-title" title={t('reading.sections.title')} description={t('reading.sections.format', { questions: QUESTIONS_PER_READING_SECTION })}>
+        <span>{t('reading.sections.completed', { completed: completedCount, total: readySections.length })}</span>
+      </SectionBanner>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {readingExamSections.map((item) => {
-          const isReady = isSectionReady(item)
-          const isUnlocked = isReady && item.sectionNumber <= unlockedSectionNumber
-          const isLocked = isReady && !isUnlocked
-          const bestScore = sectionScores[item.id]
-          const actionLabel = isUnlocked
-            ? 'reading.sections.start'
-            : isLocked
-              ? 'reading.sections.locked'
-              : 'reading.sections.comingSoon'
-          return (
-            <article key={item.id} className={cn('flex min-h-32 flex-col justify-between rounded-xl border p-4', surface, !isUnlocked && (premium ? 'opacity-75' : 'bg-slate-50/80 text-slate-500'))}>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold">{t('reading.sections.section', { number: item.sectionNumber })}</h3>
-                  <p className={cn('mt-1 text-xs', muted)}>
-                    {isReady
+      {nextSection && (
+        <section className="bosfor-panel reading-next rounded-2xl border p-4 sm:p-6" aria-labelledby="reading-next-section">
+          <PanelHeading name="plan" titleId="reading-next-section" title={t('reading.sections.nextSection', { number: nextSection.sectionNumber })} description={t('reading.sections.summary', { passages: nextSection.passages.length, questions: nextSection.questions.length })}>
+            <button ref={headingRef} type="button" onClick={() => startSection(nextSection)} className="bosfor-action reading-action">
+              {t('reading.sections.start')} <ArrowRight className="size-4" aria-hidden="true" />
+            </button>
+          </PanelHeading>
+        </section>
+      )}
+
+      <section className="bosfor-panel rounded-2xl border p-4 sm:p-6" aria-labelledby="reading-all-sections">
+        <PanelHeading name="exams" titleId="reading-all-sections" title={t('reading.sections.all')} description={t('reading.sections.unlockHint')} />
+        <ul className="mt-4 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+          {readingExamSections.map((item) => {
+            const isReady = isSectionReady(item)
+            const isUnlocked = isReady && item.sectionNumber <= unlockedSectionNumber
+            const bestScore = Object.hasOwn(sectionScores, item.id) ? sectionScores[item.id] : undefined
+            const title = t('reading.sections.section', { number: item.sectionNumber })
+            const body = (
+              <>
+                <span className="reading-section-icon" aria-hidden="true">{bestScore !== undefined ? <CheckCircle2 className="size-5" /> : item.sectionNumber}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-extrabold">{title}</span>
+                  <span className="reading-muted mt-0.5 block text-xs">{bestScore !== undefined
+                    ? t('reading.sections.bestScore', { percent: bestScore })
+                    : isUnlocked
                       ? t('reading.sections.summary', { passages: item.passages.length, questions: item.questions.length })
-                      : item.questions.length
-                        ? t('reading.sections.upcomingSummary', { passages: item.passages.length, questions: item.questions.length })
-                        : t('reading.sections.comingSoon')}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {isLocked && <LockKeyhole className="size-4 shrink-0 text-slate-400" aria-hidden="true" />}
-                  {bestScore !== undefined && <span className="rounded-md border border-slate-200 px-2 py-1 text-xs font-semibold tabular-nums dark:border-slate-700">{t('reading.sections.bestScore', { percent: bestScore })}</span>}
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => startSection(item)}
-                disabled={!isUnlocked}
-                className={cn(
-                  'mt-4 inline-flex min-h-9 w-full items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold disabled:cursor-not-allowed',
-                  isUnlocked
-                    ? premium ? 'border-teal-400 bg-teal-400 text-slate-950 hover:bg-teal-300' : 'border-teal-700 bg-teal-700 text-white hover:bg-teal-800'
-                    : premium ? 'border-slate-700 text-slate-400' : 'border-slate-200 text-slate-400',
-                )}
-                aria-label={t(actionLabel)}
-              >
-                {t(actionLabel)}
-              </button>
-            </article>
-          )
-        })}
-      </div>
+                      : t(isReady ? 'reading.sections.locked' : 'reading.sections.comingSoon')}</span>
+                </span>
+                {isUnlocked ? <ArrowRight className="size-4 shrink-0" aria-hidden="true" /> : <LockKeyhole className="reading-muted size-4 shrink-0" aria-hidden="true" />}
+              </>
+            )
+            return (
+              <li key={item.id} className="min-w-0">
+                {isUnlocked ? (
+                  <button ref={item === readySections[0] && !nextSection ? headingRef : undefined} type="button" onClick={() => startSection(item)} className="reading-section-card bosfor-inset" data-current={item === nextSection}>{body}</button>
+                ) : <div className="reading-section-card bosfor-inset" data-locked="true">{body}</div>}
+              </li>
+            )
+          })}
+        </ul>
+      </section>
     </section>
   )
 }
+

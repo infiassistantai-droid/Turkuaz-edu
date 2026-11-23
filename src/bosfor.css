@@ -1,0 +1,439 @@
+.bosfor-sidebar {
+  width: min(18rem, calc(100% - 2rem));
+  padding-bottom: env(safe-area-inset-bottom);
+  scrollbar-width: thin;
+}
+.bosfor-rail-rule { background: var(--studio-line); }
+.bosfor-header { background: var(--studio-background); }
+.bosfor-header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .375rem .75rem;
+}
+
+.bosfor-header-metrics {
+  grid-area: 2 / 1 / 3 / -1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding-inline: .25rem;
+  border: 1px solid var(--studio-line);
+  border-radius: 12px;
+  background: var(--studio-surface);
+}
+
+.bosfor-header-actions { grid-area: 1 / 2; }
+.bosfor-sidebar-toggle { color: var(--studio-muted); }
+.bosfor-sidebar-toggle:hover { background: var(--studio-selection); color: var(--studio-accent); }
+
+.bosfor-wordmark {
+  color: var(--studio-ink);
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -.045em;
+}
+
+.bosfor-header button.bosfor-wordmark { font-size: clamp(.875rem, 4.2vw, 1.125rem); }
+
+.bosfor-theme-switch {
+  color: var(--studio-ink);
+  border: 1px solid var(--studio-line);
+  background: var(--studio-surface);
+}
+
+.bosfor-theme-switch { color: var(--studio-accent); }
+.bosfor-theme-switch:hover { background: var(--studio-selection); }
+
+.bosfor-header-goal {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: .375rem;
+}
+
+.bosfor-header-level {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  min-height: 44px;
+  padding-inline: .375rem;
+  border-radius: 9px;
+  color: var(--studio-ink);
+  font-size: .8125rem;
+  font-weight: 750;
+}
+
+.bosfor-header-level:hover { background: var(--studio-selection); }
+
+.bosfor-header-stat {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  min-height: 26px;
+  padding-inline: .375rem;
+  border-inline-start: 1px solid var(--studio-line);
+  color: var(--studio-ink);
+  font-size: .6875rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.bosfor-header-xp { color: #87500a; }
+.studio-shell:is([data-theme="night"], [data-theme="premium"]) .bosfor-header-xp { color: #ffd374; }
+
+.bosfor-header-progress {
+  flex: 1;
+  min-width: 2.25rem;
+  margin-inline-end: .5rem;
+  color: var(--studio-muted);
+  font-size: .6875rem;
+  white-space: nowrap;
+}
+
+.bosfor-header-progress div { display: flex; justify-content: space-between; gap: .5rem; }
+.bosfor-header-progress strong { color: var(--studio-ink); }
+
+.bosfor-header-progress progress {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 4px;
+  margin-top: 2px;
+  border: none;
+  border-radius: 999px;
+  background: var(--studio-selection);
+}
+
+.bosfor-header-progress progress::-webkit-progress-bar { border-radius: inherit; background: var(--studio-selection); }
+.bosfor-header-progress progress::-webkit-progress-value { border-radius: inherit; background: var(--studio-fill); }
+.bosfor-header-progress progress::-moz-progress-bar { border-radius: inherit; background: var(--studio-fill); }
+
+@media (min-width: 1024px) {
+  .bosfor-header-inner {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    min-height: 65px;
+  }
+
+  .bosfor-header-metrics { grid-area: 1 / 2; }
+  .bosfor-header-actions { grid-area: 1 / 3; }
+  .bosfor-header-stat { padding-inline: .625rem; font-size: .75rem; }
+  .bosfor-header-progress { min-width: 3rem; }
+}
+
+@media (min-width: 1280px) {
+  .bosfor-header-progress { min-width: 7.25rem; }
+}
+
+.studio-dashboard { container: bosfor-dashboard / inline-size; }
+
+.bosfor-overview {
+  --bosfor-text: #f7f9ff;
+  --bosfor-soft: #b6c9ef;
+  --bosfor-panel: #0d2148;
+  --bosfor-outline: #284576;
+  --bosfor-coral: #ff8276;
+  --bosfor-hero-image: url("/images/bosfor-hero.jpg");
+  --bosfor-hero-overlay: linear-gradient(90deg, #06142c9c, #091b3a18 72%);
+  --bosfor-hero-mobile-overlay: linear-gradient(0deg, #07152f 10%, #081633bb 52%, transparent 85%);
+  --bosfor-exam-overlay: linear-gradient(90deg, #142c56 22%, #10264dcc 58%, #08204433);
+  --bosfor-subtle: #152f58;
+  --bosfor-hero-fallback: #102552;
+  --bosfor-text-shadow: 0 2px 18px #020c20b3;
+  display: grid;
+  grid-template-columns: minmax(0, 2.35fr) minmax(17rem, 1fr);
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: "hero today" "hero exam" "skills skills";
+  gap: .9rem;
+  color: var(--bosfor-text);
+}
+
+.studio-shell[data-theme="default"] .bosfor-overview {
+  --bosfor-text: #172c52;
+  --bosfor-soft: #425b81;
+  --bosfor-panel: #fffdf9;
+  --bosfor-outline: #c7d8ed;
+  --bosfor-coral: #a54138;
+  --bosfor-hero-image: url("/images/bosfor-day.jpg");
+  --bosfor-hero-overlay: linear-gradient(90deg, #fffaf0fa 3%, #f3f9fee8 33%, #eef6fd55 64%, transparent 79%);
+  --bosfor-hero-mobile-overlay: linear-gradient(0deg, #fffaf2 13%, #f5faffeb 45%, #ebf7ff33 72%, transparent 86%);
+  --bosfor-exam-overlay: linear-gradient(90deg, #f8fbff 33%, #f2f9fdec 66%, #eef7ff88);
+  --bosfor-subtle: #e8effa;
+  --bosfor-hero-fallback: #d9edfa;
+  --bosfor-text-shadow: 0 1px 12px #ffffffb3;
+}
+
+.bosfor-hero {
+  grid-area: hero;
+  display: flex;
+  align-items: center;
+  min-height: clamp(350px, 36vw, 495px);
+  padding: clamp(1.4rem, 4vw, 3.5rem);
+  border: 1px solid var(--bosfor-outline);
+  border-radius: 18px;
+  background:
+    var(--bosfor-hero-overlay),
+    var(--bosfor-hero-image) center / cover no-repeat,
+    var(--bosfor-hero-fallback);
+}
+
+.bosfor-hero-copy { max-width: 29rem; }
+
+.bosfor-overview .bosfor-hero h1 {
+  max-width: 11.3ch;
+  padding-inline-start: .24em;
+  border-inline-start: .11em solid var(--bosfor-coral);
+  font-family: var(--studio-sans);
+  font-size: clamp(2.35rem, 4vw, 4.1rem);
+  font-weight: 800;
+  letter-spacing: -.053em;
+  line-height: 1.01;
+  overflow-wrap: anywhere;
+  text-shadow: var(--bosfor-text-shadow);
+}
+
+.bosfor-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1rem;
+  color: var(--bosfor-soft);
+  font-size: clamp(.9rem, 1.3vw, 1.12rem);
+  text-shadow: var(--bosfor-text-shadow);
+}
+
+.bosfor-levels strong { font-weight: 700; }
+.bosfor-levels strong[data-current="true"] { color: var(--bosfor-coral); }
+.bosfor-levels strong + strong::before { margin-right: .5rem; color: var(--bosfor-soft); content: "/"; }
+
+#root .bosfor-hero .bosfor-start {
+  display: inline-flex;
+  min-height: 48px;
+  max-width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-top: 1.2rem;
+  padding: .75rem 1.05rem;
+  border: 1px solid #ffa096 !important;
+  border-radius: 12px;
+  background: var(--bosfor-coral) !important;
+  color: #2d1027 !important;
+  font-size: .98rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px #040b254d !important;
+}
+
+#root .bosfor-hero .bosfor-start:hover { background: #ffa195 !important; }
+
+#root .studio-shell[data-theme="default"] .bosfor-hero .bosfor-start {
+  background: #a54138 !important;
+  border-color: #a54138 !important;
+  color: #fff7f2 !important;
+  box-shadow: 0 7px 17px #731c2740 !important;
+}
+
+#root .studio-shell[data-theme="default"] .bosfor-hero .bosfor-start:hover {
+  background: #8e302d !important;
+}
+
+.bosfor-today,
+.bosfor-exam,
+.bosfor-skill {
+  border: 1px solid var(--bosfor-outline);
+  border-radius: 15px;
+  background-color: var(--bosfor-panel);
+  color: var(--bosfor-text);
+}
+
+.bosfor-today {
+  grid-area: today;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(.85rem, 2vw, 1.45rem);
+}
+
+.bosfor-today h2 { font-size: clamp(1.15rem, 1.95vw, 1.65rem); font-weight: 800; letter-spacing: -.035em; }
+.bosfor-today-count { margin-top: .2rem; color: var(--bosfor-soft); font-size: .79rem; }
+
+.bosfor-progress {
+  height: 6px;
+  margin-block: 1rem;
+  border-radius: 999px;
+  background: var(--studio-track);
+}
+
+.bosfor-progress span { display: block; height: 100%; border-radius: inherit; background: var(--bosfor-coral); }
+.bosfor-today-link {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  padding: .5rem .66rem;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--bosfor-subtle);
+  text-align: start;
+  font-size: .88rem;
+  font-weight: 650;
+}
+
+.bosfor-today-link:hover,
+.bosfor-exam:hover,
+.bosfor-skill:hover { border-color: #7896cd; }
+
+.bosfor-exam {
+  grid-area: exam;
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  gap: .8rem;
+  padding: .8rem 1rem;
+  background-image: var(--bosfor-exam-overlay), var(--bosfor-hero-image);
+  background-position: center, 85% 41%;
+  background-size: cover;
+  text-align: start;
+  font-size: clamp(.95rem, 1.45vw, 1.12rem);
+  font-weight: 800;
+}
+
+.bosfor-exam > svg { flex-shrink: 0; }
+.bosfor-exam small {
+  display: table;
+  margin-top: .28rem;
+  padding: .12rem .45rem;
+  border-radius: 5px;
+  background: var(--bosfor-subtle);
+  color: var(--bosfor-text);
+  font-size: .75rem;
+}
+
+.bosfor-skills-section {
+  grid-area: skills;
+  min-width: 0;
+}
+
+.bosfor-skills-section h2 {
+  margin: .25rem 0 .6rem;
+  color: var(--studio-ink);
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+
+.bosfor-tasks-anchor { scroll-margin-top: 5.25rem; }
+
+.bosfor-skills {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .8rem;
+}
+
+.bosfor-skill { overflow: hidden; text-align: start; }
+.bosfor-skill-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem;
+  padding: .66rem .85rem;
+  font-size: clamp(.95rem, 1.55vw, 1.18rem);
+  font-weight: 750;
+}
+
+.bosfor-dock {
+  position: fixed;
+  z-index: 35;
+  bottom: max(.55rem, env(safe-area-inset-bottom));
+  inset-inline: max(.5rem, env(safe-area-inset-left)) max(.5rem, env(safe-area-inset-right));
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .125rem;
+  padding: .25rem;
+  border: 1px solid var(--studio-line);
+  border-radius: 14px;
+  background: var(--studio-surface);
+  color: var(--studio-muted);
+  box-shadow: 0 6px 25px #020c245e;
+}
+
+.bosfor-dock button {
+  display: flex;
+  min-width: 0;
+  min-height: 52px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  padding: .25rem .1rem;
+  border-radius: 10px;
+  font-size: .6875rem;
+  font-weight: 700;
+  line-height: 1.12;
+  text-align: center;
+}
+.bosfor-dock button[aria-current="page"],
+.bosfor-dock button[data-active="true"] { background: var(--studio-selection); color: var(--studio-accent); }
+
+@media (hover: hover) {
+  .bosfor-dock button:hover { background: var(--studio-selection); color: var(--studio-accent); }
+}
+
+@media (min-width: 1024px) {
+  .studio-shell { --bosfor-sidebar-width: 14rem; }
+  .studio-shell[data-sidebar-collapsed="true"] { --bosfor-sidebar-width: 4.5rem; }
+  .bosfor-sidebar { width: var(--bosfor-sidebar-width); }
+  .bosfor-shell-main { margin-inline-start: var(--bosfor-sidebar-width); }
+  .bosfor-wordmark { font-size: 1.375rem; }
+  .bosfor-dock { display: none; }
+}
+
+@media (max-width: 1023px) {
+  .bosfor-main { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
+}
+
+@container bosfor-dashboard (max-width: 800px) {
+  .bosfor-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto;
+    grid-template-areas: "hero hero" "skills skills" "exam today";
+  }
+}
+
+@media (max-width: 639px) {
+  .bosfor-overview {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "hero" "skills" "exam" "today";
+    gap: .72rem;
+  }
+
+  .bosfor-hero {
+    align-items: end;
+    min-height: 0;
+    padding: clamp(105px, 34vw, 175px) .9rem .95rem;
+    background-image: var(--bosfor-hero-mobile-overlay), var(--bosfor-hero-image);
+    background-position: center, 90% center;
+  }
+
+  .bosfor-overview .bosfor-hero h1 {
+    max-width: 16ch;
+    padding-inline-start: 0;
+    border: 0;
+    font-size: clamp(1.9rem, 7.5vw, 2.9rem);
+  }
+
+  .bosfor-levels { margin-top: .6rem; }
+  #root .bosfor-hero .bosfor-start { width: 100%; margin-top: .8rem; }
+  .bosfor-hero-copy { width: 100%; }
+  .bosfor-skills { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+  .bosfor-skill { display: grid; justify-items: center; gap: .25rem; padding: .6rem .25rem; text-align: center; }
+  .bosfor-skill-label { padding: 0; font-size: .86rem; }
+  .bosfor-skill-label svg { display: none; }
+  .bosfor-exam { min-height: 68px; }
+  .bosfor-today h2 { font-size: 1.05rem; }
+}

@@ -1,3 +1,4 @@
+import { ModelAsset } from './BosforArtwork'
 import { useEffect, useRef, useState } from 'react'
 import { Check, Gift, LockKeyhole, PackageOpen, Shield, ShoppingBag, Sparkles, Star, X } from 'lucide-react'
 import { createPortal } from 'react-dom'
@@ -52,7 +53,7 @@ const CATEGORIES = [
 ]
 
 function CurrencyIcon({ currency, className = 'size-5' }) {
-  if (currency === 'gold') return <img src="/images/shop/gold.png" alt="" className={`${className} object-contain drop-shadow-[0_3px_5px_rgba(251,191,36,.45)]`} />
+  if (currency === 'gold') return <ModelAsset name="coin" className={className} />
   return <img src="/images/shop/gem.png" alt="" className={`${className} object-contain drop-shadow-[0_3px_5px_rgba(34,211,238,.45)]`} />
 }
 
@@ -140,7 +141,7 @@ export default function Shop({ stats = {}, profile = {} }) {
   const [chestReveal, setChestReveal] = useState(null)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
-  const currentTier = String(profile.ratingTier || getRatingTier(stats.xp)).toLowerCase()
+  const currentTier = String(profile?.ratingTier || getRatingTier(stats.xp)).toLowerCase()
   const visibleCategories = [...CATEGORIES, { id: 'inventory', labelKey: 'shop.category.inventory', icon: PackageOpen, items: chestInventory }]
   const selectedCategory = visibleCategories.find((category) => category.id === activeCategory) || CATEGORIES[0]
 
@@ -209,39 +210,34 @@ export default function Shop({ stats = {}, profile = {} }) {
     window.clearTimeout(toastTimer.current)
   }
 
-  return <section className="relative isolate mx-auto min-h-[70vh] w-full max-w-6xl overflow-hidden rounded-[2rem] border border-teal-200/15 bg-[radial-gradient(ellipse_at_95%_0%,rgba(20,184,166,.16),transparent_34%),radial-gradient(ellipse_at_0%_100%,rgba(6,182,212,.12),transparent_32%),linear-gradient(145deg,#0f172a,#111d30_65%,#0f172a)] p-4 text-slate-100 shadow-[0_28px_90px_rgba(0,0,0,.32)] sm:p-7 lg:p-8">
-    <div className="pointer-events-none absolute -right-24 top-40 -z-10 size-80 rounded-full bg-teal-500/10 blur-3xl" aria-hidden="true"/>
-    <div className="pointer-events-none absolute -left-24 top-1/3 -z-10 size-72 rounded-full bg-cyan-500/10 blur-3xl" aria-hidden="true"/>
-    <div className="mx-auto max-w-5xl space-y-8">
-      <header className="rounded-[1.7rem] border border-white/10 bg-gradient-to-br from-slate-800/95 via-slate-800/85 to-teal-950/55 p-4 shadow-2xl shadow-slate-950/30 sm:p-6">
+  return <section className="mx-auto w-full max-w-6xl space-y-7" aria-labelledby="shop-title">
+      <header className="bosfor-panel rounded-2xl border p-4 sm:p-6">
         <div className="flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
           <div className="flex items-start gap-3.5">
-            <span className="grid size-12 shrink-0 place-items-center rounded-2xl border border-teal-200/20 bg-teal-300/10 text-teal-200 shadow-[0_0_28px_rgba(45,212,191,.14)]"><Gift className="size-6" aria-hidden="true"/></span>
-            <div><p className="text-[9px] font-black uppercase tracking-[.2em] text-teal-200/75">{t('shop.wallet.title')}</p><h1 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">{t('shop.title')}</h1><p className="mt-1.5 text-xs leading-5 text-slate-300 sm:text-sm">{t('shop.subtitle')}</p></div>
+            <ModelAsset name="coin" className="size-14 sm:size-20" />
+            <div><h1 id="shop-title" className="text-2xl font-black tracking-tight sm:text-3xl">{t('shop.title')}</h1><p className="mt-1.5 text-xs leading-5 text-[var(--studio-muted)] sm:text-sm">{t('shop.subtitle')}</p></div>
           </div>
           <div className="flex w-full flex-wrap gap-3 sm:w-auto sm:justify-end"><WalletPill currency="gold" amount={wallet.gold} t={t}/><WalletPill currency="gems" amount={wallet.gems} t={t}/></div>
         </div>
-        <p className="mt-4 border-t border-white/[.07] pt-3 text-[9px] leading-4 text-slate-400 sm:text-[10px]">{t('shop.sessionNote')}</p>
+        <p className="mt-4 border-t border-[var(--studio-line)] pt-3 text-xs leading-5 text-[var(--studio-muted)]">{t('shop.sessionNote')}</p>
       </header>
 
       <section className="space-y-5" aria-labelledby="shop-catalog-heading">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <div><p className="text-[9px] font-black uppercase tracking-[.18em] text-teal-200/60">{t('shop.catalog.eyebrow')}</p><h2 id="shop-catalog-heading" className="mt-1 text-xl font-black tracking-tight text-white sm:text-2xl">{t(selectedCategory.labelKey)}</h2><p className="mt-1 text-xs text-slate-400">{t('shop.catalog.itemCount', { count: selectedCategory.items.length })}</p></div>
-          <button type="button" onClick={() => setActiveCategory('inventory')} aria-pressed={activeCategory === 'inventory'} aria-controls="shop-product-grid" className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-4 text-xs font-black transition-all ${activeCategory === 'inventory' ? 'border-teal-300/35 bg-teal-400/15 text-teal-100 shadow-[0_8px_24px_rgba(20,184,166,.14)]' : 'border-teal-200/20 bg-teal-300/[.06] text-teal-100/90 hover:border-teal-200/35 hover:bg-teal-300/10'}`}><PackageOpen className="size-4" aria-hidden="true"/>{t('shop.category.inventory')}<span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[9px] tabular-nums">{chestInventory.length}</span></button>
+          <div><h2 id="shop-catalog-heading" className="text-xl font-black tracking-tight sm:text-2xl">{t(selectedCategory.labelKey)}</h2><p className="mt-1 text-xs text-[var(--studio-muted)]">{t('shop.catalog.itemCount', { count: selectedCategory.items.length })}</p></div>
         </div>
 
-        <div role="group" aria-label={t('shop.category.label')} className="flex gap-2 overflow-x-auto pb-1">
-          {CATEGORIES.map(({ id, labelKey, icon: Icon, items }) => <button key={id} type="button" onClick={() => setActiveCategory(id)} aria-pressed={activeCategory === id} className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border px-3.5 text-xs font-bold transition-all ${activeCategory === id ? 'border-teal-300/30 bg-teal-400/10 text-teal-100 shadow-[0_8px_24px_rgba(20,184,166,.1)]' : 'border-white/10 bg-slate-900/35 text-slate-300 hover:border-white/20 hover:bg-white/[.06]'}`}><Icon className="size-4" aria-hidden="true"/>{t(labelKey)}<span className={`rounded-full px-1.5 py-0.5 text-[9px] tabular-nums ${activeCategory === id ? 'bg-teal-200/10 text-teal-100' : 'bg-white/5 text-slate-400'}`}>{items.length}</span></button>)}
+        <div role="group" aria-label={t('shop.category.label')} className="bosfor-tabs">
+          {visibleCategories.map(({ id, labelKey, icon: Icon, items }) => <button key={id} type="button" onClick={() => setActiveCategory(id)} aria-pressed={activeCategory === id} aria-controls="shop-product-grid" className="bosfor-tab inline-flex items-center justify-center gap-2" style={activeCategory === id ? { background: 'var(--studio-selection)', color: 'var(--studio-accent)' } : undefined}><Icon className="size-4 shrink-0" aria-hidden="true"/>{t(labelKey)}<span className="text-[10px] tabular-nums">{items.length}</span></button>)}
         </div>
 
         <div id="shop-product-grid" aria-live="polite" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {activeCategory === 'inventory' ? (chestInventory.length > 0 ? chestInventory.map((chest) => {
             const item = CHESTS.find((candidate) => candidate.id === chest.chestId)
             return item ? <ChestInventoryCard key={chest.uid} item={item} onOpen={() => openChest(chest)} t={t}/> : null
-          }) : <div className="col-span-full rounded-2xl border border-dashed border-white/15 bg-slate-900/30 px-5 py-12 text-center text-sm text-slate-400">{t('shop.inventory.empty')}</div>) : selectedCategory.items.map((item) => <ProductCard key={item.id} item={item} wallet={wallet} currentTier={currentTier} purchasedIds={purchasedIds} onPurchase={purchase} t={t}/>)}
+          }) : <div className="bosfor-inset col-span-full rounded-2xl border px-5 py-12 text-center text-sm text-[var(--studio-muted)]">{t('shop.inventory.empty')}</div>) : selectedCategory.items.map((item) => <ProductCard key={item.id} item={item} wallet={wallet} currentTier={currentTier} purchasedIds={purchasedIds} onPurchase={purchase} t={t}/>)}
         </div>
       </section>
-    </div>
 
     {chestReveal && typeof document !== 'undefined' && createPortal(
       <div className="fixed inset-0 z-[120] grid place-items-center bg-slate-950/80 p-4 backdrop-blur-sm" onClick={() => setChestReveal(null)}>

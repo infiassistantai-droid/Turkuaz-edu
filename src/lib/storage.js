@@ -18,10 +18,49 @@ export const VOCABULARY_XP_CLAIMED_KEY = 'turkuaz-edu-vocabulary-xp-claimed-v1'
 export const TURKUAZ_LUGAT_LEARNED_KEY = 'turkuaz-edu-lugat-learned-v1' // learned IDs from the 1,000-word catalogue
 export const READING_VOCABULARY_KEY = 'turkuaz-edu-reading-vocabulary-v1' // user-saved glossary words
 
+export function readingSectionProgressKey(learnerId = 'local') {
+  return 'turkuaz-edu-reading-section-progress-v1:' + encodeURIComponent(String(learnerId).trim().toLowerCase())
+}
+
+const storageListeners = new Set()
+const vocabularyKeys = [SAVED_KEY, VOCABULARY_STATE_KEY, TURKUAZ_LUGAT_LEARNED_KEY, READING_VOCABULARY_KEY]
+let vocabularyOwner = null
+
+export function vocabularyStorageKey(userId, key) {
+  return 'turkuaz-cloud-learning-vocabulary:' + userId + ':' + key
+}
+
+export function setVocabularyOwner(userId, migrateLegacy = false) {
+  vocabularyOwner = userId
+  if (!userId || !migrateLegacy) return
+  const marker = 'turkuaz-cloud-learning-vocabulary-migration'
+  if (loadJSON(marker, null)) return
+  for (const key of vocabularyKeys) {
+    const target = vocabularyStorageKey(userId, key)
+    if (loadJSON(target, null) !== null) continue
+    try {
+      const raw = localStorage.getItem(key)
+      if (raw) saveJSON(target, JSON.parse(raw))
+    } catch {
+      // Ignore unavailable or invalid legacy entries.
+    }
+  }
+  saveJSON(marker, { migrated: true })
+}
+
+function ownedStorageKey(key) {
+  return vocabularyOwner && vocabularyKeys.includes(key) ? vocabularyStorageKey(vocabularyOwner, key) : key
+}
+
+export function observeStorageWrites(listener) {
+  storageListeners.add(listener)
+  return () => storageListeners.delete(listener)
+}
+
 /** Safe JSON reader — falls back when storage is missing/corrupt (SSR-safe). */
 export function loadJSON(key, fallback) {
   try {
-    const raw = localStorage.getItem(key)
+    const raw = localStorage.getItem(ownedStorageKey(key))
     if (!raw) return fallback
     const parsed = JSON.parse(raw)
     return parsed && typeof parsed === 'object' ? parsed : fallback
@@ -33,9 +72,16 @@ export function loadJSON(key, fallback) {
 /** Safe JSON writer — ignores quota/availability errors. */
 export function saveJSON(key, value) {
   try {
-    localStorage.setItem(key, JSON.stringify(value))
+    key = ownedStorageKey(key)
+    const serialized = JSON.stringify(value)
+    if (localStorage.getItem(key) !== serialized) {
+      localStorage.setItem(key, serialized)
+      for (const listener of storageListeners) listener(key, value)
+    }
+    return true
   } catch {
     // storage full or unavailable — app still works in-memory
+    return false
   }
 }
 
@@ -105,8 +151,8 @@ export function saveKonusma(state) {
 
 /* ----------------------------- Clear all ------------------------------ */
 
-/** Remove every key the app owns — used by "Maʼlumotlarni tozalash". */
-export function clearAllStorage() {
+/** Clear the current learner's data while keeping other cached learners' records. */
+export function clearAllStorage(identity) {
   [STORAGE_KEY, PROFILE_KEY, AUTH_KEY, SCORES_KEY, KONUSMA_KEY, MASTERY_KEY, SAVED_KEY, VOCABULARY_STATE_KEY, VOCABULARY_XP_CLAIMED_KEY, TURKUAZ_LUGAT_LEARNED_KEY, READING_VOCABULARY_KEY].forEach((key) => {
     try {
       localStorage.removeItem(key)
@@ -114,11 +160,27 @@ export function clearAllStorage() {
       // ignore
     }
   })
-  // Daily checklists are date-scoped so yesterday's history remains available
-  // during normal use, but a full reset should remove every checklist record.
+  const owner = String(identity || 'local').trim()
+  const variants = new Set([owner, owner.toLowerCase(), encodeURIComponent(owner), encodeURIComponent(owner.toLowerCase())])
+  const accountPrefixes = [
+    'turkuaz-daily-plan-v1:',
+    'turkuaz-yazma-stage-progress-v1:',
+    'turkuaz-cloud-learning-assessments:',
+    'turkuaz-cloud-learning-pending:',
+    READING_COMPLETIONS_PREFIX,
+    'turkuaz-edu-reading-section-progress-v1:',
+    'turkuaz-edu-streak-milestones-v1:',
+    'turkuaz-edu-trophy-unlocks-v1:',
+    'turkuaz-edu-listening-progress-v1:',
+    'turkuaz-edu-listening-stage-tasks-v1:',
+    'turkuaz-edu-speaking-recording-progress-v1:',
+  ]
+  const accountKeys = new Set(accountPrefixes.flatMap((prefix) => [...variants].map((value) => prefix + value)))
   try {
     Object.keys(localStorage)
-      .filter((key) => key.startsWith('turkish-marathon-daily-plan-') || key.startsWith('turkish-marathon-dashboard-plan-') || key.startsWith(READING_COMPLETIONS_PREFIX) || key.startsWith('turkuaz-edu-streak-milestones-v1:') || key.startsWith('turkuaz-edu-trophy-unlocks-v1:') || key.startsWith('turkuaz-edu-listening-progress-v1:') || key.startsWith('turkuaz-edu-speaking-recording-progress-v1:'))
+      .filter((key) => accountKeys.has(key) || key.startsWith('turkuaz-cloud-learning-vocabulary:' + owner + ':')
+        || [...variants].some((value) => key.startsWith('turkuaz-edu-xp-awards-v1:' + value + ':'))
+        || /^(?:turkish-marathon-(?:daily-plan|dashboard-plan)-)/u.test(key))
       .forEach((key) => localStorage.removeItem(key))
   } catch {
     // ignore unavailable storage

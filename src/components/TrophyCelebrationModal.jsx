@@ -4,6 +4,7 @@ import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 import { getTrophy } from '../lib/trophies'
 import { Dialog } from './ui/dialog'
+import { ModelAsset } from './BosforArtwork'
 
 const CONFETTI = Array.from({ length: 36 }, (_, index) => ({
   id: index,
@@ -84,7 +85,8 @@ export default function TrophyCelebrationModal({ event, isPremium = false, dark 
             </p>
             <p className="mt-1 text-lg font-black leading-tight sm:text-2xl">{t(trophy.titleKey)}</p>
             <p className={cn('mt-2 text-xs leading-relaxed', isPremium ? 'text-white/60' : dark ? 'text-slate-300' : 'text-slate-500')}>{t(trophy.descriptionKey)}</p>
-            <p className={cn('mt-2 text-[11px] font-extrabold', isPremium ? 'text-amber-100' : dark ? 'text-amber-200' : 'text-amber-800')}>
+            <p className={cn('mt-2 flex items-center gap-1 text-[11px] font-extrabold', isPremium ? 'text-amber-100' : dark ? 'text-amber-200' : 'text-amber-800')}>
+              <ModelAsset name="xp" className="size-7" />
               {t('trophy.tooltip.reward', { xp: Number(event.rewardXp || trophy.rewardXp || 0).toLocaleString(language) })}
             </p>
             {date && <p className={cn('mt-1 text-[10px] font-semibold', isPremium ? 'text-white/45' : dark ? 'text-slate-400' : 'text-slate-400')}>{t('trophy.tooltip.date', { date })}</p>}
@@ -99,7 +101,7 @@ export default function TrophyCelebrationModal({ event, isPremium = false, dark 
         <button
           type="button"
           onClick={onDismiss}
-          className={cn('mx-auto mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-extrabold transition hover:-translate-y-0.5', isPremium ? 'bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-300 text-slate-950 shadow-[0_0_28px_rgba(250,204,21,.3)]' : 'bg-gradient-to-r from-amber-500 to-yellow-400 text-amber-950 shadow-lg shadow-amber-700/20')}
+          className={cn('bosfor-action mx-auto mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-extrabold transition hover:-translate-y-0.5', isPremium ? 'bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-300 text-slate-950 shadow-[0_0_28px_rgba(250,204,21,.3)]' : 'bg-gradient-to-r from-amber-500 to-yellow-400 text-amber-950 shadow-lg shadow-amber-700/20')}
         >
           {t('trophy.celebrate.continue')}<ArrowRight className="size-4" aria-hidden="true" />
         </button>

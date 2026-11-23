@@ -1,3 +1,4 @@
+import { SectionBanner } from '../BosforArtwork'
 import { useEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
@@ -701,7 +702,6 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
       <OkumaModule
         completeLevel={completeLevel}
         profile={profile}
-        premium={premium}
         onPerfectScore={() => {
           onFlawlessQuiz?.()
           onPerfectReadingExam?.()
@@ -976,7 +976,7 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
                 </button>
               </div>
             ) : answerFeedback === 'correct' ? (
-              <button type="button" onClick={continueQuiz} className={cn('inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-extrabold transition hover:-translate-y-0.5', premium ? 'bg-gradient-to-r from-cyan-300 to-teal-300 text-slate-950 shadow-[0_0_18px_rgba(34,211,238,.22)]' : 'bg-gradient-to-r from-teal-700 to-cyan-600 text-white shadow-lg')}>
+              <button type="button" onClick={continueQuiz} className={cn('bosfor-action inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-extrabold transition hover:-translate-y-0.5', premium ? 'bg-gradient-to-r from-cyan-300 to-teal-300 text-slate-950 shadow-[0_0_18px_rgba(34,211,238,.22)]' : 'bg-gradient-to-r from-teal-700 to-cyan-600 text-white shadow-lg')}>
                 {quizStep === questions.length - 1 ? t('reading.quiz.finish') : t('reading.quiz.continue')}
                 <Check className="size-4" aria-hidden="true" />
               </button>
@@ -1084,18 +1084,9 @@ export default function ReadingLibrary({ addXp, completeLevel, isPremium = false
       'mx-auto max-w-5xl space-y-7 rounded-3xl border p-4 pb-8 sm:p-6',
       premium ? 'border-white/10 bg-black/40 text-white shadow-xl shadow-black/15 backdrop-blur-xl' : 'border-slate-200 bg-white text-slate-900 shadow-sm',
     )}>
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className={cn('mb-2 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[.18em]', premium ? 'text-yellow-200' : 'text-teal-700')}>
-            <BookOpenText className="size-4" aria-hidden="true" />{t('reading.eyebrow')}
-          </div>
-          <h1 className={cn('text-3xl font-black tracking-tight sm:text-4xl', premium ? 'text-white' : 'text-slate-950')}>{t('reading.title')}</h1>
-          <p className={cn('mt-2 max-w-2xl text-sm leading-relaxed sm:text-base', muted)}>{t('reading.subtitle')}</p>
-        </div>
-        <span className={cn('rounded-full border px-3 py-1.5 text-xs font-bold', premium ? 'border-white/10 bg-white/5 text-white/75' : 'border-slate-200 bg-white text-slate-600')}>
-          {t('reading.materialCount', { count: mockReadingMaterials.length })}
-        </span>
-      </header>
+      <SectionBanner name="okuma" title={t('reading.title')} description={t('reading.subtitle')}>
+        <span>{t('reading.materialCount', { count: mockReadingMaterials.length })}</span>
+      </SectionBanner>
 
       <div className="relative space-y-8 pl-5 sm:pl-8">
         <div className={cn('absolute bottom-6 left-[7px] top-4 border-l-2 border-dashed sm:left-[11px]', premium ? 'border-yellow-200/20' : 'border-teal-200')} aria-hidden="true" />

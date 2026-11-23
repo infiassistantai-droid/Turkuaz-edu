@@ -15,9 +15,25 @@ export function Tabs({ defaultValue, value, onValueChange, children, className }
   )
 }
 
-export function TabsList({ children, className, ...props }) {
+export function TabsList({ children, className, onKeyDown, ...props }) {
+  function handleKeyDown(event) {
+    onKeyDown?.(event)
+    if (event.defaultPrevented || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
+    const tabs = Array.from(event.currentTarget.querySelectorAll('button[role="tab"]:not(:disabled)')) as HTMLButtonElement[]
+    const current = tabs.indexOf(event.target)
+    if (current === -1) return
+
+    event.preventDefault()
+    let next
+    if (event.key === 'Home') next = 0
+    else if (event.key === 'End') next = tabs.length - 1
+    else next = (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length
+    tabs[next].focus()
+    tabs[next].click()
+  }
+
   return (
-    <div role="tablist" className={cn('flex items-center gap-1', className)} {...props}>
+    <div role="tablist" className={cn('flex items-center gap-1', className)} onKeyDown={handleKeyDown} {...props}>
       {children}
     </div>
   )

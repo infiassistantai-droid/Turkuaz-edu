@@ -206,7 +206,7 @@ export default function NotificationPopover({ isPremium = false }) {
 
   const surface = isPremium
     ? 'border-white/10 bg-black/85 text-white'
-    : 'border-slate-200/80 bg-white text-slate-800 dark:border-white/10 dark:bg-slate-900 dark:text-white'
+    : 'bosfor-panel'
 
   const notificationPanel = open ? (
         <>

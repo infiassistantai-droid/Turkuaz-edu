@@ -1,5 +1,6 @@
+import { ModelAsset, PanelHeading } from './BosforArtwork'
 import { useMemo, useState } from 'react'
-import { ArrowRight, BookOpenText, CheckCircle2, Flame, Headphones, Sparkles, Trophy, Zap } from 'lucide-react'
+import { ArrowRight, BookOpenText, CheckCircle2, Headphones, Sparkles, Trophy, Zap } from 'lucide-react'
 import { CORE_TROPHIES, getTrophyProgress, TROPHY_REWARD_XP } from '../lib/trophies'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
@@ -24,6 +25,19 @@ const WEEKLY_GOALS = [
 
 function safeCount(value, target) {
   return Math.min(target, Math.max(0, Number(value) || 0))
+}
+
+export function getDailyQuestRows(progress) {
+  const values = {
+    words: Array.isArray(progress?.words) ? progress.words.length : 0,
+    listening: progress?.listening,
+    xp: progress?.xp,
+  }
+
+  return DAILY_QUESTS.map((quest) => {
+    const current = safeCount(values[quest.id], quest.target)
+    return { ...quest, current, complete: current >= quest.target }
+  })
 }
 
 function getTrophyPath(trophyId) {
@@ -52,21 +66,17 @@ function getTrophyMetrics(stats = {}) {
   }
 }
 
-const PANEL = 'rounded-2xl border border-slate-800 bg-[#0f172a] text-slate-100 shadow-xl shadow-slate-950/20'
-const MUTED = 'text-slate-400'
-const TRACK = 'bg-slate-800'
-const PROGRESS = 'bg-gradient-to-r from-violet-600 via-indigo-500 to-cyan-400'
+const PANEL = 'bosfor-panel rounded-2xl border'
+const MUTED = 'text-[var(--studio-muted)]'
+const TRACK = 'bosfor-track'
+const PROGRESS = 'bosfor-progress-fill'
 
 export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimReward, navigate, isPremium = false }) {
   const { t } = useI18n()
   const [activeTab, setActiveTab] = useState('daily')
   const safeProgress = progress && typeof progress === 'object' ? progress : {}
-  const dailyValues = {
-    words: Math.min(3, Math.max(0, Array.isArray(safeProgress.words) ? safeProgress.words.length : 0)),
-    listening: Math.min(1, Math.max(0, Number(safeProgress.listening) || 0)),
-    xp: Math.min(50, Math.max(0, Number(safeProgress.xp) || 0)),
-  }
-  const completedDaily = DAILY_QUESTS.filter((quest) => dailyValues[quest.id] >= quest.target).length
+  const dailyRows = getDailyQuestRows(safeProgress)
+  const completedDaily = dailyRows.filter((quest) => quest.complete).length
   const weeklyGoals = safeProgress.weeklyGoals && typeof safeProgress.weeklyGoals === 'object' ? safeProgress.weeklyGoals : {}
   const trophies = useMemo(() => {
     const metrics = getTrophyMetrics(stats)
@@ -84,18 +94,11 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
 
   return (
     <section className={cn(PANEL, 'overflow-hidden p-4 sm:p-6', isPremium && 'border-amber-300/25 shadow-amber-950/20')} aria-labelledby="tasks-panel-heading">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="grid size-11 shrink-0 place-items-center rounded-2xl border border-violet-400/20 bg-violet-400/10 text-violet-200">
-          <Sparkles className="size-5" aria-hidden="true" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <h2 id="tasks-panel-heading" className="text-lg font-extrabold tracking-tight">{t('tasks.title')}</h2>
-          <p className={cn('mt-0.5 text-xs', MUTED)}>{t('tasks.subtitle')}</p>
-        </div>
-        {activeTab === 'daily' && <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-bold tabular-nums text-slate-300">{t('quests.completedCount', { count: completedDaily, total: DAILY_QUESTS.length })}</span>}
-      </div>
+      <PanelHeading name="quests" titleId="tasks-panel-heading" title={t('tasks.title')} description={t('tasks.subtitle')}>
+        {activeTab === 'daily' && <span className="bosfor-badge px-3 py-1.5 text-xs font-bold tabular-nums">{t('quests.completedCount', { count: completedDaily, total: DAILY_QUESTS.length })}</span>}
+      </PanelHeading>
 
-      <div role="tablist" aria-label={t('tasks.tabs.label')} className="mt-5 flex gap-2 overflow-x-auto pb-1">
+      <div role="tablist" aria-label={t('tasks.tabs.label')} className="bosfor-tabs mt-5">
         {TABS.map((tab) => {
           const active = activeTab === tab.id
           return (
@@ -107,10 +110,7 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
               aria-selected={active}
               aria-controls={`tasks-panel-${tab.id}`}
               onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                'min-h-11 shrink-0 rounded-full border px-4 py-2 text-xs font-extrabold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400',
-                active ? 'border-violet-400/40 bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-lg shadow-indigo-950/30' : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-500 hover:text-white',
-              )}
+              className="bosfor-tab"
             >
               {t(tab.key)}
             </button>
@@ -120,54 +120,54 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
 
       {activeTab === 'daily' && (
         <div id="tasks-panel-daily" role="tabpanel" aria-labelledby="tasks-tab-daily" className="mt-4 space-y-3">
-          {DAILY_QUESTS.map((quest) => {
+          {dailyRows.map((quest) => {
             const Icon = quest.icon
-            const current = dailyValues[quest.id]
-            const done = current >= quest.target
+            const current = quest.current
+            const done = quest.complete
             const percent = Math.min(100, Math.round((current / quest.target) * 100))
             const canClaim = quest.id === 'words' && done && !safeProgress.wordRewardClaimed
             const claimed = quest.id === 'words' && Boolean(safeProgress.wordRewardClaimed)
             return (
-              <article key={quest.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 transition-colors hover:border-slate-700 sm:p-5">
+              <article key={quest.id} className="bosfor-inset rounded-xl border p-4 sm:p-5">
                 <div className="flex items-start gap-3">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-violet-400/15 bg-violet-400/10 text-violet-200">
+                  <span className="bosfor-badge grid size-10 shrink-0 place-items-center">
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-extrabold leading-snug text-white">{t(quest.titleKey)}</h3>
-                    <p className="mt-1 text-xs leading-5 text-slate-400">{t(quest.descriptionKey)}</p>
+                    <h3 className="text-sm font-extrabold leading-snug">{t(quest.titleKey)}</h3>
+                    <p className="mt-1 text-xs leading-5 text-[var(--studio-muted)]">{t(quest.descriptionKey)}</p>
                   </div>
                   <span className={cn(
                     'shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-extrabold',
-                    quest.reward ? 'border-amber-300/25 bg-amber-300/10 text-amber-200' : 'border-slate-700 bg-slate-800 text-slate-300',
+                    quest.reward ? 'bosfor-reward-badge' : 'bosfor-badge text-[var(--studio-muted)]',
                   )}>
-                    {quest.reward ? `+${quest.reward} XP` : t('tasks.goalBadge')}
+                    {quest.reward ? <span className="inline-flex items-center gap-1"><ModelAsset name="xp" className="size-6" />+{quest.reward} XP</span> : t('tasks.goalBadge')}
                   </span>
                 </div>
                 <div className="mt-4 flex items-center gap-3">
                   <div role="progressbar" aria-label={t(quest.titleKey)} aria-valuemin={0} aria-valuemax={quest.target} aria-valuenow={current} className={cn('h-2 min-w-0 flex-1 overflow-hidden rounded-full', TRACK)}>
                     <div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${percent}%` }} />
                   </div>
-                  <span className="w-12 shrink-0 text-right text-xs font-bold tabular-nums text-slate-300">{current}/{quest.target}</span>
+                  <span className="w-12 shrink-0 text-right text-xs font-bold tabular-nums text-[var(--studio-muted)]">{current}/{quest.target}</span>
                 </div>
                 <div className="mt-3 flex justify-end">
                   {claimed ? (
-                    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.claimed')}</span>
+                    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-800 dark:text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.claimed')}</span>
                   ) : canClaim ? (
                     <button
                       type="button"
                       onClick={claimReward}
-                      className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 px-4 py-2 text-xs font-extrabold text-slate-950 transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+                      className="bosfor-action inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2 text-xs"
                     >
                       {t('quests.claim')}<ArrowRight className="size-4" aria-hidden="true" />
                     </button>
                   ) : done ? (
-                    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.complete')}</span>
+                    <span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3 text-xs font-bold text-emerald-800 dark:text-emerald-200"><CheckCircle2 className="size-4" aria-hidden="true" />{t('quests.complete')}</span>
                   ) : (
                     <button
                       type="button"
                       onClick={() => navigate?.(quest.navigate)}
-                      className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-extrabold text-slate-100 transition-colors hover:border-violet-400/50 hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+                      className="bosfor-control inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold"
                     >
                       {t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" />
                     </button>
@@ -180,10 +180,10 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
       )}
 
       {activeTab === 'weekly' && (
-        <section id="tasks-panel-weekly" role="tabpanel" aria-labelledby="tasks-tab-weekly" className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-5">
+        <section id="tasks-panel-weekly" role="tabpanel" aria-labelledby="tasks-tab-weekly" className="mt-4 bosfor-inset rounded-xl border p-4 sm:p-5">
           <div className="flex items-center gap-3">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-indigo-400/10 text-indigo-200"><Flame className="size-5" aria-hidden="true" /></span>
-            <div><h3 className="text-sm font-extrabold text-white">{t('tasks.weekly.title')}</h3><p className="mt-1 text-xs text-slate-400">{t('tasks.weekly.subtitle')}</p></div>
+            <span className="size-10 shrink-0"><ModelAsset name="plan" className="size-10" /></span>
+            <div><h3 className="text-sm font-extrabold">{t('tasks.weekly.title')}</h3><p className="mt-1 text-xs text-[var(--studio-muted)]">{t('tasks.weekly.subtitle')}</p></div>
           </div>
           <div className="mt-5 space-y-5">
             {WEEKLY_GOALS.map((goal) => {
@@ -193,9 +193,9 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
               return (
                 <div key={goal.id}>
                   <div className="mb-2 flex items-center gap-2">
-                    <Icon className="size-4 shrink-0 text-indigo-200" aria-hidden="true" />
-                    <span className="min-w-0 flex-1 text-xs font-bold text-slate-200">{t(goal.titleKey)}</span>
-                    <span className="text-xs font-extrabold tabular-nums text-slate-300">{current}/{goal.target}</span>
+                    <Icon className="size-4 shrink-0 text-[var(--studio-accent)]" aria-hidden="true" />
+                    <span className="min-w-0 flex-1 text-xs font-bold text-[var(--studio-ink)]">{t(goal.titleKey)}</span>
+                    <span className="text-xs font-extrabold tabular-nums text-[var(--studio-muted)]">{current}/{goal.target}</span>
                   </div>
                   <div role="progressbar" aria-label={t(goal.titleKey)} aria-valuemin={0} aria-valuemax={goal.target} aria-valuenow={current} className={cn('h-2 overflow-hidden rounded-full', TRACK)}>
                     <div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${percent}%` }} />
@@ -212,23 +212,23 @@ export default function DailyQuestsWidget({ progress = {}, stats = {}, onClaimRe
           {trophies.length ? trophies.map(({ trophy, progress: trophyProgress }) => {
             const title = t(trophy.titleKey)
             return (
-              <article key={trophy.id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-5">
+              <article key={trophy.id} className="bosfor-inset rounded-xl border p-4 sm:p-5">
                 <div className="flex items-start gap-3">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-xl border border-amber-300/15 bg-amber-300/10 text-amber-200"><Trophy className="size-5" aria-hidden="true" /></span>
-                  <div className="min-w-0 flex-1"><h3 className="text-sm font-extrabold text-white">{title}</h3><p className="mt-1 text-xs leading-5 text-slate-400">{t(trophy.descriptionKey)}</p></div>
-                  <span className="shrink-0 rounded-full border border-amber-300/25 bg-amber-300/10 px-2.5 py-1 text-[10px] font-extrabold text-amber-200">+{TROPHY_REWARD_XP[trophy.id] || 0} XP</span>
+                  <ModelAsset name="medal" className="size-11" />
+                  <div className="min-w-0 flex-1"><h3 className="text-sm font-extrabold">{title}</h3><p className="mt-1 text-xs leading-5 text-[var(--studio-muted)]">{t(trophy.descriptionKey)}</p></div>
+                  <span className="bosfor-reward-badge shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-extrabold">+{TROPHY_REWARD_XP[trophy.id] || 0} XP</span>
                 </div>
                 <div className="mt-4 flex items-center gap-3">
                   <div role="progressbar" aria-label={title} aria-valuemin={0} aria-valuemax={trophyProgress.target} aria-valuenow={trophyProgress.current} className={cn('h-2 min-w-0 flex-1 overflow-hidden rounded-full', TRACK)}><div className={cn('h-full rounded-full transition-[width] duration-500', PROGRESS)} style={{ width: `${trophyProgress.percent}%` }} /></div>
-                  <span className="w-16 shrink-0 text-right text-xs font-bold tabular-nums text-slate-300">{t(trophy.progressKey, { count: trophyProgress.current, target: trophyProgress.target })}</span>
+                  <span className="w-16 shrink-0 text-right text-xs font-bold tabular-nums text-[var(--studio-muted)]">{t(trophy.progressKey, { count: trophyProgress.current, target: trophyProgress.target })}</span>
                 </div>
-                <div className="mt-3 flex justify-end"><button type="button" onClick={() => navigate?.(getTrophyPath(trophy.id))} className="inline-flex min-h-11 min-w-[44px] items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-extrabold text-white transition hover:border-violet-400/50 hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400">{t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" /></button></div>
+                <div className="mt-3 flex justify-end"><button type="button" onClick={() => navigate?.(getTrophyPath(trophy.id))} className="bosfor-control inline-flex min-h-11 items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold">{t('tasks.doTask')}<ArrowRight className="size-4" aria-hidden="true" /></button></div>
               </article>
             )
           }) : (
-            <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/60 p-6 text-center">
-              <CheckCircle2 className="mx-auto size-8 text-emerald-300" aria-hidden="true" />
-              <p className="mt-2 text-sm font-bold text-white">{t('tasks.achievements.completeAll')}</p>
+            <div className="bosfor-inset rounded-2xl border border-dashed p-6 text-center">
+              <CheckCircle2 className="mx-auto size-8 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
+              <p className="mt-2 text-sm font-bold">{t('tasks.achievements.completeAll')}</p>
             </div>
           )}
         </div>

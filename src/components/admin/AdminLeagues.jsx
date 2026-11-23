@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { AlertTriangle, Check, LoaderCircle, RefreshCw, Trophy } from 'lucide-react'
+import { AlertTriangle, Check, LoaderCircle, RefreshCw } from 'lucide-react'
 import { useI18n } from '../../lib/i18n.jsx'
 import { fetchLeagueTiers, saveLeagueTiers } from '../../lib/supabase.js'
 import { AdminCard, AdminPageHeader, INPUT_CLASS, SecondaryButton } from './AdminShared'
@@ -67,6 +67,5 @@ export default function AdminLeagues({ active = true, notify }) {
         </div>)}
       </div>}
     </AdminCard>
-    <p className="mt-3 flex items-start gap-2 px-1 text-[11px] leading-5 text-slate-500"><Trophy className="mt-0.5 size-4 shrink-0 text-indigo-500" aria-hidden="true"/>{t('admin.leagues.securityNote')}</p>
   </div>
 }

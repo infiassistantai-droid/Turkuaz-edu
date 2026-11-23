@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, BookOpenText, Clock3, Flag, RotateCcw, Sparkles, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpenText, Clock3, Flag, RotateCcw, Trophy } from 'lucide-react'
+import { SectionBanner } from './BosforArtwork'
 import { readingMockExam, readingQuestions, type ReadingPart } from '../data/mockExamData.ts'
 import { scoreReadingMock } from '../lib/readingMockScoring'
 import { cn } from '../lib/utils'
@@ -124,43 +125,41 @@ export default function MockExam({ onComplete, onExit }: MockExamProps) {
 
   if (view === 'intro') {
     return (
-      <div className="mx-auto max-w-5xl space-y-5">
-        <section className="premium-hero relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9">
-          <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4" /> {t('mock.badge')}</div>
-            <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">{t('mock.reading.title')}</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">{t('mock.reading.intro')}</p>
-            <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-white/90"><span className="rounded-lg border border-white/20 bg-black/15 px-3 py-2">{t('mock.reading.duration')}</span><span className="rounded-lg border border-white/20 bg-black/15 px-3 py-2">{t('mock.reading.questions', { count: 35 })}</span><span className="rounded-lg border border-white/20 bg-black/15 px-3 py-2">{t('mock.reading.types')}</span></div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button type="button" onClick={startExam} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-teal-900 shadow-lg transition hover:bg-amber-50"><BookOpenText className="size-4" />{t('mock.reading.start')}</button>
-              {onExit && <button type="button" onClick={onExit} className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-black/15 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"><ArrowLeft className="size-4" />{t('mock.reading.menu')}</button>}
-            </div>
+      <section className="exam-center mx-auto max-w-6xl space-y-4">
+        <SectionBanner name="okuma" title={t('examsHub.quick.title')} description={t('examsHub.quick.description')}>
+          <span>{t('examsHub.quick.detail')}</span>
+        </SectionBanner>
+        <section className="bosfor-panel rounded-2xl border p-4 sm:p-6">
+          <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-5">
+            {readingMockExam.parts.map((part) => <article key={part.id} className="bosfor-inset rounded-xl border p-3"><h2 className="text-sm font-extrabold">{part.title.replace(/^Bölüm \d+ · /u, '')}</h2><p className="exam-muted mt-1 text-xs">{t('mock.reading.questions', { count: part.questions.length })}</p></article>)}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button type="button" onClick={startExam} className="bosfor-action exam-action"><BookOpenText className="size-4" aria-hidden="true" />{t('mock.reading.start')}</button>
+            {onExit && <button type="button" onClick={onExit} className="bosfor-control exam-action"><ArrowLeft className="size-4" aria-hidden="true" />{t('examsHub.back')}</button>}
           </div>
         </section>
-        <div className="grid gap-3 sm:grid-cols-5">
-          {readingMockExam.parts.map((part) => <article key={part.id} className="glass premium-glass rounded-2xl border border-slate-200 bg-white/85 p-4 dark:border-slate-800 dark:bg-slate-900/85"><p className="text-[11px] font-extrabold text-amber-700 dark:text-amber-200">{t('mock.reading.questions', { count: part.questions.length })}</p><h2 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">{part.title.replace(/^Bölüm \d+ · /u, '')}</h2></article>)}
-        </div>
-      </div>
+      </section>
     )
   }
 
+
   if (view === 'results' && result) {
     return (
-      <div className="mx-auto max-w-4xl space-y-5">
-        <section className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9">
-          <div className="flex items-center gap-3"><span className="grid size-12 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/25"><Trophy className="size-6" /></span><div><p className="text-sm text-white/75">{t('mock.reading.results')}</p><h1 className="text-2xl font-extrabold">{t('mock.reading.yourResult')}</h1></div></div>
+      <div className="exam-center mx-auto max-w-4xl space-y-5">
+        <section className="bosfor-panel rounded-3xl border p-6 sm:p-9">
+          <div className="flex items-center gap-3"><span className="grid size-12 place-items-center rounded-2xl bosfor-badge"><Trophy className="size-6" /></span><div><p className="text-sm exam-muted">{t('mock.reading.results')}</p><h1 className="text-2xl font-extrabold">{t('mock.reading.yourResult')}</h1></div></div>
           <div className="mt-7 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.raw')}</p><p className="mt-1 text-3xl font-extrabold tabular-nums">{result.rawScore}<span className="text-base font-medium text-white/65"> / 35</span></p></div>
-            <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.scaled')}</p><p className="mt-1 text-3xl font-extrabold tabular-nums">{result.scaledScore}<span className="text-base font-medium text-white/65"> / 75</span></p></div>
-            <div className="rounded-2xl border border-white/20 bg-black/20 p-4"><p className="text-xs text-white/75">{t('mock.reading.level')}</p><p className="mt-1 flex flex-wrap items-center gap-2 text-2xl font-extrabold"><span>{result.level}</span><span className="text-sm text-amber-100">{result.earnedXp > 0 ? `+${result.earnedXp} XP` : t('mock.xp.notQualified')}</span></p></div>
+            <div className="bosfor-inset rounded-2xl border p-4"><p className="text-xs exam-muted">{t('mock.reading.raw')}</p><p className="mt-1 text-3xl font-extrabold tabular-nums">{result.rawScore}<span className="text-base font-medium exam-muted"> / 35</span></p></div>
+            <div className="bosfor-inset rounded-2xl border p-4"><p className="text-xs exam-muted">{t('mock.reading.scaled')}</p><p className="mt-1 text-3xl font-extrabold tabular-nums">{result.scaledScore}<span className="text-base font-medium exam-muted"> / 75</span></p></div>
+            <div className="bosfor-inset rounded-2xl border p-4"><p className="text-xs exam-muted">{t('mock.reading.level')}</p><p className="mt-1 flex flex-wrap items-center gap-2 text-2xl font-extrabold"><span>{result.level}</span><span className="text-sm exam-muted">{result.earnedXp > 0 ? `+${result.earnedXp} XP` : t('mock.xp.notQualified')}</span></p></div>
           </div>
-          <p className="mt-5 text-sm text-white/80">{t('mock.reading.answered', { count: result.answered })}</p>
+          <p className="mt-5 text-sm exam-muted">{t('mock.reading.answered', { count: result.answered })}</p>
         </section>
         <section className="glass premium-glass rounded-3xl border border-slate-200 bg-white/90 p-5 dark:border-slate-800 dark:bg-slate-900/90 sm:p-7">
           <h2 className="font-bold text-slate-900 dark:text-white">{t('mock.sectionResults')}</h2>
           <div className="mt-4 grid gap-2 sm:grid-cols-2">{result.partResults.map((part) => <div key={part.partId} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3 dark:border-slate-700 dark:bg-black/20"><span className="text-sm text-slate-700 dark:text-slate-200">{part.title}</span><span className="shrink-0 font-bold tabular-nums text-amber-700 dark:text-amber-200">{part.rawScore}/{part.maxRawScore}</span></div>)}</div>
         </section>
-        <div className="flex flex-wrap justify-between gap-3"><button type="button" onClick={() => onExit ? onExit() : setView('intro')} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><ArrowLeft className="size-4" />{t('mock.reading.menu')}</button><button type="button" onClick={startExam} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg"><RotateCcw className="size-4" />{t('mock.newAttempt')}</button></div>
+        <div className="flex flex-wrap justify-between gap-3"><button type="button" onClick={() => onExit ? onExit() : setView('intro')} className="bosfor-control exam-action"><ArrowLeft className="size-4" />{t('examsHub.back')}</button><button type="button" onClick={startExam} className="bosfor-action exam-action"><RotateCcw className="size-4" />{t('mock.newAttempt')}</button></div>
       </div>
     )
   }
@@ -195,3 +194,6 @@ export default function MockExam({ onComplete, onExit }: MockExamProps) {
     </div>
   )
 }
+
+
+

@@ -10,13 +10,32 @@ export function Dialog({ open, onOpenChange, children, isPremium = false, dark =
     const previousFocus = document.activeElement
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    window.requestAnimationFrame(() => panelRef.current?.focus())
+    const focusFrame = window.requestAnimationFrame(() => panelRef.current?.focus())
 
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') onOpenChange?.(false)
+      if (event.defaultPrevented) return
+      if (event.key === 'Escape') {
+        onOpenChange?.(false)
+        return
+      }
+      if (event.key !== 'Tab') return
+      const panel = panelRef.current
+      if (!panel) return
+      const tabbable = Array.from(panel.querySelectorAll<HTMLElement>(
+        'a[href], button, input, select, textarea, [tabindex]',
+      )).filter((item) => item.tabIndex >= 0 && !item.matches(':disabled') && item.getClientRects().length > 0)
+      const active = document.activeElement
+      const first = tabbable[0]
+      const last = tabbable[tabbable.length - 1]
+      const boundary = event.shiftKey ? first : last
+      if (active === boundary || !tabbable.some((item) => item === active)) {
+        event.preventDefault()
+        ((event.shiftKey ? last : first) ?? panel).focus()
+      }
     }
     document.addEventListener('keydown', onKeyDown)
     return () => {
+      window.cancelAnimationFrame(focusFrame)
       document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', onKeyDown)
       previousFocus?.focus?.()
@@ -43,8 +62,8 @@ export function Dialog({ open, onOpenChange, children, isPremium = false, dark =
           isPremium
             ? 'border-white/10 bg-[#1b080a]/95 text-white shadow-black/60 backdrop-blur-2xl'
             : dark
-              ? 'border-slate-700 bg-slate-900 text-slate-100 shadow-black/60'
-              : 'border-slate-200 bg-white text-slate-900 shadow-slate-950/25',
+              ? 'bosfor-dialog shadow-black/60'
+              : 'bosfor-dialog shadow-slate-950/25',
           className,
         )}
       >

@@ -1,9 +1,7 @@
 import { isSupabaseConfigured, supabase } from './supabase.js'
 import { parseJsonResponse } from './parseJsonResponse.js'
 
-const endpoint = import.meta.env.DEV
-  ? '/api/evaluate-writing'
-  : '/.netlify/functions/evaluate-writing'
+const endpoint = '/api/evaluate-writing'
 
 export class EssayEvaluationClientError extends Error {
   constructor(code) {

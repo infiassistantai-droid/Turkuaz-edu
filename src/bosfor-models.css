@@ -1,0 +1,225 @@
+.bosfor-model {
+  display: inline-block;
+  flex-shrink: 0;
+  object-fit: contain;
+  user-select: none;
+  filter: drop-shadow(0 5px 9px #020b2370);
+}
+
+.bosfor-section-banner {
+  --bosfor-object-glow: #587bff;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(132px, 29%);
+  align-items: center;
+  gap: clamp(.5rem, 3vw, 2.4rem);
+  min-height: clamp(168px, 22vw, 262px);
+  overflow: hidden;
+  padding: clamp(1rem, 3.6vw, 2.85rem);
+  border: 1px solid #2b4476;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 85% 52%, #294f9d66, transparent 49%),
+    linear-gradient(120deg, #0d1c40, #142a58 72%, #211f4b);
+  color: #f7f9ff;
+}
+
+.bosfor-section-banner[data-model="konusma"],
+.bosfor-section-banner[data-model="exams"] { --bosfor-object-glow: #ff8c82; }
+
+.bosfor-banner-copy { position: relative; z-index: 2; min-width: 0; }
+.studio-learning .bosfor-banner-copy h1 {
+  margin: 0;
+  color: #f7f9ff;
+  font-size: clamp(1.5rem, 3.7vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.bosfor-banner-copy p {
+  max-width: 58ch;
+  margin-top: .6rem;
+  color: #c1d0f0;
+  font-size: clamp(.82rem, 1.35vw, 1rem);
+  line-height: 1.55;
+}
+
+.bosfor-banner-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .92rem;
+}
+
+.bosfor-banner-details > span {
+  display: inline-flex;
+  min-height: 27px;
+  align-items: center;
+  gap: .3rem;
+  padding: .25rem .55rem;
+  border: 1px solid #476092;
+  border-radius: 8px;
+  background: #101e40c4;
+  color: #f0f4ff;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.bosfor-banner-scene {
+  position: relative;
+  display: grid;
+  max-height: 180px;
+  place-items: center;
+  perspective: 600px;
+}
+
+.bosfor-banner-scene::before {
+  position: absolute;
+  inset: 13% 0;
+  border: 1px solid #8aafff37;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #718fff29, transparent 72%);
+  box-shadow: inset 0 0 0 12px #1f377133, 0 0 60px -20px var(--bosfor-object-glow);
+  transform: rotate(-15deg);
+  content: "";
+}
+
+.bosfor-banner-scene > span {
+  position: absolute;
+  z-index: 0;
+  inset: auto 8% 9%;
+  height: 24%;
+  border: 1px solid #759df25f;
+  border-radius: 50%;
+  background: #101935c2;
+  box-shadow: 0 9px 0 -3px #101835, 0 15px 28px #080e2599;
+  transform: rotate(-9deg);
+}
+
+.bosfor-banner-scene .bosfor-model {
+  position: relative;
+  width: 100%;
+  height: clamp(110px, 17vw, 205px);
+  filter: drop-shadow(0 13px 15px #050c2b8c);
+  transition: transform .32s ease;
+}
+
+.bosfor-section-banner:hover .bosfor-banner-scene .bosfor-model {
+  transform: translate3d(0, -5px, 16px) rotateY(-8deg);
+}
+
+.bosfor-skill-stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  aspect-ratio: 1.85;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 70%, #335baf, #12274f 55%, #0c1a36);
+  perspective: 550px;
+}
+
+.bosfor-skill-stage::before {
+  position: absolute;
+  inset: 67% 17% 12%;
+  border: 1px solid #acc4ff51;
+  border-radius: 50%;
+  background: #2b4a90;
+  box-shadow: 0 6px 0 #172c63, 0 14px 22px #060b1dba;
+  content: "";
+}
+
+.studio-shell[data-theme="default"] .bosfor-skill-stage {
+  background: radial-gradient(ellipse at 55% 58%, #fff4dc, #e4effc 67%, #dbe9f7);
+}
+
+.studio-shell[data-theme="default"] .bosfor-skill-stage::before {
+  border-color: #819ac5a1;
+  background: #afc6ea;
+  box-shadow: 0 5px 0 #94add6, 0 11px 23px #6d81a24a;
+}
+
+.bosfor-skill-stage .bosfor-model {
+  position: absolute;
+  inset: 4% 12% auto;
+  width: 76%;
+  height: 87%;
+  transition: transform .25s ease;
+}
+
+.bosfor-skill:is(:hover, :focus-visible) .bosfor-model {
+  transform: translate3d(0, -5px, 24px) rotateY(-8deg);
+}
+
+.bosfor-xp-pill {
+  border-color: #628de769;
+  background: #182f60;
+  color: #edf2ff;
+}
+
+#root button.bosfor-action {
+  border: 1px solid #ffab9d !important;
+  background: linear-gradient(180deg, #ff9e8f, #fa7b74) !important;
+  color: #35172d !important;
+  box-shadow: 0 3px 0 #a34b59, 0 8px 18px #07142e42 !important;
+  font-weight: 800;
+}
+
+#root button.bosfor-action:not(:disabled):hover {
+  background: linear-gradient(180deg, #ffb1a6, #ff9185) !important;
+}
+
+#root button.bosfor-action:not(:disabled):active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #a34b59 !important;
+}
+
+#root button.bosfor-action:disabled {
+  border-color: #647493 !important;
+  background: #364765 !important;
+  color: #e2eaff !important;
+  box-shadow: none !important;
+}
+
+.studio-learning[data-section] :is(button, a, textarea, select, input):focus-visible {
+  outline: 2px solid #ff998c;
+  outline-offset: 3px;
+}
+
+html.theme-night #root .studio-learning[data-section] .premium-hero,
+html.theme-night #root .studio-learning[data-section] .bosfor-depth-panel {
+  border-color: #294675 !important;
+  background-image: linear-gradient(135deg, #0f2044, #1a3465 75%, #27244c) !important;
+}
+
+@media (max-width: 639px) {
+  .bosfor-section-banner {
+    grid-template-columns: minmax(0, 1fr) minmax(65px, 27%);
+    min-height: 144px;
+    gap: .34rem;
+    border-radius: 16px;
+  }
+
+  .bosfor-banner-scene .bosfor-model { height: clamp(70px, 26vw, 130px); }
+  .bosfor-banner-copy h1 { text-wrap: initial; }
+  .bosfor-banner-copy p { font-size: .8rem; }
+  .bosfor-banner-details { gap: .25rem; margin-top: .6rem; }
+  .bosfor-banner-details > span { font-size: .64rem; }
+
+  .bosfor-skill-stage { width: 62px; aspect-ratio: 1; background: transparent; overflow: visible; }
+  .studio-shell[data-theme="default"] .bosfor-skill-stage { background: transparent; }
+  .bosfor-skill-stage::before { inset: 72% 10% 11%; }
+  .bosfor-skill-stage .bosfor-model { inset: 0; width: 100%; height: 100%; }
+  .bosfor-skill { padding-top: .24rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bosfor-banner-scene .bosfor-model,
+  .bosfor-skill-stage .bosfor-model { transition: none; }
+  .bosfor-section-banner:hover .bosfor-banner-scene .bosfor-model,
+  .bosfor-skill:is(:hover, :focus-visible) .bosfor-model { transform: none; }
+}

@@ -1,0 +1,106 @@
+.bosfor-panel,
+.bosfor-dialog {
+  border-color: var(--studio-line);
+  background: linear-gradient(145deg, var(--studio-raised), var(--studio-surface) 70%);
+  color: var(--studio-ink);
+  box-shadow: 0 10px 24px #06142b22;
+}
+
+.bosfor-inset {
+  border-color: var(--studio-line);
+  background: var(--studio-inset);
+  color: var(--studio-ink);
+}
+
+.bosfor-panel-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+}
+
+.bosfor-panel-emblem {
+  display: grid;
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
+  place-items: center;
+  border: 1px solid var(--studio-line);
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 68% 30%, var(--studio-selection), var(--studio-inset));
+}
+
+.bosfor-panel-emblem .bosfor-model { width: 49px; height: 49px; }
+.bosfor-panel-copy { flex: 1; min-width: 8rem; }
+.bosfor-panel-copy h2 { margin: 0; color: var(--studio-ink); font-size: clamp(1rem, 1.6vw, 1.3rem); font-weight: 800; letter-spacing: -.025em; }
+.bosfor-panel-copy p { margin-top: .22rem; color: var(--studio-muted); font-size: .8rem; line-height: 1.42; }
+.bosfor-panel-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+
+.bosfor-badge,
+.bosfor-control,
+.bosfor-tab {
+  border: 1px solid var(--studio-line);
+  background: var(--studio-selection);
+  color: var(--studio-ink);
+}
+
+.bosfor-badge { border-radius: 10px; }
+.bosfor-reward-badge { border-color: #dfa94a73; background: #fff0d0; color: #704315; }
+.studio-shell:not([data-theme="default"]) .bosfor-reward-badge { background: #cfa35424; color: #ffe0a3; }
+.bosfor-control:hover { border-color: var(--studio-accent); }
+.bosfor-track { background: var(--studio-track); }
+.bosfor-progress-fill { background: var(--studio-fill); }
+
+.bosfor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding: .3rem;
+  border: 1px solid var(--studio-line);
+  border-radius: 13px;
+  background: var(--studio-inset);
+}
+
+.bosfor-tab {
+  min-height: 42px;
+  flex: 1 1 auto;
+  padding: .45rem .75rem;
+  border-color: transparent;
+  border-radius: 9px;
+  background: transparent;
+  font-size: .77rem;
+  font-weight: 750;
+}
+
+.bosfor-tab:hover { background: var(--studio-selection); }
+.bosfor-tab[aria-selected="true"] { border-color: var(--studio-line); background: var(--studio-selection); color: var(--studio-accent); }
+
+html.theme-night #root .studio-learning :is(button, a)[class~="bg-teal-700"]:not(:disabled),
+html.theme-night #root .studio-learning :is(button, a)[class~="bg-teal-600"]:not(:disabled),
+html.theme-night #root .studio-learning :is(button, a)[class~="bg-cyan-700"]:not(:disabled),
+html.theme-night #root .studio-learning :is(button, a)[class~="from-teal-600"][class~="to-cyan-500"]:not(:disabled),
+html.theme-night #root .studio-learning :is(button, a)[class~="from-teal-700"][class~="to-cyan-600"]:not(:disabled) {
+  border-color: #fc9f93;
+  background: linear-gradient(180deg, #ff9e91, #fa8178);
+  color: #35172d;
+}
+
+html.theme-night #root .studio-learning [role="tab"][aria-selected="true"]:not(.bosfor-tab),
+html.theme-night body .bosfor-dialog:not(.bosfor-profile) [role="tab"][aria-selected="true"] {
+  border-color: var(--studio-line);
+  background: var(--studio-selection);
+  color: var(--studio-accent);
+}
+
+html.theme-night #root .studio-learning .bosfor-workspace,
+html.theme-night #root .studio-admin .bosfor-workspace {
+  background: linear-gradient(128deg, var(--studio-raised), var(--studio-surface));
+  border-color: var(--studio-line);
+  color: var(--studio-ink);
+}
+
+@media (max-width: 639px) {
+  .bosfor-panel-emblem { width: 50px; height: 50px; }
+  .bosfor-panel-emblem .bosfor-model { width: 42px; height: 42px; }
+  .bosfor-panel-tools { max-width: 100%; }
+}

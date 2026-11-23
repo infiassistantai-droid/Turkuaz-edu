@@ -1,9 +1,10 @@
+import { ModelAsset, PanelHeading, SectionBanner } from '../BosforArtwork'
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
-import { BookmarkPlus, BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleHelp, Plus, RotateCcw, Search, Trash2 } from 'lucide-react'
+import { BookmarkCheck, BookmarkPlus, Check, CheckCircle2, ChevronLeft, ChevronRight, Plus, RotateCcw, Search, Trash2 } from 'lucide-react'
 import TURKUAZ_LUGAT_DATA from '../../data/turkuaz_lugat.json'
 import { STARTER_VOCABULARY, createVocabularyWord, loadSavedVocabulary, loadTurkuazLearnedIds, normalizeWordKey, saveTurkuazLearnedIds, saveVocabularyState } from '../../data/vocabulary'
-import { cn } from '../../lib/utils'
 import { useI18n } from '../../lib/i18n.jsx'
+import '../../bosfor-words.css'
 
 const PAGE_SIZE = 20
 const VOCABULARY_BATCH_MINIMUM = 20
@@ -16,7 +17,11 @@ const CATALOG_WORDS = TURKUAZ_LUGAT_DATA.map((item, index) => ({
   english: String(item.english || item.en || '').trim(),
   level: CEFR_LEVELS.includes(String(item.level || '').toUpperCase()) ? String(item.level).toUpperCase() : '',
   example: String(item.example || '').trim(),
-})).filter((item) => item.word)
+})).filter((item) => item.word).map((entry) => ({
+  ...entry,
+  searchable: normalizeSearch([entry.word, entry.translation, entry.english, entry.example].join(' ')),
+}))
+const AVAILABLE_LEVELS = [...new Set(CATALOG_WORDS.map((word) => word.level).filter(Boolean))].sort()
 
 const FIRST_CATALOG_ID_BY_TERM = new Map()
 for (const item of CATALOG_WORDS) {
@@ -47,49 +52,32 @@ function normalizeSearch(value) {
     .trim()
 }
 
-export function Flashcard({ word, language = 'uz', flipped, onFlip, dark = false }) {
+export function Flashcard({ word, language = 'uz', flipped, onFlip }) {
   const { t } = useI18n()
-  const translation = language === 'uz' ? word.uz : word.en || word.uz
+  const translation = (language === 'en' ? word.en || word.uz : word.uz || word.en) || t('words.translationMissing')
+  const label = (flipped ? translation : word.tr) + '. ' + t(flipped ? 'words.card.flipBack' : 'words.card.flip')
   return (
-    <button
-      type="button"
-      onClick={onFlip}
-      aria-label={t(flipped ? 'words.card.flipBack' : 'words.card.flip')}
-      aria-pressed={flipped}
-      className="group w-full rounded-3xl text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal-500/25"
-    >
-      <span className="block [perspective:1200px]">
-        <span className={cn(
-          'relative block min-h-[280px] w-full rounded-3xl transition-transform duration-500 ease-out [transform-style:preserve-3d] sm:min-h-[340px]',
-          flipped && '[transform:rotateY(180deg)]',
-        )}>
-          <span aria-hidden={flipped} className={cn(
-            'absolute inset-0 flex min-h-[280px] flex-col items-center justify-center overflow-hidden rounded-3xl border p-7 text-center [backface-visibility:hidden] sm:min-h-[340px] sm:p-10',
-            dark ? 'border-white/10 bg-slate-900 text-white shadow-2xl shadow-black/20' : 'border-teal-100 bg-white text-slate-900 shadow-xl shadow-teal-950/10',
-          )}>
-            <span className={cn('rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[.18em]', dark ? 'bg-teal-300/10 text-teal-200' : 'bg-teal-50 text-teal-800')}>{t('words.card.front')}</span>
-            <span lang="tr" className="mt-7 font-serif text-4xl font-black tracking-tight sm:text-5xl">{word.tr}</span>
-            <span className={cn('mt-5 inline-flex items-center gap-2 text-xs font-semibold', dark ? 'text-white/55' : 'text-slate-500')}><CircleHelp className="size-4" />{t('words.card.tapHint')}</span>
-            <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 size-40 rounded-full bg-teal-400/10 blur-3xl transition group-hover:bg-teal-400/20" />
-          </span>
-          <span aria-hidden={!flipped} className={cn(
-            'absolute inset-0 flex min-h-[280px] flex-col items-center justify-center overflow-hidden rounded-3xl border p-7 text-center [transform:rotateY(180deg)] [backface-visibility:hidden] sm:min-h-[340px] sm:p-10',
-            dark ? 'border-emerald-300/15 bg-slate-900 text-white shadow-2xl shadow-black/20' : 'border-emerald-100 bg-white text-slate-900 shadow-xl shadow-emerald-950/10',
-          )}>
-            <span className={cn('rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[.18em]', dark ? 'bg-emerald-300/10 text-emerald-200' : 'bg-emerald-50 text-emerald-800')}>{t('words.card.back')}</span>
-            <span className={cn('mt-7 font-serif text-3xl font-black sm:text-4xl', dark ? 'text-emerald-100' : 'text-emerald-800')}>{translation || t('words.translationMissing')}</span>
-            {language !== 'uz' && word.uz && <span className={cn('mt-2 text-sm font-semibold', dark ? 'text-white/55' : 'text-slate-500')}>{word.uz}</span>}
-            <span lang="tr" className={cn('mt-5 text-sm font-bold', dark ? 'text-white/65' : 'text-slate-500')}>{word.tr}</span>
-          </span>
+    <button type="button" onClick={onFlip} aria-label={label} aria-pressed={flipped} className="words-flashcard">
+      <span className="words-card-inner" data-flipped={flipped}>
+        <span className="words-card-face" aria-hidden={flipped}>
+          <ModelAsset name="lugat" className="size-14 sm:size-16" />
+          <span lang="tr" className="text-3xl font-extrabold sm:text-4xl">{word.tr}</span>
+          <span className="words-muted text-xs font-semibold">{t('words.card.tapHint')}</span>
+        </span>
+        <span className="words-card-face words-card-back" aria-hidden={!flipped}>
+          <span className="words-muted text-xs font-bold">{t('words.card.back')}</span>
+          <span className="text-3xl font-extrabold sm:text-4xl">{translation}</span>
+          <span lang="tr" className="words-muted text-sm font-semibold">{word.tr}</span>
         </span>
       </span>
     </button>
   )
 }
 
-export default function Kelimeler({ onSavedWordsChange, onBatchComplete, onNewQuestWord, onToast, isPremium = false, dark = false }) {
+
+export default function Kelimeler({ onSavedWordsChange, onBatchComplete, onNewQuestWord, onToast }) {
   const { language, t } = useI18n()
-  const isDark = Boolean(isPremium || dark)
+  const [view, setView] = useState('catalog')
   const [words, setWords] = useState(loadSavedVocabulary)
   const [queue, setQueue] = useState(() => loadSavedVocabulary().map((word) => word.id))
   const [learnedCatalogIds, setLearnedCatalogIds] = useState(loadInitialCatalogLearnedIds)
@@ -100,25 +88,27 @@ export default function Kelimeler({ onSavedWordsChange, onBatchComplete, onNewQu
   const [searchQuery, setSearchQuery] = useState('')
   const deferredSearchQuery = useDeferredValue(searchQuery)
   const [levelFilter, setLevelFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const practiceBatchRef = useRef(null)
+  const practiceRef = useRef(null)
+  const resultsRef = useRef(null)
 
   const uniqueSavedCount = useMemo(() => new Set(words.map((word) => normalizeWordKey(word.tr))).size, [words])
   const learnedCount = useMemo(() => words.filter((word) => word.learned).length, [words])
   const current = words.find((word) => word.id === queue[0]) || null
-  const availableLevels = useMemo(() => [...new Set(CATALOG_WORDS.map((word) => word.level).filter(Boolean))].sort(), [])
   const learnedIdSet = useMemo(() => new Set(learnedCatalogIds), [learnedCatalogIds])
   const catalogLearnedCount = useMemo(() => CATALOG_WORDS.filter((word) => learnedIdSet.has(word.id)).length, [learnedIdSet])
 
   const normalizedQuery = normalizeSearch(deferredSearchQuery)
   const filteredCatalog = useMemo(() => CATALOG_WORDS.filter((word) => {
     if (levelFilter && word.level !== levelFilter) return false
-    if (!normalizedQuery) return true
-    const searchable = normalizeSearch([word.word, word.translation, word.english, word.example].join(' '))
-    return searchable.includes(normalizedQuery)
-  }), [levelFilter, normalizedQuery])
+    if (statusFilter !== 'all' && learnedIdSet.has(word.id) !== (statusFilter === 'learned')) return false
+    return word.searchable.includes(normalizedQuery)
+  }), [levelFilter, learnedIdSet, normalizedQuery, statusFilter])
   const totalPages = Math.max(1, Math.ceil(filteredCatalog.length / PAGE_SIZE))
-  const visibleCatalog = filteredCatalog.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const page = Math.min(currentPage, totalPages)
+  const visibleCatalog = filteredCatalog.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   useEffect(() => {
     saveVocabularyState(words)
@@ -131,7 +121,7 @@ export default function Kelimeler({ onSavedWordsChange, onBatchComplete, onNewQu
 
   useEffect(() => {
     setCurrentPage(1)
-  }, [normalizedQuery, levelFilter])
+  }, [normalizedQuery, levelFilter, statusFilter])
 
   useEffect(() => {
     if (currentPage > totalPages) setCurrentPage(totalPages)
@@ -240,211 +230,198 @@ export default function Kelimeler({ onSavedWordsChange, onBatchComplete, onNewQu
   }
 
   const restartPractice = () => {
+    practiceBatchRef.current = null
     setQueue(words.map((word) => word.id))
     setFlipped(false)
   }
 
   const removeSavedWord = (wordId) => {
+    if (practiceBatchRef.current?.wordIds.includes(wordId)) practiceBatchRef.current = null
     setWords((previous) => previous.filter((word) => word.id !== wordId))
     setQueue((previous) => previous.filter((id) => id !== wordId))
     if (queue[0] === wordId) setFlipped(false)
   }
 
-  const panel = isDark ? 'border-white/10 bg-slate-950/55 text-white' : 'border-slate-200 bg-white text-slate-900'
-  const muted = isDark ? 'text-white/60' : 'text-slate-500'
-  const field = isDark ? 'border-white/10 bg-black/30 text-white placeholder:text-white/35 focus:border-teal-300/50' : 'border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-teal-500'
+  const savedTerms = new Set(words.map((word) => normalizeWordKey(word.tr)))
+  const tabs = [
+    ['catalog', 'words.view.catalog'],
+    ['saved', 'words.view.saved'],
+    ['practice', 'words.view.practice'],
+  ]
+
+  const saveCatalogWord = (entry) => appendWords([
+    createVocabularyWord({ tr: entry.word, uz: entry.translation, en: entry.english }, 'catalog-' + entry.id),
+  ])
+
+  const openPractice = (word) => {
+    setQueue((previous) => [word.id, ...previous.filter((id) => id !== word.id)])
+    setFlipped(false)
+    setNotice('')
+    setView('practice')
+    requestAnimationFrame(() => practiceRef.current?.focus())
+  }
+
+  const changePage = (delta) => {
+    setCurrentPage((page) => Math.min(totalPages, Math.max(1, page + delta)))
+    requestAnimationFrame(() => resultsRef.current?.focus())
+  }
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-6 pb-10" aria-label={t('words.title')}>
-      <header className={cn('flex flex-wrap items-center justify-between gap-4 rounded-3xl border p-5 sm:p-7', panel)}>
-        <div className="flex items-center gap-4">
-          <span className={cn('grid size-12 place-items-center rounded-2xl', isDark ? 'bg-teal-300/10 text-teal-200' : 'bg-teal-50 text-teal-700')}><BookOpen className="size-6" /></span>
-          <div>
-            <h1 className="text-2xl font-black tracking-tight sm:text-3xl">{t('words.title')}</h1>
-            <p className={cn('mt-1 text-sm', muted)}>{t('words.subtitle')}</p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <div className={cn('min-w-24 rounded-2xl border px-4 py-2.5 text-center', isDark ? 'border-white/10 bg-white/[.04]' : 'border-slate-100 bg-slate-50')}>
-            <div className="text-xl font-black tabular-nums">{uniqueSavedCount}</div><div className={cn('text-[10px] font-bold uppercase tracking-wide', muted)}>{t('words.stats.saved')}</div>
-          </div>
-          <div className={cn('min-w-24 rounded-2xl border px-4 py-2.5 text-center', isDark ? 'border-white/10 bg-white/[.04]' : 'border-slate-100 bg-slate-50')}>
-            <div className="text-xl font-black tabular-nums">{learnedCount}</div><div className={cn('text-[10px] font-bold uppercase tracking-wide', muted)}>{t('words.stats.learned')}</div>
-          </div>
-        </div>
-      </header>
+    <section className="bosfor-words mx-auto max-w-6xl space-y-4" aria-labelledby="words-title">
+      <SectionBanner name="lugat" titleId="words-title" title={t('words.title')} description={t('words.subtitle')}>
+        <span>{uniqueSavedCount} {t('words.stats.saved')}</span>
+      </SectionBanner>
 
-      {notice && <p role="status" className={cn('rounded-xl border px-4 py-2.5 text-sm font-semibold', isDark ? 'border-emerald-300/15 bg-emerald-300/[.05] text-emerald-100' : 'border-emerald-100 bg-emerald-50 text-emerald-800')}>{notice}</p>}
+      <div className="bosfor-tabs words-tabs" role="group" aria-label={t('words.view.navigation')}>
+        {tabs.map(([id, label]) => (
+          <button key={id} type="button" className="bosfor-tab" aria-pressed={view === id} onClick={() => { setView(id); setNotice('') }}>
+            {t(label)}
+          </button>
+        ))}
+      </div>
+      {notice && <p role="status" className="bosfor-inset rounded-xl border px-4 py-2.5 text-sm font-semibold">{notice}</p>}
 
-      <section className={cn('overflow-hidden rounded-3xl border p-4 sm:p-6', panel)} aria-label={t('words.catalog.title')}>
-        <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-black tracking-tight sm:text-2xl">{t('words.catalog.title')}</h2>
-            <p className={cn('mt-1 text-sm', muted)}>{t('words.catalog.subtitle', { count: CATALOG_WORDS.length })}</p>
+      {view === 'catalog' && (
+        <section className="bosfor-panel rounded-2xl border p-4 sm:p-6" aria-labelledby="words-catalog">
+          <PanelHeading name="lugat" titleId="words-catalog" title={t('words.catalog.title')}>
+            <span className="bosfor-badge px-2.5 py-1.5 text-xs font-bold">{catalogLearnedCount}/{CATALOG_WORDS.length} {t('words.stats.learned')}</span>
+          </PanelHeading>
+          <div className="bosfor-track mt-4 h-2 overflow-hidden rounded-full" role="progressbar" aria-label={t('words.catalog.progressLabel')} aria-valuemin={0} aria-valuemax={CATALOG_WORDS.length} aria-valuenow={catalogLearnedCount}>
+            <div className="bosfor-progress-fill h-full rounded-full" style={{ width: (catalogLearnedCount / CATALOG_WORDS.length) * 100 + '%' }} />
           </div>
-          <div className={cn('min-w-44 rounded-2xl border px-4 py-2.5 text-center', isDark ? 'border-emerald-300/15 bg-emerald-300/[.05]' : 'border-emerald-100 bg-emerald-50/70')}>
-            <div className="text-xl font-black tabular-nums">{catalogLearnedCount} / {CATALOG_WORDS.length}</div>
-            <div className={cn('text-[10px] font-bold uppercase tracking-wide', muted)}>{t('words.catalog.progressLabel')}</div>
-          </div>
-        </div>
-        <div className={cn('mb-5 h-2 overflow-hidden rounded-full', isDark ? 'bg-white/10' : 'bg-slate-100')} role="progressbar" aria-label={t('words.catalog.progressLabel')} aria-valuemin={0} aria-valuemax={CATALOG_WORDS.length} aria-valuenow={catalogLearnedCount}>
-          <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-[width] duration-300" style={{ width: `${Math.min(100, (catalogLearnedCount / CATALOG_WORDS.length) * 100)}%` }} />
-        </div>
-
-        <div className="mb-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-          <label className="relative block">
-            <span className="sr-only">{t('words.catalog.searchLabel')}</span>
-            <Search className={cn('pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2', muted)} />
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder={t('words.catalog.searchPlaceholder')}
-              className={cn('w-full rounded-xl border py-3 pl-10 pr-4 text-sm outline-none transition focus:ring-2 focus:ring-teal-500/20', field)}
-            />
-          </label>
-          {availableLevels.length > 0 ? (
-            <label className="flex items-center gap-2">
-              <span className={cn('text-xs font-bold', muted)}>{t('words.catalog.levelLabel')}</span>
-              <select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} className={cn('min-w-36 rounded-xl border px-3 py-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-teal-500/20', field)}>
-                <option value="">{t('words.catalog.allLevels')}</option>
-                {availableLevels.map((level) => <option key={level} value={level}>{level}</option>)}
-              </select>
+          <div className="mt-4 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
+            <label className="relative min-w-0">
+              <span className="sr-only">{t('words.catalog.searchLabel')}</span>
+              <Search className="words-muted pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2" aria-hidden="true" />
+              <input type="search" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder={t('words.catalog.searchPlaceholder')} className="words-field bosfor-inset w-full rounded-xl border py-2.5 pe-3 ps-9 text-sm" />
             </label>
-          ) : (
-            <p className={cn('self-center text-xs', muted)}>{t('words.catalog.levelsUnavailable')}</p>
-          )}
-        </div>
-
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <p className={cn('text-xs font-semibold', muted)}>{t('words.catalog.results', { count: filteredCatalog.length })}</p>
-          <p className={cn('text-xs', muted)}>{t('words.catalog.pageOf', { page: currentPage, pages: totalPages })}</p>
-        </div>
-
-        {visibleCatalog.length > 0 ? (
-          <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {visibleCatalog.map((entry) => {
-              const isLearned = learnedIdSet.has(entry.id)
-              return (
-                <li key={entry.id} className={cn('flex min-w-0 flex-col rounded-2xl border p-4 transition-colors', isDark ? 'border-white/10 bg-white/[.025] hover:bg-white/[.045]' : 'border-slate-200 bg-slate-50/60 hover:bg-white hover:shadow-md hover:shadow-slate-900/5')}>
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 lang="tr" className="min-w-0 break-words text-lg font-black tracking-tight">{entry.word}</h3>
-                    <span className={cn('shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide', entry.level ? isDark ? 'bg-indigo-300/10 text-indigo-100' : 'bg-indigo-50 text-indigo-700' : isDark ? 'bg-white/[.06] text-white/45' : 'bg-slate-100 text-slate-500')}>
-                      {entry.level || t('words.catalog.levelUnknown')}
-                    </span>
-                  </div>
-                  <p className={cn('mt-3 text-base font-bold', isDark ? 'text-teal-100' : 'text-teal-800')}><span className={cn('mr-1 text-[10px] font-bold uppercase tracking-wide', muted)}>{t('words.catalog.uzbekLabel')}</span>{entry.translation || '—'}</p>
-                  {entry.english && <p className={cn('mt-1 text-xs', muted)}>{entry.english}</p>}
-                  <div className={cn('mt-4 flex-1 rounded-xl border px-3 py-2.5', isDark ? 'border-white/[.07] bg-black/15' : 'border-slate-100 bg-white/80')}>
-                    <p className={cn('text-[10px] font-extrabold uppercase tracking-wider', muted)}>{t('words.catalog.exampleLabel')}</p>
-                    <p className={cn('mt-1 text-xs leading-relaxed', entry.example ? '' : muted)}>{entry.example || t('words.catalog.exampleUnavailable')}</p>
-                  </div>
-                  <button
-                    type="button"
-                    disabled={isLearned}
-                    onClick={() => markCatalogWordLearned(entry)}
-                    className={cn('mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-extrabold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/20 disabled:cursor-default', isLearned ? isDark ? 'bg-emerald-300/10 text-emerald-100' : 'bg-emerald-50 text-emerald-800' : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-900/10 hover:-translate-y-0.5 hover:from-emerald-700 hover:to-teal-700 active:scale-[.98]')}
-                  >
-                    {isLearned ? <CheckCircle2 className="size-4" /> : <Check className="size-4" />}
-                    {t(isLearned ? 'words.catalog.learned' : 'words.catalog.markLearned')}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        ) : (
-          <div className={cn('rounded-2xl border border-dashed p-8 text-center text-sm', isDark ? 'border-white/15 text-white/55' : 'border-slate-200 text-slate-500')}>
-            <Search className="mx-auto size-7 opacity-50" />
-            <p className="mt-2 font-semibold">{t('words.catalog.noResults')}</p>
+            <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label={t('words.view.status')} className="words-field bosfor-inset min-w-0 rounded-xl border px-2.5 text-sm">
+              <option value="all">{t('words.view.all')}</option>
+              <option value="unlearned">{t('words.view.unlearned')}</option>
+              <option value="learned">{t('words.learned')}</option>
+            </select>
+            {AVAILABLE_LEVELS.length > 0 && (
+              <select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} aria-label={t('words.catalog.levelLabel')} className="words-field bosfor-inset min-w-0 rounded-xl border px-2.5 text-sm">
+                <option value="">{t('words.catalog.allLevels')}</option>
+                {AVAILABLE_LEVELS.map((level) => <option key={level} value={level}>{level}</option>)}
+              </select>
+            )}
           </div>
-        )}
+          <p ref={resultsRef} tabIndex={-1} className="words-muted words-focus mb-3 mt-3 text-xs font-semibold" aria-live="polite">{t('words.catalog.results', { count: filteredCatalog.length })}</p>
+          {visibleCatalog.length ? (
+            <ul className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+              {visibleCatalog.map((entry) => {
+                const learned = learnedIdSet.has(entry.id)
+                const saved = savedTerms.has(normalizeWordKey(entry.word))
+                return (
+                  <li key={entry.id} className="words-catalog-card bosfor-inset flex min-w-0 flex-col rounded-xl border p-3.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 lang="tr" className="text-lg font-extrabold">{entry.word}</h3>
+                      {entry.level && <span className="bosfor-badge px-2 py-0.5 text-xs font-bold">{entry.level}</span>}
+                    </div>
+                    {entry.translation && <p lang="uz" className="mt-0.5 text-sm font-semibold">{entry.translation}</p>}
+                    {entry.english && <p lang="en" className="words-muted mt-0.5 text-xs">{entry.english}</p>}
+                    {entry.example && <p lang="tr" className="words-muted mt-2 text-xs italic">{entry.example}</p>}
+                    <div className="mt-auto flex flex-wrap gap-2 pt-3">
+                      <button type="button" onClick={() => markCatalogWordLearned(entry)} disabled={learned} className="bosfor-control words-action words-learned" data-learned={learned}>
+                        {learned ? <CheckCircle2 className="size-4" aria-hidden="true" /> : <Check className="size-4" aria-hidden="true" />}{t(learned ? 'words.catalog.learned' : 'words.catalog.markLearned')}
+                      </button>
+                      <button type="button" onClick={() => saveCatalogWord(entry)} disabled={saved} aria-label={t(saved ? 'words.starters.saved' : 'words.starters.save', { word: entry.word })} className="bosfor-control words-action">
+                        {saved ? <BookmarkCheck className="size-4" aria-hidden="true" /> : <BookmarkPlus className="size-4" aria-hidden="true" />}{t(saved ? 'words.view.savedLabel' : 'words.view.save')}
+                      </button>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : (
+            <p className="bosfor-inset words-muted rounded-xl border p-5 text-center text-sm">{t('words.catalog.noResults')}</p>
+          )}
+          {totalPages > 1 && (
+            <nav className="mt-4 flex flex-wrap items-center justify-between gap-2" aria-label={t('words.catalog.pagination')}>
+              <button type="button" onClick={() => changePage(-1)} disabled={page === 1} className="bosfor-control words-action"><ChevronLeft className="size-4" aria-hidden="true" />{t('words.catalog.previous')}</button>
+              <span className="words-muted text-xs tabular-nums">{t('words.catalog.pageOf', { page, pages: totalPages })}</span>
+              <button type="button" onClick={() => changePage(1)} disabled={page === totalPages} className="bosfor-control words-action">{t('words.catalog.next')}<ChevronRight className="size-4" aria-hidden="true" /></button>
+            </nav>
+          )}
+        </section>
+      )}
 
-        <nav className="mt-5 flex items-center justify-between gap-3" aria-label={t('words.catalog.pagination')}>
-          <button type="button" disabled={currentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} className={cn('inline-flex min-h-11 min-w-[44px] items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
-            <ChevronLeft className="size-4" />{t('words.catalog.previous')}
-          </button>
-          <span className={cn('text-xs font-semibold tabular-nums', muted)}>{t('words.catalog.pageOf', { page: currentPage, pages: totalPages })}</span>
-          <button type="button" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} className={cn('inline-flex min-h-11 min-w-[44px] items-center gap-1 rounded-xl border px-3 py-2 text-xs font-extrabold transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-40', isDark ? 'border-white/10 bg-white/[.04] hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-50')}>
-            {t('words.catalog.next')}<ChevronRight className="size-4" />
-          </button>
-        </nav>
-        <p className={cn('mt-3 text-[11px] leading-relaxed', muted)}>{t('words.catalog.sourceLimitations')}</p>
-      </section>
+      {view === 'saved' && (
+        <section className="bosfor-panel rounded-2xl border p-4 sm:p-6" aria-labelledby="words-saved">
+          <PanelHeading name="lugat" titleId="words-saved" title={t('words.saved.title')}>
+            <span className="bosfor-badge px-2.5 py-1.5 text-xs font-bold">{learnedCount}/{uniqueSavedCount} {t('words.stats.learned')}</span>
+          </PanelHeading>
+          <details className="bosfor-inset mt-4 rounded-xl border">
+            <summary className="words-disclosure">{t('words.form.title')}</summary>
+            <form onSubmit={addCustomWord} className="grid gap-2.5 px-3 pb-3 sm:grid-cols-3">
+              {['tr', 'uz', 'en'].map((code, index) => {
+                const key = ['turkish', 'uzbek', 'english'][index]
+                return <label key={code} className="text-xs font-bold">{t('words.form.' + key)}<input lang={code} value={form[code]} onChange={(event) => setForm((value) => ({ ...value, [code]: event.target.value }))} className="words-field bosfor-inset mt-1.5 w-full rounded-xl border px-3 text-sm" placeholder={t('words.form.' + key + 'Placeholder')} /></label>
+              })}
+              <div className="flex flex-wrap items-center gap-2 sm:col-span-3">
+                <button type="submit" className="bosfor-action words-action"><Plus className="size-4" aria-hidden="true" />{t('words.form.add')}</button>
+                {formError && <p role="alert" className="text-xs font-semibold">{formError}</p>}
+              </div>
+            </form>
+          </details>
+          {words.length ? (
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {words.map((word) => <li key={word.id} className="bosfor-inset flex min-w-0 items-center gap-2 rounded-xl border p-2.5">
+                <button type="button" onClick={() => openPractice(word)} className="min-h-11 min-w-0 flex-1 text-start" aria-label={t('words.view.practiceWord', { word: word.tr })}>
+                  <span lang="tr" className="block break-words text-sm font-extrabold">{word.tr}</span><span className="words-muted block break-words text-xs">{language === 'en' ? word.en || word.uz : word.uz || word.en}</span>
+                </button>
+                {word.learned && <CheckCircle2 className="size-4 shrink-0" aria-label={t('words.learned')} />}
+                <button type="button" onClick={() => removeSavedWord(word.id)} aria-label={t('words.saved.remove', { word: word.tr })} className="words-remove bosfor-control grid size-11 shrink-0 place-items-center rounded-lg"><Trash2 className="size-4" aria-hidden="true" /></button>
+              </li>)}
+            </ul>
+          ) : <p className="words-muted mt-4 text-sm">{t('words.saved.empty')}</p>}
+          <details className="bosfor-inset mt-4 rounded-xl border">
+            <summary className="words-disclosure">{t('words.starters.title')}</summary>
+            <div className="px-3 pb-3">
+              <button type="button" onClick={saveAllStarterWords} className="bosfor-control words-action"><BookmarkPlus className="size-4" aria-hidden="true" />{t('words.saved.addAll')}</button>
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                {STARTER_VOCABULARY.map((word) => {
+                  const saved = savedTerms.has(normalizeWordKey(word.tr))
+                  return <li key={word.id} className="bosfor-inset flex min-w-0 items-center gap-2 rounded-xl border px-3 py-1">
+                    <span className="min-w-0 flex-1"><span lang="tr" className="block break-words text-sm font-extrabold">{word.tr}</span><span className="words-muted block text-xs">{language === 'en' ? word.en || word.uz : word.uz || word.en}</span></span>
+                    <button type="button" disabled={saved} onClick={() => saveStarterWord(word)} aria-label={t(saved ? 'words.starters.saved' : 'words.starters.save', { word: word.tr })} className="bosfor-control words-action">
+                      {saved ? <Check className="size-4" aria-hidden="true" /> : <BookmarkPlus className="size-4" aria-hidden="true" />}
+                    </button>
+                  </li>
+                })}
+              </ul>
+            </div>
+          </details>
+        </section>
+      )}
 
-      <section className={cn('rounded-3xl border p-4 sm:p-6', panel)} aria-label={t('words.practice.title')}>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div><h2 className="text-lg font-black">{t('words.practice.title')}</h2><p className={cn('mt-1 text-xs', muted)}>{t('words.practice.subtitle')}</p></div>
-          {queue.length > 0 && <span className={cn('rounded-full px-3 py-1 text-xs font-extrabold tabular-nums', isDark ? 'bg-teal-300/10 text-teal-100' : 'bg-teal-50 text-teal-800')}>{t('words.queueRemaining', { count: queue.length })}</span>}
-        </div>
-
-        {current ? (
-          <div className="mx-auto max-w-2xl">
-            <Flashcard word={current} language={language} flipped={flipped} onFlip={() => setFlipped((value) => !value)} dark={isDark} />
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <button type="button" onClick={reviewAgain} className={cn('min-h-16 rounded-2xl border-2 px-5 py-4 text-base font-black transition hover:-translate-y-0.5 active:scale-[.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/20', isDark ? 'border-amber-300/25 bg-amber-300/[.06] text-amber-100 hover:bg-amber-300/10' : 'border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100')}>
-                <RotateCcw className="mr-2 inline size-5" />{t('words.reviewAgain')}
-              </button>
-              <button type="button" onClick={markLearned} className="min-h-16 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-4 text-base font-black text-white shadow-lg shadow-emerald-900/15 transition hover:-translate-y-0.5 hover:from-emerald-700 hover:to-teal-700 active:scale-[.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/25">
-                <Check className="mr-2 inline size-5" />{t('words.gotIt')}
+      {view === 'practice' && (
+        <section ref={practiceRef} tabIndex={-1} className="bosfor-panel words-focus rounded-2xl border p-4 sm:p-6" aria-labelledby="words-practice">
+          <PanelHeading name="quests" titleId="words-practice" title={t('words.practice.title')}>
+            {queue.length > 0 && <span className="bosfor-badge px-2.5 py-1.5 text-xs font-bold">{t('words.queueRemaining', { count: queue.length })}</span>}
+          </PanelHeading>
+          {current ? (
+            <div className="mx-auto mt-4 max-w-2xl">
+              <Flashcard word={current} language={language} flipped={flipped} onFlip={() => setFlipped((value) => !value)} />
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button type="button" onClick={reviewAgain} className="bosfor-control words-action"><RotateCcw className="size-4" aria-hidden="true" />{t('words.reviewAgain')}</button>
+                <button type="button" onClick={markLearned} className="bosfor-action words-action"><Check className="size-4" aria-hidden="true" />{t('words.gotIt')}</button>
+              </div>
+              <p className="words-muted mt-3 text-center text-xs">{t('words.batch.rewardHint', { count: VOCABULARY_BATCH_MINIMUM, xp: 15 })}</p>
+            </div>
+          ) : (
+            <div className="bosfor-inset mt-4 rounded-xl border p-5 text-center">
+              <ModelAsset name={words.length ? 'medal' : 'lugat'} className="size-14" />
+              <h3 className="mt-2 font-extrabold">{t(words.length ? 'words.practice.complete' : 'words.practice.empty')}</h3>
+              <button type="button" onClick={words.length ? restartPractice : () => setView('catalog')} className="bosfor-action words-action mt-3">
+                {t(words.length ? 'words.practice.restart' : 'words.view.catalog')}
               </button>
             </div>
-            <p className={cn('mt-3 text-center text-xs', muted)}>{t('words.batch.rewardHint', { count: VOCABULARY_BATCH_MINIMUM, xp: 15 })}</p>
-          </div>
-        ) : words.length > 0 ? (
-          <div className={cn('rounded-2xl border border-dashed p-8 text-center', isDark ? 'border-white/15 bg-white/[.02]' : 'border-slate-200 bg-slate-50/60')}>
-            <CheckCircle2 className={cn('mx-auto size-9', isDark ? 'text-emerald-200' : 'text-emerald-600')} />
-            <h3 className="mt-3 text-lg font-black">{t('words.practice.complete')}</h3>
-            <p className={cn('mx-auto mt-1 max-w-md text-sm', muted)}>{t('words.practice.completeHint')}</p>
-            <button type="button" onClick={() => { practiceBatchRef.current = null; restartPractice() }} className="mt-4 rounded-xl bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-teal-800"><RotateCcw className="mr-2 inline size-4" />{t('words.practice.restart')}</button>
-          </div>
-        ) : (
-          <div className={cn('rounded-2xl border border-dashed p-8 text-center', isDark ? 'border-white/15 bg-white/[.02]' : 'border-slate-200 bg-slate-50/60')}>
-            <BookmarkPlus className={cn('mx-auto size-9', isDark ? 'text-teal-200' : 'text-teal-700')} />
-            <h3 className="mt-3 text-lg font-black">{t('words.practice.empty')}</h3>
-            <p className={cn('mx-auto mt-1 max-w-md text-sm', muted)}>{t('words.practice.emptyHint')}</p>
-            <button type="button" onClick={saveAllStarterWords} className="mt-4 rounded-xl bg-teal-700 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-teal-800"><BookmarkPlus className="mr-2 inline size-4" />{t('words.saved.addAll')}</button>
-          </div>
-        )}
-      </section>
-
-      <section className={cn('rounded-3xl border p-4 sm:p-6', panel)}>
-        <div className="mb-4"><h2 className="text-lg font-black">{t('words.form.title')}</h2><p className={cn('mt-1 text-xs', muted)}>{t('words.form.subtitle')}</p></div>
-        <form onSubmit={addCustomWord} className="grid gap-3 sm:grid-cols-3">
-          <label className="text-xs font-bold">{t('words.form.turkish')}<input value={form.tr} onChange={(event) => setForm((value) => ({ ...value, tr: event.target.value }))} className={cn('mt-1.5 w-full rounded-xl border px-3 py-3 text-sm outline-none transition focus:ring-2 focus:ring-teal-500/20', field)} placeholder={t('words.form.turkishPlaceholder')} /></label>
-          <label className="text-xs font-bold">{t('words.form.uzbek')}<input value={form.uz} onChange={(event) => setForm((value) => ({ ...value, uz: event.target.value }))} className={cn('mt-1.5 w-full rounded-xl border px-3 py-3 text-sm outline-none transition focus:ring-2 focus:ring-teal-500/20', field)} placeholder={t('words.form.uzbekPlaceholder')} /></label>
-          <label className="text-xs font-bold">{t('words.form.english')}<input value={form.en} onChange={(event) => setForm((value) => ({ ...value, en: event.target.value }))} className={cn('mt-1.5 w-full rounded-xl border px-3 py-3 text-sm outline-none transition focus:ring-2 focus:ring-teal-500/20', field)} placeholder={t('words.form.englishPlaceholder')} /></label>
-          <div className="flex flex-wrap items-center gap-3 sm:col-span-3">
-            <button type="submit" className="rounded-xl bg-teal-700 px-4 py-3 text-sm font-extrabold text-white transition hover:bg-teal-800"><Plus className="mr-1.5 inline size-4" />{t('words.form.add')}</button>
-            {formError && <p role="alert" className="text-xs font-semibold text-rose-600 dark:text-rose-300">{formError}</p>}
-          </div>
-        </form>
-      </section>
-
-      <section className={cn('rounded-3xl border p-4 sm:p-6', panel)}>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-black">{t('words.saved.title')}</h2><p className={cn('mt-1 text-xs', muted)}>{t('words.saved.subtitle')}</p></div><button type="button" onClick={saveAllStarterWords} className={cn('rounded-xl border px-3 py-2 text-xs font-extrabold transition', isDark ? 'border-white/10 bg-white/[.04] text-white hover:bg-white/10' : 'border-teal-100 bg-teal-50 text-teal-800 hover:bg-teal-100')}><BookmarkPlus className="mr-1.5 inline size-4" />{t('words.saved.addAll')}</button></div>
-        {words.length > 0 ? <ul className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-          {words.map((word) => <li key={word.id} className={cn('flex min-w-0 items-center gap-2 rounded-xl border px-3 py-2.5', isDark ? 'border-white/10 bg-white/[.03]' : 'border-slate-100 bg-slate-50')}>
-            <button type="button" onClick={() => { setQueue((previous) => previous.includes(word.id) ? previous : [...previous, word.id]); setFlipped(false) }} className="min-w-0 flex-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/30"><span lang="tr" className="block truncate text-sm font-black">{word.tr}</span><span className={cn('block truncate text-xs', muted)}>{language === 'uz' ? word.uz || word.en : word.en || word.uz}</span></button>
-            {word.learned && <CheckCircle2 className="size-4 shrink-0 text-emerald-500" aria-label={t('words.learned')} />}
-            <button type="button" onClick={() => removeSavedWord(word.id)} aria-label={t('words.saved.remove', { word: word.tr })} className={cn('grid size-11 shrink-0 place-items-center rounded-lg transition active:scale-95', isDark ? 'text-white/45 hover:bg-rose-400/10 hover:text-rose-200' : 'text-slate-400 hover:bg-rose-50 hover:text-rose-600')}><Trash2 className="size-4" /></button>
-          </li>)}
-        </ul> : <p className={cn('rounded-xl border border-dashed p-5 text-center text-sm', isDark ? 'border-white/10 text-white/55' : 'border-slate-200 text-slate-500')}>{t('words.saved.empty')}</p>}
-      </section>
-
-      <section className={cn('rounded-3xl border p-4 sm:p-6', panel)}>
-        <div className="mb-4"><h2 className="text-lg font-black">{t('words.starters.title')}</h2><p className={cn('mt-1 text-xs', muted)}>{t('words.starters.subtitle')}</p></div>
-        <ul className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-          {STARTER_VOCABULARY.map((word) => {
-            const saved = words.some((item) => normalizeWordKey(item.tr) === normalizeWordKey(word.tr))
-            return <li key={word.id} className={cn('flex items-center gap-3 rounded-xl border px-3 py-2.5', isDark ? 'border-white/10 bg-white/[.03]' : 'border-slate-100 bg-slate-50')}>
-              <span className="min-w-0 flex-1"><span lang="tr" className="block truncate text-sm font-black">{word.tr}</span><span className={cn('block truncate text-xs', muted)}>{language === 'uz' ? word.uz : word.en}</span></span>
-              <button type="button" disabled={saved} onClick={() => saveStarterWord(word)} aria-label={t(saved ? 'words.starters.saved' : 'words.starters.save', { word: word.tr })} className={cn('grid size-11 shrink-0 place-items-center rounded-xl transition active:scale-95 disabled:cursor-default', saved ? isDark ? 'bg-emerald-300/10 text-emerald-200' : 'bg-emerald-50 text-emerald-700' : isDark ? 'bg-teal-300/10 text-teal-100 hover:bg-teal-300/20' : 'bg-teal-50 text-teal-800 hover:bg-teal-100')}>
-                {saved ? <Check className="size-4" /> : <BookmarkPlus className="size-4" />}
-              </button>
-            </li>
-          })}
-        </ul>
-      </section>
-    </main>
+          )}
+        </section>
+      )}
+    </section>
   )
 }
+

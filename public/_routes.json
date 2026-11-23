@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "include": ["/api/evaluate-writing", "/api/evaluate-writing/"],
+  "exclude": []
+}

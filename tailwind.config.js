@@ -5,6 +5,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        slate: {
+          700: '#2a426b',
+          800: '#1b3157',
+          900: '#0d1e40',
+          950: '#08152f',
+        },
         // Turkish turquoise palette — now mapped to the EXACT Tailwind teal
         // scale so every component renders in the v0 premium design system
         // (teal-600 / teal-700 / cyan-500 gradients, teal chips, teal rings).

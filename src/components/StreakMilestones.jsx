@@ -65,7 +65,7 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
         </header>
       )}
 
-      <div className={cn('grid grid-cols-4 gap-2.5 p-3 sm:grid-cols-6 sm:gap-3 sm:p-4', compact && 'xl:grid-cols-12')}>
+      <div className={cn('grid grid-cols-3 gap-2.5 p-3 min-[420px]:grid-cols-4 sm:grid-cols-6 sm:gap-3 sm:p-4', compact && 'xl:grid-cols-12')}>
         {STREAK_MILESTONES.map((milestone) => {
           const unlocked = unlockedSet.has(milestone.days)
           const visuallyUnlocked = unlocked
@@ -73,6 +73,7 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
           return (
             <button
               key={milestone.id}
+              data-streak-days={milestone.days}
               type="button"
               onClick={() => setSelectedDays(milestone.days)}
               aria-pressed={selected}
@@ -121,7 +122,7 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
                   <Sparkles className={cn('absolute left-0 top-0 size-4 animate-pulse', isPremium ? 'text-yellow-100' : 'text-amber-500')} aria-hidden="true" />
                 )}
               </span>
-              <span className={cn('mt-1 max-w-full truncate text-[10px] font-black tabular-nums sm:text-xs', visuallyUnlocked ? isPremium ? 'text-amber-100' : 'text-amber-800 dark:text-amber-200' : isPremium ? 'text-white/45' : 'text-slate-500 dark:text-slate-400')}>
+              <span className={cn('mt-1 text-center text-[10px] font-black tabular-nums sm:text-xs', visuallyUnlocked ? isPremium ? 'text-amber-100' : 'text-amber-800 dark:text-amber-200' : isPremium ? 'text-white/45' : 'text-slate-500 dark:text-slate-400')}>
                 {milestone.days.toLocaleString(language)} {t('streak.days')}
               </span>
             </button>
@@ -164,7 +165,7 @@ export default function StreakMilestones({ currentStreak = 0, unlockedMilestones
       {winterFeatureEnabled && (
         <div className={cn('mx-3 mb-3 flex flex-col gap-3 rounded-2xl border p-3 sm:mx-4 sm:mb-4 sm:flex-row sm:items-center', isPremium ? 'winter-frost border-sky-100/20 bg-emerald-950/35' : 'border-sky-200 bg-gradient-to-r from-sky-50/90 to-emerald-50/80 dark:border-sky-400/15 dark:from-slate-900 dark:to-emerald-950/30')}>
           <div className="relative grid size-14 shrink-0 place-items-center rounded-xl border border-sky-200/50 bg-sky-100/45 p-1 dark:border-sky-300/20 dark:bg-sky-300/10">
-            <img src="/images/trophies/winter-champion.svg" alt="" className="size-full object-contain" />
+            <img src="/images/trophies/cup-winter.png" alt="" className="size-full object-contain" />
             {winterChampionUnlocked && <Sparkles className="absolute -right-1 -top-1 size-4 animate-pulse text-sky-500" aria-hidden="true" />}
           </div>
           <div className="min-w-0 flex-1">

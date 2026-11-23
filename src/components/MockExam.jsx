@@ -1,24 +1,16 @@
+import { SectionBanner } from './BosforArtwork'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  ArrowLeft, ArrowRight, BookOpenText, Check, CheckCircle2, Clock, FileCheck2,
-  Headphones, Mic, MicOff, Play, RotateCcw, Sparkles, Volume2,
+  ArrowLeft, ArrowRight, Check, Clock, Mic, MicOff, RotateCcw, Volume2,
 } from 'lucide-react'
-import { calculateCertificate, scoreSection, scoreSpeakingParts, scoreWritingTasks } from '../lib/multilevelScoring'
-import { generateMockExam } from '../data/mockExamBank'
+import { scoreSection, scoreSpeakingParts, scoreWritingTasks } from '../lib/multilevelScoring'
 import { MOCK_01 } from '../data/mockDatabase'
 import ReadingMockExam from './MockExam.tsx'
-import MockExamEngine from './DatabaseMockExamEngine.tsx'
 import { cn } from '../lib/utils'
 import { useI18n } from '../lib/i18n.jsx'
 
-const SECTION_KEYS = ['dinleme', 'okuma', 'yazma', 'konusma']
-const SECTION_ICONS = { dinleme: Headphones, okuma: BookOpenText, yazma: FileCheck2, konusma: Mic }
-const SECTION_META = {
-  dinleme: { titleKey: 'mock.section.listen', descriptionKey: 'mock.description.listen' },
-  okuma: { titleKey: 'mock.section.read', descriptionKey: 'mock.description.read' },
-  yazma: { titleKey: 'mock.section.write', descriptionKey: 'mock.description.write' },
-  konusma: { titleKey: 'mock.section.speak', descriptionKey: 'mock.description.speak' },
-}
+const SECTION_MOCK = { id: MOCK_01.id, ...MOCK_01.sections }
+const SECTION_TITLE_KEYS = { dinleme: 'nav.listening', okuma: 'nav.reading', yazma: 'nav.writing', konusma: 'nav.speaking' }
 
 function clock(seconds) {
   const value = Math.max(0, seconds)
@@ -79,168 +71,54 @@ function evaluateWriting(text, prompt) {
   }
 }
 
-export default function MockExam({ sectionResults = {}, onSectionComplete, onExamComplete, initialMode = 'mixed', initialSection = null, onInitialSectionConsumed, onExit }) {
+export default function MockExam({ onSectionComplete, initialMode, initialSection, onExit }) {
   const { t } = useI18n()
-  const [mock, setMock] = useState(null)
-  const [screen, setScreen] = useState('landing')
-  const [activeSection, setActiveSection] = useState(null)
-  const [completedThisMock, setCompletedThisMock] = useState({})
-  const [lastResult, setLastResult] = useState(null)
-  const [readingOnlyMode, setReadingOnlyMode] = useState(initialMode === 'reading')
-  const [databaseEngineMode, setDatabaseEngineMode] = useState(false)
-  const reportedExamRef = useRef(false)
+  const [result, setResult] = useState(null)
+  const [attempt, setAttempt] = useState(0)
 
-  function generateNewMock() {
-    setReadingOnlyMode(false)
-    setMock(generateMockExam())
-    setCompletedThisMock({})
-    setLastResult(null)
-    setActiveSection(null)
-    reportedExamRef.current = false
-    setScreen('overview')
+  if (initialMode === 'reading') {
+    return <ReadingMockExam onComplete={onSectionComplete} onExit={onExit} />
   }
 
-  function openSection(key) {
-    setActiveSection(key)
-    setLastResult(null)
-    setScreen('session')
-  }
-
-  function handleSectionComplete(result) {
-    setLastResult(result)
-    const next = { ...completedThisMock, [result.section]: result }
-    setCompletedThisMock(next)
-    if (SECTION_KEYS.every((key) => next[key])) {
-      const runSignature = SECTION_KEYS.map((key) => next[key].completedAt).join('|')
-      if (runSignature !== reportedExamRef.current) {
-        reportedExamRef.current = runSignature
-        const scaledScores = Object.fromEntries(SECTION_KEYS.map((key) => [key, next[key].scaledScore]))
-        const certificate = calculateCertificate(scaledScores)
-        onExamComplete?.({
-          examId: mock.id,
-          completedAt: new Date().toISOString(),
-          scores: scaledScores,
-          rawScores: Object.fromEntries(SECTION_KEYS.map((key) => [key, next[key].rawScore])),
-          sectionResults: next,
-          overallScore: certificate.average,
-          level: certificate.level,
-          timeSpentSeconds: SECTION_KEYS.reduce((sum, key) => sum + Math.max(0, Number(next[key].durationSeconds ?? next[key].timeUsedSeconds) || 0), 0),
-          correctAnswerCount: ['dinleme', 'okuma'].reduce((sum, key) => sum + Math.max(0, Number(next[key].rawScore) || 0), 0),
-          earnedXp: SECTION_KEYS.reduce((sum, key) => sum + Math.max(0, Number(next[key].durationSeconds ?? next[key].timeUsedSeconds) || 0), 0) >= 60
-            ? 50 + 10 * ['dinleme', 'okuma'].reduce((sum, key) => sum + Math.max(0, Number(next[key].rawScore) || 0), 0)
-            : 0,
-          examTaskType: 'exam:full-mock',
-        })
-      }
-    }
-    onSectionComplete?.(result)
-    setScreen('result')
-  }
-
-  useEffect(() => {
-    if (!initialSection || initialMode === 'reading') return
-    const generatedMock = { id: MOCK_01.id, generatedAt: MOCK_01.createdAt, ...MOCK_01.sections }
-    setReadingOnlyMode(false)
-    setMock(generatedMock)
-    setCompletedThisMock({})
-    setLastResult(null)
-    setActiveSection(initialSection)
-    setScreen('session')
-    reportedExamRef.current = false
-    onInitialSectionConsumed?.()
-  }, [])
-
-  if (readingOnlyMode) {
-    return <ReadingMockExam onComplete={handleSectionComplete} onExit={() => initialMode === 'reading' && onExit ? onExit() : setReadingOnlyMode(false)} />
-  }
-
-  if (databaseEngineMode) {
-    return <MockExamEngine onSectionComplete={(result) => onSectionComplete?.(result)} onExamComplete={(result) => onExamComplete?.(result)} onExit={() => setDatabaseEngineMode(false)} />
-  }
-
-  if (screen === 'session' && mock && activeSection) {
+  if (!result) {
     return (
-      <SectionSession
-        key={`${mock.id}-${activeSection}`}
-        mock={mock}
-        sectionKey={activeSection}
-        onBack={() => setScreen('overview')}
-        onComplete={handleSectionComplete}
-        t={t}
-      />
+      <SectionSession key={initialSection + ':' + attempt} mock={SECTION_MOCK} sectionKey={initialSection} onBack={onExit} onComplete={(value) => {
+        setResult(value)
+        onSectionComplete?.(value)
+        window.scrollTo(0, 0)
+      }} />
     )
   }
 
-  if (screen === 'result' && lastResult) {
-    const Icon = SECTION_ICONS[lastResult.section]
-    return (
-      <div className="mx-auto max-w-3xl space-y-5">
-        <section className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-7 text-white shadow-xl sm:p-9">
-          <div className="flex items-center gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/25"><Icon className="size-6" /></span>
-            <div><p className="text-sm text-white/75">{t('mock.result.title')}</p><h1 className="text-2xl font-extrabold">{t(`skill.${({ dinleme: 'listening', okuma: 'reading', yazma: 'writing', konusma: 'speaking' })[lastResult.section]}`)}</h1></div>
-          </div>
-          <div className="mt-7 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.rawScore')}</p><p className="mt-1 text-3xl font-extrabold">{lastResult.rawScore}<span className="text-base font-medium text-white/70"> / {lastResult.maxRawScore}</span></p></div>
-            <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.result.scaled')}</p><p className="mt-1 text-3xl font-extrabold">{lastResult.scaledScore}<span className="text-base font-medium text-white/70"> / 75</span></p></div>
-            <div className="rounded-2xl border border-white/20 bg-black/15 p-4"><p className="text-xs text-white/70">{t('mock.cefrXp')}</p><p className="mt-1 text-2xl font-extrabold">{lastResult.level} <span className="block text-xs font-semibold text-white/80">{t('mock.sectionXpPending')}</span></p></div>
-          </div>
-          <p className="mt-5 text-sm text-white/80">{t('mock.savedLocally')}</p>
-        </section>
-        {lastResult.partResults && <section className="glass premium-glass rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900"><h2 className="font-bold text-slate-900 dark:text-white">{t('mock.sectionResults')}</h2><div className="mt-3 grid gap-2 sm:grid-cols-2">{lastResult.partResults.map((part) => <div key={part.partId} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800"><span className="text-slate-700 dark:text-slate-200">{part.title}</span><span className="shrink-0 font-bold tabular-nums text-teal-700 dark:text-teal-300">{part.rawScore}/{part.maxRawScore}</span></div>)}</div></section>}
-        {lastResult.taskScores && <section className="glass premium-glass rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900"><h2 className="font-bold text-slate-900 dark:text-white">{t('mock.writingResults')}</h2><div className="mt-3 grid gap-2 sm:grid-cols-2">{lastResult.taskScores.map((score, index) => <div key={index} className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800"><span className="text-slate-700 dark:text-slate-200">{index === 0 ? t('mock.writing.letter') : t('mock.writing.essay')}</span><span className="font-bold tabular-nums text-teal-700 dark:text-teal-300">{score}/{index === 0 ? 12 : 24}</span></div>)}</div></section>}
-        {lastResult.partScores && <section className="glass premium-glass rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900"><h2 className="font-bold text-slate-900 dark:text-white">{t('mock.speakingResults')}</h2><div className="mt-3 grid grid-cols-3 gap-2">{lastResult.partScores.map((score, index) => <div key={index} className="rounded-xl bg-slate-50 p-3 text-center text-sm dark:bg-slate-800"><span className="block text-slate-500 dark:text-slate-400">{t('mock.part', { number: index + 1 })}</span><span className="font-bold tabular-nums text-teal-700 dark:text-teal-300">{score}/12</span></div>)}</div></section>}
-        <div className="flex flex-wrap justify-between gap-3">
-          <button type="button" onClick={() => setScreen('overview')} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><ArrowLeft className="size-4"/>{t('mock.backPlan')}</button>
-          <button type="button" onClick={() => mock && generateNewMock()} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white"><RotateCcw className="size-4"/>{t('mock.startNew')}</button>
+  const scoreLabel = initialSection === 'yazma'
+    ? 'examsHub.skills.writingScore'
+    : initialSection === 'konusma' ? 'examsHub.skills.speakingScore' : 'mock.result.scaled'
+  const breakdown = result.partResults?.map((part) => ({ id: part.partId, title: part.title, value: part.rawScore, maximum: part.maxRawScore }))
+    || result.taskScores?.map((value, index) => ({ id: index, title: t(index === 0 ? 'mock.writing.letter' : 'mock.writing.essay'), value, maximum: index === 0 ? 12 : 24 }))
+    || result.partScores?.map((value, index) => ({ id: index, title: t('mock.part', { number: index + 1 }), value, maximum: 12 }))
+
+  return (
+    <section className="exam-center mx-auto max-w-4xl space-y-4" aria-labelledby="exam-skill-result">
+      <SectionBanner name={initialSection} titleId="exam-skill-result" title={t('mock.result.title')} description={t(SECTION_TITLE_KEYS[initialSection])} />
+      <section className="bosfor-panel rounded-2xl border p-4 sm:p-6">
+        <dl className="grid gap-2 sm:grid-cols-2">
+          <div className="bosfor-inset rounded-xl border p-3"><dt className="exam-muted text-sm">{t('mock.rawScore')}</dt><dd className="text-2xl font-extrabold tabular-nums">{result.rawScore}/{result.maxRawScore}</dd></div>
+          <div className="bosfor-inset rounded-xl border p-3"><dt className="exam-muted text-sm">{t(scoreLabel)}</dt><dd className="text-2xl font-extrabold tabular-nums">{result.scaledScore}/75 <span className="exam-muted text-sm">{result.level}</span></dd></div>
+        </dl>
+        {breakdown?.length > 0 && (
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            {breakdown.map((part) => <li key={part.id} className="bosfor-inset flex items-center justify-between gap-2 rounded-xl border p-3 text-sm"><span>{part.title}</span><strong className="shrink-0 tabular-nums">{part.value}/{part.maximum}</strong></li>)}
+          </ul>
+        )}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button type="button" onClick={onExit} className="bosfor-control exam-action"><ArrowLeft className="size-4" aria-hidden="true" />{t('examsHub.back')}</button>
+          <button type="button" onClick={() => { setResult(null); setAttempt((previous) => previous + 1); window.scrollTo(0, 0) }} className="bosfor-action exam-action"><RotateCcw className="size-4" aria-hidden="true" />{t('mock.retrySection')}</button>
         </div>
-      </div>
-    )
-  }
-
-  if (!mock || screen === 'landing') {
-    return <MockLanding onGenerate={generateNewMock} onStartReading={() => setReadingOnlyMode(true)} onStartDatabase={() => setDatabaseEngineMode(true)} onExit={onExit} sectionResults={sectionResults} t={t} />
-  }
-
-  const certificate = completedThisMock && SECTION_KEYS.every((key) => completedThisMock[key])
-    ? calculateCertificate(Object.fromEntries(SECTION_KEYS.map((key) => [key, completedThisMock[key].scaledScore])))
-    : null
-
-  return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700 dark:text-teal-300">{t('mock.multilevel')} · {t('mock.newSet')}</p><h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">{t('mock.overview')}</h1><p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{t('mock.newSet')}</p></div>
-        <div className="flex flex-wrap gap-2"><button type="button" onClick={() => setDatabaseEngineMode(true)} className="inline-flex items-center gap-2 rounded-xl border border-amber-300/50 bg-amber-50 px-4 py-2.5 text-sm font-bold text-amber-900 dark:bg-amber-400/10 dark:text-amber-100"><Sparkles className="size-4"/>{t('mock.engine')}</button><button type="button" onClick={() => setReadingOnlyMode(true)} className="inline-flex items-center gap-2 rounded-xl border border-amber-300/50 bg-amber-50 px-4 py-2.5 text-sm font-bold text-amber-900 dark:bg-amber-400/10 dark:text-amber-100"><BookOpenText className="size-4"/>{t('mock.onlyReading')}</button><button type="button" onClick={generateNewMock} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-teal-900/15"><RotateCcw className="size-4"/>{t('mock.startNew')}</button></div>
-      </div>
-      {certificate && <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5 dark:border-teal-800 dark:bg-teal-950/30"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-bold text-teal-900 dark:text-teal-100">{t('mock.finishedAll', { level: certificate.level })}</p><p className="text-sm text-teal-700 dark:text-teal-300">{t('mock.scoreAverage')}: {certificate.average} / 75</p></div><span className="text-2xl font-extrabold text-teal-800 dark:text-teal-200">{certificate.average} / 75</span></div></div>}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {SECTION_KEYS.map((key) => {
-          const Icon = SECTION_ICONS[key]
-          const result = completedThisMock[key]
-          const saved = sectionResults[key]
-          return <article key={key} className="glass premium-glass rounded-3xl border border-slate-200/80 bg-white/80 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/80 sm:p-6">
-            <div className="flex items-start gap-3"><span className="grid size-11 place-items-center rounded-2xl bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300"><Icon className="size-5"/></span><div className="min-w-0 flex-1"><h2 className="font-bold text-slate-900 dark:text-white">{t(SECTION_META[key].titleKey)}</h2><p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t('common.minutes', { count: mock[key].durationMinutes })} · {t(mock[key].totalQuestions ? 'mock.count.questions' : key === 'yazma' ? 'mock.count.tasks' : 'mock.count.parts', { count: mock[key].totalQuestions || mock[key].tasks?.length || mock[key].parts?.length })}</p></div>{result && <CheckCircle2 className="size-5 text-emerald-500"/>}</div>
-            <p className="mt-4 min-h-12 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{t(SECTION_META[key].descriptionKey)}</p>
-            {result ? <p className="mt-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{t('mock.sectionThis')} {result.scaledScore}/75 · {result.level}</p> : saved ? <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{t('mock.resultLast')} {saved.scaledScore}/75 · {saved.level}</p> : <p className="mt-3 text-sm text-slate-400">{t('mock.sectionNotTaken')}</p>}
-            <button type="button" onClick={() => openSection(key)} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white"><Play className="size-4"/>{result ? t('mock.retrySection') : t('mock.startSection')}</button>
-          </article>
-        })}
-      </div>
-      <p className="text-center text-xs text-slate-400">{t('mock.examId')}: {mock.id}</p>
-    </div>
-  )
-}
-
-function MockLanding({ onGenerate, onStartReading, onStartDatabase, onExit, sectionResults, t }) {
-  return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <section className="premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl sm:p-9">
-        <div className="relative z-10 max-w-3xl"><div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20"><Sparkles className="size-4"/> {t('mock.badge')}</div><h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">{t('mock.title')}</h1><p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">{t('mock.blueprint')}</p><div className="mt-6 flex flex-wrap gap-3"><button type="button" onClick={onGenerate} className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-bold text-teal-800 shadow-lg hover:bg-teal-50"><RotateCcw className="size-4"/>{t('mock.fullPlan')}</button><button type="button" onClick={onStartDatabase} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><Sparkles className="size-4 text-amber-200"/>{t('mock.engine')}</button><button type="button" onClick={onStartReading} className="inline-flex items-center gap-2 rounded-xl border border-amber-200/60 bg-black/15 px-5 py-3 font-bold text-white transition hover:border-amber-200 hover:bg-amber-300/15"><BookOpenText className="size-4 text-amber-200"/>{t('mock.onlyReading')}</button>{onExit && <button type="button" onClick={onExit} className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-black/10 px-4 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/10">{t('examsHub.back')}</button>}</div></div>
       </section>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{SECTION_KEYS.map((key) => { const Icon = SECTION_ICONS[key]; const saved = sectionResults[key]; return <div key={key} className="glass premium-glass rounded-2xl border border-slate-200 bg-white/80 p-4 dark:border-slate-800 dark:bg-slate-900/80"><div className="flex items-center gap-2"><Icon className="size-4 text-teal-700 dark:text-teal-300"/><span className="font-semibold text-slate-900 dark:text-white">{t(`skill.${({ dinleme: 'listening', okuma: 'reading', yazma: 'writing', konusma: 'speaking' })[key]}`)}</span></div><p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{saved ? `${saved.scaledScore}/75 · ${saved.level}` : `${t('mock.sectionNotTaken')} · 0 / 75`}</p></div> })}</div>
-    </div>
+    </section>
   )
 }
+
 
 function SectionSession({ mock, sectionKey, onBack, onComplete }) {
   const { t } = useI18n()
@@ -434,9 +312,9 @@ function SectionSession({ mock, sectionKey, onBack, onComplete }) {
   const timerWarning = secondsLeft <= 300
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5">
+    <div className="exam-center mx-auto max-w-5xl space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <button type="button" onClick={onBack} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><ArrowLeft className="size-4"/>{t('mock.backToPlan')}</button>
+        <button type="button" onClick={onBack} className="bosfor-control exam-action"><ArrowLeft className="size-4" aria-hidden="true" />{t('examsHub.back')}</button>
         <div className={cn('inline-flex items-center gap-2 rounded-xl border px-4 py-2 font-mono text-sm font-bold tabular-nums', timerWarning ? 'border-rose-300 bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300' : 'border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200')}><Clock className="size-4"/>{clock(secondsLeft)}<span className="font-sans text-xs font-medium opacity-70">{t('mock.timeLeft')}</span></div>
       </div>
 
@@ -457,7 +335,7 @@ function QuestionSession({ section, currentPart, currentQuestion, questions, que
   const qNum = currentQuestion.number
   return (
     <>
-      <header className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-5 text-white sm:p-7"><p className="text-xs font-bold uppercase tracking-widest text-white/70">{section.label} · {currentPart.title}</p><h1 className="mt-1 text-2xl font-extrabold">{t('common.question')} {qNum} / {section.totalQuestions}</h1><p className="mt-2 text-sm text-white/85">{currentPart.instructions}</p></header>
+      <header className="bosfor-panel rounded-2xl border p-5 sm:p-7"><p className="text-xs font-bold uppercase tracking-widest exam-muted">{section.label} · {currentPart.title}</p><h1 className="mt-1 text-2xl font-extrabold">{t('common.question')} {qNum} / {section.totalQuestions}</h1><p className="mt-2 text-sm exam-muted">{currentPart.instructions}</p></header>
       {currentPart.contextTitle && <h2 className="-mb-2 font-bold text-slate-800 dark:text-white">{currentPart.contextTitle}</h2>}
       {currentPart.planLocations && <div role="group" aria-label={t('mock.planLocations')} className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900 sm:grid-cols-4">{currentPart.planLocations.map((location, index) => <div key={`${index}-${location}`} className="flex min-h-14 items-center gap-2 rounded-xl border border-slate-200 bg-white p-2 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"><span className="grid size-7 shrink-0 place-items-center rounded-lg bg-teal-100 font-extrabold text-teal-800 dark:bg-teal-500/20 dark:text-teal-200">{String.fromCharCode(65 + index)}</span>{location}</div>)}</div>}
       {contextText && <article className="rounded-2xl border border-slate-200 bg-white/90 p-5 text-sm leading-7 text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><p className="whitespace-pre-line">{contextText}</p></article>}
@@ -477,7 +355,7 @@ function QuestionSession({ section, currentPart, currentQuestion, questions, que
 function WritingSession({ section, text, setText, evaluations, onGrade, onSubmit }) {
   const { t } = useI18n()
   return (
-    <div className="space-y-5"><header className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 to-cyan-600 p-5 text-white sm:p-7"><p className="text-xs font-bold uppercase tracking-widest text-white/70">{t('mock.sectionNumber', { number: 3 })} · {t('skill.writing')} · {t('common.minutes', { count: section.durationMinutes })}</p><h1 className="mt-1 text-2xl font-extrabold">{t('mock.writing.title')}</h1><p className="mt-2 text-sm text-white/85">{t('mock.writing.intro')}</p></header>
+    <div className="space-y-5"><header className="bosfor-panel rounded-2xl border p-5 sm:p-7"><p className="text-xs font-bold uppercase tracking-widest exam-muted">{t('mock.sectionNumber', { number: 3 })} · {t('skill.writing')} · {t('common.minutes', { count: section.durationMinutes })}</p><h1 className="mt-1 text-2xl font-extrabold">{t('mock.writing.title')}</h1><p className="mt-2 text-sm exam-muted">{t('mock.writing.intro')}</p></header>
       {section.tasks.map((task) => { const content = text[task.id] || ''; const evaluation = evaluations[task.id]; return <article key={task.id} className="glass premium-glass rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7"><div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-bold text-slate-900 dark:text-white">{task.title}</h2><span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">{t('mock.writing.max', { count: task.maxRaw })}</span></div><p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{task.prompt}</p><textarea value={content} disabled={!!evaluation} onChange={(event) => setText((previous) => ({ ...previous, [task.id]: event.target.value }))} rows={task.task === 1 ? 8 : 11} placeholder={t('mock.writing.placeholder')} className="mt-4 w-full resize-y rounded-2xl border border-slate-300 bg-white p-4 text-sm leading-6 text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 disabled:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-white"/><div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400"><span>{t('mock.writing.recommended', { min: task.minWords, max: task.maxWords })}</span><span className={cn('font-bold tabular-nums', countWords(content) < task.minWords ? 'text-amber-600' : countWords(content) > task.maxWords ? 'text-rose-600' : 'text-emerald-600')}>{t('mock.writing.words', { count: countWords(content) })}</span></div>
         {evaluation ? <div className="mt-4 rounded-2xl border border-teal-200 bg-teal-50 p-4 dark:border-teal-800 dark:bg-teal-950/30"><div className="flex items-center justify-between gap-2"><p className="font-bold text-teal-900 dark:text-teal-100">{t('mock.writing.autoScore')}</p><p className="text-xl font-extrabold text-teal-800 dark:text-teal-200">{evaluation.rawScore}/{evaluation.maxRawScore}</p></div><div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300"><span>{t('mock.writing.words', { count: evaluation.wordCount })}</span><span>{t('mock.writing.connectors')}: {evaluation.connectorCount}</span><span>{t('mock.writing.vocab')}: {evaluation.vocabularyDiversity}%</span><span>{t('mock.writing.paragraphs')}: {evaluation.paragraphCount}</span></div><p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{t('mock.writing.disclaimer')}</p></div> : <button type="button" onClick={() => onGrade(task)} className="mt-4 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-bold text-white">{t('mock.writing.grade')}</button>}</article> })}
       <div className="flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-slate-500 dark:text-slate-400">{t('mock.writing.gradeBoth')}</p><button type="button" onClick={onSubmit} disabled={section.tasks.some((task) => !evaluations[task.id])} className="rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-40">{t('mock.writing.finish')}</button></div>
@@ -489,7 +367,7 @@ function SpeakingSession({ section, currentPart, partIndex, done, scores, setSco
   const { t } = useI18n()
   const needsPreparation = currentPart.part === 2
   return (
-    <div className="space-y-5"><header className="premium-hero rounded-3xl bg-gradient-to-br from-teal-700 to-cyan-600 p-5 text-white sm:p-7"><p className="text-xs font-bold uppercase tracking-widest text-white/70">{t('mock.sectionNumber', { number: 4 })} · {t('skill.speaking')} · {t('common.minutes', { count: section.durationMinutes })}</p><h1 className="mt-1 text-2xl font-extrabold">{t('mock.speaking.title')}</h1><p className="mt-2 text-sm text-white/85">{t('mock.speaking.intro')}</p></header>
+    <div className="space-y-5"><header className="bosfor-panel rounded-2xl border p-5 sm:p-7"><p className="text-xs font-bold uppercase tracking-widest exam-muted">{t('mock.sectionNumber', { number: 4 })} · {t('skill.speaking')} · {t('common.minutes', { count: section.durationMinutes })}</p><h1 className="mt-1 text-2xl font-extrabold">{t('mock.speaking.title')}</h1><p className="mt-2 text-sm exam-muted">{t('mock.speaking.intro')}</p></header>
       <div className="grid gap-2 sm:grid-cols-3">{section.parts.map((part, index) => <button key={part.id} type="button" onClick={() => onSelectPart(index)} className={cn('rounded-xl border p-3 text-left text-sm font-semibold', partIndex === index ? 'border-teal-500 bg-teal-50 text-teal-800 dark:bg-teal-500/10 dark:text-teal-200' : 'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300')}>{done[part.id] && <Check className="mr-1 inline size-4 text-emerald-500"/>}{t('mock.part', { number: part.part })}: {part.title}</button>)}</div>
       <article className="glass premium-glass rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-7"><h2 className="text-lg font-bold text-slate-900 dark:text-white">{currentPart.title}</h2><p className="mt-3 text-sm leading-7 text-slate-700 dark:text-slate-200">{currentPart.prompt}</p>
         {needsPreparation && <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30"><p className="font-bold text-amber-800 dark:text-amber-200">{t('mock.speaking.prep', { time: clock(prepSeconds) })}</p><button type="button" onClick={onStartPrep} disabled={prepStarted || prepSeconds === 0} className="mt-2 rounded-lg bg-amber-600 px-3 py-2 text-sm font-bold text-white disabled:opacity-50">{prepStarted ? t('mock.speaking.prep.running') : prepSeconds === 0 ? t('mock.speaking.prep.done') : t('mock.speaking.prep.start')}</button></div>}
@@ -503,3 +381,5 @@ function SpeakingSession({ section, currentPart, partIndex, done, scores, setSco
     </div>
   )
 }
+
+

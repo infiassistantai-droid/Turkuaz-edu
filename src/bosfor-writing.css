@@ -1,0 +1,107 @@
+.writing-muted { color: var(--studio-muted); }
+.writing-check { color: var(--studio-accent); }
+.writing-prompt-text { border-color: var(--studio-fill); }
+.writing-flow, .writing-prompt { overflow-wrap: anywhere; }
+
+.writing-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  padding: .55rem .8rem;
+  border-width: 1px;
+  border-radius: 11px;
+  font-size: .83rem;
+  font-weight: 750;
+}
+
+.writing-action svg { flex-shrink: 0; }
+.writing-action:disabled { cursor: not-allowed; opacity: .55; }
+
+.writing-stage-card {
+  display: flex;
+  width: 100%;
+  min-height: 69px;
+  align-items: center;
+  gap: .65rem;
+  padding: .65rem;
+  border-width: 1px;
+  border-radius: 12px;
+  text-align: start;
+}
+
+.writing-stage-number {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--studio-line);
+  border-radius: 10px;
+  background: var(--studio-surface);
+  font-size: .8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.writing-stage-card[data-current="true"],
+.writing-task-tab[aria-current="step"] {
+  border-color: var(--studio-fill);
+  background: var(--studio-selection);
+}
+
+button.writing-stage-card:hover { border-color: var(--studio-accent); }
+.writing-stage-card[data-locked="true"] { color: var(--studio-muted); }
+
+.writing-editor { background: var(--studio-surface); caret-color: var(--studio-accent); }
+.writing-editor::placeholder { color: var(--studio-muted); }
+.writing-word-fill[data-status="ok"] { background: #4e976a; }
+.writing-word-fill[data-status="long"] { background: #cb6070; }
+
+.writing-disclosure {
+  min-height: 44px;
+  padding: .72rem .8rem;
+  cursor: pointer;
+  font-size: .83rem;
+  font-weight: 750;
+}
+
+.writing-keys { grid-template-columns: repeat(auto-fit, minmax(2.35rem, 1fr)); }
+.writing-keys button:disabled { opacity: .55; }
+
+.writing-error {
+  border-color: #b36d70;
+  background: color-mix(in srgb, var(--studio-surface) 86%, #dd7476);
+}
+
+.bosfor-writing :is(button, textarea, summary):focus-visible {
+  outline: 2px solid var(--studio-accent);
+  outline-offset: 2px;
+}
+
+.writing-focus { scroll-margin-top: 5.5rem; }
+.writing-focus:focus { outline: none; }
+
+.studio-shell[data-theme="default"] .bosfor-writing .bosfor-section-banner {
+  border-color: var(--studio-line);
+  background: radial-gradient(ellipse at 86% 54%, #dee8fb, transparent 60%), linear-gradient(110deg, #fff5e7, #edf4fd);
+}
+
+.studio-shell[data-theme="default"] .bosfor-writing .bosfor-banner-copy h1 { color: var(--studio-ink); }
+.studio-shell[data-theme="default"] .bosfor-writing .bosfor-banner-copy p { color: var(--studio-muted); }
+.studio-shell[data-theme="default"] .bosfor-writing .bosfor-banner-details > span {
+  border-color: var(--studio-line);
+  background: var(--studio-surface);
+  color: var(--studio-ink);
+}
+
+.studio-shell[data-theme="default"] .bosfor-writing .bosfor-banner-scene > span {
+  background: #afc6ea;
+  box-shadow: 0 5px 0 #94add6, 0 11px 23px #6d81a24a;
+}
+
+@media (min-width: 1080px) {
+  .writing-layout { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+  .writing-prompt { position: sticky; top: 5.35rem; }
+}

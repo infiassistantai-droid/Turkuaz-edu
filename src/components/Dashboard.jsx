@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowRight,
   BookOpenText,
@@ -7,15 +7,14 @@ import {
   Mic,
   PenLine,
   RotateCcw,
-  Sparkles,
   Target,
   TrendingUp,
   Trophy,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
-import { getCefrLevel } from '../lib/multilevelScoring'
 import { useI18n } from '../lib/i18n.jsx'
-import DailyQuestsWidget from './DailyQuestsWidget'
+import DailyQuestsWidget, { getDailyQuestRows } from './DailyQuestsWidget'
+import { ModelAsset, PanelHeading } from './BosforArtwork'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Data                                    */
@@ -25,36 +24,36 @@ const SKILLS = [
   {
     id: 'okuma',
     labelKey: 'skill.reading',
-    subKey: 'skill.reading.sub',
-    nextKey: 'skill.reading.next',
-    actionKey: 'skill.reading.action',
+
+
+
     icon: BookOpenText,
     score: 0,
   },
   {
     id: 'dinleme',
     labelKey: 'skill.listening',
-    subKey: 'skill.listening.sub',
-    nextKey: 'skill.listening.next',
-    actionKey: 'skill.listening.action',
+
+
+
     icon: Headphones,
     score: 0,
   },
   {
     id: 'yazma',
     labelKey: 'skill.writing',
-    subKey: 'skill.writing.sub',
-    nextKey: 'skill.writing.next',
-    actionKey: 'skill.writing.action',
+
+
+
     icon: PenLine,
     score: 0,
   },
   {
     id: 'konusma',
     labelKey: 'skill.speaking',
-    subKey: 'skill.speaking.sub',
-    nextKey: 'skill.speaking.next',
-    actionKey: 'skill.speaking.action',
+
+
+
     icon: Mic,
     score: 0,
   },
@@ -64,48 +63,6 @@ const SKILLS = [
 /*                                   Helpers                                  */
 /* -------------------------------------------------------------------------- */
 
-function masteryTone(score, t, isEvaluated) {
-  if (!isEvaluated)
-    return {
-      label: t('dashboard.notEvaluated'),
-      stroke: 'stroke-slate-300 dark:stroke-slate-600',
-      bar: 'from-slate-400 to-slate-300',
-      text: 'text-slate-500 dark:text-slate-400',
-      chip: 'bg-slate-100 text-slate-700 ring-1 ring-slate-300/70 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700',
-    }
-  if (score >= 65)
-    return {
-      label: t('level.C1'),
-      stroke: 'stroke-emerald-500',
-      bar: 'from-emerald-500 to-emerald-400',
-      text: 'text-emerald-600 dark:text-emerald-400',
-      chip: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20',
-    }
-  if (score >= 51)
-    return {
-      label: t('level.B2'),
-      stroke: 'stroke-teal-500',
-      bar: 'from-teal-600 to-cyan-500',
-      text: 'text-teal-600 dark:text-teal-400',
-      chip: 'bg-teal-50 text-teal-700 ring-1 ring-teal-600/15 dark:bg-teal-500/10 dark:text-teal-300 dark:ring-teal-400/20',
-    }
-  if (score >= 38)
-    return {
-      label: t('level.B1'),
-      stroke: 'stroke-amber-500',
-      bar: 'from-amber-500 to-yellow-400',
-      text: 'text-amber-600 dark:text-amber-400',
-      chip: 'bg-amber-50 text-amber-700 ring-1 ring-amber-600/15 dark:bg-amber-500/10 dark:text-amber-300 dark:ring-amber-400/20',
-    }
-  return {
-    label: t('level.belowB1'),
-    stroke: 'stroke-rose-500',
-    bar: 'from-rose-500 to-red-500',
-    text: 'text-rose-600 dark:text-rose-400',
-    chip: 'bg-rose-50 text-rose-700 ring-1 ring-rose-600/15 dark:bg-rose-500/10 dark:text-rose-300 dark:ring-rose-400/20',
-  }
-}
-
 function getCertificate(total, t) {
   if (total >= 65)
     return {
@@ -113,8 +70,8 @@ function getCertificate(total, t) {
       title: t('certificate.C1.title'),
       note: t('certificate.C1.note'),
       nextAt: null,
-      card: 'from-emerald-500 to-teal-600 text-white shadow-emerald-600/25',
-      ring: 'ring-white/25',
+
+
     }
   if (total >= 51)
     return {
@@ -122,8 +79,8 @@ function getCertificate(total, t) {
       title: t('certificate.B2.title'),
       note: t('certificate.B2.note'),
       nextAt: 65,
-      card: 'from-teal-600 to-cyan-500 text-white shadow-teal-600/25',
-      ring: 'ring-white/25',
+
+
     }
   if (total >= 38)
     return {
@@ -131,16 +88,16 @@ function getCertificate(total, t) {
       title: t('certificate.B1.title'),
       note: t('certificate.B1.note'),
       nextAt: 51,
-      card: 'from-cyan-500 to-sky-500 text-white shadow-cyan-600/25',
-      ring: 'ring-white/25',
+
+
     }
   return {
     level: 'Below B1',
     title: t('certificate.below.title'),
     note: t('certificate.below.note'),
     nextAt: 38,
-    card: 'from-rose-500 to-red-600 text-white shadow-rose-600/25',
-    ring: 'ring-white/25',
+
+
   }
 }
 
@@ -162,7 +119,7 @@ function Card({ className, children, ...props }) {
   return (
     <section
       className={cn(
-        'glass premium-glass rounded-[22px] border border-slate-200/80 bg-white/80 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_8px_24px_-12px_rgba(0,0,0,0.5)]',
+        'studio-card bosfor-panel min-w-0 rounded-2xl border',
         className,
       )}
       {...props}
@@ -172,84 +129,54 @@ function Card({ className, children, ...props }) {
   )
 }
 
-function CardHeader({ icon: Icon, title, subtitle, right }) {
-  return (
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex items-center gap-3">
-        <span className="grid size-9 place-items-center rounded-xl border border-slate-200/80 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-200">
-          <Icon className="size-4" aria-hidden="true" />
-        </span>
-        <div>
-          <h2 className="text-[15px] font-semibold tracking-tight text-slate-900 dark:text-white">{title}</h2>
-          {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>}
-        </div>
-      </div>
-      {right}
-    </div>
-  )
-}
-
 /* -------------------------------------------------------------------------- */
 /*                                  Hero card                                 */
 /* -------------------------------------------------------------------------- */
 
-function HeroCard({ onStart, name, weakest, targetLevel, totalScore, hasResults }) {
+function HeroCard({ onStart, targetLevel }) {
   const { t } = useI18n()
-  const target = targetLevel || '—'
-  const threshold = target === 'B1' ? 38 : target === 'B2' ? 51 : target === 'C1' ? 65 : 0
-  const pct = threshold ? Math.min(100, Math.round((totalScore / threshold) * 100)) : 0
 
   return (
-    <section className="dashboard-home-hero premium-hero relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-500 p-6 text-white shadow-xl shadow-teal-900/15 sm:p-8 lg:col-span-2">
-      <div className="pointer-events-none absolute -right-16 -top-24 -z-10 size-72 rounded-full bg-cyan-300/20 blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-28 left-1/3 -z-10 size-72 rounded-full bg-rose-500/20 blur-3xl" aria-hidden="true" />
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12]"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)',
-          backgroundSize: '18px 18px',
-          maskImage: 'linear-gradient(to bottom left, black, transparent 70%)',
-          WebkitMaskImage: 'linear-gradient(to bottom left, black, transparent 70%)',
-        }}
-        aria-hidden="true"
-      />
+    <section className="bosfor-hero">
+      <div className="bosfor-hero-copy">
+        <h1 data-testid="text-page-heading">{t('bosfor.hero.title')}</h1>
+        <p className="bosfor-levels">
+          <span>CEFR</span>
+          {['B1', 'B2', 'C1'].map((level) => <strong key={level} data-current={targetLevel === level}>{level}</strong>)}
+        </p>
+        <button
+          type="button"
+          onClick={onStart}
+          className="dashboard-start-cta bosfor-start group"
+        >
+          {t('bosfor.hero.start')}
+          <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </button>
+      </div>
+    </section>
+  )
+}
 
-      <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-md">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/25 backdrop-blur-md">
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            {t('dashboard.hero.badge', { target })}
-          </span>
-          <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            {t('dashboard.greeting', { name: name || t('dashboard.learner'), target })}
-          </h1>
-          <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-white/65">{t('dashboard.journey')}</p>
-          <p className="mt-2 text-pretty text-sm leading-relaxed text-white/80">
-            {weakest ? t('dashboard.weakest', { skill: weakest }) : t('dashboard.noScores')}
-          </p>
-          <button
-            type="button"
-            onClick={onStart}
-            className="dashboard-start-cta premium-primary group mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white shadow-lg shadow-teal-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
-          >
-            {t('dashboard.start')}
-            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-          </button>
-        </div>
+function TodayCard({ progress, onShowTasks }) {
+  const { t } = useI18n()
+  const quests = getDailyQuestRows(progress)
+  const completed = quests.filter(({ complete }) => complete).length
 
-        <div className="w-full max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-xl">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-white/65">{t('dashboard.progress')}</p>
-          <div className="mt-2 flex items-end justify-between gap-3">
-            <span className="text-3xl font-semibold tracking-tight text-cyan-200">{target}</span>
-            <span className="text-right text-sm font-semibold tabular-nums text-white/85">
-              {hasResults && threshold ? `${pct}%` : '—'}
-            </span>
-          </div>
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/20 ring-1 ring-white/10">
-            <div className="dashboard-home-progress h-full rounded-full bg-gradient-to-r from-teal-300 to-cyan-200 transition-[width] duration-700" style={{ width: `${pct}%` }} />
-          </div>
+  return (
+    <section className="bosfor-today" aria-labelledby="bosfor-today-heading">
+      <div className="flex items-center gap-3">
+        <ModelAsset name="quests" className="size-12" />
+        <div>
+          <h2 id="bosfor-today-heading">{t('bosfor.today.title')}</h2>
+          <p className="bosfor-today-count">{t('quests.completedCount', { count: completed, total: quests.length })}</p>
         </div>
       </div>
+      <div className="bosfor-progress" aria-hidden="true">
+        <span style={{ width: `${completed / quests.length * 100}%` }} />
+      </div>
+      <button type="button" className="bosfor-today-link" onClick={onShowTasks}>
+        {t('bosfor.today.openTasks')} <ArrowRight size={17} aria-hidden="true" />
+      </button>
     </section>
   )
 }
@@ -268,18 +195,17 @@ function ReadinessCard({ total, targetLevel, hasResults }) {
   const remaining = threshold ? Math.max(0, threshold - total) : null
 
   return (
-    <Card className="flex flex-col p-6">
-      <CardHeader
-        icon={Trophy}
+    <Card className="flex min-w-0 flex-col p-5 sm:p-6">
+      <PanelHeading
+        name="readiness"
         title={t('dashboard.readiness')}
-        subtitle={t('dashboard.fourSkillsAverage')}
-        right={
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300 dark:ring-emerald-400/20">
+        description={t('dashboard.fourSkillsAverage')}
+      >
+          <span className="inline-flex items-center gap-1 bosfor-badge px-2 py-1 text-[11px] font-semibold">
             <TrendingUp className="size-3" aria-hidden="true" /> {t('dashboard.target', { target })}
           </span>
-        }
-      />
-      <div className="mt-6 flex items-end gap-2">
+      </PanelHeading>
+      <div className="mt-6 flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span className="text-5xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{hasResults ? Number(total).toFixed(2) : '—'}</span>
         <span className="mb-1.5 text-sm text-slate-500 dark:text-slate-400">{t('dashboard.scoreAverage')}</span>
         <span className={cn(
@@ -293,9 +219,9 @@ function ReadinessCard({ total, targetLevel, hasResults }) {
       </div>
 
       <div className="relative mt-5">
-        <div className="h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+        <div className="bosfor-track h-2.5 overflow-hidden rounded-full">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500 transition-[width] duration-1000 ease-out"
+            className="h-full rounded-full bosfor-progress-fill transition-[width] duration-1000 ease-out"
             style={{ width: mounted ? `${pct}%` : '0%' }}
           />
         </div>
@@ -321,11 +247,11 @@ function ReadinessCard({ total, targetLevel, hasResults }) {
       </div>
 
       <div className="mt-auto pt-5">
-        <div className="flex items-center gap-3 rounded-2xl border border-rose-200/70 bg-rose-50/70 p-3 dark:border-rose-500/20 dark:bg-rose-500/10">
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-rose-500 text-white">
+        <div className="flex items-center gap-3 bosfor-inset rounded-xl border p-3">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bosfor-badge">
             <Target className="size-4" aria-hidden="true" />
           </span>
-          <p className="text-xs leading-relaxed text-rose-900 dark:text-rose-200">
+          <p className="text-xs leading-relaxed text-[var(--studio-muted)]">
             {!hasResults ? (
               <>{t('dashboard.noScores')}</>
             ) : remaining === null ? (
@@ -338,96 +264,6 @@ function ReadinessCard({ total, targetLevel, hasResults }) {
           </p>
         </div>
       </div>
-    </Card>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                 Skill cards                                */
-/* -------------------------------------------------------------------------- */
-
-function ProgressRing({ value, max, toneStroke, mounted }) {
-  const r = 26
-  const c = 2 * Math.PI * r
-  const offset = c - (mounted ? value / max : 0) * c
-  return (
-    <svg viewBox="0 0 64 64" className="size-16 -rotate-90" aria-hidden="true">
-      <circle cx="32" cy="32" r={r} fill="none" strokeWidth="6" className="stroke-slate-100 dark:stroke-slate-800" />
-      <circle
-        cx="32"
-        cy="32"
-        r={r}
-        fill="none"
-        strokeWidth="6"
-        strokeLinecap="round"
-        strokeDasharray={c}
-        strokeDashoffset={offset}
-        className={cn(toneStroke, 'transition-[stroke-dashoffset] duration-1000 ease-out')}
-      />
-    </svg>
-  )
-}
-
-function SkillCard({ skill, onOpen }) {
-  const { t } = useI18n()
-  const mounted = useMounted()
-  const Icon = skill.icon
-  const tone = masteryTone(skill.score, t, skill.isEvaluated)
-  const pct = skill.isEvaluated ? Math.round((skill.score / 75) * 100) : null
-
-  return (
-    <Card className={`group flex flex-col p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300/80 hover:shadow-lg dark:hover:border-slate-700`}>
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <span className={`grid size-10 place-items-center rounded-xl bg-gradient-to-br from-teal-600/10 to-cyan-500/10 text-teal-700 ring-1 ring-teal-600/15 dark:text-teal-300 dark:ring-teal-400/20`}>
-            <Icon className="size-5" aria-hidden="true" />
-          </span>
-          <div>
-            <h3 className="text-sm font-semibold tracking-tight text-slate-900 dark:text-white">{t(skill.labelKey)}</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{t(skill.subKey)}</p>
-          </div>
-        </div>
-        <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-semibold ring-1', tone.chip)}>{tone.label}</span>
-      </div>
-
-      <div className="mt-5 flex items-center justify-between">
-        <div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
-              {skill.isEvaluated ? skill.score.toFixed(2).replace(/\.00$/, '') : '—'}
-            </span>
-            {skill.isEvaluated && <span className="text-sm text-slate-500 dark:text-slate-400">{t('skill.scoreUnit')}</span>}
-          </div>
-          <p className={cn('mt-1 flex items-center gap-1 text-xs', skill.isEvaluated ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400')}>
-            {skill.isEvaluated && <TrendingUp className="size-3" aria-hidden="true" />}
-            {skill.isEvaluated ? t('dashboard.skillEvaluated', { level: skill.level || getCefrLevel(skill.score) }) : t('dashboard.notEvaluated')}
-          </p>
-        </div>
-        <div className="relative">
-          <ProgressRing value={skill.score} max={75} toneStroke={tone.stroke} mounted={mounted} />
-          <span className={cn('absolute inset-0 grid place-items-center text-xs font-semibold tabular-nums', tone.text)}>{pct === null ? '—' : `${pct}%`}</span>
-        </div>
-      </div>
-
-      <div className="mt-4 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/50 dark:text-slate-300">
-        <span className="text-slate-400 dark:text-slate-500">{t('dashboard.next')} </span>
-        {t(skill.nextKey)}
-      </div>
-
-      {skill.id === 'dinleme' && (
-        <p className="mt-2 text-[10px] font-semibold text-slate-400 dark:text-slate-500">
-          {t('listening.completedCount', { count: skill.completedCount || 0 })}
-        </p>
-      )}
-
-      <button
-        type="button"
-        onClick={() => onOpen(skill.id)}
-        className="mt-3 inline-flex items-center gap-1 self-start text-sm font-medium text-teal-700 transition-colors hover:text-teal-900 active:scale-95 dark:text-teal-300 dark:hover:text-teal-100"
-      >
-        {t(skill.actionKey)}
-        <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-      </button>
     </Card>
   )
 }
@@ -452,7 +288,7 @@ function ScoreSlider({ id, label, sub, icon: Icon, value, onChange }) {
       </div>
       <div className="relative flex h-5 items-center">
         <div className="absolute inset-x-0 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-          <div className="h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-full bosfor-progress-fill" style={{ width: `${pct}%` }} />
         </div>
         <input
           id={id}
@@ -481,40 +317,31 @@ const CALC_FIELDS = [
   { key: 'konusma', labelKey: 'skill.speaking', subKey: 'skill.speaking.sub', icon: Mic },
 ]
 
-function CertificateCalculator({ initial, dark = false, isPremium = false }) {
+function CertificateCalculator({ initial }) {
   const { t } = useI18n()
   const [scores, setScores] = useState(initial)
   useEffect(() => setScores(initial), [initial])
   const total = (scores.dinleme + scores.okuma + scores.yazma + scores.konusma) / 4
   const pct = Math.round((total / 75) * 100)
   const cert = getCertificate(total, t)
-  const nightCardTones = {
-    C1: 'from-emerald-950 via-teal-950 to-slate-950 text-emerald-50 shadow-emerald-950/30',
-    B2: 'from-teal-950 via-cyan-950 to-slate-950 text-cyan-50 shadow-teal-950/30',
-    B1: 'from-cyan-950 via-sky-950 to-slate-950 text-cyan-50 shadow-cyan-950/30',
-    'Below B1': 'from-rose-950 via-slate-900 to-[#1f1119] text-rose-50 shadow-rose-950/30',
-  }
-  const certificateCardTone = dark && !isPremium ? nightCardTones[cert.level] : cert.card
-
   return (
     <Card className="p-6 lg:col-span-2">
-      <CardHeader
-        icon={Sparkles}
+      <PanelHeading
+        name="calculator"
         title={t('certificate.calculator')}
-        subtitle={t('certificate.subtitle')}
-        right={
+        description={t('certificate.subtitle')}
+      >
           <button
             type="button"
             onClick={() => setScores(initial)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/80 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 bosfor-control rounded-lg px-2.5 py-1.5 text-xs font-medium"
           >
             <RotateCcw className="size-3.5" aria-hidden="true" />
             {t('certificate.reset')}
           </button>
-        }
-      />
+      </PanelHeading>
 
-      <div className="mt-6 grid gap-8 md:grid-cols-[1fr_260px]">
+      <div className="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(12rem,260px)]">
         <div className="space-y-6">
           {CALC_FIELDS.map((f) => (
             <ScoreSlider
@@ -530,39 +357,36 @@ function CertificateCalculator({ initial, dark = false, isPremium = false }) {
         </div>
 
         <div className="flex flex-col gap-3">
-          <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-slate-800 dark:bg-slate-800/40">
+          <div className="bosfor-inset rounded-2xl border p-4">
             <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('certificate.total')}</p>
             <div className="mt-1 flex items-baseline gap-1.5" aria-live="polite">
               <span className="text-4xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{total.toFixed(2)}</span>
               <span className="text-sm text-slate-500 dark:text-slate-400">{t('certificate.average')}</span>
               <span className="ml-auto text-lg font-semibold tabular-nums text-slate-700 dark:text-slate-200">{pct}%</span>
             </div>
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-700/60">
+            <div className="bosfor-track mt-3 h-1.5 overflow-hidden rounded-full">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500 transition-[width] duration-300"
+                className="h-full rounded-full bosfor-progress-fill transition-[width] duration-300"
                 style={{ width: `${pct}%` }}
               />
             </div>
           </div>
 
           <div
-            className={cn(
-              'relative flex items-start gap-4 overflow-hidden rounded-2xl bg-gradient-to-br p-4 shadow-lg ring-1 transition-all duration-500',
-              certificateCardTone,
-              cert.ring,
-            )}
+            className="bosfor-inset relative flex items-start gap-4 rounded-xl border p-4"
             aria-live="polite"
           >
             <div className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-white/15 blur-2xl" aria-hidden="true" />
-            <span className="relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-white/20 px-1 text-center text-xs font-bold leading-tight tracking-tight ring-1 ring-white/30">
-              <span className="whitespace-nowrap">{t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}</span>
+            <span className="relative grid w-16 shrink-0 place-items-center gap-1 text-center text-xs font-bold">
+              <ModelAsset name="certificate" className="size-16" />
+              <span>{t(cert.level === 'Below B1' ? 'level.belowB1' : `level.${cert.level}`)}</span>
             </span>
             <div className="relative min-w-0 flex-1">
-              <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{t('certificate.label')}</p>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-[var(--studio-muted)]">{t('certificate.label')}</p>
               <p className="break-words text-sm font-semibold leading-tight">{cert.title}</p>
-              <p className="mt-2 break-words text-xs leading-relaxed text-white/90">{cert.note}</p>
+              <p className="mt-2 break-words text-xs leading-relaxed text-[var(--studio-muted)]">{cert.note}</p>
               {cert.nextAt && (
-                <p className="mt-2 break-words text-[11px] font-medium leading-relaxed text-white/75">
+                <p className="mt-2 break-words text-[11px] font-medium leading-relaxed text-[var(--studio-muted)]">
                   {t('certificate.next', { count: (cert.nextAt - total).toFixed(2).replace(/\.00$/, '') })}
                 </p>
               )}
@@ -600,79 +424,75 @@ function CertificateCalculator({ initial, dark = false, isPremium = false }) {
 /*                                  Dashboard                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, name, targetLevel, stats, dailyQuests, onClaimDailyReward, isPremium = false, dark = false }) {
-  const { language, t } = useI18n()
-  const locale = { uz: 'uz-UZ', tr: 'tr-TR', en: 'en-US' }[language] || 'tr-TR'
-  const todayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
+export default function Dashboard({ scores, sectionResults = {}, overallScore, navigate, targetLevel, stats, dailyQuests, onClaimDailyReward, isPremium = false }) {
+  const { t } = useI18n()
+  const tasksRef = useRef(null)
   const total = overallScore ?? SKILLS.reduce((a, s) => a + (scores?.[s.id] ?? s.score), 0) / 4
   const hasResults = SKILLS.some((skill) => Boolean(sectionResults[skill.id]))
   const initialScores = useMemo(
     () => Object.fromEntries(SKILLS.map((s) => [s.id, scores?.[s.id] ?? s.score])),
     [scores],
   )
-  // Only evaluated skills can be identified as the learner's weakest skill.
-  const weakestSkill = useMemo(
-    () => SKILLS.filter((skill) => Boolean(sectionResults[skill.id]))
-      .reduce((weakest, skill) => !weakest || (scores?.[skill.id] ?? skill.score) < (scores?.[weakest.id] ?? weakest.score) ? skill : weakest, null),
-    [scores, sectionResults],
-  )
-  const weakest = weakestSkill ? t(weakestSkill.labelKey) : null
+  function showTasks() {
+    const panel = tasksRef.current
+    if (!panel) return
+    panel.focus({ preventScroll: true })
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    panel.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'instant' : 'smooth' })
+  }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="mb-1 px-1">
-        <p className="text-[10px] font-bold uppercase tracking-[.22em] text-teal-700 dark:text-teal-300">{todayLabel}</p>
-        <h1 className="mt-1.5 font-serif text-[26px] font-extrabold tracking-[-.045em] text-slate-900 dark:text-white sm:text-[30px]" data-testid="text-page-heading">{t('dashboard.home.title')}<span className={isPremium ? 'text-yellow-300' : 'text-teal-600'}>.</span></h1>
-      </div>
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
-        <HeroCard onStart={() => navigate('plan')} name={name} weakest={weakest} targetLevel={targetLevel} totalScore={total} hasResults={hasResults} />
-        <ReadinessCard total={total} targetLevel={targetLevel} hasResults={hasResults} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-4">
-        {[
-          { label: t('dashboard.stat.quizzes'), value: stats?.completedQuizzes ?? 0, icon: Check, hint: t('dashboard.stat.quizzes.hint') },
-          { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
-        ].map(({ label, value, icon: Icon, hint }) => (
-          <Card key={label} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-amber-300/20 bg-amber-300/10 text-amber-300 shadow-inner shadow-white/10">
-              <Icon className="size-5" aria-hidden="true" />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">{label}</p>
-              <p className="truncate text-xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-2xl">{value}</p>
-              <p className="hidden truncate text-[11px] text-slate-400 sm:block">{hint}</p>
-            </div>
-          </Card>
-        ))}
+    <div className="studio-dashboard space-y-5 sm:space-y-6">
+      <div className="bosfor-overview">
+        <HeroCard onStart={() => navigate('plan')} targetLevel={targetLevel} />
+        <section className="bosfor-skills-section" aria-labelledby="dashboard-skills-heading">
+          <h2 id="dashboard-skills-heading">{t('dashboard.skills.title')}</h2>
+          <nav className="bosfor-skills" aria-labelledby="dashboard-skills-heading">
+            {SKILLS.map(({ id, labelKey }) => (
+              <button className="bosfor-skill" data-skill={id} key={id} type="button" onClick={() => navigate(id)}>
+                <span className="bosfor-skill-stage"><ModelAsset name={id} /></span>
+                <span className="bosfor-skill-label">{t(labelKey)} <ArrowRight size={17} aria-hidden="true" /></span>
+              </button>
+            ))}
+          </nav>
+        </section>
+        <button className="bosfor-exam" type="button" onClick={() => navigate('exams')}>
+          <ModelAsset name="exams" className="size-14" />
+          <span>{t('nav.mock')}{targetLevel && <small>{targetLevel}</small>}</span>
+          <ArrowRight size={18} className="ml-auto shrink-0" aria-hidden="true" />
+        </button>
+        <TodayCard progress={dailyQuests} onShowTasks={showTasks} />
       </div>
 
-      <section aria-labelledby="dashboard-skills-heading">
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-2 px-1">
-          <div>
-            <h2 id="dashboard-skills-heading" className="text-base font-bold tracking-tight text-slate-900 dark:text-white">{t('dashboard.skills.title')}</h2>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{t('dashboard.skills.subtitle')}</p>
+      <div className="grid items-start gap-4 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <div ref={tasksRef} tabIndex={-1} role="region" className="bosfor-tasks-anchor min-w-0" aria-labelledby="tasks-panel-heading">
+          <DailyQuestsWidget progress={dailyQuests} stats={stats} navigate={navigate} onClaimReward={onClaimDailyReward} isPremium={isPremium} />
+        </div>
+        <div className="grid min-w-0 gap-4">
+          <ReadinessCard total={total} targetLevel={targetLevel} hasResults={hasResults} />
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
+            {[
+              { label: t('dashboard.stat.quizzes'), value: stats?.completedQuizzes ?? 0, icon: Check, hint: t('dashboard.stat.quizzes.hint') },
+              { label: t('dashboard.stat.levels'), value: stats?.levelsCompleted ?? 0, icon: Trophy, hint: t('dashboard.stat.levels.hint') },
+            ].map(({ label, value, icon: Icon, hint }) => (
+              <Card key={label} className="premium-stat flex items-center gap-3 p-4 sm:p-5">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl border bosfor-badge">
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-400">{label}</p>
+                  <p className="text-xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-2xl">{value}</p>
+                  <p className="hidden text-[11px] text-slate-500 dark:text-slate-400 sm:block">{hint}</p>
+                </div>
+              </Card>
+            ))}
           </div>
-          <span className="rounded-lg border border-slate-200 bg-white/80 px-2.5 py-1 text-[10px] font-semibold text-slate-500 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-400">{SKILLS.length}</span>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 sm:gap-6 xl:grid-cols-4">
-          {SKILLS.map((skill) => (
-            <SkillCard
-              key={skill.id}
-              skill={{ ...skill, score: scores?.[skill.id] ?? skill.score, isEvaluated: Boolean(sectionResults[skill.id]), level: sectionResults[skill.id]?.level, completedCount: skill.id === 'dinleme' ? stats?.listeningLessonsCompleted ?? 0 : undefined }}
-              onOpen={navigate}
-            />
-          ))}
-        </div>
-      </section>
-
-      <DailyQuestsWidget progress={dailyQuests} stats={stats} navigate={navigate} onClaimReward={onClaimDailyReward} isPremium={isPremium} />
-
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
-        <CertificateCalculator initial={initialScores} dark={dark} isPremium={isPremium} />
       </div>
 
-      <footer className="pb-2 pt-2 text-center text-xs text-slate-400 dark:text-slate-500">
+      <CertificateCalculator initial={initialScores} />
+
+      <footer className="pb-2 pt-2 text-center text-xs text-[var(--studio-muted)]">
         {t('dashboard.footer')}
       </footer>
     </div>

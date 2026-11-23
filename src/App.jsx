@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Flame, CheckCircle2, Copy, LoaderCircle, Star, Trophy } from 'lucide-react'
+import { Flame, CheckCircle2, Copy, Star, Trophy } from 'lucide-react'
 import { cn } from './lib/utils'
 import {
   STORAGE_KEY,
@@ -14,6 +14,7 @@ import {
   clearAllStorage,
   loadScores,
   saveScore,
+  setVocabularyOwner,
 } from './lib/storage'
 import TurkchaDashboard from './components/TurkchaDashboard'
 import ProfileSetupModal from './components/ProfileSetupModal'
@@ -26,12 +27,16 @@ import { useI18n } from './lib/i18n.jsx'
 import { DEFAULT_EQUIPPED_MEDAL, DEFAULT_UNLOCKED_MEDALS } from './lib/medals'
 import { getRankProgress, getRatingTier } from './lib/ranks'
 import { getStreakMilestonesUpTo, STREAK_MILESTONES } from './lib/streakMilestones'
-import { getTrophyProgress, TROPHIES, TROPHY_REWARD_XP } from './lib/trophies'
+import { getSeasonStudyDays, getTrophyProgress, TROPHIES, TROPHY_REWARD_XP } from './lib/trophies'
 import { getListeningCompletedCount } from './lib/listeningProgress'
 import { useWinterUpdate } from './features/winter/WinterUpdateContext'
 import { useAuth } from './context/AuthContext.jsx'
+import { learningKeys, restoreLearningState, syncLearningState } from './lib/learningCloudSync'
 import { getWinterStudyDayCount, normalizeWinterStudy, recordWinterStudyDay } from './features/winter/winterSeason'
 import { isPresetAvatarPath } from './lib/profileAvatar'
+import { canAccessShop } from './config/admin'
+import { normalizeExamDate } from './lib/studyPlan'
+import AppLoading from './components/AppLoading'
 
 const Dashboard = lazy(() => import('./components/Dashboard'))
 const ComingSoon = lazy(() => import('./components/ComingSoon'))
@@ -132,10 +137,11 @@ function getLearnerProfileFromAuth(user, targetLevel, hasExistingProgress = true
     email,
     avatarUrl: cloudProfile?.avatar_url || metadata.avatar_url || metadata.picture || null,
     ratingTier: cloudProfile?.rating_tier || getRatingTier(cloudProfile?.total_xp || 0),
-    targetLevel: targetLevel || metadata.target_level || 'B1',
+    targetLevel: metadata.target_level || targetLevel || 'B1',
     learningGoal: metadata.learning_goal || null,
     startingPath: metadata.starting_path || null,
     startingLevel: metadata.starting_level || null,
+    examDate: normalizeExamDate(metadata.exam_date),
     onboardingCompleted: typeof metadata.onboarding_completed === 'boolean' ? metadata.onboarding_completed : forceOnboarding ? false : Boolean(hasExistingProgress),
     userId: user?.id,
   }
@@ -326,12 +332,8 @@ function normalizeAppPath(pathname) {
 export default function App() {
   const { t } = useI18n()
   const { session: authSession, user: authUser, loading: authStateLoading } = useAuth()
+  const shopAllowed = canAccessShop(authUser)
   const { featureEnabled: winterFeatureEnabled } = useWinterUpdate()
-  const pageFallback = (
-    <div role="status" aria-live="polite" aria-busy="true" className="grid min-h-[40vh] place-items-center text-sm font-semibold text-slate-600 dark:text-slate-300">
-      <span className="inline-flex items-center gap-2"><LoaderCircle className="size-5 animate-spin" aria-hidden="true" />{t('cloud.loading.status')}</span>
-    </div>
-  )
   // The app uses protected in-place tabs plus login/home and owner-gated admin routes.
   const [pathname, setPathname] = useState(() => normalizeAppPath(typeof window === 'undefined' ? '/' : window.location.pathname))
   const navigatePath = useCallback((nextPath, replace = false) => {
@@ -354,7 +356,7 @@ export default function App() {
   const [resetVersion, setResetVersion] = useState(0)
   const [dark, setDark] = useState(() => {
     const savedAppState = loadJSON(STORAGE_KEY, {})
-    return typeof savedAppState?.dark === 'boolean' ? savedAppState.dark : true
+    return savedAppState?.design === 'bosfor' && typeof savedAppState.dark === 'boolean' ? savedAppState.dark : true
   })
   const [isPremium, setIsPremium] = useState(() => {
     try {
@@ -366,14 +368,20 @@ export default function App() {
       return false
     }
   })
+  const loadingTheme = isPremium ? 'premium' : dark ? 'night' : 'default'
+  const pageFallback = <AppLoading label={t('cloud.loading.status')} theme={loadingTheme} />
+  const screenFallback = <AppLoading label={t('cloud.loading.status')} theme={loadingTheme} screen />
   const [toasts, setToasts] = useState([])
   const toastTimersRef = useRef(new Map())
   const [profile, setProfile] = useState(() => isSupabaseConfigured ? null : loadProfile())
   const [cloudSession, setCloudSession] = useState(null)
   const [cloudReady, setCloudReady] = useState(false)
+  const [learningOwner, setLearningOwner] = useState(null)
+  const stopLearningSync = useRef(null)
+  const progressWrites = useRef(new Set())
+  const resettingProgress = useRef(false)
+  const learningSessionUser = useRef(null)
   const [authLoading, setAuthLoading] = useState(isSupabaseConfigured)
-  const [loadingScreenVisible, setLoadingScreenVisible] = useState(isSupabaseConfigured)
-  const [loadingScreenExiting, setLoadingScreenExiting] = useState(false)
   const [remindersEnabled, setRemindersEnabled] = useState(getReminderPreference)
   const [authenticated, setAuthenticated] = useState(() => {
     if (isSupabaseConfigured || !loadProfile()) return false
@@ -387,21 +395,7 @@ export default function App() {
     ? Boolean(authUser)
     : authenticated
   const [editingProfile, setEditingProfile] = useState(false)
-
-  useEffect(() => {
-    if (authLoading) {
-      setLoadingScreenVisible(true)
-      setLoadingScreenExiting(false)
-      return undefined
-    }
-    if (!loadingScreenVisible) return undefined
-    setLoadingScreenExiting(true)
-    const timeout = window.setTimeout(() => {
-      setLoadingScreenVisible(false)
-      setLoadingScreenExiting(false)
-    }, 220)
-    return () => window.clearTimeout(timeout)
-  }, [authLoading, loadingScreenVisible])
+  const closeProfileEditor = useCallback(() => setEditingProfile(false), [])
 
   useEffect(() => {
     if (authLoading) return
@@ -429,7 +423,7 @@ export default function App() {
   const claimedQuestRewards = useRef(new Set())
   const [progress, setProgress] = useState(() => isSupabaseConfigured ? DEFAULT_PROGRESS : loadLearnerProgress())
   const [sectionResults, setSectionResults] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelSectionResults || {})
-  const [mockLaunchTask, setMockLaunchTask] = useState(null)
+  const [mockLaunchSection, setMockLaunchSection] = useState(null)
   const [multilevelExamResult, setMultilevelExamResult] = useState(() => loadJSON(STORAGE_KEY, {})?.multilevelExamResult || null)
   const [unlockedMedals, setUnlockedMedals] = useState(() => {
     const saved = loadJSON(STORAGE_KEY, {})?.unlockedMedals
@@ -498,6 +492,7 @@ export default function App() {
     document.documentElement.classList.toggle('theme-premium', isPremium)
     document.documentElement.classList.toggle('theme-night', !isPremium && dark)
     document.documentElement.classList.toggle('theme-default', !isPremium && !dark)
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isPremium ? '#2f1414' : dark ? '#07142e' : '#eef3fb')
   }, [dark, isPremium])
 
   useEffect(() => {
@@ -509,7 +504,7 @@ export default function App() {
   }, [isPremium])
 
   useEffect(() => {
-    const localState = { multilevelSectionResults: sectionResults, multilevelExamResult, dark, isPremium, unlockedMedals, equippedMedal }
+    const localState = { multilevelSectionResults: sectionResults, multilevelExamResult, design: 'bosfor', dark, isPremium, unlockedMedals, equippedMedal }
     if (profile) Object.assign(localState, { stats, progress })
     saveJSON(STORAGE_KEY, localState)
   }, [stats, progress, profile, sectionResults, multilevelExamResult, dark, isPremium, unlockedMedals, equippedMedal])
@@ -537,15 +532,22 @@ export default function App() {
       if (!alive) return
       setCloudSession(session || null)
       setCloudReady(false)
+      setLearningOwner(null)
       if (!session?.user) {
+        learningSessionUser.current = null
+        setVocabularyOwner(null)
         setCloudReady(false)
         setAuthenticated(false)
         setProfile(null)
         setStats(DEFAULT_STATS)
         setProgress(DEFAULT_PROGRESS)
+        setSectionResults({})
+        setMultilevelExamResult(null)
         setAuthLoading(false)
         return
       }
+      if (learningSessionUser.current !== session.user.id) setAuthLoading(true)
+      learningSessionUser.current = session.user.id
       setAuthenticated(true)
       const cachedProfile = loadProfile()
       const sessionEmail = String(session.user.email || '').trim().toLowerCase()
@@ -561,10 +563,14 @@ export default function App() {
         setProgress(DEFAULT_PROGRESS)
       }
       const metadata = session.user.user_metadata || {}
+      const keys = learningKeys(session.user.id)
+      const cachedAssessment = cachedProfileMatchesSession ? loadJSON(STORAGE_KEY, {}) : {}
+      setVocabularyOwner(session.user.id, cachedProfileMatchesSession)
       const forceOnboarding = hasPendingOnboarding(session.user.id)
-      const [progressResult, gamificationResult] = await Promise.allSettled([
+      const [progressResult, gamificationResult, learningResult] = await Promise.allSettled([
         fetchLearnerProgress(session.user.id),
         fetchLearnerGamification(session.user.id),
+        restoreLearningState(session.user.id, () => alive),
       ])
       const row = progressResult.status === 'fulfilled' ? progressResult.value : null
       const cloudData = gamificationResult.status === 'fulfilled' ? gamificationResult.value : null
@@ -572,7 +578,14 @@ export default function App() {
       if (progressResult.status === 'rejected') console.error('Could not load cloud progress:', progressResult.reason)
       if (gamificationResult.status === 'rejected') console.warn('Could not load cloud profile, streak, achievements, or vocabulary. Apply the latest Supabase schema to enable full sync.', gamificationResult.reason)
       if (!alive) return
-      if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
+      if (learningResult.status === 'rejected') console.warn('Learning state unavailable. Apply the learning-state migration or retry after reconnecting.', learningResult.reason)
+      const assessments = loadJSON(keys.assessments, null)
+      setSectionResults(assessments?.sectionResults || cachedAssessment.multilevelSectionResults || {})
+      setMultilevelExamResult(assessments?.examResult || cachedAssessment.multilevelExamResult || null)
+      if (assessments?.progress) setProgress({ ...DEFAULT_PROGRESS, ...assessments.progress })
+      stopLearningSync.current = syncLearningState(session.user.id, learningResult.status === 'fulfilled')
+      setLearningOwner(session.user.id)
+      if (cloudData?.vocabulary && loadJSON(keys.vocabulary_words, null) === null) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
       const cloudAchievementRecords = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
         .filter((record) => record && typeof record === 'object' && typeof record.trophy_id === 'string')
         .map((record) => ({
@@ -599,6 +612,8 @@ export default function App() {
         savedWordsCount: getSavedWordCount(),
         completedLessons: row?.completed_lessons || current.completedLessons || [],
         moduleScores: mergeModuleScores(current.moduleScores, row?.module_scores),
+        completedMocks: Math.max(Number(current.completedMocks) || 0, Number(assessments?.completedMocks) || 0),
+        examDone: Boolean(assessments?.examDone || current.examDone),
         weeklyXp: row?.weekly_xp ?? current.weeklyXp ?? 0,
         weekStart: row?.week_start ?? current.weekStart ?? null,
         lastActivityDate: row?.last_activity_date || cloudStreak?.last_active_date || current.lastActivityDate || null,
@@ -624,6 +639,7 @@ export default function App() {
       setCloudReady(false)
 
       if (session?.user) {
+        setVocabularyOwner(session.user.id)
         const email = String(session.user.email || '').trim().toLowerCase()
         const cachedEmail = String(cachedProfile?.email || '').trim().toLowerCase()
         const cachedMatchesSession = Boolean(cachedProfile && (
@@ -662,8 +678,19 @@ export default function App() {
     }
 
     void safelyHydrateSession(authSession)
-    return () => { alive = false }
+    return () => {
+      alive = false
+      stopLearningSync.current?.()
+      stopLearningSync.current = null
+    }
   }, [authSession, authStateLoading])
+
+  useEffect(() => {
+    if (!learningOwner || learningOwner !== authUser?.id || !stopLearningSync.current || authLoading) return
+    saveJSON(learningKeys(learningOwner).assessments, {
+      sectionResults, examResult: multilevelExamResult, progress, completedMocks: stats.completedMocks, examDone: stats.examDone,
+    })
+  }, [learningOwner, authUser?.id, authLoading, sectionResults, multilevelExamResult, progress, stats.completedMocks, stats.examDone])
 
   const showToast = useCallback((message, type = 'default') => {
     const id = Math.random().toString(36).slice(2)
@@ -692,10 +719,18 @@ export default function App() {
 
   useEffect(() => {
     if (!isSupabaseConfigured || !cloudReady || !cloudSession?.user || !profile || profile.onboardingCompleted === false) return undefined
+    let current = true
     const timeout = window.setTimeout(() => {
-      syncLearnerProgress(cloudSession.user.id, profile, stats).catch((error) => console.error('Cloud progress sync failed:', error))
+      if (resettingProgress.current) return
+      const write = Promise.allSettled([...progressWrites.current])
+        .then(() => {
+          if (current && !resettingProgress.current) return syncLearnerProgress(cloudSession.user.id, profile, stats)
+        })
+        .catch((error) => console.error('Cloud progress sync failed:', error))
+        .finally(() => progressWrites.current.delete(write))
+      progressWrites.current.add(write)
     }, 250)
-    return () => window.clearTimeout(timeout)
+    return () => { current = false; window.clearTimeout(timeout) }
   }, [cloudReady, cloudSession, profile, stats])
 
   useEffect(() => { void showDailyReminderIfDue({ title: t('reminder.notification.title'), body: t('reminder.notification.body') }) }, [t])
@@ -714,78 +749,21 @@ export default function App() {
 
   const handleCloudRegister = useCallback(async ({ email, password, profile: newProfile }) => {
     if (!supabase) throw new Error('Supabase is not configured.')
-    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name: newProfile.name, surname: newProfile.surname, target_level: newProfile.targetLevel, onboarding_completed: false } } })
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name: newProfile.name, surname: newProfile.surname, onboarding_completed: false } } })
     if (error) throw error
-    if (!data.session) throw new Error('Account created. Confirm your email, then sign in to continue.')
+    if (!data.session) return { needsConfirmation: true }
     const learner = { ...newProfile, onboardingCompleted: false, userId: data.user.id }
     setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(true); setAuthLoading(false)
-    try { await syncLearnerProgress(data.user.id, learner, DEFAULT_STATS) } catch (error) { console.error('Initial cloud progress write failed:', error) }
-    showToast('Hisob Supabase’da yaratildi va bulut bilan ulandi.', 'success')
-  }, [showToast])
+    showToast(t('auth.account.created'), 'success')
+  }, [showToast, t])
 
   const handleCloudLogin = useCallback(async ({ email, password }) => {
     if (!supabase) throw new Error('Supabase is not configured.')
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
-    const cachedProfile = loadProfile()
-    const cachedEmail = String(cachedProfile?.email || '').trim().toLowerCase()
-    const sessionEmail = String(data.user?.email || '').trim().toLowerCase()
-    const cachedProfileMatchesSession = Boolean(cachedProfile && (
-      cachedProfile.userId === data.user?.id || (cachedEmail && sessionEmail && cachedEmail === sessionEmail)
-    ))
-    if (cachedProfileMatchesSession) {
-      setStats(loadLearnerStats(cachedProfile))
-      setProgress(loadLearnerProgress())
-    } else {
-      setStats(DEFAULT_STATS)
-      setProgress(DEFAULT_PROGRESS)
-    }
-    const [progressResult, gamificationResult] = await Promise.allSettled([
-      fetchLearnerProgress(data.user.id),
-      fetchLearnerGamification(data.user.id),
-    ])
-    const row = progressResult.status === 'fulfilled' ? progressResult.value : null
-    const cloudData = gamificationResult.status === 'fulfilled' ? gamificationResult.value : null
-    const progressLookupSucceeded = progressResult.status === 'fulfilled'
-    if (progressResult.status === 'rejected') console.error('Could not load cloud progress:', progressResult.reason)
-    if (gamificationResult.status === 'rejected') console.warn('Could not load cloud gamification data. Apply the latest Supabase schema to enable full sync.', gamificationResult.reason)
-    if (cloudData?.vocabulary) mergeCloudVocabularyIntoLocal(cloudData.vocabulary)
-    const metadata = data.user.user_metadata || {}
-    const forceOnboarding = hasPendingOnboarding(data.user.id)
-    const localSavedXp = cachedProfileMatchesSession ? Math.max(0, Number(loadLearnerStats(cachedProfile).xp) || 0) : 0
-    const restoredXp = Math.max(0, Number(row?.xp) || 0, Number(cloudData?.profile?.total_xp) || 0, localSavedXp)
-    void syncProfileXpFloor(data.user.id, restoredXp).catch((syncError) => {
-      console.warn('[Turkuaz Edu] Could not reconcile the saved XP total with the profile.', syncError)
-    })
-    const learnerProfile = getLearnerProfileFromAuth(data.user, row?.target_level || metadata.target_level, progressLookupSucceeded ? Boolean(row || cloudData?.profile || cloudData?.streak) : true, forceOnboarding, cloudData?.profile)
-    const learner = { ...preserveCachedProfileAvatar(learnerProfile, cachedProfile, cachedProfileMatchesSession, !cloudData?.profile), ratingTier: getRatingTier(restoredXp) }
-    setCloudSession(data.session); setProfile(learner); setAuthenticated(true); setCloudReady(progressLookupSucceeded && Boolean(cloudData) && !cloudData.hasReadFailures); setAuthLoading(false)
-    const remoteAchievements = (Array.isArray(cloudData?.achievements) ? cloudData.achievements : [])
-      .filter((record) => record && typeof record === 'object' && typeof record.trophy_id === 'string')
-      .map((record) => ({ id: record.trophy_id, unlockedAt: record.unlocked_at || null, rewardXp: Number(record.progress_data?.rewardXp ?? record.progress_data?.reward_xp) || 0, historical: Boolean(record.progress_data?.historical) }))
-    const cloudStreak = cloudData?.streak
-    const streakCount = Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? 0)
-    if (row || cloudData) setStats((current) => ({
-      ...current,
-      xp: restoredXp,
-      streak: Math.max(0, Number(row?.streak ?? cloudStreak?.streak_count ?? cloudData?.profile?.current_streak ?? current.streak) || 0),
-      streakMilestones: [...new Set([...(current.streakMilestones || []), ...(Array.isArray(cloudStreak?.unlocked_milestones) ? cloudStreak.unlocked_milestones.map(Number) : []), ...getStreakMilestonesUpTo(streakCount)])].filter((days) => STREAK_MILESTONES.some((milestone) => milestone.days === days)).sort((a, b) => a - b),
-      trophyUnlocks: mergeTrophyRecords(current.trophyUnlocks || [], remoteAchievements),
-      winterStudy: normalizeWinterStudy(cloudStreak?.winter_study_days || current.winterStudy),
-      savedWordsCount: getSavedWordCount(),
-      completedLessons: row?.completed_lessons || current.completedLessons || [],
-      moduleScores: mergeModuleScores(current.moduleScores, row?.module_scores),
-      skillsCompleted: row?.completed_lessons || current.skillsCompleted || [],
-      weeklyXp: row?.weekly_xp ?? current.weeklyXp ?? 0,
-      weekStart: row?.week_start ?? current.weekStart ?? null,
-      lastActivityDate: row?.last_activity_date || cloudStreak?.last_active_date || current.lastActivityDate || null,
-      dailyXp: row?.daily_xp || current.dailyXp || {},
-      analyticsTrackingSince: row?.analytics_tracking_since || current.analyticsTrackingSince || null,
-      dailyQuests: row?.daily_quests || current.dailyQuests || null,
-      questWordsCredited: row?.quest_words_credited || current.questWordsCredited || [],
-    }))
-    showToast('Bulut hisobingizga muvaffaqiyatli kirdingiz.', 'success')
-  }, [showToast])
+    showToast(t('auth.account.signedIn'), 'success')
+  }, [showToast, t])
+
 
   // Show platform-specific install steps because native install prompts are
   // not exposed consistently across browsers and embedded previews.
@@ -889,7 +867,7 @@ export default function App() {
       }
       const monday = new Date(); monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7))
       const weekStart = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
-      const historyCutoffDate = new Date(); historyCutoffDate.setDate(historyCutoffDate.getDate() - 89)
+      const historyCutoffDate = new Date(); historyCutoffDate.setDate(historyCutoffDate.getDate() - 91)
       const historyCutoffKey = localDateKey(historyCutoffDate)
       setStats((s) => {
         const streak = !markLessonActivity || s.lastActivityDate === today
@@ -1003,7 +981,7 @@ export default function App() {
   )
 
   const navigate = useCallback((id) => {
-    if (id === 'shop' && authUser?.app_metadata?.role !== 'admin' && !isOwnerEmail(authUser?.email)) {
+    if (id === 'shop' && !shopAllowed) {
       setActive('home')
       showToast('Ruxsat etilmagan hudud!', 'default')
       return
@@ -1015,7 +993,7 @@ export default function App() {
     if (pathname.startsWith('/admin')) navigatePath('/', true)
     setActive(id)
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [authUser?.app_metadata?.role, authUser?.email, navigatePath, pathname, showToast])
+  }, [shopAllowed, navigatePath, pathname, showToast])
 
   const handleAdminHome = useCallback(() => {
     setActive('home')
@@ -1050,8 +1028,11 @@ export default function App() {
     savedWordsCount: stats.savedWordsCount,
     flawlessQuizAchieved: stats.flawlessQuizAchieved,
     speedBonusAchieved: stats.speedBonusAchieved,
+    listeningLessonsCompleted: stats.listeningLessonsCompleted,
+    completedMocks: stats.completedMocks,
+    seasonStudyDays: getSeasonStudyDays(stats.dailyXp),
     winterStudyDays: winterFeatureEnabled ? getWinterStudyDayCount(stats.winterStudy) : 0,
-  }), [stats.xp, stats.completedQuizzes, stats.streak, stats.streakMilestones, stats.readingCompletedCount, stats.readingPerfectExamAchieved, stats.savedWordsCount, stats.flawlessQuizAchieved, stats.speedBonusAchieved, stats.winterStudy, progress.dinleme, winterFeatureEnabled])
+  }), [stats, progress.dinleme, winterFeatureEnabled])
 
   useEffect(() => {
     if (authLoading || !authenticated || !profile || profile.onboardingCompleted === false) return
@@ -1108,10 +1089,10 @@ export default function App() {
 
   // ------------------------------ auth flow ------------------------------
 
-  const handleSaveProfile = (p) => {
+  const handleSaveProfile = async (p) => {
     const learnerProfile = editingProfile ? p : { ...p, onboardingCompleted: false }
     if (isSupabaseConfigured && supabase && cloudSession?.user) {
-      supabase.auth.updateUser({ data: {
+      const { error } = await supabase.auth.updateUser({ data: {
         name: learnerProfile.name,
         surname: learnerProfile.surname,
         target_level: learnerProfile.targetLevel,
@@ -1119,12 +1100,14 @@ export default function App() {
         learning_goal: learnerProfile.learningGoal,
         starting_path: learnerProfile.startingPath,
         starting_level: learnerProfile.startingLevel,
-      } }).catch((error) => console.error('Profile sync failed:', error))
+        exam_date: normalizeExamDate(learnerProfile.examDate),
+      } })
+      if (error) throw error
     }
     setProfile(learnerProfile)
     setAuthenticated(true)
     setEditingProfile(false)
-    showToast(editingProfile ? 'Profil yangilandi! ✅' : 'Roʻyxatdan oʻtdingiz! 🎉', 'success')
+    showToast(t(editingProfile ? 'auth.account.profileSaved' : 'auth.account.created'), 'success')
   }
 
   const handleSaveAvatar = async (avatarPath) => {
@@ -1133,64 +1116,74 @@ export default function App() {
       if (!userId) throw new Error(t('profile.avatar.failure'))
       await updateLearnerAvatar(userId, avatarPath, { ...profile, xp: stats.xp, streak: stats.streak })
     }
-    setProfile((current) => current ? { ...current, avatarUrl: avatarPath, avatar_url: avatarPath } : current)
-    showToast(t('profile.avatar.saved'), 'success')
   }
 
   const handleLogin = () => {
     setAuthenticated(true)
-    showToast('Tekrar hoş geldiniz! ✅', 'success')
+    showToast(t('auth.account.signedIn'), 'success')
   }
 
-  const completeOnboarding = useCallback((choices) => {
+  const completeOnboarding = useCallback(async (choices) => {
+    if (isSupabaseConfigured && supabase && cloudSession?.user) {
+      const { error } = await supabase.auth.updateUser({ data: {
+        onboarding_completed: true,
+        learning_goal: choices.learningGoal,
+        starting_path: choices.startingPath,
+        starting_level: choices.startingLevel,
+        target_level: choices.targetLevel,
+        exam_date: choices.examDate,
+      } })
+      if (error) throw error
+    }
     const completedProfile = {
       ...profile,
       ...choices,
       onboardingCompleted: true,
     }
     setProfile(completedProfile)
-    setActive('home')
+    setActive('plan')
     try {
       const pendingOwner = window.localStorage.getItem(ONBOARDING_PENDING_KEY)
       if (pendingOwner === 'pending' || pendingOwner === String(profile?.userId)) window.localStorage.removeItem(ONBOARDING_PENDING_KEY)
     } catch { /* profile state still persists onboarding completion */ }
-
-    if (isSupabaseConfigured && supabase && cloudSession?.user) {
-      void supabase.auth.updateUser({ data: {
-        onboarding_completed: true,
-        learning_goal: choices.learningGoal,
-        starting_path: choices.startingPath,
-        starting_level: choices.startingLevel,
-      } }).then(({ error }) => {
-        if (error) console.error('Onboarding profile sync failed:', error)
-      }).catch((error) => console.error('Onboarding profile sync failed:', error))
-    }
   }, [cloudSession?.user, profile])
 
-  const handleClearData = () => {
-    claimedQuestRewards.current.clear()
-    clearAllStorage()
+  const handleClearData = async () => {
+    if (resettingProgress.current) return false
+    resettingProgress.current = true
     const cloudUserId = cloudSession?.user?.id
-    if (isSupabaseConfigured && cloudUserId) {
-      void (async () => {
-        try { await deleteLearnerCloudData(cloudUserId) }
-        catch (error) { console.error('Cloud learner data deletion failed:', error) }
-        finally {
-          try {
-            const { error } = await supabase.auth.signOut()
-            if (error) throw error
-          } catch (error) {
-            console.error('Supabase sign out after data deletion failed:', error)
-          }
-        }
-      })()
-    } else if (isSupabaseConfigured && supabase) {
-      void supabase.auth.signOut().catch((error) => console.error('[Turkuaz Edu] Supabase sign out failed:', error))
+    const resetIdentity = cloudUserId || profile?.userId || profile?.email
+    let signedOut = true
+    if (isSupabaseConfigured) {
+      const resumeUploads = Boolean(stopLearningSync.current)
+      const pendingLearningWrite = stopLearningSync.current?.({ drain: true })
+      stopLearningSync.current = null
+      try {
+        await Promise.allSettled([...progressWrites.current, pendingLearningWrite])
+        await deleteLearnerCloudData(cloudUserId)
+      } catch (error) {
+        console.error('Cloud learner data deletion failed:', error)
+        if (cloudUserId && resumeUploads) stopLearningSync.current = syncLearningState(cloudUserId, true)
+        resettingProgress.current = false
+        return false
+      }
+      try {
+        const { error } = await supabase.auth.signOut({ scope: 'local' })
+        if (error) throw error
+      } catch (error) {
+        signedOut = false
+        console.error('Sign out after learner reset failed:', error)
+      }
     }
-    setCloudSession(null)
+    claimedQuestRewards.current.clear()
+    setLearningOwner(null)
+    clearAllStorage(resetIdentity)
+    if (signedOut) {
+      setCloudSession(null)
+      setProfile(null)
+      setAuthenticated(false)
+    }
     setCloudReady(false)
-    setProfile(null)
-    setAuthenticated(false)
     setEditingProfile(false)
     setStats(DEFAULT_STATS)
     setTrophyCelebrationEvent(null)
@@ -1205,7 +1198,9 @@ export default function App() {
     setIsPremium(false)
     setActive('home')
     setResetVersion((version) => version + 1)
-    showToast('Barcha maʼlumotlar tozalandi 🧹', 'save')
+    resettingProgress.current = false
+    showToast(t(signedOut ? 'profile.resetDone' : 'profile.resetSignOut'), signedOut ? 'save' : 'default')
+    return true
   }
 
   const handleLogout = async () => {
@@ -1239,17 +1234,17 @@ export default function App() {
       case 'home':
         return <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
       case 'leagues':
-        return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} isPremium={isPremium} />
+        return <Leaderboard key="leagues" userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} navigate={navigate} />
       case 'clans':
-        return <Leaderboard userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} initialTab="clans" />
+        return <Leaderboard key="clans" userId={cloudSession?.user?.id || profile?.userId} profile={profile} stats={stats} initialTab="clans" navigate={navigate} />
       case 'analytics':
-        return <Statistika profile={profile} stats={stats} progress={progress} isPremium={isPremium} dark={dark} navigate={navigate} />
+        return <Statistika profile={profile} stats={stats} progress={progress} sectionResults={sectionResults} navigate={navigate} />
       case 'plan':
-        return <KunlikReja stats={stats} sectionResults={sectionResults} targetLevel={profile?.targetLevel} navigate={navigate} isPremium={isPremium} />
+        return <KunlikReja stats={stats} sectionResults={sectionResults} profile={profile} learnerId={profile?.userId || profile?.email} navigate={navigate} onEditProfile={() => setEditingProfile(true)} />
       case 'journey':
-        return <JourneyMap stats={stats} progress={progress} navigate={navigate} />
+        return <JourneyMap stats={stats} sectionResults={sectionResults} learnerId={profile?.userId || profile?.email} navigate={navigate} />
       case 'shop':
-        return (authUser?.app_metadata?.role === 'admin' || isOwnerEmail(authUser?.email)) ? <Shop stats={stats} profile={profile} /> : <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
+        return shopAllowed ? <Shop stats={stats} profile={profile} /> : <Dashboard scores={scores} sectionResults={sectionResults} overallScore={totalScore} navigate={navigate} name={profile?.name} targetLevel={profile?.targetLevel} stats={stats} dailyQuests={todaysQuests} onClaimDailyReward={claimDailyWordReward} isPremium={isPremium} dark={dark} />
       case 'okuma':
         return <ReadingLibrary key={profile?.userId || profile?.email || 'local'} addXp={addXp} completeLevel={(percent, xpAward) => completeLevel('okuma', percent, xpAward)} isPremium={isPremium} dark={dark} profile={profile} onReadingCompletionsChange={updateReadingCompletedCount} onSavedWordsChange={updateSavedWordsCount} onFlawlessQuiz={recordFlawlessQuiz} onPerfectReadingExam={recordPerfectReadingExam} onSpeedBonus={recordSpeedBonus} />
       case 'dinleme':
@@ -1257,8 +1252,6 @@ export default function App() {
           key={profile?.userId || profile?.email || 'local'}
           profile={profile}
           moduleScores={stats.moduleScores}
-          isPremium={isPremium}
-          dark={dark}
           onLessonComplete={({ testId, scorePct, xpAward, firstCompletion, completedCount }) => {
             const saved = saveScore('dinleme', { best: scorePct, attempts: 1 })
             const previousCloudRecord = stats.moduleScores?.[testId]
@@ -1302,27 +1295,25 @@ export default function App() {
           onBatchComplete={(xp, taskType) => addXp(xp, { taskType })}
           onToast={showToast}
           onNewQuestWord={recordNewQuestWord}
-          isPremium={isPremium}
-          dark={dark}
         />
       case 'exams':
-        return <ImtihonlarHub onNavigate={navigate} onStartTask={(task) => { setMockLaunchTask(task); navigate('mock') }} />
+        return <ImtihonlarHub sectionResults={sectionResults} onNavigate={navigate} onStartSection={(section) => { setMockLaunchSection(section); navigate('mock') }} />
       case 'mixed-practice':
-        return <MockExamSimulator profile={profile} isPremium={isPremium} onToast={showToast} onExit={() => navigate('exams')} onComplete={() => setStats((current) => incrementWeeklyGoal(current, 'tests'))} />
+        return <MockExamSimulator profile={profile} isPremium={isPremium} dark={dark} onToast={showToast} onExit={() => navigate('exams')} onComplete={() => setStats((current) => incrementWeeklyGoal(current, 'tests'))} />
       case 'full-mock':
         return <MockExamEngine onExit={() => navigate('exams')} onExamComplete={(result) => {
-          setStats((current) => incrementWeeklyGoal({ ...current, completedMocks: (current.completedMocks || 0) + 1 }, 'tests'))
+          setStats((current) => incrementWeeklyGoal({ ...current, examDone: true, completedMocks: (current.completedMocks || 0) + 1 }, 'tests'))
           if (result.earnedXp > 0) addXp(result.earnedXp, { taskType: 'exam:database-mock' })
         }} />
       case 'mock':
       case 'quick-assessment':
+        if (active === 'mock' && !mockLaunchSection) return <ImtihonlarHub sectionResults={sectionResults} onNavigate={navigate} onStartSection={setMockLaunchSection} />
         return (
           <MockExam
+            key={active === 'mock' ? mockLaunchSection : active}
             initialMode={active === 'quick-assessment' ? 'reading' : 'mixed'}
-            initialSection={active === 'mock' ? mockLaunchTask?.section : null}
-            onInitialSectionConsumed={() => setMockLaunchTask(null)}
-            onExit={() => navigate('exams')}
-            sectionResults={sectionResults}
+            initialSection={active === 'mock' ? mockLaunchSection : null}
+            onExit={() => { setMockLaunchSection(null); navigate('exams') }}
             onSectionComplete={(result) => {
               setSectionResults((previous) => {
                 const existing = previous[result.section]
@@ -1340,11 +1331,6 @@ export default function App() {
               }
               showToast(`${result.section.toLocaleUpperCase('tr-TR')} bo‘limi yakunlandi · ${result.scaledScore}/75 · ${result.level}`, 'success')
             }}
-            onExamComplete={(result) => {
-              setMultilevelExamResult(result)
-              setStats((current) => incrementWeeklyGoal({ ...current, examDone: true, completedMocks: (current.completedMocks || 0) + 1 }, 'tests'))
-              if (result.earnedXp > 0) addXp(result.earnedXp, { taskType: result.examTaskType || 'exam:full-mock' })
-            }}
           />
         )
       default:
@@ -1359,7 +1345,8 @@ export default function App() {
       profile={profile}
       hasProfile={!!profile}
       isPremium={isPremium}
-      onClose={editingProfile ? () => setEditingProfile(false) : undefined}
+      dark={dark}
+      onClose={editingProfile ? closeProfileEditor : undefined}
       onSave={handleSaveProfile}
       onSaveAvatar={handleSaveAvatar}
       onLogin={handleLogin}
@@ -1371,49 +1358,27 @@ export default function App() {
     />
   )
 
-  if (authLoading || loadingScreenVisible) {
-    return (
-      <main className={`grid min-h-[100dvh] w-full place-items-center bg-[#0f172a] transition-opacity duration-200 ease-out ${loadingScreenExiting ? 'opacity-0' : 'opacity-100'}`}>
-        <section role="status" aria-live="polite" aria-busy="true" aria-label={t('cloud.loading.status')} className="flex flex-col items-center gap-4">
-          <span className="relative grid size-16 place-items-center" aria-hidden="true">
-            <span className="absolute -inset-3 rounded-full bg-cyan-500/10 blur-xl" />
-            <span className="absolute inset-0 rounded-full border-4 border-b-transparent border-l-transparent border-r-cyan-400 border-t-cyan-400 shadow-[0_0_30px_rgba(6,182,212,0.4)] animate-spin" />
-            <span className="size-3 rotate-45 rounded-[3px] bg-cyan-100 shadow-[0_0_18px_rgba(103,232,249,0.9)] animate-pulse" />
-          </span>
-          <p className="text-[10px] font-semibold tracking-[.32em] text-slate-500 animate-pulse">TURKUAZ</p>
-        </section>
-      </main>
-    )
-  }
+  if (authLoading) return screenFallback
 
   const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/')
   if (isAdminPath && routeAuthenticated) {
-    return <Suspense fallback={pageFallback}><AdminRoute pathname={pathname} onNavigate={navigatePath} onHome={handleAdminHome} onUnauthorized={handleAdminDenied}/></Suspense>
+    return <Suspense fallback={screenFallback}><AdminRoute pathname={pathname} onNavigate={navigatePath} onHome={handleAdminHome} onOpenShop={() => navigate('shop')} onUnauthorized={handleAdminDenied} dark={dark} onToggleDark={isPremium ? undefined : () => setDark((value) => !value)}/></Suspense>
   }
 
   if (pathname !== '/' && pathname !== '/login') {
-    if (!routeAuthenticated) return <div role="status" aria-live="polite" className="grid min-h-[100dvh] place-items-center bg-slate-950 text-sm font-semibold text-slate-200"><span className="inline-flex items-center gap-2"><LoaderCircle className="size-5 animate-spin" aria-hidden="true" />{t('cloud.loading.status')}</span></div>
+    if (!routeAuthenticated) return screenFallback
     return <NotFound onHome={() => { setActive('home'); navigatePath('/', false) }} />
   }
 
   if (!routeAuthenticated) {
     return (
-      <main className="relative isolate grid min-h-[100dvh] place-items-center overflow-hidden bg-gradient-to-br from-slate-950 via-[#071b26] to-slate-950 px-4 py-10 text-white">
-        <div className="pointer-events-none absolute -right-20 -top-24 size-80 rounded-full bg-teal-500/10 blur-3xl" aria-hidden="true" />
-        <div className="pointer-events-none absolute -bottom-24 -left-20 size-80 rounded-full bg-cyan-500/10 blur-3xl" aria-hidden="true" />
-        <div className="relative z-10 flex flex-col items-center gap-2 text-center">
-          <img src="/icons/turkish-education.svg" alt="" className="size-14 rounded-2xl shadow-lg shadow-black/25" />
-          <h1 className="text-xl font-black tracking-tight">Turkuaz-edu</h1>
-          <p className="text-xs font-semibold text-slate-400">Turk tili platformasi</p>
-        </div>
-        {profileModal}
-      </main>
+      <main>{profileModal}</main>
     )
   }
 
   if (routeAuthenticated && profile?.onboardingCompleted === false) {
     return (
-      <Suspense fallback={pageFallback}>
+      <Suspense fallback={screenFallback}>
         <OnboardingFlow isPremium={isPremium} dark={dark} profile={profile} onComplete={completeOnboarding} />
       </Suspense>
     )
@@ -1468,3 +1433,4 @@ export default function App() {
     </>
   )
 }
+

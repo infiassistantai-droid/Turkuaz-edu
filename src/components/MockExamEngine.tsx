@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { ModelAsset, SectionBanner } from './BosforArtwork'
 import { ArrowRight, BookOpenText, Check, Clock3, FileText, Headphones, Mic, MicOff, Square, Volume2 } from 'lucide-react'
 import examSource from '../data/Turkuaz_BMBA_Full_Mock_Exam_1.json'
 import { cn } from '../lib/utils'
@@ -468,52 +469,36 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
 
   if (phase === 'intro') {
     return (
-      <main className="mx-auto w-full max-w-6xl px-4 pb-12 pt-5 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/85 p-6 shadow-xl shadow-slate-950/5 dark:border-slate-700/70 dark:bg-slate-900/75 sm:p-9 lg:p-12">
-          <div className="absolute -right-20 -top-24 size-72 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true" />
-          <div className="absolute -bottom-32 -left-10 size-72 rounded-full bg-cyan-500/10 blur-3xl" aria-hidden="true" />
-          <div className="relative">
-            <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">{t('fullExam.eyebrow')}</p>
-            <h1 className="max-w-3xl text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">{EXAM.title}</h1>
-            <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">{EXAM.description}</p>
-
-            <div className="mt-7 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,20rem)] xl:items-stretch">
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {SECTION_ORDER.map((id, index) => {
-                  const Icon = SECTION_ICONS[id]
-                  return (
-                    <div key={id} className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 dark:border-slate-700/70 dark:bg-slate-950/45">
-                      <div className="mb-3 flex size-9 items-center justify-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-300/15 dark:text-teal-200"><Icon className="size-4" aria-hidden="true" /></div>
-                      <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{t(SECTION_LABELS[id])}</p>
-                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{t('fullExam.sectionDuration', { minutes: getSectionDuration(id) })}</p>
-                      <span className="mt-3 inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{index + 1} / 4</span>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-teal-300/40 bg-gradient-to-br from-teal-600/10 to-cyan-500/10 p-5 dark:border-teal-300/20 dark:from-teal-500/10 dark:to-cyan-400/10">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('fullExam.duration')}</p>
-                  <p className="mt-1 flex items-baseline gap-2 text-3xl font-black text-slate-950 dark:text-white"><Clock3 className="size-6 text-teal-700 dark:text-teal-300" />{EXAM.duration_minutes}<span className="text-sm font-bold text-slate-600 dark:text-slate-300">{t('fullExam.minutes')}</span></p>
-                  <p className="mt-3 text-xs leading-5 text-slate-600 dark:text-slate-300">{t('fullExam.startHint')}</p>
-                </div>
-                <button type="button" onClick={startExam} className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-500 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-teal-700/20 transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
-                  {t('fullExam.start')}<ArrowRight className="size-4" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-            {onExit && <button type="button" onClick={onExit} className="mt-6 text-sm font-semibold text-slate-500 underline decoration-slate-400/50 underline-offset-4 hover:text-teal-700 dark:text-slate-400 dark:hover:text-teal-200">{t('fullExam.exit')}</button>}
+      <section className="exam-center mx-auto max-w-6xl space-y-4">
+        <SectionBanner name="exams" title={t('examsHub.full.title')} description={t('examsHub.full.description')}>
+          <span>{t('examsHub.full.detail')}</span>
+        </SectionBanner>
+        <section className="bosfor-panel rounded-2xl border p-4 sm:p-6">
+          <ol className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            {SECTION_ORDER.map((id) => (
+              <li key={id} className="bosfor-inset min-w-0 rounded-xl border p-3">
+                <ModelAsset name={id} className="mb-2 size-11" />
+                <p className="text-sm font-extrabold">{t(SECTION_LABELS[id])}</p>
+                <p className="exam-muted mt-1 text-xs">{t('fullExam.sectionDuration', { minutes: getSectionDuration(id) })}</p>
+              </li>
+            ))}
+          </ol>
+          <p className="exam-muted mt-4 text-sm">{t('fullExam.startHint')}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="button" onClick={startExam} className="bosfor-action exam-action">{t('fullExam.start')}<ArrowRight className="size-4" aria-hidden="true" /></button>
+            {onExit && <button type="button" onClick={onExit} className="bosfor-control exam-action">{t('examsHub.back')}</button>}
           </div>
         </section>
-      </main>
+      </section>
     )
   }
 
+
   if (phase === 'submitted') {
     return (
-      <main className="mx-auto w-full max-w-4xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
-        <section className="rounded-[2rem] border border-emerald-300/40 bg-white/90 p-7 text-center shadow-xl shadow-emerald-950/5 dark:border-emerald-300/20 dark:bg-slate-900/80 sm:p-12">
-          <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-200"><Check className="size-8" aria-hidden="true" /></div>
+      <div className="mx-auto w-full max-w-4xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+        <section className="bosfor-panel rounded-[2rem] border p-7 text-center sm:p-12">
+          <ModelAsset name="certificate" className="mx-auto size-28" />
           <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">{t('fullExam.complete.answers')}</p>
           <h1 className="mt-2 text-3xl font-black text-slate-950 dark:text-white">{t('fullExam.complete.title')}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">{t('fullExam.complete.body')}</p>
@@ -524,18 +509,18 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
             })}
           </div>
           <p className="mx-auto mt-5 max-w-xl text-xs leading-5 text-slate-500 dark:text-slate-400">{t('fullExam.sessionNote')}</p>
-          {onExit && <button type="button" onClick={onExit} className="mt-7 rounded-xl bg-teal-700 px-5 py-3 text-sm font-bold text-white hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-900">{t('fullExam.exit')}</button>}
+          {onExit && <button type="button" onClick={onExit} className="bosfor-action exam-action mt-7">{t('examsHub.back')}</button>}
         </section>
-      </main>
+      </div>
     )
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 pb-12 pt-3 sm:px-6 lg:px-8">
-      <div className="sticky top-[76px] z-30 mb-6 rounded-2xl border border-slate-200/80 bg-white/95 p-3 shadow-lg shadow-slate-950/10 backdrop-blur-xl dark:border-slate-700/80 dark:bg-slate-950/95 sm:p-4">
+    <div className="mx-auto w-full max-w-6xl px-4 pb-12 pt-3 sm:px-6 lg:px-8">
+      <div className="bosfor-panel sticky top-[76px] z-30 mb-6 rounded-2xl border p-3 sm:p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
-            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-300/15 dark:text-teal-200"><Clock3 className="size-4" aria-hidden="true" /></span>
+            <ModelAsset name="exams" className="size-10" />
             <div className="min-w-0">
               <p className="truncate text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">{t('fullExam.remaining')} · {t(SECTION_LABELS[section])}</p>
               <p className={cn('font-mono text-xl font-black tabular-nums sm:text-2xl', timerUrgent ? 'text-rose-700 dark:text-rose-300' : 'text-slate-900 dark:text-white')} aria-label={`${formatClock(secondsRemaining)} ${t('fullExam.remaining')}`}>{formatClock(secondsRemaining)}</p>
@@ -551,12 +536,15 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
       </div>
 
       {timeoutNotice && <div role="status" className="mb-4 rounded-xl border border-amber-300/50 bg-amber-50/80 px-4 py-3 text-sm font-medium text-amber-950 dark:border-amber-300/25 dark:bg-amber-300/10 dark:text-amber-100">{t('fullExam.timeout')}</div>}
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-2">
+      <div className="bosfor-workspace mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border p-4">
         <div>
           <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-teal-700 dark:text-teal-300">{t('fullExam.eyebrow')}</p>
           <h1 className="mt-1 text-2xl font-black text-slate-950 dark:text-white sm:text-3xl">{t(SECTION_LABELS[section])}</h1>
         </div>
-        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{EXAM.title}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{EXAM.title}</p>
+          <ModelAsset name={section} className="size-12" />
+        </div>
       </div>
 
       {currentStep?.kind === 'reading' && (
@@ -619,7 +607,7 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
         <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">{t('fullExam.sessionNote')}</p>
         {isFinalSpeakingStep ? (
           <button type="button" disabled={isBusy || Boolean(recordingPart)} onClick={() => void finishExam()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-700 to-orange-600 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-rose-900/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
-            {t('fullExam.finishOriginal')}<Check className="size-4" aria-hidden="true" />
+            {t('fullExam.finish')}<Check className="size-4" aria-hidden="true" />
           </button>
         ) : (
           <button type="button" disabled={isBusy || Boolean(recordingPart)} onClick={() => void continueExam()} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-teal-900/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
@@ -627,6 +615,7 @@ export default function MockExamEngine({ onExamComplete, onExit }: EngineProps) 
           </button>
         )}
       </div>
-    </main>
+    </div>
   )
 }
+
